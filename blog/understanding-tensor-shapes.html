@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Understanding Tensor Shapes: The #1 ML Debugging Problem — HeyTensor</title>
+  <meta name="description" content="Why tensor shape errors dominate ML debugging. Learn systematic approaches to reasoning about dimensions in PyTorch and TensorFlow.">
+  <link rel="canonical" href="https://heytensor.com/blog/understanding-tensor-shapes.html">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo">heytensor</a>
+    <ul class="nav-links">
+      <li><a href="/">Calculator</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <article class="page-content">
+    <h1>Understanding Tensor Shapes: The #1 ML Debugging Problem</h1>
+    <div class="blog-meta">Published January 2025 &middot; 12 min read</div>
+
+    <p>If you have spent any time building neural networks, you know the feeling. You define your model, prepare your data, call <code>model(input)</code>, and get hit with a cryptic error about mismatched dimensions. You stare at the shapes, count on your fingers, and eventually find the off-by-one error in your convolution padding. This article provides a systematic approach to never getting stuck on shape errors again.</p>
+
+    <h2>Why Shapes Are Hard</h2>
+    <p>Tensor shapes are hard for a specific reason: each operation transforms dimensions differently, and the rules are not intuitive. A 2D convolution reduces spatial dimensions based on kernel size, stride, and padding. A linear layer only touches the last dimension. Reshape can change the number of dimensions entirely. Keeping track of how these compose through 10, 20, or 50 layers is error-prone mental arithmetic.</p>
+    <p>The problem is compounded by batch dimensions (which most operations ignore), channel dimensions (which Conv2d changes but MaxPool does not), and the different conventions between PyTorch (NCHW) and TensorFlow (NHWC).</p>
+
+    <h2>The Shape Propagation Mental Model</h2>
+    <p>Think of your model as a pipeline of shape transformations. Each layer takes an input shape and produces an output shape according to a formula. Your job is to ensure that every layer's expected input shape matches the previous layer's output shape.</p>
+    <pre><code>Input: [batch, 3, 224, 224]
+  |
+  v Conv2d(3, 64, kernel=7, stride=2, padding=3)
+  |   Formula: H_out = floor((224 + 2*3 - 7) / 2) + 1 = 112
+  |
+  v [batch, 64, 112, 112]
+  |
+  v MaxPool2d(kernel=3, stride=2, padding=1)
+  |   Formula: H_out = floor((112 + 2*1 - 3) / 2) + 1 = 56
+  |
+  v [batch, 64, 56, 56]
+  |
+  v Flatten(start_dim=1)
+  |   64 * 56 * 56 = 200704
+  |
+  v [batch, 200704]
+  |
+  v Linear(200704, 1000)
+  |
+  v [batch, 1000]</code></pre>
+    <p>This is exactly what the <a href="/">HeyTensor calculator</a> automates. Instead of doing this on paper, you add layers and see the shapes update in real time.</p>
+
+    <h2>The Conv2d Formula</h2>
+    <p>The 2D convolution output formula is the most commonly needed:</p>
+    <pre><code>H_out = floor((H_in + 2 * padding - kernel_size) / stride) + 1
+W_out = floor((W_in + 2 * padding - kernel_size) / stride) + 1</code></pre>
+    <p>Some common patterns to memorize:</p>
+    <ul>
+      <li><strong>kernel=3, stride=1, padding=1:</strong> Output size equals input size (most common in ResNets)</li>
+      <li><strong>kernel=3, stride=2, padding=1:</strong> Output size is roughly half the input (downsampling)</li>
+      <li><strong>kernel=1, stride=1, padding=0:</strong> Only changes the channel dimension (1x1 convolution)</li>
+      <li><strong>kernel=7, stride=2, padding=3:</strong> Output is roughly half the input (ResNet stem)</li>
+    </ul>
+
+    <h2>The Flatten Trap</h2>
+    <p>The most common shape error in practice happens at the transition from convolutional layers to fully connected layers. After your last pooling layer, you need to flatten the spatial dimensions into a single vector. The size of that vector depends on every preceding layer's parameters.</p>
+    <pre><code># Wrong: hardcoded value that does not match the actual shape
+self.fc1 = nn.Linear(512, 256)  # But the actual flattened size is 2048!
+
+# Right: calculate or use adaptive pooling
+# Option 1: Calculate manually
+# After conv layers: [batch, 128, 4, 4] -> flatten -> [batch, 2048]
+self.fc1 = nn.Linear(128 * 4 * 4, 256)
+
+# Option 2: Use adaptive average pooling to get a fixed size
+self.pool = nn.AdaptiveAvgPool2d((1, 1))  # Always outputs [batch, C, 1, 1]
+self.fc1 = nn.Linear(128, 256)  # C channels, always works</code></pre>
+    <p>Adaptive average pooling is the robust solution. ResNets use it to decouple the classifier from the spatial resolution of the input.</p>
+
+    <h2>Batch Dimension Rules</h2>
+    <p>In PyTorch, the batch dimension is always dimension 0. Most operations preserve it silently:</p>
+    <ul>
+      <li><strong>Conv2d, MaxPool2d, BatchNorm:</strong> Operate on C, H, W dimensions (dims 1, 2, 3). Batch is untouched.</li>
+      <li><strong>Linear:</strong> Operates on the last dimension only. Works with any number of batch dimensions.</li>
+      <li><strong>Flatten(start_dim=1):</strong> Flattens everything except the batch dimension.</li>
+      <li><strong>Reshape:</strong> You must account for the batch dimension explicitly.</li>
+    </ul>
+    <p>When using <code>torch.reshape</code> or <code>view</code>, always use <code>-1</code> for the batch dimension to avoid hardcoding batch sizes:</p>
+    <pre><code># Wrong: hardcodes batch size
+x = x.view(32, -1)
+
+# Right: uses -1 for batch dimension
+x = x.view(-1, 128)
+# or equivalently
+x = x.flatten(1)</code></pre>
+
+    <h2>Debugging Strategy</h2>
+    <p>When you hit a shape error, use this systematic approach:</p>
+    <ol>
+      <li><strong>Print shapes at every layer.</strong> Add <code>print(x.shape)</code> in your forward method before each operation. This immediately shows where the mismatch happens.</li>
+      <li><strong>Work backwards from the error.</strong> The error message tells you what shape the operation received and what it expected. Trace backwards to find which layer produced the wrong shape.</li>
+      <li><strong>Use the formula.</strong> For Conv2d and MaxPool2d, plug numbers into the output formula. For Linear, check that the last dimension of the input matches <code>in_features</code>.</li>
+      <li><strong>Use a shape calculator.</strong> Tools like <a href="/">HeyTensor</a> let you experiment with layer parameters and see the effect on shapes instantly, without running any code.</li>
+    </ol>
+    <pre><code>class DebugModel(nn.Module):
+    def forward(self, x):
+        print(f"Input: {x.shape}")
+        x = self.conv1(x)
+        print(f"After conv1: {x.shape}")
+        x = self.pool(x)
+        print(f"After pool: {x.shape}")
+        x = x.flatten(1)
+        print(f"After flatten: {x.shape}")
+        x = self.fc1(x)
+        print(f"After fc1: {x.shape}")
+        return x</code></pre>
+
+    <h2>Common Architecture Shape Patterns</h2>
+    <p>Understanding standard architecture patterns helps you reason about shapes faster:</p>
+
+    <h3>ResNet Block</h3>
+    <p>Uses kernel=3, padding=1 throughout so spatial dimensions stay constant. Skip connections require matching shapes, which is why ResNet uses 1x1 convolutions to adjust channel dimensions when needed.</p>
+
+    <h3>Transformer</h3>
+    <p>Input shape is [batch, seq_len, d_model]. Multi-head attention reshapes to [batch, num_heads, seq_len, d_head] where d_head = d_model / num_heads. The key shape transformation is this reshape-transpose-reshape cycle. AI workflow tools like <a href="https://claudkit.com">ClaudKit</a> can help manage the complexity of building transformer architectures.</p>
+
+    <h3>U-Net</h3>
+    <p>Encoder halves spatial dimensions (stride=2 conv or pooling). Decoder doubles them (transpose convolution or interpolation + conv). Skip connections concatenate along the channel dimension, doubling it.</p>
+
+    <p>Shape errors are not a sign of incompetence — they are the natural result of working with high-dimensional data and operations with non-obvious transformation rules. The solution is not to memorize everything but to use tools that make shape propagation visible. Try the <a href="/">HeyTensor calculator</a> next time you are designing a network architecture.</p>
+  </article>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="/">Calculator</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about.html">About</a>
+    </div>
+    <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://lockml.com">lockml.com</a> &middot; <a href="https://kickllm.com">kickllm.com</a></p>
+  </footer>
+</body>
+</html>

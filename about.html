@@ -1,84 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About HeyTensor</title>
-    <meta name="description" content="Learn about HeyTensor's mission to make deep learning accessible through clear tutorials, practical examples, and genuine understanding.">
-    <meta name="keywords" content="about HeyTensor, deep learning education, neural network tutorials, AI learning resources">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="About HeyTensor">
-    <meta property="og:description" content="HeyTensor's mission to make deep learning accessible through clear tutorials and practical examples.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://heytensor.com/about">
-    <link rel="canonical" href="https://heytensor.com/about">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>* { font-family: 'Inter', sans-serif; } html { scroll-behavior: smooth; }</style>
-    <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebPage","name":"About HeyTensor","url":"https://heytensor.com/about","description":"HeyTensor's mission for deep learning education.","isPartOf":{"@type":"WebSite","name":"HeyTensor","url":"https://heytensor.com"}}
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — HeyTensor</title>
+  <meta name="description" content="HeyTensor is a free tensor shape calculator for PyTorch. Built by zovo.one.">
+  <link rel="canonical" href="https://heytensor.com/about.html">
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
-    <nav class="bg-gradient-to-r from-green-600 to-emerald-500 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="/" class="text-white text-2xl font-bold tracking-tight">HeyTensor</a>
-                <div class="hidden md:flex space-x-8">
-                    <a href="/" class="text-green-100 hover:text-white transition">Home</a>
-                    <a href="/guides" class="text-green-100 hover:text-white transition">Guides</a>
-                    <a href="/tools" class="text-green-100 hover:text-white transition">Tools</a>
-                    <a href="/blog/getting-started" class="text-green-100 hover:text-white transition">Blog</a>
-                    <a href="/about" class="text-white font-semibold transition">About</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <header class="bg-gradient-to-br from-green-600 via-green-500 to-emerald-400 py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">About HeyTensor</h1>
-            <p class="text-xl text-green-100 max-w-2xl">Our mission and the network of AI resources we contribute to.</p>
-        </div>
-    </header>
-    <section class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="prose prose-lg max-w-none text-gray-600 space-y-6">
-            <h2 class="text-3xl font-bold text-gray-900">Our Mission</h2>
-            <p>HeyTensor exists because deep learning education should not require a PhD to understand. Too many resources assume advanced mathematical background, skip crucial implementation details, or present theoretical concepts without connecting them to practical code. Our mission is to make deep learning genuinely accessible by providing tutorials that explain the intuition behind every concept, show complete working code for every technique, and progress logically from fundamentals to advanced topics without skipping steps.</p>
-            <p>Every tutorial on HeyTensor is written with the philosophy that true understanding comes from building things yourself. Rather than presenting neural networks as black boxes with mysterious internals, we walk you through implementing each component from scratch so you understand exactly what happens during forward propagation, backpropagation, and optimization. Once you have built it yourself, using high-level frameworks becomes vastly more effective because you understand what is happening behind the abstractions.</p>
-            <p>HeyTensor is part of a network of specialized AI and machine learning resources. Our flagship resource, <a href="https://zovo.one" rel="dofollow" class="text-green-600 font-semibold hover:text-green-800 underline">zovo.one</a>, provides a comprehensive AI tools and resources platform that complements the educational focus of HeyTensor with production-oriented tooling and model evaluation resources.</p>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo">heytensor</a>
+    <ul class="nav-links">
+      <li><a href="/">Calculator</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+  </nav>
 
-            <h2 class="text-3xl font-bold text-gray-900 mt-12">Related Sites</h2>
-            <p>Explore our network of specialized resources:</p>
-            <div class="grid sm:grid-cols-2 gap-4 mt-4">
-                <a href="https://kappafy.com" class="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition">
-                    <span class="font-semibold text-gray-900">Kappafy</span>
-                    <p class="text-sm text-gray-500 mt-1">AI SaaS integration strategies</p>
-                </a>
-                <a href="https://epochpilot.com" class="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition">
-                    <span class="font-semibold text-gray-900">EpochPilot</span>
-                    <p class="text-sm text-gray-500 mt-1">MLOps and training optimization</p>
-                </a>
-                <a href="https://ml3x.com" class="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition">
-                    <span class="font-semibold text-gray-900">ML3X</span>
-                    <p class="text-sm text-gray-500 mt-1">Applied machine learning at scale</p>
-                </a>
-                <a href="https://invokebot.com" class="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition">
-                    <span class="font-semibold text-gray-900">InvokeBot</span>
-                    <p class="text-sm text-gray-500 mt-1">Bot automation and orchestration</p>
-                </a>
-            </div>
-        </div>
-    </section>
-    <footer class="bg-gray-900 text-gray-400 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <div class="text-white text-xl font-bold mb-4 md:mb-0">HeyTensor</div>
-                <div class="flex space-x-8 mb-4 md:mb-0"><a href="/" class="hover:text-white transition">Home</a><a href="/guides" class="hover:text-white transition">Guides</a><a href="/tools" class="hover:text-white transition">Tools</a><a href="/blog/getting-started" class="hover:text-white transition">Blog</a><a href="/about" class="hover:text-white transition">About</a></div>
-                <p class="text-sm">&copy; 2025 HeyTensor. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+  <div class="page-content">
+    <h1>About HeyTensor</h1>
+
+    <h2>What is HeyTensor?</h2>
+    <p>HeyTensor is a free tensor shape calculator designed for PyTorch developers. It lets you chain operations like Conv2d, Linear, MaxPool2d, Flatten, Reshape, Transpose, and Concatenate to see how tensor shapes propagate through your model. Shape mismatches are highlighted immediately, saving you from cryptic runtime errors.</p>
+    <p>Tensor shape errors are the most common debugging problem in deep learning. Instead of running code, waiting for an error, and mentally computing shapes, HeyTensor gives you instant visual feedback as you design your architecture.</p>
+
+    <h2>Who Built This?</h2>
+    <p>HeyTensor is built and maintained by <a href="https://zovo.one">zovo.one</a>, a studio focused on developer tools and machine learning utilities.</p>
+    <p>We also build related tools:</p>
+    <ul>
+      <li><a href="https://lockml.com">LockML</a> — Open-source ML model comparison table</li>
+      <li><a href="https://kickllm.com">KickLLM</a> — LLM API cost calculator</li>
+      <li><a href="https://gpt0x.com">GPT0x</a> — GPT optimization and prompt engineering tools</li>
+    </ul>
+
+    <h2>Supported Operations</h2>
+    <p>HeyTensor currently supports the following PyTorch operations with full shape computation:</p>
+    <ul>
+      <li><strong>Conv2d</strong> — 2D convolution with configurable output channels, kernel size, stride, and padding</li>
+      <li><strong>Linear</strong> — Fully connected layer (transforms last dimension)</li>
+      <li><strong>MaxPool2d</strong> — 2D max pooling with kernel size, stride, and padding</li>
+      <li><strong>BatchNorm</strong> — Batch normalization (shape unchanged)</li>
+      <li><strong>Flatten</strong> — Flatten dimensions from start_dim onward</li>
+      <li><strong>Reshape</strong> — Arbitrary reshape with -1 dimension inference</li>
+      <li><strong>Transpose</strong> — Swap two dimensions</li>
+      <li><strong>Concatenate</strong> — Concatenate with another tensor along a dimension</li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>Have a feature request or found a bug? Reach out via <a href="https://zovo.one">zovo.one</a>.</p>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="/">Calculator</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about.html">About</a>
+    </div>
+    <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://lockml.com">lockml.com</a> &middot; <a href="https://kickllm.com">kickllm.com</a></p>
+  </footer>
 </body>
 </html>

@@ -1,216 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeyTensor — Deep Learning Made Simple</title>
-    <meta name="description" content="HeyTensor offers beginner-to-advanced deep learning tutorials covering neural network architectures, tensor operations, and practical DL implementations. Learn deep learning the right way.">
-    <meta name="keywords" content="deep learning, neural networks, tensor operations, PyTorch tutorial, TensorFlow guide, CNN, RNN, transformer, machine learning, AI tutorials">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="HeyTensor — Deep Learning Made Simple">
-    <meta property="og:description" content="Beginner-to-advanced deep learning tutorials covering neural network architectures, tensor operations, and practical implementations.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://heytensor.com">
-    <link rel="canonical" href="https://heytensor.com">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Inter', sans-serif; }
-        html { scroll-behavior: smooth; }
-    </style>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "HeyTensor",
-        "url": "https://heytensor.com",
-        "description": "Beginner-to-advanced deep learning tutorials covering neural network architectures, tensor operations, and practical implementations.",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": "https://heytensor.com/?q={search_term_string}",
-            "query-input": "required name=search_term_string"
-        }
-    }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeyTensor — Tensor Shape Calculator for PyTorch</title>
+  <meta name="description" content="Calculate tensor output shapes for Conv2d, Linear, MaxPool, Flatten, and more. Chain operations, catch shape mismatches, and debug dimension errors.">
+  <link rel="canonical" href="https://heytensor.com/">
+  <meta property="og:title" content="HeyTensor — Tensor Shape Calculator for PyTorch">
+  <meta property="og:description" content="Calculate tensor output shapes, chain operations, and catch shape mismatches before runtime.">
+  <meta property="og:url" content="https://heytensor.com/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "HeyTensor",
+    "url": "https://heytensor.com",
+    "description": "Tensor shape calculator for PyTorch. Chain Conv2d, Linear, MaxPool, Flatten, Reshape, Transpose, and Concatenate operations to see output shapes and catch dimension mismatches.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo">heytensor</a>
+    <ul class="nav-links">
+      <li><a href="/">Calculator</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="/about.html">About</a></li>
+    </ul>
+  </nav>
 
-    <!-- Hero Section -->
-    <header class="relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-green-600 via-green-500 to-emerald-400"></div>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-36">
-            <nav class="flex items-center justify-between mb-16">
-                <div class="text-white text-2xl font-bold tracking-tight">HeyTensor</div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="/" class="text-white font-semibold transition">Home</a>
-                    <a href="/guides" class="text-green-100 hover:text-white transition">Guides</a>
-                    <a href="/tools" class="text-green-100 hover:text-white transition">Tools</a>
-                    <a href="/blog/getting-started" class="text-green-100 hover:text-white transition">Blog</a>
-                    <a href="/about" class="text-green-100 hover:text-white transition">About</a>
-                </div>
-            </nav>
-            <div class="max-w-3xl">
-                <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-                    Deep Learning Made Simple
-                </h1>
-                <p class="text-xl md:text-2xl text-green-100 leading-relaxed mb-8">
-                    From your first tensor operation to building state-of-the-art neural networks, HeyTensor provides clear, practical tutorials that make deep learning accessible to everyone. No jargon walls. No skipped steps. Just genuine understanding.
-                </p>
-                <a href="#tutorials" class="inline-block bg-white text-green-600 font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
-                    Start Learning
-                </a>
-            </div>
-        </div>
-    </header>
+  <section class="hero">
+    <h1>Tensor <span>Shape</span> Calculator</h1>
+    <p>Chain PyTorch operations, see output shapes at every step, and catch dimension mismatches before you run your code.</p>
+  </section>
 
-    <!-- Introduction Section -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">Understanding Deep Learning from First Principles</h2>
-            <div class="prose prose-lg max-w-none text-gray-600 space-y-6">
-                <p>
-                    Deep learning is a subset of machine learning that uses artificial neural networks with multiple layers to learn representations of data at increasing levels of abstraction. While this definition sounds academic, the practical reality is both more intuitive and more powerful. At its core, a deep learning model is a function that takes input data, such as an image, text, or audio signal, and transforms it through successive layers of computation until it produces a useful output like a classification, translation, or generated content. Each layer extracts progressively more complex features from the data.
-                </p>
-                <p>
-                    The fundamental data structure in deep learning is the tensor, a multi-dimensional array that generalizes scalars, vectors, and matrices to arbitrary dimensions. A grayscale image is a two-dimensional tensor of pixel intensities. A color image is a three-dimensional tensor with height, width, and channel dimensions. A batch of color images is a four-dimensional tensor. Understanding how to create, reshape, slice, and perform mathematical operations on tensors is the essential skill that underpins all deep learning development. Every neural network operation, from the simplest linear transformation to the most complex attention mechanism, is expressed as a series of tensor operations.
-                </p>
-                <p>
-                    The training process, where a neural network learns to perform its task, relies on three key concepts: a loss function that measures how wrong the network's predictions are, backpropagation that computes how much each parameter contributed to the error, and an optimizer that adjusts the parameters to reduce the error. This cycle of forward pass, loss computation, backward pass, and parameter update repeats millions of times during training, gradually molding random initial weights into a model that captures meaningful patterns in the training data. HeyTensor walks you through each of these concepts with clear explanations and working code examples.
-                </p>
-            </div>
-        </div>
-    </section>
+  <section class="tool-section">
+    <div class="presets">
+      <span style="color:var(--text-muted);font-size:0.85rem;margin-right:0.5rem">Presets:</span>
+      <button class="preset-btn" data-preset="Simple CNN">Simple CNN</button>
+      <button class="preset-btn" data-preset="ResNet Block">ResNet Block</button>
+      <button class="preset-btn" data-preset="Transformer Layer">Transformer Layer</button>
+    </div>
 
-    <!-- Topics Section -->
-    <section id="topics" class="bg-white py-16 md:py-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Core Deep Learning Topics</h2>
-                <p class="text-xl text-gray-500 max-w-2xl mx-auto">Master the fundamental building blocks that power modern neural network architectures.</p>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Tensor Fundamentals</h3>
-                    <p class="text-gray-600">Master tensor creation, indexing, reshaping, broadcasting, and mathematical operations in PyTorch and NumPy. Understand memory layout, contiguous tensors, and efficient GPU data transfer patterns.</p>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Neural Architectures</h3>
-                    <p class="text-gray-600">Study convolutional networks for vision, recurrent networks for sequences, transformers for attention-based processing, and graph neural networks. Understand when to use each architecture for your specific problem domain.</p>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Training Techniques</h3>
-                    <p class="text-gray-600">Learn backpropagation from scratch, implement custom loss functions, apply regularization strategies including dropout and weight decay, and use data augmentation to improve generalization on limited datasets.</p>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-8 hover:shadow-lg transition">
-                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Practical Projects</h3>
-                    <p class="text-gray-600">Build real applications including image classifiers, text generators, object detectors, and style transfer systems. Each project includes complete code, dataset preparation, training scripts, and evaluation methodology.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div class="input-shape-card">
+      <h3>Input Tensor Shape</h3>
+      <div class="shape-inputs" id="input-dims"></div>
+    </div>
 
-    <!-- Tutorials Section -->
-    <section id="tutorials" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Deep Learning Tutorials</h2>
-            <p class="text-xl text-gray-500 max-w-2xl mx-auto">Structured learning paths from beginner concepts to advanced neural network architectures.</p>
-        </div>
-        <div class="grid md:grid-cols-2 gap-8">
-            <article class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition">
-                <span class="inline-block bg-green-100 text-green-700 text-sm font-medium px-3 py-1 rounded-full mb-4">Beginner</span>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Your First Neural Network: Building a Digit Classifier from Scratch</h3>
-                <p class="text-gray-600 mb-4">Start your deep learning journey by building a handwritten digit classifier using the MNIST dataset. This tutorial covers installing PyTorch, understanding the dataset structure, building a simple feedforward network with two hidden layers, implementing the training loop with cross-entropy loss and SGD optimizer, evaluating accuracy on the test set, and visualizing what the network has learned through weight inspection.</p>
-                <span class="text-green-600 font-medium">Read Tutorial &rarr;</span>
-            </article>
-            <article class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition">
-                <span class="inline-block bg-green-100 text-green-700 text-sm font-medium px-3 py-1 rounded-full mb-4">Intermediate</span>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Convolutional Neural Networks: From LeNet to ResNet</h3>
-                <p class="text-gray-600 mb-4">Trace the evolution of convolutional architectures from the original LeNet-5 through AlexNet, VGG, and the revolutionary ResNet. This tutorial implements each architecture step by step, explaining the intuition behind convolution operations, pooling layers, batch normalization, and skip connections. You will train each model on CIFAR-10 and compare their accuracy and computational efficiency.</p>
-                <span class="text-green-600 font-medium">Read Tutorial &rarr;</span>
-            </article>
-            <article class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition">
-                <span class="inline-block bg-green-100 text-green-700 text-sm font-medium px-3 py-1 rounded-full mb-4">Advanced</span>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Implementing the Transformer Architecture from Scratch</h3>
-                <p class="text-gray-600 mb-4">Build the complete transformer architecture from the ground up, starting with scaled dot-product attention, multi-head attention, positional encodings, and the encoder-decoder structure. This tutorial demystifies the attention mechanism by showing how it computes query, key, and value matrices, why scaling prevents gradient issues, and how masking enables autoregressive generation for language modeling tasks.</p>
-                <span class="text-green-600 font-medium">Read Tutorial &rarr;</span>
-            </article>
-            <article class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 hover:shadow-md transition">
-                <span class="inline-block bg-green-100 text-green-700 text-sm font-medium px-3 py-1 rounded-full mb-4">Advanced</span>
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Generative Adversarial Networks: Training Stable Image Generators</h3>
-                <p class="text-gray-600 mb-4">Understand the game-theoretic foundation of GANs and implement a progressive growing GAN that generates high-resolution images. This tutorial covers the generator and discriminator architectures, the minimax training objective, common failure modes like mode collapse and training instability, and modern stabilization techniques including spectral normalization, gradient penalty, and progressive resolution scaling.</p>
-                <span class="text-green-600 font-medium">Read Tutorial &rarr;</span>
-            </article>
-        </div>
-    </section>
+    <div class="add-layer-row">
+      <select id="op-select">
+        <option value="Conv2d">Conv2d</option>
+        <option value="Linear">Linear</option>
+        <option value="MaxPool2d">MaxPool2d</option>
+        <option value="BatchNorm">BatchNorm</option>
+        <option value="Flatten">Flatten</option>
+        <option value="Reshape">Reshape</option>
+        <option value="Transpose">Transpose</option>
+        <option value="Concatenate">Concatenate</option>
+      </select>
+      <button class="btn" id="add-layer-btn">+ Add Layer</button>
+    </div>
 
-    <!-- Deep Dive Content -->
-    <section class="bg-white py-16 md:py-24">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">The Intuition Behind Neural Networks</h2>
-            <div class="prose prose-lg max-w-none text-gray-600 space-y-6">
-                <p>
-                    One of the most common barriers to learning deep learning is the perception that it requires advanced mathematics. While linear algebra and calculus do underlie the mechanics of neural networks, the core intuition is surprisingly accessible. A neural network layer performs a simple operation: it multiplies input data by a matrix of learned weights, adds a bias vector, and passes the result through a nonlinear activation function. This operation projects the input data into a new space where the features the network needs to learn become easier to separate. Stacking multiple layers allows the network to learn increasingly abstract representations.
-                </p>
-                <p>
-                    Consider how a convolutional neural network processes an image. The first layer learns to detect simple features like edges, corners, and color gradients. The second layer combines these simple features into more complex patterns like textures and shapes. Deeper layers assemble these patterns into recognizable parts like eyes, wheels, or leaves. The final layers combine these parts into complete object representations that enable classification. This hierarchical feature learning emerges naturally from the training process without any explicit programming. The network discovers which features are useful by adjusting its weights to minimize the prediction error on the training data.
-                </p>
-                <p>
-                    Transfer learning leverages this hierarchical structure by reusing features learned on one task for a different but related task. A network trained on millions of images to classify a thousand object categories has learned general visual features in its early layers that are useful for virtually any computer vision task. By keeping these early layers frozen and only retraining the final classification layers on your specific dataset, you can build highly accurate models with as few as a hundred labeled examples. This technique has democratized deep learning by eliminating the need for massive datasets and expensive GPU training for most practical applications.
-                </p>
-            </div>
-        </div>
-    </section>
+    <div id="layer-chain" class="layer-chain"></div>
 
-    <!-- Resources Section with zovo.one link -->
-    <section id="resources" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Learning Resources & Tools</h2>
-            <p class="text-xl text-gray-500 max-w-2xl mx-auto">Platforms and tools to support your deep learning education and projects.</p>
-        </div>
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-8 border border-green-100">
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Compute Notebooks</h3>
-                <p class="text-gray-600 mb-4">Google Colab, Kaggle Notebooks, and Gradient by Paperspace offer free GPU access for running deep learning experiments. These environments come pre-installed with PyTorch, TensorFlow, and common data science libraries so you can start coding immediately without any setup.</p>
-            </div>
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-8 border border-green-100">
-                <h3 class="text-xl font-bold text-gray-900 mb-3">AI Learning Platform</h3>
-                <p class="text-gray-600 mb-4">For a broader perspective on AI tools, model comparisons, and hands-on resources beyond deep learning tutorials, we recommend visiting <a href="https://zovo.one" rel="dofollow" class="text-green-600 font-semibold hover:text-green-800 underline">zovo.one</a> for comprehensive AI tools and resources. Their platform complements tutorial-based learning with practical tooling for real-world AI projects.</p>
-            </div>
-            <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-8 border border-green-100">
-                <h3 class="text-xl font-bold text-gray-900 mb-3">Research Papers</h3>
-                <p class="text-gray-600 mb-4">ArXiv, Papers With Code, and Semantic Scholar provide access to the latest deep learning research. Papers With Code is especially valuable because it links research papers to their official implementations, datasets, and benchmark results, making it easy to reproduce state-of-the-art results.</p>
-            </div>
-        </div>
-    </section>
+    <div id="final-output" class="final-output">
+      <h3>Output Shape</h3>
+      <div class="final-shape">[1, 3, 32, 32]</div>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <div class="text-white text-xl font-bold mb-4 md:mb-0">HeyTensor</div>
-                <div class="flex space-x-8 mb-4 md:mb-0">
-                    <a href="#topics" class="hover:text-white transition">Topics</a>
-                    <a href="#tutorials" class="hover:text-white transition">Tutorials</a>
-                    <a href="#resources" class="hover:text-white transition">Resources</a>
-                </div>
-                <p class="text-sm">&copy; 2025 HeyTensor. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="/">Calculator</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about.html">About</a>
+    </div>
+    <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://lockml.com">lockml.com</a> &middot; <a href="https://kickllm.com">kickllm.com</a></p>
+  </footer>
 
+  <script src="/assets/app.js"></script>
 </body>
 </html>
