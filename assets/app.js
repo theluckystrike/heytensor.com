@@ -125,6 +125,7 @@
   }
 
   function calcTranspose(input, params) {
+  if ((params.dim0 || 0) >= input.length || (params.dim1 || 1) >= input.length) return { error: 'Transpose dimension out of range' };
     var d0 = params.dim0 || 0, d1 = params.dim1 || 1;
     var out = input.slice();
     var tmp = out[d0];
@@ -144,12 +145,13 @@
       if (parts[j] === -1) { negIdx = j; }
       else { totalOut *= parts[j]; }
     }
-    if (negIdx >= 0) { parts[negIdx] = totalIn / totalOut; }
+    if (negIdx >= 0) { var inferred = totalIn / totalOut; if (inferred !== Math.round(inferred)) return { error: 'Cannot reshape: dimensions not evenly divisible' }; parts[negIdx] = Math.round(inferred); }
     var formula = 'Reshape [' + input.join(', ') + '] -> [' + parts.join(', ') + ']';
     return { shape: parts, formula: formula };
   }
 
   function calcConcatenate(input, params) {
+  if ((params.dim || 0) >= input.length) return { error: 'Concatenation dimension out of range' };
     var dim = params.dim || 0;
     var addSize = params.concat_size || input[dim];
     var out = input.slice();
