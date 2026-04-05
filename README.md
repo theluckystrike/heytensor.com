@@ -20,9 +20,7 @@ Enter your input tensor shape (e.g., batch x channels x height x width) and sele
 
 - Vanilla JavaScript (no frameworks, no dependencies)
 - Client-side only — your data never leaves your browser
-- Part of the [Zovo Tools](https://zovo.one) open network
 
-## Related Tools
 
 - [Matrix Calculator](https://ml3x.com) — compute matrix operations used in neural network layers
 - [ML Model Comparison](https://lockml.com) — compare architectures and benchmarks across models
