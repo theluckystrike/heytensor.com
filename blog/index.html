@@ -4,41 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog — HeyTensor</title>
-  <meta name="description" content="Articles on tensor shapes, PyTorch dimension errors, and deep learning debugging techniques.">
+  <meta name="description" content="Articles on PyTorch tensor shapes, debugging shape errors, and layer output formulas for deep learning engineers.">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/blog/">
+  <meta property="og:title" content="Blog — HeyTensor">
+  <meta property="og:url" content="https://heytensor.com/blog/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <nav class="nav">
-    <a href="/" class="nav-logo">heytensor</a>
-    <ul class="nav-links">
-      <li><a href="/">Calculator</a></li>
-      <li><a href="/blog/">Blog</a></li>
-      <li><a href="/about.html">About</a></li>
-    </ul>
-  </nav>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/" class="active">Blog</a>
+      </nav>
+    </div>
+  </header>
 
-  <div class="page-content">
-    <h1>Blog</h1>
+  <div class="article" style="max-width:720px;margin:0 auto;padding:40px 20px;">
+    <h1 style="font-size:1.8rem;margin-bottom:32px;">Blog</h1>
+
     <ul class="blog-list">
-      <li>
-        <h3><a href="/blog/understanding-tensor-shapes.html">Understanding Tensor Shapes: The #1 ML Debugging Problem</a></h3>
-        <p>Why shape errors dominate ML debugging time, and a systematic approach to reasoning about dimensions.</p>
+      <li class="blog-item">
+        <h3><a href="/blog/pytorch-shape-errors-explained.html">Every PyTorch Shape Error Explained (With Fixes)</a></h3>
+        <div class="blog-meta">April 2025 &middot; 8 min read</div>
+        <p class="blog-excerpt">A comprehensive reference covering the 10 most common PyTorch RuntimeErrors related to tensor shapes. Each error includes the exact error text, root cause analysis, and a concrete code fix.</p>
       </li>
-      <li>
-        <h3><a href="/blog/pytorch-dimension-errors.html">PyTorch Dimension Errors Explained (With Fixes)</a></h3>
-        <p>A reference guide to every common PyTorch dimension error message, what causes them, and how to fix them.</p>
+      <li class="blog-item">
+        <h3><a href="/blog/tensor-shape-cheat-sheet.html">Tensor Shape Cheat Sheet: Every Layer's Input/Output Formula</a></h3>
+        <div class="blog-meta">April 2025 &middot; 7 min read</div>
+        <p class="blog-excerpt">Quick-reference formulas for every common neural network layer type. Includes worked examples with real numbers for Conv2d, Linear, LSTM, MaxPool2d, and more.</p>
       </li>
     </ul>
   </div>
 
-  <footer class="footer">
-    <div class="footer-links">
-      <a href="/">Calculator</a>
-      <a href="/blog/">Blog</a>
-      <a href="/about.html">About</a>
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 HeyTensor. Built by <a href="https://zovo.one">zovo.one</a></p>
+      <p style="margin-top:8px;">More tools: <a href="https://kickllm.com">KickLLM</a> &middot; <a href="https://lockml.com">LockML</a></p>
     </div>
-    <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://lockml.com">lockml.com</a> &middot; <a href="https://kickllm.com">kickllm.com</a></p>
   </footer>
 </body>
 </html>

@@ -3,85 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeyTensor — Tensor Shape Calculator for PyTorch</title>
-  <meta name="description" content="Calculate tensor output shapes for Conv2d, Linear, MaxPool, Flatten, and more. Chain operations, catch shape mismatches, and debug dimension errors.">
+  <title>HeyTensor — PyTorch Tensor Shape Calculator & Error Debugger</title>
+  <meta name="description" content="Calculate tensor output shapes for Conv2d, Linear, LSTM, and 10+ PyTorch layers. Chain layers, debug shape errors, and explore architecture presets. Free, instant, no sign-up.">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/">
-  <meta property="og:title" content="HeyTensor — Tensor Shape Calculator for PyTorch">
-  <meta property="og:description" content="Calculate tensor output shapes, chain operations, and catch shape mismatches before runtime.">
+  <meta property="og:title" content="HeyTensor — PyTorch Tensor Shape Calculator & Error Debugger">
+  <meta property="og:description" content="Calculate tensor shapes for every PyTorch layer type. Chain mode, error debugger, and architecture presets.">
   <meta property="og:url" content="https://heytensor.com/">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="HeyTensor">
   <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="HeyTensor — PyTorch Tensor Shape Calculator">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "HeyTensor",
     "url": "https://heytensor.com",
-    "description": "Tensor shape calculator for PyTorch. Chain Conv2d, Linear, MaxPool, Flatten, Reshape, Transpose, and Concatenate operations to see output shapes and catch dimension mismatches.",
+    "description": "PyTorch tensor shape calculator with chain mode, error debugger, and architecture presets. Supports Conv2d, Linear, LSTM, MultiheadAttention, and 10+ layer types.",
     "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Web",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "browserRequirements": "Requires JavaScript"
   }
   </script>
-  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I calculate Conv2d output shape?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Conv2d output shape formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use HeyTensor's calculator to compute this instantly for any configuration."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's in_features doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll get 'mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)'. Fix: set in_features to match your actual flattened size."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the output shape of a Linear layer?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A PyTorch Linear(in_features, out_features) layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I fix tensor size mismatch in PyTorch?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with tensor.shape at each layer. 2) Use HeyTensor's Chain Mode to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does RuntimeError: Expected input batch_size mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
-  <nav class="nav">
-    <a href="/" class="nav-logo">heytensor</a>
-    <ul class="nav-links">
-      <li><a href="/">Calculator</a></li>
-      <li><a href="/blog/">Blog</a></li>
-      <li><a href="/about.html">About</a></li>
-    </ul>
-  </nav>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/" class="active">Calculator</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+      </nav>
+    </div>
+  </header>
 
-  <section class="hero">
-    <h1>Tensor <span>Shape</span> Calculator</h1>
-    <p>Chain PyTorch operations, see output shapes at every step, and catch dimension mismatches before you run your code.</p>
-  </section>
+  <main class="container">
+    <section class="hero">
+      <h1>PyTorch <span>Tensor Shape</span> Calculator</h1>
+      <p>Calculate output shapes for 14 layer types. Chain layers together, debug shape errors, and explore architecture presets. Works with PyTorch and TensorFlow.</p>
+    </section>
 
-  <section class="tool-section">
-    <div class="presets">
-      <span style="color:var(--text-muted);font-size:0.85rem;margin-right:0.5rem">Presets:</span>
-      <button class="preset-btn" data-preset="Simple CNN">Simple CNN</button>
-      <button class="preset-btn" data-preset="ResNet Block">ResNet Block</button>
-      <button class="preset-btn" data-preset="Transformer Layer">Transformer Layer</button>
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="single">Single Layer</button>
+      <button class="tab-btn" data-tab="chain">Chain Mode</button>
+      <button class="tab-btn" data-tab="error">Paste Error</button>
+      <button class="tab-btn" data-tab="presets">Presets</button>
     </div>
 
-    <div class="input-shape-card">
-      <h3>Input Tensor Shape</h3>
-      <div class="shape-inputs" id="input-dims"></div>
-    </div>
+    <div id="single-content" class="tab-pane active"></div>
+    <div id="chain-content" class="tab-pane"></div>
+    <div id="error-content" class="tab-pane"></div>
+    <div id="presets-content" class="tab-pane"></div>
 
-    <div class="add-layer-row">
-      <select id="op-select">
-        <option value="Conv2d">Conv2d</option>
-        <option value="Linear">Linear</option>
-        <option value="MaxPool2d">MaxPool2d</option>
-        <option value="BatchNorm">BatchNorm</option>
-        <option value="Flatten">Flatten</option>
-        <option value="Reshape">Reshape</option>
-        <option value="Transpose">Transpose</option>
-        <option value="Concatenate">Concatenate</option>
-      </select>
-      <button class="btn" id="add-layer-btn">+ Add Layer</button>
-    </div>
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
 
-    <div id="layer-chain" class="layer-chain"></div>
+      <div class="faq-item">
+        <div class="faq-q">How do I calculate Conv2d output shape?</div>
+        <div class="faq-a">
+          <p>The Conv2d output shape formula is: <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
+        </div>
+      </div>
 
-    <div id="final-output" class="final-output">
-      <h3>Output Shape</h3>
-      <div class="final-shape">[1, 3, 32, 32]</div>
-    </div>
-  </section>
+      <div class="faq-item">
+        <div class="faq-q">Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?</div>
+        <div class="faq-a">
+          <p>This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. Fix: set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
+        </div>
+      </div>
 
-  <footer class="footer">
-    <div class="footer-links">
-      <a href="/">Calculator</a>
-      <a href="/blog/">Blog</a>
-      <a href="/about.html">About</a>
+      <div class="faq-item">
+        <div class="faq-q">What is the output shape of a Linear layer?</div>
+        <div class="faq-a">
+          <p>A PyTorch <code>nn.Linear(in_features, out_features)</code> layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes to out_features.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">How do I fix tensor size mismatch in PyTorch?</div>
+        <div class="faq-a">
+          <p>Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">What does RuntimeError: Expected input batch_size mean?</div>
+        <div class="faq-a">
+          <p>This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 HeyTensor. Built by <a href="https://zovo.one">zovo.one</a></p>
+      <p style="margin-top:8px;">More tools: <a href="https://kickllm.com">KickLLM</a> &middot; <a href="https://lockml.com">LockML</a></p>
     </div>
-    <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://lockml.com">lockml.com</a> &middot; <a href="https://kickllm.com">kickllm.com</a></p>
   </footer>
 
   <script src="/assets/app.js"></script>

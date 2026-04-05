@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tensor Shape Cheat Sheet: Every Layer's Input/Output Formula — HeyTensor</title>
+  <meta name="description" content="Quick-reference formulas for every PyTorch layer's output shape. Worked examples with real numbers for Conv2d, Linear, LSTM, MaxPool2d, MultiheadAttention, and more.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/blog/tensor-shape-cheat-sheet.html">
+  <meta property="og:title" content="Tensor Shape Cheat Sheet: Every Layer's Input/Output Formula">
+  <meta property="og:description" content="Quick-reference output shape formulas for every common PyTorch layer type, with worked examples.">
+  <meta property="og:url" content="https://heytensor.com/blog/tensor-shape-cheat-sheet.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/" class="active">Blog</a>
+      </nav>
+    </div>
+  </header>
+
+  <article class="article">
+    <h1>Tensor Shape Cheat Sheet: Every Layer's Input/Output Formula</h1>
+    <div class="meta">April 2025 &middot; 7 min read</div>
+
+    <p>This is a quick-reference guide for the output shape of every common PyTorch layer. Each entry includes the formula, the input/output format, and a worked example with concrete numbers. Bookmark this and stop re-deriving formulas every time you build a model.</p>
+
+    <p>You can verify any of these formulas instantly using <a href="/">HeyTensor's calculator</a>.</p>
+
+    <h2>Conv2d</h2>
+
+    <p><strong>Input:</strong> <code>(N, C_in, H, W)</code><br>
+    <strong>Output:</strong> <code>(N, C_out, H_out, W_out)</code></p>
+
+    <pre><code>H_out = floor((H + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code></pre>
+
+    <p><strong>Example:</strong> Input (1, 3, 224, 224), Conv2d(3, 64, kernel_size=7, stride=2, padding=3):</p>
+    <pre><code>H_out = floor((224 + 2*3 - 1*(7-1) - 1) / 2) + 1
+     = floor((224 + 6 - 6 - 1) / 2) + 1
+     = floor(223 / 2) + 1 = 111 + 1 = 112
+Output: (1, 64, 112, 112)</code></pre>
+
+    <h2>Conv1d</h2>
+
+    <p><strong>Input:</strong> <code>(N, C_in, L)</code><br>
+    <strong>Output:</strong> <code>(N, C_out, L_out)</code></p>
+
+    <pre><code>L_out = floor((L + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code></pre>
+
+    <p><strong>Example:</strong> Input (32, 1, 1000), Conv1d(1, 16, kernel_size=5, stride=1, padding=2):</p>
+    <pre><code>L_out = floor((1000 + 4 - 4 - 1) / 1) + 1 = 1000
+Output: (32, 16, 1000)</code></pre>
+
+    <h2>Linear</h2>
+
+    <p><strong>Input:</strong> <code>(*, H_in)</code> — any number of leading dimensions<br>
+    <strong>Output:</strong> <code>(*, H_out)</code> — only the last dimension changes</p>
+
+    <pre><code>Output last dim = out_features</code></pre>
+
+    <p><strong>Example:</strong> Input (32, 512), Linear(512, 10):</p>
+    <pre><code>Output: (32, 10)</code></pre>
+
+    <p>For 3D input (32, 50, 512), Linear(512, 256):</p>
+    <pre><code>Output: (32, 50, 256)  # applied to last dim independently</code></pre>
+
+    <h2>LSTM</h2>
+
+    <p><strong>Input:</strong> <code>(N, L, H_in)</code> with batch_first=True<br>
+    <strong>Output:</strong> <code>(N, L, D*H_out)</code> where D=2 if bidirectional else 1</p>
+
+    <pre><code>Output features = hidden_size * num_directions</code></pre>
+
+    <p><strong>Example:</strong> Input (16, 100, 300), LSTM(300, 128, bidirectional=True, batch_first=True):</p>
+    <pre><code>Output: (16, 100, 256)  # 128 * 2 = 256</code></pre>
+
+    <h2>GRU</h2>
+
+    <p>Same formula as LSTM.</p>
+
+    <p><strong>Example:</strong> Input (16, 50, 128), GRU(128, 64, batch_first=True):</p>
+    <pre><code>Output: (16, 50, 64)</code></pre>
+
+    <h2>MultiheadAttention</h2>
+
+    <p><strong>Input:</strong> <code>(N, L, E)</code> with batch_first=True<br>
+    <strong>Output:</strong> <code>(N, L, E)</code> — shape does not change</p>
+
+    <p><strong>Constraint:</strong> <code>embed_dim</code> must be divisible by <code>num_heads</code>.</p>
+
+    <pre><code>head_dim = embed_dim / num_heads</code></pre>
+
+    <p><strong>Example:</strong> Input (8, 50, 512), MultiheadAttention(embed_dim=512, num_heads=8):</p>
+    <pre><code>head_dim = 512 / 8 = 64
+Output: (8, 50, 512)  # same shape</code></pre>
+
+    <h2>BatchNorm2d / BatchNorm1d</h2>
+
+    <p><strong>Input:</strong> Same as output. BatchNorm does not change the tensor shape.</p>
+
+    <p><strong>Parameter:</strong> <code>num_features</code> must equal the channel dimension of the input.</p>
+
+    <pre><code># After Conv2d(3, 64, 3):
+nn.BatchNorm2d(64)  # num_features = 64 = out_channels</code></pre>
+
+    <h2>MaxPool2d / AvgPool2d</h2>
+
+    <p><strong>Input:</strong> <code>(N, C, H, W)</code><br>
+    <strong>Output:</strong> <code>(N, C, H_out, W_out)</code> — channels unchanged</p>
+
+    <pre><code>H_out = floor((H + 2*padding - kernel_size) / stride) + 1</code></pre>
+
+    <p><strong>Example:</strong> Input (1, 64, 112, 112), MaxPool2d(kernel_size=2, stride=2):</p>
+    <pre><code>H_out = floor((112 + 0 - 2) / 2) + 1 = 56
+Output: (1, 64, 56, 56)</code></pre>
+
+    <h2>Flatten</h2>
+
+    <p><strong>Input:</strong> <code>(N, C, H, W)</code> with default start_dim=1<br>
+    <strong>Output:</strong> <code>(N, C*H*W)</code></p>
+
+    <pre><code>flattened_features = product of all dims from start_dim to end_dim</code></pre>
+
+    <p><strong>Example:</strong> Input (32, 64, 7, 7), nn.Flatten():</p>
+    <pre><code>Output: (32, 3136)  # 64 * 7 * 7 = 3136</code></pre>
+
+    <h2>Dropout</h2>
+
+    <p>Does not change shape. Output shape equals input shape exactly.</p>
+
+    <h2>Transpose / Permute</h2>
+
+    <p><strong>transpose(dim0, dim1):</strong> Swaps two dimensions.</p>
+
+    <p><strong>Example:</strong> Input (32, 100, 512).transpose(1, 2):</p>
+    <pre><code>Output: (32, 512, 100)</code></pre>
+
+    <h2>Reshape / View</h2>
+
+    <p>Total number of elements must remain the same. Use <code>-1</code> for one dimension to auto-calculate.</p>
+
+    <p><strong>Example:</strong> Input (32, 3, 8, 8).view(32, -1):</p>
+    <pre><code>Total elements per sample: 3 * 8 * 8 = 192
+Output: (32, 192)</code></pre>
+
+    <h2>Concatenate (torch.cat)</h2>
+
+    <p>Increases size along the specified dimension. All other dimensions must match.</p>
+
+    <p><strong>Example:</strong> torch.cat([a, b], dim=1) where a is (32, 64, 8, 8) and b is (32, 128, 8, 8):</p>
+    <pre><code>Output: (32, 192, 8, 8)  # 64 + 128 = 192 along dim 1</code></pre>
+
+    <h2>Quick Reference Table</h2>
+
+    <pre><code>Layer             Input Shape        Output Shape          Key Param
+----------------------------------------------------------------------
+Conv2d            (N,C,H,W)         (N,Co,Ho,Wo)          kernel, stride, pad
+Conv1d            (N,C,L)           (N,Co,Lo)             kernel, stride, pad
+Linear            (*,Hin)           (*,Hout)              out_features
+LSTM              (N,L,Hin)         (N,L,D*Hh)            hidden_size, bidir
+GRU               (N,L,Hin)         (N,L,D*Hh)            hidden_size, bidir
+MHA               (N,L,E)           (N,L,E)               num_heads
+BatchNorm         same               same                  num_features
+MaxPool2d         (N,C,H,W)         (N,C,Ho,Wo)           kernel, stride
+Flatten           (N,C,H,W)         (N,C*H*W)             start_dim
+Dropout           any                same                  p (rate)
+Transpose         any                swapped dims          dim0, dim1
+Reshape           any                target shape          -1 for auto</code></pre>
+
+    <p>For interactive verification of any of these formulas, use the <a href="/">HeyTensor calculator</a>. You can chain multiple layers together and see the shape propagation at every step.</p>
+
+    <p><em>Part of the <a href="https://zovo.one">zovo.one</a> tools collection.</em></p>
+  </article>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 HeyTensor. Built by <a href="https://zovo.one">zovo.one</a></p>
+      <p style="margin-top:8px;">More tools: <a href="https://kickllm.com">KickLLM</a> &middot; <a href="https://lockml.com">LockML</a></p>
+    </div>
+  </footer>
+</body>
+</html>

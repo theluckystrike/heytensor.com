@@ -4,60 +4,56 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About — HeyTensor</title>
-  <meta name="description" content="HeyTensor is a free tensor shape calculator for PyTorch. Built by zovo.one.">
+  <meta name="description" content="HeyTensor is a free PyTorch tensor shape calculator. Calculate output shapes, chain layers, debug errors, and explore architectures — all in your browser.">
+  <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/about.html">
+  <meta property="og:title" content="About — HeyTensor">
+  <meta property="og:url" content="https://heytensor.com/about.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <nav class="nav">
-    <a href="/" class="nav-logo">heytensor</a>
-    <ul class="nav-links">
-      <li><a href="/">Calculator</a></li>
-      <li><a href="/blog/">Blog</a></li>
-      <li><a href="/about.html">About</a></li>
-    </ul>
-  </nav>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/about.html" class="active">About</a>
+        <a href="/blog/">Blog</a>
+      </nav>
+    </div>
+  </header>
 
-  <div class="page-content">
+  <div class="about-content">
     <h1>About HeyTensor</h1>
 
-    <h2>What is HeyTensor?</h2>
-    <p>HeyTensor is a free tensor shape calculator designed for PyTorch developers. It lets you chain operations like Conv2d, Linear, MaxPool2d, Flatten, Reshape, Transpose, and Concatenate to see how tensor shapes propagate through your model. Shape mismatches are highlighted immediately, saving you from cryptic runtime errors.</p>
-    <p>Tensor shape errors are the most common debugging problem in deep learning. Instead of running code, waiting for an error, and mentally computing shapes, HeyTensor gives you instant visual feedback as you design your architecture.</p>
+    <p>HeyTensor is a free, browser-based tensor shape calculator built for deep learning practitioners. Whether you are designing a new neural network architecture or debugging a frustrating shape mismatch error, HeyTensor gives you instant answers without leaving your browser.</p>
 
-    <h2>Who Built This?</h2>
-    <p>HeyTensor is built and maintained by <a href="https://zovo.one">zovo.one</a>, a studio focused on developer tools and machine learning utilities.</p>
-    <p>We also build related tools:</p>
-    <ul>
-      <li><a href="https://lockml.com">LockML</a> — Open-source ML model comparison table</li>
-      <li><a href="https://kickllm.com">KickLLM</a> — LLM API cost calculator</li>
-      <li><a href="https://gpt0x.com">GPT0x</a> — GPT optimization and prompt engineering tools</li>
-    </ul>
+    <h2>What It Does</h2>
+    <p>HeyTensor supports 14 layer types across both PyTorch and TensorFlow: Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, and Concatenate. For each layer, it computes the exact output shape and shows the formula used.</p>
 
-    <h2>Supported Operations</h2>
-    <p>HeyTensor currently supports the following PyTorch operations with full shape computation:</p>
-    <ul>
-      <li><strong>Conv2d</strong> — 2D convolution with configurable output channels, kernel size, stride, and padding</li>
-      <li><strong>Linear</strong> — Fully connected layer (transforms last dimension)</li>
-      <li><strong>MaxPool2d</strong> — 2D max pooling with kernel size, stride, and padding</li>
-      <li><strong>BatchNorm</strong> — Batch normalization (shape unchanged)</li>
-      <li><strong>Flatten</strong> — Flatten dimensions from start_dim onward</li>
-      <li><strong>Reshape</strong> — Arbitrary reshape with -1 dimension inference</li>
-      <li><strong>Transpose</strong> — Swap two dimensions</li>
-      <li><strong>Concatenate</strong> — Concatenate with another tensor along a dimension</li>
-    </ul>
+    <h2>Key Features</h2>
+    <p><strong>Chain Mode</strong> lets you stack layers sequentially and see the output shape at every step. If shapes become incompatible between layers, the mismatch is highlighted immediately so you can fix it before writing any code.</p>
 
-    <h2>Contact</h2>
-    <p>Have a feature request or found a bug? Reach out via <a href="https://zovo.one">zovo.one</a>.</p>
+    <p><strong>Paste Error Mode</strong> accepts common PyTorch RuntimeError messages. It extracts dimension numbers from the error text and suggests which layer parameters need to change. No more staring at "mat1 and mat2 shapes cannot be multiplied" wondering which layer is wrong.</p>
+
+    <p><strong>Architecture Presets</strong> include LeNet-5, a Simple CNN, a ResNet Block, a Transformer Encoder Layer, and an LSTM Classifier. Load any preset to see shape propagation through a real architecture.</p>
+
+    <h2>100% Client-Side</h2>
+    <p>All calculations run in your browser. Nothing is sent to a server. Your model architectures and error messages stay on your machine.</p>
+
+    <h2>Who Built This</h2>
+    <p>HeyTensor is part of the <a href="https://zovo.one">zovo.one</a> developer tools collection. We build focused, free tools for machine learning engineers. Other tools include <a href="https://kickllm.com">KickLLM</a> for LLM prompt benchmarking and <a href="https://lockml.com">LockML</a> for ML model security scanning.</p>
   </div>
 
-  <footer class="footer">
-    <div class="footer-links">
-      <a href="/">Calculator</a>
-      <a href="/blog/">Blog</a>
-      <a href="/about.html">About</a>
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 HeyTensor. Built by <a href="https://zovo.one">zovo.one</a></p>
+      <p style="margin-top:8px;">More tools: <a href="https://kickllm.com">KickLLM</a> &middot; <a href="https://lockml.com">LockML</a></p>
     </div>
-    <p>Built by <a href="https://zovo.one">zovo.one</a> &middot; More tools: <a href="https://lockml.com">lockml.com</a> &middot; <a href="https://kickllm.com">kickllm.com</a></p>
   </footer>
 </body>
 </html>
