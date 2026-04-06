@@ -1,0 +1,494 @@
+[
+  {
+    "slug": "conv2d-calculator",
+    "title": "Conv2d Output Size Calculator — PyTorch | HeyTensor",
+    "h1": "Conv2d Output Size Calculator",
+    "description": "Calculate the output height, width, and channels of a PyTorch Conv2d layer. Enter input shape, kernel size, stride, padding, and dilation to get the exact output tensor shape instantly.",
+    "keyword": "conv2d output size calculator",
+    "component": "shape-calculator",
+    "config": { "layer": "Conv2d" },
+    "faq": [
+      {
+        "q": "What is the Conv2d output size formula?",
+        "a": "The formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to the width dimension. The batch size and number of output channels (out_channels parameter) determine the remaining dimensions."
+      },
+      {
+        "q": "How does dilation affect Conv2d output size?",
+        "a": "Dilation spreads the kernel elements apart, effectively increasing the receptive field without adding parameters. A dilation of 2 means there is one gap between each kernel element. The effective kernel size becomes dilation*(kernel_size-1)+1, which reduces the output spatial dimensions."
+      },
+      {
+        "q": "What padding should I use to keep the same spatial size?",
+        "a": "For 'same' padding with stride=1 and dilation=1, use padding = (kernel_size - 1) / 2. For a 3x3 kernel, that's padding=1. For a 5x5 kernel, padding=2. This only works with odd kernel sizes."
+      },
+      {
+        "q": "What happens if Conv2d output size is zero or negative?",
+        "a": "If the formula produces zero or a negative number, PyTorch will raise a RuntimeError. This means your kernel is larger than the input spatial dimensions (after padding). Fix it by increasing padding, decreasing kernel size, or decreasing dilation."
+      }
+    ],
+    "related": ["maxpool2d-calculator", "convtranspose2d-calculator", "flatten-calculator"]
+  },
+  {
+    "slug": "conv1d-calculator",
+    "title": "Conv1d Output Size Calculator — PyTorch | HeyTensor",
+    "h1": "Conv1d Output Size Calculator",
+    "description": "Calculate the output length and channels of a PyTorch Conv1d layer. Enter input shape, kernel size, stride, padding, and dilation for instant results.",
+    "keyword": "conv1d output size calculator",
+    "component": "shape-calculator",
+    "config": { "layer": "Conv1d" },
+    "faq": [
+      {
+        "q": "What is the Conv1d output size formula?",
+        "a": "The formula is: L_out = floor((L_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. Conv1d operates on 1D sequences, so there is only one spatial dimension to compute."
+      },
+      {
+        "q": "When should I use Conv1d vs Conv2d?",
+        "a": "Use Conv1d for 1D sequence data like time series, audio waveforms, or text (after embedding). Use Conv2d for 2D spatial data like images. Conv1d input shape is [batch, channels, length], while Conv2d is [batch, channels, height, width]."
+      },
+      {
+        "q": "What is the input shape for Conv1d?",
+        "a": "Conv1d expects input shape [batch_size, in_channels, length]. For example, a batch of 32 audio signals with 1 channel and 16000 samples would be [32, 1, 16000]."
+      }
+    ],
+    "related": ["conv2d-calculator", "linear-layer-calculator", "maxpool2d-calculator"]
+  },
+  {
+    "slug": "linear-layer-calculator",
+    "title": "Linear Layer Shape Calculator — PyTorch | HeyTensor",
+    "h1": "Linear Layer Shape Calculator",
+    "description": "Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.",
+    "keyword": "pytorch linear layer shape",
+    "component": "shape-calculator",
+    "config": { "layer": "Linear" },
+    "faq": [
+      {
+        "q": "What is the output shape of nn.Linear?",
+        "a": "nn.Linear(in_features, out_features) transforms only the last dimension. For input [batch, in_features], output is [batch, out_features]. For input [batch, seq, in_features], output is [batch, seq, out_features]."
+      },
+      {
+        "q": "How many parameters does a Linear layer have?",
+        "a": "A Linear layer has in_features * out_features weights plus out_features biases (if bias=True). Total: in_features * out_features + out_features. For Linear(512, 10), that's 512*10 + 10 = 5,130 parameters."
+      },
+      {
+        "q": "Why do I get a shape error with Linear after Conv2d?",
+        "a": "Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W."
+      }
+    ],
+    "related": ["flatten-calculator", "conv2d-calculator", "parameter-counter"]
+  },
+  {
+    "slug": "lstm-shape-calculator",
+    "title": "LSTM Output Shape Calculator — PyTorch | HeyTensor",
+    "h1": "LSTM Output Shape Calculator",
+    "description": "Calculate the output shape of a PyTorch LSTM layer. Enter input size, hidden size, number of layers, and bidirectional flag to get exact output dimensions.",
+    "keyword": "lstm output shape pytorch",
+    "component": "shape-calculator",
+    "config": { "layer": "LSTM" },
+    "faq": [
+      {
+        "q": "What is the LSTM output shape in PyTorch?",
+        "a": "For input [batch, seq_len, input_size], the LSTM output shape is [batch, seq_len, hidden_size * num_directions] where num_directions is 2 if bidirectional=True, else 1. The hidden state h_n has shape [num_layers * num_directions, batch, hidden_size]."
+      },
+      {
+        "q": "How does bidirectional affect LSTM output?",
+        "a": "Setting bidirectional=True doubles the last dimension of the output. A bidirectional LSTM with hidden_size=256 outputs features of size 512 (256*2). The hidden state also doubles in the first dimension."
+      },
+      {
+        "q": "How many parameters does an LSTM have?",
+        "a": "An LSTM layer has 4 * ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size * 2) parameters per layer. For additional layers, input_size becomes hidden_size * num_directions. Multiply by num_layers and num_directions."
+      }
+    ],
+    "related": ["linear-layer-calculator", "embedding-calculator", "parameter-counter"]
+  },
+  {
+    "slug": "maxpool2d-calculator",
+    "title": "MaxPool2d Output Size Calculator — PyTorch | HeyTensor",
+    "h1": "MaxPool2d Output Size Calculator",
+    "description": "Calculate the output size of a PyTorch MaxPool2d layer. Enter input shape, kernel size, stride, and padding to compute the output tensor dimensions.",
+    "keyword": "maxpool2d output size calculator",
+    "component": "shape-calculator",
+    "config": { "layer": "MaxPool2d" },
+    "faq": [
+      {
+        "q": "What is the MaxPool2d output size formula?",
+        "a": "The formula is identical to Conv2d: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. By default, MaxPool2d uses stride equal to kernel_size if not specified."
+      },
+      {
+        "q": "What is the difference between MaxPool2d and AvgPool2d?",
+        "a": "Both have the same output shape formula. MaxPool2d takes the maximum value in each window, while AvgPool2d computes the average. MaxPool2d is more common in classification networks, while AvgPool2d is often used as the final global pooling layer."
+      },
+      {
+        "q": "Does MaxPool2d change the number of channels?",
+        "a": "No. MaxPool2d only reduces the spatial dimensions (height and width). The batch size and channel count remain unchanged. If input is [8, 64, 32, 32] and you apply MaxPool2d(2), output is [8, 64, 16, 16]."
+      }
+    ],
+    "related": ["conv2d-calculator", "flatten-calculator", "batchnorm-calculator"]
+  },
+  {
+    "slug": "batchnorm-calculator",
+    "title": "BatchNorm Shape Calculator — PyTorch | HeyTensor",
+    "h1": "BatchNorm Shape Calculator",
+    "description": "Verify your PyTorch BatchNorm2d configuration. BatchNorm preserves the input shape but requires num_features to match the channel dimension. Check your setup instantly.",
+    "keyword": "batchnorm shape pytorch",
+    "component": "shape-calculator",
+    "config": { "layer": "BatchNorm2d" },
+    "faq": [
+      {
+        "q": "Does BatchNorm change the tensor shape?",
+        "a": "No. BatchNorm2d preserves the input shape exactly. If input is [batch, C, H, W], output is [batch, C, H, W]. However, the num_features parameter must equal C (the channel dimension), or you get a RuntimeError."
+      },
+      {
+        "q": "What does the num_features parameter mean?",
+        "a": "num_features must equal the number of channels (C) in your input tensor. For BatchNorm2d after a Conv2d with out_channels=64, set num_features=64. For BatchNorm1d after a Linear with out_features=256, set num_features=256."
+      },
+      {
+        "q": "When should I use BatchNorm1d vs BatchNorm2d?",
+        "a": "Use BatchNorm2d for 4D input [batch, C, H, W] (after Conv2d). Use BatchNorm1d for 2D input [batch, features] (after Linear) or 3D input [batch, C, L] (after Conv1d)."
+      }
+    ],
+    "related": ["conv2d-calculator", "linear-layer-calculator", "maxpool2d-calculator"]
+  },
+  {
+    "slug": "embedding-calculator",
+    "title": "Embedding Layer Shape Calculator — PyTorch | HeyTensor",
+    "h1": "Embedding Layer Shape Calculator",
+    "description": "Calculate the output shape of a PyTorch nn.Embedding layer. Enter vocab size, embedding dimension, and sequence length to see the output tensor shape.",
+    "keyword": "pytorch embedding output shape",
+    "component": "shape-calculator",
+    "config": { "layer": "Embedding" },
+    "faq": [
+      {
+        "q": "What is the output shape of nn.Embedding?",
+        "a": "nn.Embedding(num_embeddings, embedding_dim) converts integer indices to dense vectors. For input [batch, seq_len] (integer indices), output is [batch, seq_len, embedding_dim]."
+      },
+      {
+        "q": "How many parameters does an Embedding layer have?",
+        "a": "An Embedding layer has num_embeddings * embedding_dim parameters. For a vocabulary of 30,000 tokens with 768-dimensional embeddings, that's 30,000 * 768 = 23,040,000 parameters (about 88 MB in float32)."
+      },
+      {
+        "q": "What is the difference between Embedding and Linear?",
+        "a": "Embedding is a lookup table that takes integer indices as input. Linear performs matrix multiplication on float inputs. Mathematically, Embedding is equivalent to one-hot encoding followed by a Linear layer, but much more memory-efficient."
+      }
+    ],
+    "related": ["lstm-shape-calculator", "linear-layer-calculator", "multihead-attention-calculator"]
+  },
+  {
+    "slug": "flatten-calculator",
+    "title": "Flatten Output Shape Calculator — PyTorch | HeyTensor",
+    "h1": "Flatten Output Shape Calculator",
+    "description": "Calculate the output shape of nn.Flatten in PyTorch. See how a multi-dimensional tensor collapses into a 2D tensor for fully-connected layers.",
+    "keyword": "pytorch flatten output shape",
+    "component": "shape-calculator",
+    "config": { "layer": "Flatten" },
+    "faq": [
+      {
+        "q": "What does nn.Flatten do to the shape?",
+        "a": "nn.Flatten() collapses all dimensions except the batch dimension into one. For input [batch, C, H, W], output is [batch, C*H*W]. For example, [32, 64, 7, 7] becomes [32, 3136]."
+      },
+      {
+        "q": "When do I need to use Flatten?",
+        "a": "Use Flatten when transitioning from convolutional layers (which output 4D tensors) to fully-connected Linear layers (which expect 2D tensors). It is the bridge between the feature extraction and classification parts of a CNN."
+      },
+      {
+        "q": "What is the start_dim parameter?",
+        "a": "nn.Flatten(start_dim=1) flattens from dimension 1 onward (default). You can change start_dim to flatten only certain dimensions. For example, Flatten(start_dim=2) on [B, C, H, W] gives [B, C, H*W]."
+      }
+    ],
+    "related": ["conv2d-calculator", "linear-layer-calculator", "maxpool2d-calculator"]
+  },
+  {
+    "slug": "convtranspose2d-calculator",
+    "title": "ConvTranspose2d Output Size Calculator — PyTorch | HeyTensor",
+    "h1": "ConvTranspose2d Output Size Calculator",
+    "description": "Calculate the output size of a PyTorch ConvTranspose2d (transposed convolution) layer. Enter input shape, kernel, stride, padding, and output_padding for exact results.",
+    "keyword": "convtranspose2d output size",
+    "component": "shape-calculator",
+    "config": { "layer": "ConvTranspose2d" },
+    "faq": [
+      {
+        "q": "What is the ConvTranspose2d output size formula?",
+        "a": "The formula is: H_out = (H_in - 1) * stride - 2*padding + dilation*(kernel_size-1) + output_padding + 1. This is the inverse of Conv2d and is used in decoder networks and GANs to upsample feature maps."
+      },
+      {
+        "q": "What is output_padding in ConvTranspose2d?",
+        "a": "output_padding adds extra pixels to one side of the output. It resolves the ambiguity where multiple input sizes can map to the same Conv2d output. It must be less than stride. Common value is 0 or 1."
+      },
+      {
+        "q": "When should I use ConvTranspose2d vs Upsample + Conv2d?",
+        "a": "ConvTranspose2d can produce checkerboard artifacts. An alternative is nn.Upsample followed by nn.Conv2d, which often gives smoother results. However, ConvTranspose2d is more parameter-efficient and widely used in U-Net and GAN architectures."
+      }
+    ],
+    "related": ["conv2d-calculator", "conv1d-calculator", "parameter-counter"]
+  },
+  {
+    "slug": "multihead-attention-calculator",
+    "title": "MultiHead Attention Shape Calculator — PyTorch | HeyTensor",
+    "h1": "MultiHead Attention Shape Calculator",
+    "description": "Calculate the output shape of PyTorch MultiheadAttention. Enter embed_dim, num_heads, and sequence length to verify your transformer layer configuration.",
+    "keyword": "multihead attention shape pytorch",
+    "component": "shape-calculator",
+    "config": { "layer": "MultiheadAttention" },
+    "faq": [
+      {
+        "q": "What is the output shape of MultiheadAttention?",
+        "a": "For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, num_heads, seq_len, seq_len]."
+      },
+      {
+        "q": "Why must embed_dim be divisible by num_heads?",
+        "a": "Each head operates on embed_dim / num_heads dimensions. If embed_dim=512 and num_heads=8, each head processes 64 dimensions. If this division isn't even, PyTorch raises an error."
+      },
+      {
+        "q": "How many parameters does MultiheadAttention have?",
+        "a": "With in_proj (default), it has 3 * embed_dim * embed_dim (for Q, K, V projections) + embed_dim * embed_dim (output projection) + biases. For embed_dim=512, that's about 1.05M parameters."
+      }
+    ],
+    "related": ["embedding-calculator", "linear-layer-calculator", "lstm-shape-calculator"]
+  },
+  {
+    "slug": "shape-mismatch",
+    "title": "PyTorch Shape Mismatch Error Debugger | HeyTensor",
+    "h1": "PyTorch Shape Mismatch Error Debugger",
+    "description": "Paste any PyTorch shape mismatch RuntimeError and get a plain English explanation of what went wrong, which tensors don't match, and how to fix it.",
+    "keyword": "pytorch shape mismatch error",
+    "component": "error-debugger",
+    "config": { "preset": "shape-mismatch" },
+    "faq": [
+      {
+        "q": "What causes shape mismatch errors in PyTorch?",
+        "a": "Shape mismatches occur when two tensors in an operation have incompatible dimensions. Common causes: wrong in_features in Linear layers, missing Flatten before FC layers, incorrect reshape/view dimensions, or tensors from different batch sizes."
+      },
+      {
+        "q": "How do I debug shape errors in PyTorch?",
+        "a": "1) Add print(tensor.shape) before the failing line. 2) Use HeyTensor's Chain Mode to trace shapes through your network. 3) Check that in_features matches the actual output of the previous layer. 4) Verify reshape/view dimensions multiply to the correct total."
+      },
+      {
+        "q": "What does 'expected input batch_size X to match target batch_size Y' mean?",
+        "a": "Your model output and labels have different batch sizes. This often happens when you accidentally reshape a tensor and change the batch dimension. Check that your data loader returns matching batches and no layer modifies dimension 0."
+      }
+    ],
+    "related": ["mat1-mat2-shapes", "view-size-not-compatible", "conv2d-calculator"]
+  },
+  {
+    "slug": "mat1-mat2-shapes",
+    "title": "mat1 and mat2 shapes cannot be multiplied — Fix | HeyTensor",
+    "h1": "mat1 and mat2 shapes cannot be multiplied — Fix",
+    "description": "Fix the PyTorch error 'mat1 and mat2 shapes cannot be multiplied'. Paste your error message to see which dimensions don't match and get the exact fix.",
+    "keyword": "mat1 and mat2 shapes cannot be multiplied",
+    "component": "error-debugger",
+    "config": { "preset": "mat1-mat2" },
+    "faq": [
+      {
+        "q": "What does 'mat1 and mat2 shapes cannot be multiplied' mean?",
+        "a": "This error means the inner dimensions of a matrix multiplication don't match. In a Linear layer, this means in_features doesn't match the actual input size. For example, if your input is [64, 512] but Linear expects in_features=256, you get 'mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)'."
+      },
+      {
+        "q": "How do I fix this error?",
+        "a": "Read the error dimensions: 'mat1 (AxB) and mat2 (CxD)'. B must equal C. If they don't match, change in_features of your Linear layer to match B (the actual input size). Often B is C_out * H * W from the last Conv2d + pooling."
+      },
+      {
+        "q": "Why does this happen after changing Conv2d parameters?",
+        "a": "Changing kernel_size, stride, or padding in Conv2d changes the output spatial dimensions. If you then Flatten and feed into a Linear layer, the flattened size changes. You must recalculate: in_features = out_channels * H_out * W_out."
+      }
+    ],
+    "related": ["shape-mismatch", "linear-layer-calculator", "flatten-calculator"]
+  },
+  {
+    "slug": "cuda-out-of-memory",
+    "title": "CUDA Out of Memory — Solutions | HeyTensor",
+    "h1": "CUDA Out of Memory — Solutions",
+    "description": "Fix PyTorch CUDA out of memory errors. Calculate GPU memory requirements for your model, find the right batch size, and apply memory optimization techniques.",
+    "keyword": "cuda out of memory pytorch",
+    "component": "error-debugger",
+    "config": { "preset": "cuda-oom" },
+    "faq": [
+      {
+        "q": "Why am I getting CUDA out of memory?",
+        "a": "Your model, optimizer states, gradients, and intermediate activations exceed GPU VRAM. Training requires roughly 4x the model size (1x params + 1x gradients + 2x Adam states) plus activation memory which scales with batch size."
+      },
+      {
+        "q": "How do I reduce GPU memory usage?",
+        "a": "1) Reduce batch size. 2) Use mixed precision (torch.cuda.amp). 3) Use gradient checkpointing (model.gradient_checkpointing_enable()). 4) Use gradient accumulation. 5) Clear cache with torch.cuda.empty_cache(). 6) Use a smaller model."
+      },
+      {
+        "q": "How much GPU memory does my model need?",
+        "a": "For training with Adam: memory ≈ (num_params * 4 bytes * 4) + activation_memory. The 4x comes from: parameters (4B), gradients (4B), Adam m state (4B), Adam v state (4B). Activations depend on batch size and model architecture. Use HeyTensor's Memory Calculator for an estimate."
+      },
+      {
+        "q": "What does 'Tried to allocate X MiB' mean?",
+        "a": "PyTorch is telling you how much memory the current operation needs. The error also shows total GPU memory and current allocation. If allocated + requested > total, you're out of memory. The solution is to reduce the requested amount (smaller batch) or free existing allocations."
+      }
+    ],
+    "related": ["memory-calculator", "parameter-counter", "shape-mismatch"]
+  },
+  {
+    "slug": "view-size-not-compatible",
+    "title": "view size not compatible — PyTorch Fix | HeyTensor",
+    "h1": "view size not compatible with input tensor — Fix",
+    "description": "Fix the PyTorch error 'view size is not compatible with input tensor's size and stride'. Learn why this happens and when to use reshape vs view vs contiguous.",
+    "keyword": "pytorch view size not compatible",
+    "component": "error-debugger",
+    "config": { "preset": "view-size" },
+    "faq": [
+      {
+        "q": "What does 'view size is not compatible' mean?",
+        "a": "tensor.view() requires the tensor to be contiguous in memory. After operations like transpose, permute, or narrow, the tensor may no longer be contiguous. The fix is to call .contiguous() before .view(), or use .reshape() which handles non-contiguous tensors automatically."
+      },
+      {
+        "q": "What is the difference between view and reshape?",
+        "a": "view() requires contiguous memory and never copies data. reshape() works on any tensor — it returns a view if possible, or copies the data if needed. reshape() is safer but view() makes memory guarantees explicit."
+      },
+      {
+        "q": "When does a tensor become non-contiguous?",
+        "a": "After transpose(), permute(), expand(), narrow(), or indexing operations. These create a new view with different strides without copying data. Check with tensor.is_contiguous(). Call tensor.contiguous() to create a contiguous copy."
+      }
+    ],
+    "related": ["shape-mismatch", "flatten-calculator", "mat1-mat2-shapes"]
+  },
+  {
+    "slug": "activation-functions",
+    "title": "Activation Functions Comparison — PyTorch | HeyTensor",
+    "h1": "Activation Functions Comparison",
+    "description": "Compare PyTorch activation functions side by side: ReLU, GELU, SiLU, Sigmoid, Tanh, and more. Interactive plots, formulas, pros/cons, and when to use each one.",
+    "keyword": "pytorch activation functions comparison",
+    "component": "reference",
+    "config": { "topic": "activation-functions" },
+    "faq": [
+      {
+        "q": "Which activation function should I use?",
+        "a": "For most cases: ReLU for CNNs and simple networks. GELU for transformers and NLP models (used in BERT, GPT). SiLU/Swish for modern architectures (EfficientNet). Sigmoid for binary output layers. Softmax for multi-class output layers."
+      },
+      {
+        "q": "What is the dying ReLU problem?",
+        "a": "If a ReLU neuron receives large negative inputs, it outputs 0 and its gradient is 0, so it stops learning permanently. Solutions: use LeakyReLU (small negative slope), ELU, or GELU. Proper weight initialization (He init) also helps prevent this."
+      },
+      {
+        "q": "What is GELU and why do transformers use it?",
+        "a": "GELU (Gaussian Error Linear Unit) is x * Phi(x) where Phi is the Gaussian CDF. Unlike ReLU, it's smooth everywhere and allows small negative values. Transformers use it because the smooth gradient flow works well with attention mechanisms and deep architectures."
+      }
+    ],
+    "related": ["loss-functions", "optimizers", "linear-layer-calculator"]
+  },
+  {
+    "slug": "loss-functions",
+    "title": "Loss Functions Guide — PyTorch | HeyTensor",
+    "h1": "Loss Functions Guide",
+    "description": "Compare PyTorch loss functions: CrossEntropyLoss, MSELoss, BCELoss, and more. Formulas, when to use, code examples, and common pitfalls for each loss function.",
+    "keyword": "pytorch loss functions guide",
+    "component": "reference",
+    "config": { "topic": "loss-functions" },
+    "faq": [
+      {
+        "q": "Which loss function should I use?",
+        "a": "Multi-class classification: CrossEntropyLoss (no Softmax needed — it's built in). Binary classification: BCEWithLogitsLoss. Regression: MSELoss (L2) or L1Loss (more robust to outliers). Regression with outliers: HuberLoss."
+      },
+      {
+        "q": "Why does CrossEntropyLoss include Softmax?",
+        "a": "PyTorch's CrossEntropyLoss combines LogSoftmax + NLLLoss for numerical stability. Do NOT apply Softmax before CrossEntropyLoss — you'll get wrong gradients. Your model's final layer should output raw logits."
+      },
+      {
+        "q": "What is the difference between BCE and CrossEntropy?",
+        "a": "BCELoss is for binary classification (one output per sample, 0 or 1). CrossEntropyLoss is for multi-class classification (one-of-N classes). For multi-label classification (multiple labels per sample), use BCEWithLogitsLoss."
+      }
+    ],
+    "related": ["activation-functions", "optimizers", "parameter-counter"]
+  },
+  {
+    "slug": "optimizers",
+    "title": "Optimizers Comparison — PyTorch | HeyTensor",
+    "h1": "Optimizers Comparison",
+    "description": "Compare PyTorch optimizers: Adam, AdamW, SGD, RMSprop, and more. Key parameters, when to use, memory requirements, and best practices for each optimizer.",
+    "keyword": "pytorch optimizers comparison",
+    "component": "reference",
+    "config": { "topic": "optimizers" },
+    "faq": [
+      {
+        "q": "Which optimizer should I use?",
+        "a": "AdamW for transformers and NLP. SGD with momentum for CNNs (often better final accuracy). Adam for quick experiments and most general use. RAdam or Adafactor for stability without learning rate warmup."
+      },
+      {
+        "q": "What is the difference between Adam and AdamW?",
+        "a": "Adam applies weight decay to the gradient before computing adaptive learning rates, which couples regularization with adaptation. AdamW decouples weight decay from the gradient update, applying it directly to the parameters. AdamW produces better generalization, especially with learning rate schedules."
+      },
+      {
+        "q": "How much memory do optimizers use?",
+        "a": "SGD with momentum: 1x parameters (momentum buffer). Adam/AdamW: 2x parameters (first and second moment estimates). So Adam uses 2x more optimizer memory than SGD. For a 1B parameter model in float32, that's 4GB (SGD) vs 8GB (Adam) of optimizer states."
+      }
+    ],
+    "related": ["activation-functions", "loss-functions", "memory-calculator"]
+  },
+  {
+    "slug": "einsum-calculator",
+    "title": "Einsum Calculator — NumPy & PyTorch | HeyTensor",
+    "h1": "Einsum Calculator",
+    "description": "Interactive einsum notation calculator for NumPy and PyTorch. Enter your einsum expression and tensor shapes to see the output shape, operation description, and equivalent code.",
+    "keyword": "einsum calculator pytorch numpy",
+    "component": "reference",
+    "config": { "topic": "einsum" },
+    "faq": [
+      {
+        "q": "What is einsum notation?",
+        "a": "Einstein summation notation is a compact way to express tensor operations. 'ij,jk->ik' means matrix multiplication. Each letter represents a dimension; repeated letters are summed over (contracted). It can express dot products, outer products, transposes, traces, and more."
+      },
+      {
+        "q": "How do I read einsum expressions?",
+        "a": "Left side of '->' lists input dimensions (comma-separated for multiple inputs). Right side lists output dimensions. Any letter on the left but not on the right is summed over. 'ij,jk->ik': i,j from first input; j,k from second; j is summed out; output is i,k."
+      },
+      {
+        "q": "Is einsum slower than dedicated operations?",
+        "a": "Modern frameworks optimize einsum to call the same underlying BLAS routines. For common operations (matmul, dot), there's no speed difference. For complex multi-operand expressions, einsum may be slightly slower but much more readable."
+      }
+    ],
+    "related": ["linear-layer-calculator", "multihead-attention-calculator", "activation-functions"]
+  },
+  {
+    "slug": "parameter-counter",
+    "title": "Neural Network Parameter Counter | HeyTensor",
+    "h1": "Neural Network Parameter Counter",
+    "description": "Count the total parameters in your neural network. Add layers, specify dimensions, and get the exact parameter count with a breakdown per layer.",
+    "keyword": "neural network parameter counter",
+    "component": "model-tool",
+    "config": { "mode": "param-counter" },
+    "faq": [
+      {
+        "q": "How do I count parameters in PyTorch?",
+        "a": "In code: sum(p.numel() for p in model.parameters()). Or use this tool to add layers and get a breakdown. Each layer type has a different formula: Linear = in*out + out, Conv2d = out_ch * in_ch * k * k + out_ch, LSTM = 4 * ((in + hid) * hid + hid) per layer."
+      },
+      {
+        "q": "Why does parameter count matter?",
+        "a": "Parameter count affects: 1) Model file size (params * 4 bytes for float32). 2) GPU memory during training (params * 16 bytes with Adam). 3) Inference speed. 4) Risk of overfitting (more params = more capacity = needs more data)."
+      },
+      {
+        "q": "Which layers have the most parameters?",
+        "a": "Fully connected (Linear) layers typically dominate. A single Linear(4096, 4096) has 16.8M parameters. Embedding layers in NLP models are also large. Conv2d layers are relatively parameter-efficient due to weight sharing across spatial positions."
+      }
+    ],
+    "related": ["memory-calculator", "linear-layer-calculator", "conv2d-calculator"]
+  },
+  {
+    "slug": "memory-calculator",
+    "title": "GPU Memory Calculator for Training | HeyTensor",
+    "h1": "GPU Memory Calculator for Training",
+    "description": "Estimate GPU VRAM required to train your neural network. Calculate memory for parameters, gradients, optimizer states, and activations. Find the right batch size for your GPU.",
+    "keyword": "gpu memory calculator training",
+    "component": "model-tool",
+    "config": { "mode": "memory" },
+    "faq": [
+      {
+        "q": "How much GPU memory does training require?",
+        "a": "Training memory ≈ model_params * bytes_per_param * multiplier + activation_memory. With float32 and Adam: multiplier is 4 (1x params + 1x grads + 2x Adam states). With mixed precision: roughly 60-70% of float32. Activations scale linearly with batch size."
+      },
+      {
+        "q": "How do I estimate activation memory?",
+        "a": "Activation memory stores intermediate outputs for backpropagation. For CNNs: sum of (batch * channels * H * W * 4 bytes) across all layers. For transformers: dominated by attention maps (batch * num_heads * seq_len^2 * 4 bytes per layer). This tool provides estimates based on your architecture."
+      },
+      {
+        "q": "What GPU do I need for my model?",
+        "a": "Quick guide: <10M params → any GPU (4GB+). 10M-100M params → 8-16GB (RTX 3070/4080). 100M-1B params → 24-48GB (RTX 3090/A6000). 1B+ params → multiple GPUs or 80GB (A100/H100). Mixed precision roughly halves these requirements."
+      },
+      {
+        "q": "How does mixed precision affect memory?",
+        "a": "Mixed precision (torch.cuda.amp) stores model weights in float16 (2 bytes) but keeps a float32 master copy. Net effect: about 60% of full float32 memory for parameters/optimizer states. Activations are stored in float16, roughly halving activation memory."
+      }
+    ],
+    "related": ["parameter-counter", "cuda-out-of-memory", "optimizers"]
+  }
+]

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conv2d Output Size Calculator — PyTorch | HeyTensor</title>
+  <meta name="description" content="Calculate the output height, width, and channels of a PyTorch Conv2d layer. Enter input shape, kernel size, stride, padding, and dilation to get the exact output tensor shape instantly.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/conv2d-calculator.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/conv2d-calculator.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/conv2d-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Conv2d Output Size Calculator — PyTorch | HeyTensor">
+  <meta property="og:description" content="Calculate the output height, width, and channels of a PyTorch Conv2d layer. Enter input shape, kernel size, stride, padding, and dilation to get the exact output tensor shape instantly.">
+  <meta property="og:url" content="https://heytensor.com/tools/conv2d-calculator.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Conv2d Output Size Calculator — PyTorch | HeyTensor">
+  <meta name="twitter:description" content="Calculate the output height, width, and channels of a PyTorch Conv2d layer. Enter input shape, kernel size, stride, padding, and dilation to get the exact output tensor shape instantly.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Conv2d Output Size Calculator",
+    "url": "https://heytensor.com/tools/conv2d-calculator.html",
+    "description": "Calculate the output height, width, and channels of a PyTorch Conv2d layer. Enter input shape, kernel size, stride, padding, and dilation to get the exact output tensor shape instantly.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "browserRequirements": "Requires JavaScript",
+    "author": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-06",
+    "dateModified": "2026-04-06"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the Conv2d output size formula?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to the width dimension. The batch size and number of output channels (out_channels parameter) determine the remaining dimensions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does dilation affect Conv2d output size?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dilation spreads the kernel elements apart, effectively increasing the receptive field without adding parameters. A dilation of 2 means there is one gap between each kernel element. The effective kernel size becomes dilation*(kernel_size-1)+1, which reduces the output spatial dimensions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What padding should I use to keep the same spatial size?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For 'same' padding with stride=1 and dilation=1, use padding = (kernel_size - 1) / 2. For a 3x3 kernel, that's padding=1. For a 5x5 kernel, padding=2. This only works with odd kernel sizes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if Conv2d output size is zero or negative?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If the formula produces zero or a negative number, PyTorch will raise a RuntimeError. This means your kernel is larger than the input spatial dimensions (after padding). Fix it by increasing padding, decreasing kernel size, or decreasing dilation."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Conv2d Output Size Calculator</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <h1>Conv2d Output Size Calculator</h1>
+      <p>Calculate the output height, width, and channels of a PyTorch Conv2d layer. Enter input shape, kernel size, stride, padding, and dilation to get the exact output tensor shape instantly.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+    </section>
+
+    <div id="tool-container"
+         data-component="shape-calculator"
+         data-config='{&quot;layer&quot;:&quot;Conv2d&quot;}'>
+    </div>
+
+    <div class="last-updated"><time datetime="2026-04-06">Last updated: April 6, 2026</time></div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+            <details>
+        <summary>What is the Conv2d output size formula?</summary>
+        <p>The formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to the width dimension. The batch size and number of output channels (out_channels parameter) determine the remaining dimensions.</p>
+      </details>
+
+      <details>
+        <summary>How does dilation affect Conv2d output size?</summary>
+        <p>Dilation spreads the kernel elements apart, effectively increasing the receptive field without adding parameters. A dilation of 2 means there is one gap between each kernel element. The effective kernel size becomes dilation*(kernel_size-1)+1, which reduces the output spatial dimensions.</p>
+      </details>
+
+      <details>
+        <summary>What padding should I use to keep the same spatial size?</summary>
+        <p>For &#39;same&#39; padding with stride=1 and dilation=1, use padding = (kernel_size - 1) / 2. For a 3x3 kernel, that&#39;s padding=1. For a 5x5 kernel, padding=2. This only works with odd kernel sizes.</p>
+      </details>
+
+      <details>
+        <summary>What happens if Conv2d output size is zero or negative?</summary>
+        <p>If the formula produces zero or a negative number, PyTorch will raise a RuntimeError. This means your kernel is larger than the input spatial dimensions (after padding). Fix it by increasing padding, decreasing kernel size, or decreasing dilation.</p>
+      </details>
+    </section>
+
+    <section class="related-tools">
+      <h2>Related Tools</h2>
+      <div class="related-grid">
+                <a href="/tools/maxpool2d-calculator.html" class="related-card">
+          <h3>MaxPool2d Output Size Calculator</h3>
+          <p>Calculate the output size of a PyTorch MaxPool2d layer. Enter input shape, kernel size, stride, and...</p>
+        </a>
+        <a href="/tools/convtranspose2d-calculator.html" class="related-card">
+          <h3>ConvTranspose2d Output Size Calculator</h3>
+          <p>Calculate the output size of a PyTorch ConvTranspose2d (transposed convolution) layer. Enter input...</p>
+        </a>
+        <a href="/tools/flatten-calculator.html" class="related-card">
+          <h3>Flatten Output Shape Calculator</h3>
+          <p>Calculate the output shape of nn.Flatten in PyTorch. See how a multi-dimensional tensor collapses...</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Tool</h2>
+      <p>This tool is part of <a href="/">HeyTensor</a>, a free suite of PyTorch and deep learning utilities. All calculations run entirely in your browser — no data is sent to any server. The source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+      <h3>Contact</h3>
+      <p>HeyTensor is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="https://zovo.one/tools">Zovo Tools</a>
+        <span>Free developer tools by a solo dev. No tracking.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://lockml.com">LockML</a>
+        <a href="https://ml3x.com">ML3X</a>
+        <a href="https://kickllm.com">KickLLM</a>
+      </div>
+      <div class="footer-pro">
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>

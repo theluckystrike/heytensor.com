@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPU Memory Calculator for Training | HeyTensor</title>
+  <meta name="description" content="Estimate GPU VRAM required to train your neural network. Calculate memory for parameters, gradients, optimizer states, and activations. Find the right batch size for your GPU.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/memory-calculator.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/memory-calculator.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/memory-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="GPU Memory Calculator for Training | HeyTensor">
+  <meta property="og:description" content="Estimate GPU VRAM required to train your neural network. Calculate memory for parameters, gradients, optimizer states, and activations. Find the right batch size for your GPU.">
+  <meta property="og:url" content="https://heytensor.com/tools/memory-calculator.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GPU Memory Calculator for Training | HeyTensor">
+  <meta name="twitter:description" content="Estimate GPU VRAM required to train your neural network. Calculate memory for parameters, gradients, optimizer states, and activations. Find the right batch size for your GPU.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "GPU Memory Calculator for Training",
+    "url": "https://heytensor.com/tools/memory-calculator.html",
+    "description": "Estimate GPU VRAM required to train your neural network. Calculate memory for parameters, gradients, optimizer states, and activations. Find the right batch size for your GPU.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "browserRequirements": "Requires JavaScript",
+    "author": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-06",
+    "dateModified": "2026-04-06"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much GPU memory does training require?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Training memory ≈ model_params * bytes_per_param * multiplier + activation_memory. With float32 and Adam: multiplier is 4 (1x params + 1x grads + 2x Adam states). With mixed precision: roughly 60-70% of float32. Activations scale linearly with batch size."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I estimate activation memory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Activation memory stores intermediate outputs for backpropagation. For CNNs: sum of (batch * channels * H * W * 4 bytes) across all layers. For transformers: dominated by attention maps (batch * num_heads * seq_len^2 * 4 bytes per layer). This tool provides estimates based on your architecture."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What GPU do I need for my model?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Quick guide: <10M params → any GPU (4GB+). 10M-100M params → 8-16GB (RTX 3070/4080). 100M-1B params → 24-48GB (RTX 3090/A6000). 1B+ params → multiple GPUs or 80GB (A100/H100). Mixed precision roughly halves these requirements."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does mixed precision affect memory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Mixed precision (torch.cuda.amp) stores model weights in float16 (2 bytes) but keeps a float32 master copy. Net effect: about 60% of full float32 memory for parameters/optimizer states. Activations are stored in float16, roughly halving activation memory."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>GPU Memory Calculator for Training</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <h1>GPU Memory Calculator for Training</h1>
+      <p>Estimate GPU VRAM required to train your neural network. Calculate memory for parameters, gradients, optimizer states, and activations. Find the right batch size for your GPU.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+    </section>
+
+    <div id="tool-container"
+         data-component="model-tool"
+         data-config='{&quot;mode&quot;:&quot;memory&quot;}'>
+    </div>
+
+    <div class="last-updated"><time datetime="2026-04-06">Last updated: April 6, 2026</time></div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+            <details>
+        <summary>How much GPU memory does training require?</summary>
+        <p>Training memory ≈ model_params * bytes_per_param * multiplier + activation_memory. With float32 and Adam: multiplier is 4 (1x params + 1x grads + 2x Adam states). With mixed precision: roughly 60-70% of float32. Activations scale linearly with batch size.</p>
+      </details>
+
+      <details>
+        <summary>How do I estimate activation memory?</summary>
+        <p>Activation memory stores intermediate outputs for backpropagation. For CNNs: sum of (batch * channels * H * W * 4 bytes) across all layers. For transformers: dominated by attention maps (batch * num_heads * seq_len^2 * 4 bytes per layer). This tool provides estimates based on your architecture.</p>
+      </details>
+
+      <details>
+        <summary>What GPU do I need for my model?</summary>
+        <p>Quick guide: &lt;10M params → any GPU (4GB+). 10M-100M params → 8-16GB (RTX 3070/4080). 100M-1B params → 24-48GB (RTX 3090/A6000). 1B+ params → multiple GPUs or 80GB (A100/H100). Mixed precision roughly halves these requirements.</p>
+      </details>
+
+      <details>
+        <summary>How does mixed precision affect memory?</summary>
+        <p>Mixed precision (torch.cuda.amp) stores model weights in float16 (2 bytes) but keeps a float32 master copy. Net effect: about 60% of full float32 memory for parameters/optimizer states. Activations are stored in float16, roughly halving activation memory.</p>
+      </details>
+    </section>
+
+    <section class="related-tools">
+      <h2>Related Tools</h2>
+      <div class="related-grid">
+                <a href="/tools/parameter-counter.html" class="related-card">
+          <h3>Neural Network Parameter Counter</h3>
+          <p>Count the total parameters in your neural network. Add layers, specify dimensions, and get the...</p>
+        </a>
+        <a href="/tools/cuda-out-of-memory.html" class="related-card">
+          <h3>CUDA Out of Memory — Solutions</h3>
+          <p>Fix PyTorch CUDA out of memory errors. Calculate GPU memory requirements for your model, find the...</p>
+        </a>
+        <a href="/tools/optimizers.html" class="related-card">
+          <h3>Optimizers Comparison</h3>
+          <p>Compare PyTorch optimizers: Adam, AdamW, SGD, RMSprop, and more. Key parameters, when to use,...</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Tool</h2>
+      <p>This tool is part of <a href="/">HeyTensor</a>, a free suite of PyTorch and deep learning utilities. All calculations run entirely in your browser — no data is sent to any server. The source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+      <h3>Contact</h3>
+      <p>HeyTensor is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="https://zovo.one/tools">Zovo Tools</a>
+        <span>Free developer tools by a solo dev. No tracking.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://lockml.com">LockML</a>
+        <a href="https://ml3x.com">ML3X</a>
+        <a href="https://kickllm.com">KickLLM</a>
+      </div>
+      <div class="footer-pro">
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>

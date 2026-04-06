@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mat1 and mat2 shapes cannot be multiplied — Fix | HeyTensor</title>
+  <meta name="description" content="Fix the PyTorch error &#39;mat1 and mat2 shapes cannot be multiplied&#39;. Paste your error message to see which dimensions don&#39;t match and get the exact fix.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/mat1-mat2-shapes.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/mat1-mat2-shapes.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/mat1-mat2-shapes.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="mat1 and mat2 shapes cannot be multiplied — Fix | HeyTensor">
+  <meta property="og:description" content="Fix the PyTorch error &#39;mat1 and mat2 shapes cannot be multiplied&#39;. Paste your error message to see which dimensions don&#39;t match and get the exact fix.">
+  <meta property="og:url" content="https://heytensor.com/tools/mat1-mat2-shapes.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="mat1 and mat2 shapes cannot be multiplied — Fix | HeyTensor">
+  <meta name="twitter:description" content="Fix the PyTorch error &#39;mat1 and mat2 shapes cannot be multiplied&#39;. Paste your error message to see which dimensions don&#39;t match and get the exact fix.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "mat1 and mat2 shapes cannot be multiplied — Fix",
+    "url": "https://heytensor.com/tools/mat1-mat2-shapes.html",
+    "description": "Fix the PyTorch error &#39;mat1 and mat2 shapes cannot be multiplied&#39;. Paste your error message to see which dimensions don&#39;t match and get the exact fix.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "browserRequirements": "Requires JavaScript",
+    "author": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-06",
+    "dateModified": "2026-04-06"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What does 'mat1 and mat2 shapes cannot be multiplied' mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This error means the inner dimensions of a matrix multiplication don't match. In a Linear layer, this means in_features doesn't match the actual input size. For example, if your input is [64, 512] but Linear expects in_features=256, you get 'mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)'."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I fix this error?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Read the error dimensions: 'mat1 (AxB) and mat2 (CxD)'. B must equal C. If they don't match, change in_features of your Linear layer to match B (the actual input size). Often B is C_out * H * W from the last Conv2d + pooling."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does this happen after changing Conv2d parameters?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Changing kernel_size, stride, or padding in Conv2d changes the output spatial dimensions. If you then Flatten and feed into a Linear layer, the flattened size changes. You must recalculate: in_features = out_channels * H_out * W_out."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>mat1 and mat2 shapes cannot be multiplied — Fix</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <h1>mat1 and mat2 shapes cannot be multiplied — Fix</h1>
+      <p>Fix the PyTorch error &#39;mat1 and mat2 shapes cannot be multiplied&#39;. Paste your error message to see which dimensions don&#39;t match and get the exact fix.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+    </section>
+
+    <div id="tool-container"
+         data-component="error-debugger"
+         data-config='{&quot;preset&quot;:&quot;mat1-mat2&quot;}'>
+    </div>
+
+    <div class="last-updated"><time datetime="2026-04-06">Last updated: April 6, 2026</time></div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+            <details>
+        <summary>What does &#39;mat1 and mat2 shapes cannot be multiplied&#39; mean?</summary>
+        <p>This error means the inner dimensions of a matrix multiplication don&#39;t match. In a Linear layer, this means in_features doesn&#39;t match the actual input size. For example, if your input is [64, 512] but Linear expects in_features=256, you get &#39;mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)&#39;.</p>
+      </details>
+
+      <details>
+        <summary>How do I fix this error?</summary>
+        <p>Read the error dimensions: &#39;mat1 (AxB) and mat2 (CxD)&#39;. B must equal C. If they don&#39;t match, change in_features of your Linear layer to match B (the actual input size). Often B is C_out * H * W from the last Conv2d + pooling.</p>
+      </details>
+
+      <details>
+        <summary>Why does this happen after changing Conv2d parameters?</summary>
+        <p>Changing kernel_size, stride, or padding in Conv2d changes the output spatial dimensions. If you then Flatten and feed into a Linear layer, the flattened size changes. You must recalculate: in_features = out_channels * H_out * W_out.</p>
+      </details>
+    </section>
+
+    <section class="related-tools">
+      <h2>Related Tools</h2>
+      <div class="related-grid">
+                <a href="/tools/shape-mismatch.html" class="related-card">
+          <h3>PyTorch Shape Mismatch Error Debugger</h3>
+          <p>Paste any PyTorch shape mismatch RuntimeError and get a plain English explanation of what went...</p>
+        </a>
+        <a href="/tools/linear-layer-calculator.html" class="related-card">
+          <h3>Linear Layer Shape Calculator</h3>
+          <p>Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see...</p>
+        </a>
+        <a href="/tools/flatten-calculator.html" class="related-card">
+          <h3>Flatten Output Shape Calculator</h3>
+          <p>Calculate the output shape of nn.Flatten in PyTorch. See how a multi-dimensional tensor collapses...</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Tool</h2>
+      <p>This tool is part of <a href="/">HeyTensor</a>, a free suite of PyTorch and deep learning utilities. All calculations run entirely in your browser — no data is sent to any server. The source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+      <h3>Contact</h3>
+      <p>HeyTensor is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="https://zovo.one/tools">Zovo Tools</a>
+        <span>Free developer tools by a solo dev. No tracking.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://lockml.com">LockML</a>
+        <a href="https://ml3x.com">ML3X</a>
+        <a href="https://kickllm.com">KickLLM</a>
+      </div>
+      <div class="footer-pro">
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>

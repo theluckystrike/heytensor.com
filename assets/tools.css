@@ -1,0 +1,305 @@
+/* === Tool Pages Shared Styles === */
+
+.breadcrumb {
+  padding: 16px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.breadcrumb a { color: var(--text-dim); }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { margin: 0 6px; }
+
+.tool-hero { padding: 40px 0 32px; }
+.tool-hero h1 { font-size: 2rem; }
+
+/* Tool container */
+#tool-container {
+  min-height: 200px;
+}
+
+/* Related tools grid */
+.related-tools { padding: 40px 0 0; }
+.related-tools h2 { font-size: 1.3rem; margin-bottom: 20px; text-align: center; }
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+.related-card {
+  display: block;
+  padding: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.related-card:hover { border-color: var(--accent); background: var(--bg-hover); text-decoration: none; }
+.related-card h3 { font-size: 0.9rem; color: var(--text); margin-bottom: 4px; }
+.related-card p { font-size: 0.78rem; color: var(--text-dim); margin: 0; }
+
+/* Tool-specific: Shape Calculator */
+.shape-calc-container .input-group { margin-bottom: 16px; }
+.shape-calc-container select { margin-bottom: 12px; }
+
+.layer-select-wrap {
+  margin-bottom: 16px;
+}
+.layer-select-wrap label { margin-bottom: 6px; }
+.layer-select-wrap select {
+  max-width: 300px;
+}
+
+.params-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.params-grid .input-field label {
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+}
+
+/* Chain mode in tool pages */
+.chain-output {
+  margin-top: 16px;
+}
+.chain-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+}
+.chain-step .step-num {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  min-width: 20px;
+}
+.chain-step .step-layer {
+  color: var(--text);
+  font-weight: 500;
+  min-width: 120px;
+}
+.chain-step .step-shape {
+  font-family: var(--font-display);
+  color: var(--accent);
+  margin-left: auto;
+}
+.chain-step.error { border-color: var(--red); }
+.chain-step.error .step-shape { color: var(--red); }
+
+/* Error Debugger */
+.error-input-wrap { margin-bottom: 16px; }
+.error-input-wrap textarea {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  min-height: 120px;
+}
+.error-result { margin-top: 16px; }
+.error-result .error-type {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--orange);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.error-result .error-explain {
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+.error-result .error-cause {
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.error-result .error-fix {
+  color: var(--green);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  padding: 12px;
+  background: rgba(34, 197, 94, 0.06);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 6px;
+}
+.error-result .error-fix strong { color: var(--green); }
+
+/* Reference tables */
+.ref-table-wrap { overflow-x: auto; margin-bottom: 24px; }
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.ref-table th, .ref-table td {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+.ref-table th {
+  background: var(--bg-card);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.ref-table td { color: var(--text); }
+.ref-table tr:hover td { background: var(--bg-hover); }
+.ref-table code {
+  font-family: var(--font-display);
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8em;
+}
+
+/* Canvas plots */
+.plot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.plot-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.plot-card h3 {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+.plot-card canvas {
+  width: 100%;
+  height: 160px;
+  border-radius: 4px;
+}
+.plot-card .plot-formula {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+.plot-card .plot-info {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* Model tool */
+.model-layers-list { margin-bottom: 16px; }
+.model-layer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.model-layer-row select { max-width: 160px; }
+.model-layer-row input { max-width: 100px; }
+.model-layer-row .layer-params {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-left: auto;
+}
+
+.model-summary {
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.model-summary h3 { margin-bottom: 12px; }
+.model-summary .summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.model-summary .summary-row:last-child { border-bottom: none; }
+.model-summary .summary-row .val {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-weight: 700;
+}
+.model-summary .summary-total {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px solid var(--accent);
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+}
+.model-summary .summary-total .val { color: var(--accent); }
+
+/* Einsum */
+.einsum-input-wrap {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.einsum-input-wrap .input-field { flex: 1; min-width: 200px; }
+.einsum-result {
+  padding: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+/* Tools hub */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin-bottom: 40px;
+}
+.tool-card {
+  display: block;
+  padding: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.tool-card:hover { border-color: var(--accent); background: var(--bg-hover); text-decoration: none; }
+.tool-card h3 { font-size: 0.95rem; color: var(--text); margin-bottom: 6px; }
+.tool-card p { font-size: 0.82rem; color: var(--text-dim); margin: 0; line-height: 1.5; }
+.tool-card .tool-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-family: var(--font-display);
+  color: var(--accent);
+  background: rgba(59,130,246,0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.tools-section-title {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 16px;
+  margin-top: 32px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}

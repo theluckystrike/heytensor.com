@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MultiHead Attention Shape Calculator — PyTorch | HeyTensor</title>
+  <meta name="description" content="Calculate the output shape of PyTorch MultiheadAttention. Enter embed_dim, num_heads, and sequence length to verify your transformer layer configuration.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/multihead-attention-calculator.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/multihead-attention-calculator.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/multihead-attention-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MultiHead Attention Shape Calculator — PyTorch | HeyTensor">
+  <meta property="og:description" content="Calculate the output shape of PyTorch MultiheadAttention. Enter embed_dim, num_heads, and sequence length to verify your transformer layer configuration.">
+  <meta property="og:url" content="https://heytensor.com/tools/multihead-attention-calculator.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MultiHead Attention Shape Calculator — PyTorch | HeyTensor">
+  <meta name="twitter:description" content="Calculate the output shape of PyTorch MultiheadAttention. Enter embed_dim, num_heads, and sequence length to verify your transformer layer configuration.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "MultiHead Attention Shape Calculator",
+    "url": "https://heytensor.com/tools/multihead-attention-calculator.html",
+    "description": "Calculate the output shape of PyTorch MultiheadAttention. Enter embed_dim, num_heads, and sequence length to verify your transformer layer configuration.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "browserRequirements": "Requires JavaScript",
+    "author": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-06",
+    "dateModified": "2026-04-06"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the output shape of MultiheadAttention?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, num_heads, seq_len, seq_len]."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why must embed_dim be divisible by num_heads?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each head operates on embed_dim / num_heads dimensions. If embed_dim=512 and num_heads=8, each head processes 64 dimensions. If this division isn't even, PyTorch raises an error."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How many parameters does MultiheadAttention have?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "With in_proj (default), it has 3 * embed_dim * embed_dim (for Q, K, V projections) + embed_dim * embed_dim (output projection) + biases. For embed_dim=512, that's about 1.05M parameters."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>MultiHead Attention Shape Calculator</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <h1>MultiHead Attention Shape Calculator</h1>
+      <p>Calculate the output shape of PyTorch MultiheadAttention. Enter embed_dim, num_heads, and sequence length to verify your transformer layer configuration.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+    </section>
+
+    <div id="tool-container"
+         data-component="shape-calculator"
+         data-config='{&quot;layer&quot;:&quot;MultiheadAttention&quot;}'>
+    </div>
+
+    <div class="last-updated"><time datetime="2026-04-06">Last updated: April 6, 2026</time></div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+            <details>
+        <summary>What is the output shape of MultiheadAttention?</summary>
+        <p>For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, num_heads, seq_len, seq_len].</p>
+      </details>
+
+      <details>
+        <summary>Why must embed_dim be divisible by num_heads?</summary>
+        <p>Each head operates on embed_dim / num_heads dimensions. If embed_dim=512 and num_heads=8, each head processes 64 dimensions. If this division isn&#39;t even, PyTorch raises an error.</p>
+      </details>
+
+      <details>
+        <summary>How many parameters does MultiheadAttention have?</summary>
+        <p>With in_proj (default), it has 3 * embed_dim * embed_dim (for Q, K, V projections) + embed_dim * embed_dim (output projection) + biases. For embed_dim=512, that&#39;s about 1.05M parameters.</p>
+      </details>
+    </section>
+
+    <section class="related-tools">
+      <h2>Related Tools</h2>
+      <div class="related-grid">
+                <a href="/tools/embedding-calculator.html" class="related-card">
+          <h3>Embedding Layer Shape Calculator</h3>
+          <p>Calculate the output shape of a PyTorch nn.Embedding layer. Enter vocab size, embedding dimension,...</p>
+        </a>
+        <a href="/tools/linear-layer-calculator.html" class="related-card">
+          <h3>Linear Layer Shape Calculator</h3>
+          <p>Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see...</p>
+        </a>
+        <a href="/tools/lstm-shape-calculator.html" class="related-card">
+          <h3>LSTM Output Shape Calculator</h3>
+          <p>Calculate the output shape of a PyTorch LSTM layer. Enter input size, hidden size, number of...</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Tool</h2>
+      <p>This tool is part of <a href="/">HeyTensor</a>, a free suite of PyTorch and deep learning utilities. All calculations run entirely in your browser — no data is sent to any server. The source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+      <h3>Contact</h3>
+      <p>HeyTensor is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="https://zovo.one/tools">Zovo Tools</a>
+        <span>Free developer tools by a solo dev. No tracking.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://lockml.com">LockML</a>
+        <a href="https://ml3x.com">ML3X</a>
+        <a href="https://kickllm.com">KickLLM</a>
+      </div>
+      <div class="footer-pro">
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>
