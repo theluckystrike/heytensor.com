@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://heytensor.com/sitemap.xml
+Sitemap: http://heytensor.com/sitemap.xml
