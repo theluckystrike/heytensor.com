@@ -7,14 +7,19 @@
   <meta name="description" content="Calculate tensor output shapes for Conv2d, Linear, LSTM, and 10+ PyTorch layers. Chain layers, debug shape errors, and explore architecture presets. Free, instant, no sign-up.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/">
 <link rel="alternate" type="application/atom+xml" title="HeyTensor — PyTorch Tensor Shape Calculator &amp; Error Debugger Blog Feed" href="/blog/feed.xml">
-  <meta property="og:title" content="HeyTensor — PyTorch Tensor Shape Calculator & Error Debugger">
-  <meta property="og:description" content="Calculate tensor shapes for every PyTorch layer type. Chain mode, error debugger, and architecture presets.">
-  <meta property="og:url" content="https://heytensor.com/">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="HeyTensor — PyTorch Tensor Shape Calculator">
+  <meta property="og:title" content="HeyTensor — PyTorch Tensor Shape Calculator & Error Debugger">
+  <meta property="og:description" content="Calculate tensor shapes for every PyTorch layer type. Chain mode, error debugger, and architecture presets. Free, runs in your browser.">
+  <meta property="og:url" content="https://heytensor.com/">
+  <meta property="og:site_name" content="Zovo Tools">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HeyTensor — PyTorch Tensor Shape Calculator & Error Debugger">
+  <meta name="twitter:description" content="Calculate tensor shapes for every PyTorch layer type. Chain mode, error debugger, and architecture presets.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -23,13 +28,21 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "HeyTensor",
+    "name": "HeyTensor — PyTorch Tensor Shape Calculator",
     "url": "https://heytensor.com",
     "description": "PyTorch tensor shape calculator with chain mode, error debugger, and architecture presets. Supports Conv2d, Linear, LSTM, MultiheadAttention, and 10+ layer types.",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Any",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "browserRequirements": "Requires JavaScript"
+    "browserRequirements": "Requires JavaScript",
+    "author": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-05",
+    "dateModified": "2026-04-06",
+    "featureList": ["Single Layer Shape Calculator for 14 layer types", "Chain Mode for sequential layer stacking", "Paste Error mode for PyTorch RuntimeError debugging", "Architecture Presets (LeNet-5, ResNet Block, Transformer)", "Supports Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, Concatenate"]
   }
   </script>
   <script type="application/ld+json">
@@ -102,6 +115,7 @@
     <section class="hero">
       <h1>PyTorch <span>Tensor Shape</span> Calculator</h1>
       <p>Calculate output shapes for 14 layer types. Chain layers together, debug shape errors, and explore architecture presets. Works with PyTorch and TensorFlow.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
     </section>
 
     <div class="tab-bar">
@@ -116,43 +130,63 @@
     <div id="error-content" class="tab-pane"></div>
     <div id="presets-content" class="tab-pane"></div>
 
+    <div class="last-updated"><time datetime="2026-04-06">Last updated: April 6, 2026</time></div>
+
     <section class="faq-section">
       <h2>Frequently Asked Questions</h2>
 
-      <div class="faq-item">
-        <div class="faq-q">How do I calculate Conv2d output shape?</div>
-        <div class="faq-a">
-          <p>The Conv2d output shape formula is: <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
-        </div>
-      </div>
+      <details>
+        <summary>How do I calculate Conv2d output shape?</summary>
+        <p>The Conv2d output shape formula is: <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
+      </details>
 
-      <div class="faq-item">
-        <div class="faq-q">Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?</div>
-        <div class="faq-a">
-          <p>This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. Fix: set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
-        </div>
-      </div>
+      <details>
+        <summary>Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?</summary>
+        <p>This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. Fix: set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
+      </details>
 
-      <div class="faq-item">
-        <div class="faq-q">What is the output shape of a Linear layer?</div>
-        <div class="faq-a">
-          <p>A PyTorch <code>nn.Linear(in_features, out_features)</code> layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes to out_features.</p>
-        </div>
-      </div>
+      <details>
+        <summary>What is the output shape of a Linear layer?</summary>
+        <p>A PyTorch <code>nn.Linear(in_features, out_features)</code> layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes to out_features.</p>
+      </details>
 
-      <div class="faq-item">
-        <div class="faq-q">How do I fix tensor size mismatch in PyTorch?</div>
-        <div class="faq-a">
-          <p>Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
-        </div>
-      </div>
+      <details>
+        <summary>How do I fix tensor size mismatch in PyTorch?</summary>
+        <p>Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
+      </details>
 
-      <div class="faq-item">
-        <div class="faq-q">What does RuntimeError: Expected input batch_size mean?</div>
-        <div class="faq-a">
-          <p>This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
-        </div>
-      </div>
+      <details>
+        <summary>What does RuntimeError: Expected input batch_size mean?</summary>
+        <p>This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
+      </details>
+
+      <details>
+        <summary>Does HeyTensor support TensorFlow layers?</summary>
+        <p>Yes. While the layer naming follows PyTorch conventions, the shape formulas are identical across frameworks. Conv2D, Dense (Linear), LSTM, and pooling layers use the same mathematical formulas in both PyTorch and TensorFlow. Enter your TensorFlow layer parameters and the output shapes will be correct.</p>
+      </details>
+    </section>
+
+    <!-- How It Works Explainer Section -->
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>How HeyTensor Works</h2>
+
+      <p>HeyTensor is a free, browser-based tensor shape calculator built for deep learning practitioners who need to quickly determine output dimensions for neural network layers. Instead of manually applying formulas or inserting print statements into your code, you enter the input shape and layer parameters, and HeyTensor computes the exact output shape instantly. The calculator supports 14 layer types across both PyTorch and TensorFlow: Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, and Concatenate.</p>
+
+      <p>The most powerful feature is Chain Mode, which lets you stack layers sequentially and see the output shape at every step of your network. If shapes become incompatible between layers — the most common source of PyTorch RuntimeErrors — the mismatch is highlighted immediately. This lets you fix architecture issues before writing any code, saving the frustrating cycle of running a training script, hitting a shape error, guessing the fix, and running again. The Paste Error mode goes further: paste a PyTorch error message like "mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)" and HeyTensor extracts the dimensions and suggests which parameter to change.</p>
+
+      <p>Architecture Presets let you load complete network configurations with one click. Available presets include LeNet-5, a simple CNN classifier, a ResNet residual block, a Transformer encoder layer, and an LSTM classifier. Each preset shows shape propagation through every layer, serving as both a learning tool and a starting point for your own designs.</p>
+
+      <h3>Features</h3>
+      <p>HeyTensor provides a single-layer calculator for instant shape computation, a chain mode for tracing shapes through multi-layer architectures, a paste-error debugger that parses PyTorch RuntimeErrors and suggests fixes, architecture presets for common network designs, support for 14 PyTorch and TensorFlow layer types, and detailed formula display showing exactly how each output dimension is calculated. All computations run entirely in your browser with no server communication.</p>
+
+      <h3>Who Uses This</h3>
+      <p>HeyTensor is designed for ML engineers debugging shape mismatches during model development, students learning deep learning architecture design, researchers prototyping new layer configurations, and anyone working with PyTorch or TensorFlow who wants to verify tensor dimensions before running code. If you work with the underlying matrix math behind neural networks, <a href="https://ml3x.com">ML3X</a> provides a visual matrix calculator with step-by-step solutions. For developers needing general-purpose encoding tools, <a href="https://kappakit.com">KappaKit</a> offers Base64, JWT, hash, and UUID utilities in a similar single-page format. Model security analysis and input validation tools are available at <a href="https://lockml.com">LockML</a>.</p>
+
+      <h3>Privacy</h3>
+      <p>All tensor shape calculations run locally in your browser. No model architectures, error messages, or layer parameters are sent to any server. The source code is fully open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>. There are no cookies, no analytics, and no tracking.</p>
+
+      <h3>Contact</h3>
+      <p>HeyTensor is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:michael@zovo.one">michael@zovo.one</a> or visit the project on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
     </section>
   </main>
 
