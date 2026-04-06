@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>HeyTensor — PyTorch Tensor Shape Calculator &amp; Error Debugger Blog</title>
+  <title>HeyTensor Blog</title>
   <link href="http://heytensor.com/blog/" rel="alternate"/>
   <link href="http://heytensor.com/blog/feed.xml" rel="self"/>
   <id>http://heytensor.com/blog/</id>
   <updated>2026-04-06T00:00:00Z</updated>
-  <author><name>HeyTensor — PyTorch Tensor Shape Calculator &amp; Error Debugger</name></author>
+  <author><name>HeyTensor</name></author>
   <entry>
     <title>Every PyTorch Shape Error Explained (With Fixes) — HeyTensor</title>
     <link href="https://heytensor.com/blog/pytorch-shape-errors-explained.html" rel="alternate"/>
