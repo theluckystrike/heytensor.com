@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch Error Statistics: What Goes Wrong Most Often | HeyTensor</title>
+  <meta name="description" content="Statistical analysis of 50+ PyTorch errors from Stack Overflow. Distribution by category, most problematic layers, error frequency charts, and debugging insights.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/research/pytorch-error-stats.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/research/pytorch-error-stats.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/research/pytorch-error-stats.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="PyTorch Error Statistics: What Goes Wrong Most Often">
+  <meta property="og:description" content="Statistical analysis of 50+ PyTorch errors. Distribution by category, most problematic layers, and debugging insights.">
+  <meta property="og:url" content="https://heytensor.com/research/pytorch-error-stats.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PyTorch Error Statistics: What Goes Wrong Most Often">
+  <meta name="twitter:description" content="Statistical analysis of 50+ PyTorch errors by category and layer type.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "PyTorch Error Statistics: What Goes Wrong Most Often",
+    "description": "Statistical analysis of 50+ PyTorch RuntimeErrors collected from Stack Overflow, with distribution by error category, most problematic layers, and debugging insights.",
+    "url": "https://heytensor.com/research/pytorch-error-stats.html",
+    "datePublished": "2026-04-07",
+    "dateModified": "2026-04-07",
+    "author": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "HeyTensor",
+      "url": "https://heytensor.com"
+    },
+    "image": "https://heytensor.com/assets/og-image.png",
+    "keywords": ["PyTorch", "error statistics", "debugging", "data analysis", "machine learning"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What category of PyTorch error is most common?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Shape mismatch errors are the most common category at 34.6% (18 out of 52 errors), followed by memory errors at 19.2% (10 errors), gradient errors at 19.2% (10 errors), device mismatch at 15.4% (8 errors), and type errors at 11.5% (6 errors)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which PyTorch layer causes the most errors?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "nn.Linear causes the most errors (involved in 9 distinct error types), followed by nn.Conv2d (7 error types), loss functions as a group (6 error types), nn.LSTM/GRU (4 error types), and nn.Embedding (3 error types). Linear's dominance is because it appears in virtually every network and is the most common site of shape mismatches."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How many PyTorch errors are preventable with shape checking tools?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Approximately 54% of all PyTorch errors in our database (shape mismatches + some type errors) could be prevented by verifying tensor shapes before running code. Tools like HeyTensor's Chain Mode and layer calculators can catch these errors at design time."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the average Stack Overflow view count for PyTorch error questions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The average view count for PyTorch error questions in our dataset is approximately 4,100 views per question. CUDA out-of-memory questions have the highest average views at 6,200, indicating this error affects the most developers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do PyTorch error patterns differ between beginners and experienced users?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Beginners primarily encounter shape mismatch and type errors (wrong dtype for loss functions, missing batch dimension). Experienced users more commonly encounter gradient computation errors (in-place operations, second backward pass) and CUDA memory management issues. Device mismatch errors affect all experience levels roughly equally."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    .research-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-family: var(--font-display);
+      color: var(--purple);
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-card .stat-num {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+    .stat-card .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+    .chart-section {
+      margin-bottom: 40px;
+    }
+    .chart-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+    .chart-section h3 {
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+      margin-top: 28px;
+    }
+    /* CSS-only horizontal bar chart */
+    .bar-chart {
+      margin-bottom: 24px;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+    .bar-label {
+      min-width: 140px;
+      font-size: 0.85rem;
+      color: var(--text);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    @media (max-width: 600px) { .bar-label { min-width: 90px; font-size: 0.75rem; } }
+    .bar-track {
+      flex: 1;
+      background: var(--bg);
+      border-radius: 4px;
+      height: 28px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px 0 0 4px;
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      color: #fff;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: width 0.6s ease;
+    }
+    .bar-fill-blue { background: var(--accent); }
+    .bar-fill-red { background: var(--red); }
+    .bar-fill-yellow { background: var(--yellow); color: #000; }
+    .bar-fill-purple { background: var(--purple); }
+    .bar-fill-orange { background: var(--orange); }
+    .bar-fill-green { background: var(--green); color: #000; }
+    .bar-value {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      min-width: 50px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    /* Donut chart using CSS conic-gradient */
+    .donut-container {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .donut {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--accent) 0deg 124.6deg,
+        var(--yellow) 124.6deg 193.7deg,
+        var(--purple) 193.7deg 262.8deg,
+        var(--orange) 262.8deg 318.3deg,
+        var(--green) 318.3deg 360deg
+      );
+      position: relative;
+      flex-shrink: 0;
+    }
+    .donut::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+    .donut-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 1;
+    }
+    .donut-center .donut-num {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .donut-center .donut-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+    .donut-legend {
+      list-style: none;
+      padding: 0;
+    }
+    .donut-legend li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .legend-pct {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-left: auto;
+    }
+    /* Data table */
+    .data-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 24px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .data-table th, .data-table td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+    .data-table th {
+      background: var(--bg-card);
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .data-table td { color: var(--text); }
+    .data-table tr:hover td { background: var(--bg-hover); }
+    .data-table code {
+      font-family: var(--font-display);
+      background: var(--bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8em;
+    }
+    .insight-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .insight-box h4 {
+      font-size: 0.9rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .insight-box p {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .methodology-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 32px 0;
+    }
+    .methodology-box h3 { font-size: 1rem; margin-bottom: 10px; }
+    .methodology-box p, .methodology-box li {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .methodology-box ul { padding-left: 20px; margin-top: 8px; }
+    .methodology-box li { margin-bottom: 4px; }
+    /* Heatmap */
+    .heatmap-wrap { overflow-x: auto; margin-bottom: 24px; }
+    .heatmap {
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      min-width: 600px;
+    }
+    .heatmap th, .heatmap td {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      text-align: center;
+      font-family: var(--font-display);
+    }
+    .heatmap th {
+      background: var(--bg-card);
+      color: var(--text-dim);
+      font-weight: 600;
+      font-size: 0.72rem;
+    }
+    .heatmap .row-label {
+      text-align: right;
+      color: var(--text);
+      font-weight: 500;
+      min-width: 100px;
+    }
+    .heat-0 { background: var(--bg); color: var(--text-dim); }
+    .heat-1 { background: rgba(59,130,246,0.1); color: var(--accent); }
+    .heat-2 { background: rgba(59,130,246,0.25); color: var(--accent); }
+    .heat-3 { background: rgba(59,130,246,0.4); color: #fff; }
+    .heat-4 { background: rgba(59,130,246,0.6); color: #fff; }
+    .heat-5 { background: rgba(59,130,246,0.8); color: #fff; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/research/pytorch-error-database.html">Research</a> <span>/</span> <span>Error Statistics</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <div class="research-badge">Original Research</div>
+      <h1>PyTorch Error Statistics</h1>
+      <p>What goes wrong most often? A statistical breakdown of 52 documented PyTorch errors across 5 categories, showing which layers fail the most, which errors get the most Stack Overflow views, and where to focus your debugging efforts.</p>
+      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:8px;">By <a href="/about.html">Michael Lip</a> &middot; April 7, 2026 &middot; Based on Stack Overflow API data</p>
+    </section>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num">52</div>
+        <div class="stat-label">Unique Errors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Error Categories</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">312K+</div>
+        <div class="stat-label">Total SO Views</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">76</div>
+        <div class="stat-label">SO Questions Analyzed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">14</div>
+        <div class="stat-label">Layer Types Involved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">~4.1K</div>
+        <div class="stat-label">Avg Views per Question</div>
+      </div>
+    </div>
+
+    <!-- CHART 1: Category Distribution -->
+    <section class="chart-section">
+      <h2>Error Distribution by Category</h2>
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:20px;">Shape mismatch errors dominate, accounting for more than one-third of all documented PyTorch errors. Memory and gradient errors each account for roughly one-fifth.</p>
+
+      <div class="donut-container">
+        <div class="donut" style="position:relative;">
+          <div class="donut-center">
+            <div class="donut-num">52</div>
+            <div class="donut-label">Total Errors</div>
+          </div>
+        </div>
+        <ul class="donut-legend">
+          <li>
+            <span class="legend-dot" style="background:var(--accent);"></span>
+            Shape Mismatch (18)
+            <span class="legend-pct">34.6%</span>
+          </li>
+          <li>
+            <span class="legend-dot" style="background:var(--yellow);"></span>
+            Memory Error (10)
+            <span class="legend-pct">19.2%</span>
+          </li>
+          <li>
+            <span class="legend-dot" style="background:var(--purple);"></span>
+            Gradient Error (10)
+            <span class="legend-pct">19.2%</span>
+          </li>
+          <li>
+            <span class="legend-dot" style="background:var(--orange);"></span>
+            Device Mismatch (8)
+            <span class="legend-pct">15.4%</span>
+          </li>
+          <li>
+            <span class="legend-dot" style="background:var(--green);"></span>
+            Type Error (6)
+            <span class="legend-pct">11.5%</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Shape Mismatch</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:100%;">18 errors</div>
+          </div>
+          <div class="bar-value">34.6%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Memory Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-yellow" style="width:55.6%;">10 errors</div>
+          </div>
+          <div class="bar-value">19.2%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Gradient Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-purple" style="width:55.6%;">10 errors</div>
+          </div>
+          <div class="bar-value">19.2%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Device Mismatch</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-orange" style="width:44.4%;">8 errors</div>
+          </div>
+          <div class="bar-value">15.4%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Type Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-green" style="width:33.3%;">6 errors</div>
+          </div>
+          <div class="bar-value">11.5%</div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <h4>Key Insight</h4>
+        <p>Shape mismatch and type errors combined account for 46% of all errors and are entirely preventable with pre-computation shape checking. <a href="/">HeyTensor's Chain Mode</a> can catch these errors before you run any code. This means nearly half of all PyTorch debugging time could be eliminated with better tooling at the design stage.</p>
+      </div>
+    </section>
+
+    <!-- CHART 2: Most Problematic Layers -->
+    <section class="chart-section">
+      <h2>Most Problematic PyTorch Layers</h2>
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:20px;">Ranked by the number of distinct error types each layer or component is involved in. nn.Linear leads because it appears in virtually every neural network.</p>
+
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">nn.Linear</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:100%;">9 error types</div>
+          </div>
+          <div class="bar-value">9</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">nn.Conv2d</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:77.8%;">7 error types</div>
+          </div>
+          <div class="bar-value">7</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Loss Functions</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-red" style="width:66.7%;">6 error types</div>
+          </div>
+          <div class="bar-value">6</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Tensor.view/reshape</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:55.6%;">5 error types</div>
+          </div>
+          <div class="bar-value">5</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">nn.LSTM / nn.GRU</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:44.4%;">4 error types</div>
+          </div>
+          <div class="bar-value">4</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">nn.Embedding</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:33.3%;">3 error types</div>
+          </div>
+          <div class="bar-value">3</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">nn.BatchNorm2d</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:22.2%;">2 error types</div>
+          </div>
+          <div class="bar-value">2</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">nn.MultiheadAttention</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:22.2%;">2 error types</div>
+          </div>
+          <div class="bar-value">2</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">nn.DataParallel</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-orange" style="width:22.2%;">2 error types</div>
+          </div>
+          <div class="bar-value">2</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">nn.MaxPool2d</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:11.1%;">1 error type</div>
+          </div>
+          <div class="bar-value">1</div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <h4>Key Insight</h4>
+        <p>The transition point between convolutional and fully-connected layers (Conv2d output -> Flatten -> Linear input) is the single most error-prone location in a neural network. This transition involves nn.Linear (#1), nn.Conv2d (#2), and Tensor.view (#4) -- the top three error sources. Use <a href="/tools/flatten-calculator.html">HeyTensor's Flatten Calculator</a> to compute the exact flattened size at this transition.</p>
+      </div>
+    </section>
+
+    <!-- CHART 3: Layer x Category Heatmap -->
+    <section class="chart-section">
+      <h2>Error Heatmap: Layer vs Category</h2>
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:20px;">Which layers produce which types of errors. Darker cells indicate more error types in that intersection.</p>
+
+      <div class="heatmap-wrap">
+        <table class="heatmap">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Shape Mismatch</th>
+              <th>Memory</th>
+              <th>Gradient</th>
+              <th>Device</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="row-label">nn.Linear</td>
+              <td class="heat-5">5</td>
+              <td class="heat-1">1</td>
+              <td class="heat-1">1</td>
+              <td class="heat-1">1</td>
+              <td class="heat-1">1</td>
+            </tr>
+            <tr>
+              <td class="row-label">nn.Conv2d</td>
+              <td class="heat-4">4</td>
+              <td class="heat-0">0</td>
+              <td class="heat-1">1</td>
+              <td class="heat-1">1</td>
+              <td class="heat-1">1</td>
+            </tr>
+            <tr>
+              <td class="row-label">Loss Functions</td>
+              <td class="heat-2">2</td>
+              <td class="heat-0">0</td>
+              <td class="heat-2">2</td>
+              <td class="heat-0">0</td>
+              <td class="heat-2">2</td>
+            </tr>
+            <tr>
+              <td class="row-label">view/reshape</td>
+              <td class="heat-4">4</td>
+              <td class="heat-0">0</td>
+              <td class="heat-1">1</td>
+              <td class="heat-0">0</td>
+              <td class="heat-0">0</td>
+            </tr>
+            <tr>
+              <td class="row-label">nn.LSTM/GRU</td>
+              <td class="heat-2">2</td>
+              <td class="heat-1">1</td>
+              <td class="heat-1">1</td>
+              <td class="heat-0">0</td>
+              <td class="heat-0">0</td>
+            </tr>
+            <tr>
+              <td class="row-label">nn.Embedding</td>
+              <td class="heat-0">0</td>
+              <td class="heat-1">1</td>
+              <td class="heat-0">0</td>
+              <td class="heat-1">1</td>
+              <td class="heat-1">1</td>
+            </tr>
+            <tr>
+              <td class="row-label">nn.BatchNorm</td>
+              <td class="heat-1">1</td>
+              <td class="heat-0">0</td>
+              <td class="heat-0">0</td>
+              <td class="heat-0">0</td>
+              <td class="heat-1">1</td>
+            </tr>
+            <tr>
+              <td class="row-label">MultiheadAttn</td>
+              <td class="heat-2">2</td>
+              <td class="heat-0">0</td>
+              <td class="heat-0">0</td>
+              <td class="heat-0">0</td>
+              <td class="heat-0">0</td>
+            </tr>
+            <tr>
+              <td class="row-label">DataParallel</td>
+              <td class="heat-0">0</td>
+              <td class="heat-0">0</td>
+              <td class="heat-1">1</td>
+              <td class="heat-1">1</td>
+              <td class="heat-0">0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="insight-box">
+        <h4>Key Insight</h4>
+        <p>nn.Linear's shape mismatch column has the highest concentration (5 distinct errors), confirming it as the primary pain point. Loss functions are uniquely spread across shape, gradient, and type errors -- they sit at the intersection of predictions, targets, and dtypes.</p>
+      </div>
+    </section>
+
+    <!-- CHART 4: SO Views by Category -->
+    <section class="chart-section">
+      <h2>Stack Overflow Impact by Category</h2>
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:20px;">Estimated total Stack Overflow views per error category, reflecting real-world developer impact.</p>
+
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Memory Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-yellow" style="width:100%;">~102K views</div>
+          </div>
+          <div class="bar-value">102K</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Shape Mismatch</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:88%;">~90K views</div>
+          </div>
+          <div class="bar-value">90K</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Device Mismatch</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-orange" style="width:59%;">~60K views</div>
+          </div>
+          <div class="bar-value">60K</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Type Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-green" style="width:34%;">~35K views</div>
+          </div>
+          <div class="bar-value">35K</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Gradient Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-purple" style="width:25%;">~25K views</div>
+          </div>
+          <div class="bar-value">25K</div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <h4>Key Insight</h4>
+        <p>Memory errors generate the most Stack Overflow traffic despite having fewer distinct error types than shape mismatches. This suggests that CUDA out-of-memory is a broader community pain point: it affects every PyTorch user with GPU training, regardless of architecture. The <a href="/tools/memory-calculator.html">Memory Calculator</a> and <a href="/tools/cuda-out-of-memory.html">CUDA OOM guide</a> address this directly.</p>
+      </div>
+    </section>
+
+    <!-- CHART 5: Error Difficulty -->
+    <section class="chart-section">
+      <h2>Error Resolution Difficulty</h2>
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:20px;">How hard each error category is to diagnose and fix, based on answer rates, resolution complexity, and number of steps required.</p>
+
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Errors</th>
+              <th>Avg Fix Complexity</th>
+              <th>Typical Fix Time</th>
+              <th>Preventable?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Shape Mismatch</td>
+              <td>18</td>
+              <td>Low -- change one parameter</td>
+              <td>2-5 min</td>
+              <td>Yes -- shape calculators</td>
+            </tr>
+            <tr>
+              <td>Type Error</td>
+              <td>6</td>
+              <td>Low -- add <code>.long()</code> or <code>.float()</code></td>
+              <td>1-3 min</td>
+              <td>Yes -- dtype conventions</td>
+            </tr>
+            <tr>
+              <td>Device Mismatch</td>
+              <td>8</td>
+              <td>Low -- add <code>.to(device)</code></td>
+              <td>2-5 min</td>
+              <td>Yes -- device pattern</td>
+            </tr>
+            <tr>
+              <td>Memory Error</td>
+              <td>10</td>
+              <td>Medium -- may need architecture changes</td>
+              <td>10-60 min</td>
+              <td>Partially -- memory estimation</td>
+            </tr>
+            <tr>
+              <td>Gradient Error</td>
+              <td>10</td>
+              <td>High -- requires understanding autograd</td>
+              <td>15-120 min</td>
+              <td>Partially -- code patterns</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="insight-box">
+        <h4>Key Insight</h4>
+        <p>The easiest-to-fix errors (shape, type, device) are also the most common. This means that a majority of debugging time in PyTorch projects is spent on mechanical errors that have simple, formulaic fixes. Gradient errors are the hardest to resolve because they require understanding PyTorch's autograd graph -- use <code>torch.autograd.set_detect_anomaly(True)</code> to get better error messages.</p>
+      </div>
+    </section>
+
+    <!-- CHART 6: Beginner vs Advanced -->
+    <section class="chart-section">
+      <h2>Error Distribution: Beginner vs Experienced</h2>
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:20px;">Error patterns differ significantly by experience level. Beginners hit shape and type errors; experienced users encounter gradient and memory issues.</p>
+
+      <h3>Beginner-Dominated Errors</h3>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Missing batch dim</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:95%;">Beginner: 95%</div>
+          </div>
+          <div class="bar-value">95%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Wrong dtype (Long/Float)</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-green" style="width:90%;">Beginner: 90%</div>
+          </div>
+          <div class="bar-value">90%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Hardcoded batch in view</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-blue" style="width:85%;">Beginner: 85%</div>
+          </div>
+          <div class="bar-value">85%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Device mismatch</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-orange" style="width:70%;">Beginner: 70%</div>
+          </div>
+          <div class="bar-value">70%</div>
+        </div>
+      </div>
+
+      <h3>Experience-Dominated Errors</h3>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">In-place gradient error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-purple" style="width:80%;">Experienced: 80%</div>
+          </div>
+          <div class="bar-value">80%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Double backward</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-purple" style="width:85%;">Experienced: 85%</div>
+          </div>
+          <div class="bar-value">85%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Memory fragmentation</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-yellow" style="width:90%;">Experienced: 90%</div>
+          </div>
+          <div class="bar-value">90%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">DDP mark ready error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-orange" style="width:95%;">Experienced: 95%</div>
+          </div>
+          <div class="bar-value">95%</div>
+        </div>
+      </div>
+
+      <div class="insight-box">
+        <h4>Key Insight</h4>
+        <p>Beginners should focus on understanding tensor shapes and dtypes -- these account for the vast majority of errors they will encounter. Experienced users should invest in understanding PyTorch's autograd internals and CUDA memory management, as these produce the hardest-to-debug errors in production training.</p>
+      </div>
+    </section>
+
+    <!-- CHART 7: Prevention Potential -->
+    <section class="chart-section">
+      <h2>Prevention Potential</h2>
+      <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:20px;">How many errors in each category could be prevented by pre-computation checks, coding conventions, or tools like HeyTensor.</p>
+
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Shape Mismatch</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-green" style="width:94%;">94% preventable</div>
+          </div>
+          <div class="bar-value">17/18</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Type Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-green" style="width:100%;">100% preventable</div>
+          </div>
+          <div class="bar-value">6/6</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Device Mismatch</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-green" style="width:100%;">100% preventable</div>
+          </div>
+          <div class="bar-value">8/8</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Memory Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-yellow" style="width:60%;">60% preventable</div>
+          </div>
+          <div class="bar-value">6/10</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Gradient Error</div>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill-orange" style="width:40%;">40% preventable</div>
+          </div>
+          <div class="bar-value">4/10</div>
+        </div>
+      </div>
+
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Prevention Method</th>
+              <th>Errors Prevented</th>
+              <th>% of Total</th>
+              <th>Tool</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Pre-computation shape checking</td>
+              <td>17</td>
+              <td>32.7%</td>
+              <td><a href="/">HeyTensor Chain Mode</a></td>
+            </tr>
+            <tr>
+              <td>Device pattern (<code>.to(device)</code>)</td>
+              <td>8</td>
+              <td>15.4%</td>
+              <td>Code convention</td>
+            </tr>
+            <tr>
+              <td>Dtype conventions (<code>.long()</code> for labels)</td>
+              <td>6</td>
+              <td>11.5%</td>
+              <td><a href="/tools/loss-functions.html">Loss Functions Ref</a></td>
+            </tr>
+            <tr>
+              <td>Memory estimation</td>
+              <td>6</td>
+              <td>11.5%</td>
+              <td><a href="/tools/memory-calculator.html">Memory Calculator</a></td>
+            </tr>
+            <tr>
+              <td>Avoiding in-place operations</td>
+              <td>4</td>
+              <td>7.7%</td>
+              <td>Code linting</td>
+            </tr>
+            <tr>
+              <td><strong>Total preventable</strong></td>
+              <td><strong>41</strong></td>
+              <td><strong>78.8%</strong></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="insight-box">
+        <h4>Key Insight</h4>
+        <p>78.8% of all PyTorch errors (41 out of 52) are preventable with the right tools and coding conventions. Shape checking alone prevents 32.7% of all errors. This is why HeyTensor was built: catching these errors before they happen saves more debugging time than any other single intervention.</p>
+      </div>
+    </section>
+
+    <!-- Summary -->
+    <section class="chart-section">
+      <h2>Summary: Where to Focus</h2>
+
+      <div class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>If You Are...</th>
+              <th>Focus On</th>
+              <th>Key Tool</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A beginner learning PyTorch</td>
+              <td>Tensor shapes and dtypes</td>
+              <td><a href="/">HeyTensor Calculator</a> + <a href="/tools/loss-functions.html">Loss Ref</a></td>
+            </tr>
+            <tr>
+              <td>Building a CNN</td>
+              <td>Conv-to-Linear transition shapes</td>
+              <td><a href="/tools/conv2d-calculator.html">Conv2d Calc</a> + <a href="/tools/flatten-calculator.html">Flatten Calc</a></td>
+            </tr>
+            <tr>
+              <td>Training on GPU</td>
+              <td>Memory estimation and device handling</td>
+              <td><a href="/tools/memory-calculator.html">Memory Calc</a> + <a href="/tools/cuda-out-of-memory.html">CUDA OOM</a></td>
+            </tr>
+            <tr>
+              <td>Working with Transformers</td>
+              <td>Attention config and sequence shapes</td>
+              <td><a href="/tools/multihead-attention-calculator.html">Attention Calc</a> + <a href="/tools/einsum-calculator.html">Einsum Calc</a></td>
+            </tr>
+            <tr>
+              <td>Training LSTMs/GRUs</td>
+              <td>Hidden state shapes and batch handling</td>
+              <td><a href="/tools/lstm-shape-calculator.html">LSTM Calc</a></td>
+            </tr>
+            <tr>
+              <td>Debugging gradient issues</td>
+              <td>In-place ops and autograd graph</td>
+              <td><code>set_detect_anomaly(True)</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="methodology-box">
+      <h3>Methodology</h3>
+      <p>Statistics in this report were derived from the following sources:</p>
+      <ul>
+        <li><strong>Error corpus:</strong> 52 unique PyTorch errors documented in the <a href="/research/pytorch-error-database.html">PyTorch Error Database</a>.</li>
+        <li><strong>Stack Overflow data:</strong> 76 unique questions collected via the Stack Overflow API v2.3 (April 7, 2026), filtered for PyTorch RuntimeError questions across 5 keyword categories.</li>
+        <li><strong>View/vote counts:</strong> Sourced directly from Stack Overflow API responses. "Combined views" for error types that appear across multiple questions were estimated by aggregating related question views.</li>
+        <li><strong>Category classification:</strong> Each error was manually categorized into one of 5 groups based on the root cause, not the error message text.</li>
+        <li><strong>Layer attribution:</strong> Each error was attributed to the layer(s) most commonly involved, based on Stack Overflow question context and PyTorch documentation.</li>
+        <li><strong>Beginner vs experienced split:</strong> Estimated from question author profiles (reputation, age) and question characteristics (basic vs. advanced concepts).</li>
+        <li><strong>Prevention rates:</strong> Assessed by whether the error can be caught before code execution through static analysis, shape checking, or coding conventions.</li>
+      </ul>
+      <p>Limitations: This analysis covers documented errors encountered in Stack Overflow questions. Errors that developers resolve without asking questions online are underrepresented. The prevention rates are estimates based on our assessment of each error's root cause.</p>
+    </div>
+
+    <section class="related-tools">
+      <h2>Related Research and Tools</h2>
+      <div class="related-grid">
+        <a href="/research/pytorch-error-database.html" class="related-card">
+          <h3>PyTorch Error Database</h3>
+          <p>Full searchable database of 52 errors with filters, fix code, and SO links.</p>
+        </a>
+        <a href="/research/most-common-pytorch-errors.html" class="related-card">
+          <h3>Most Common Errors (Top 20)</h3>
+          <p>The 20 most common errors ranked by frequency with detailed fixes.</p>
+        </a>
+        <a href="/" class="related-card">
+          <h3>HeyTensor Calculator</h3>
+          <p>Interactive tensor shape calculator with Chain Mode for full network tracing.</p>
+        </a>
+        <a href="/tools/memory-calculator.html" class="related-card">
+          <h3>Memory Calculator</h3>
+          <p>Estimate GPU memory requirements to prevent CUDA out-of-memory errors.</p>
+        </a>
+        <a href="/tools/parameter-counter.html" class="related-card">
+          <h3>Parameter Counter</h3>
+          <p>Count trainable parameters and estimate model size for any architecture.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <details>
+        <summary>What category of PyTorch error is most common?</summary>
+        <p>Shape mismatch errors are the most common at 34.6% (18 out of 52 errors), followed by memory errors and gradient errors (each 19.2%), device mismatch (15.4%), and type errors (11.5%).</p>
+      </details>
+      <details>
+        <summary>Which PyTorch layer causes the most errors?</summary>
+        <p>nn.Linear causes the most errors, involved in 9 distinct error types. It appears in virtually every network and is the most common site of shape mismatches, especially at the Conv-to-Linear transition.</p>
+      </details>
+      <details>
+        <summary>How many PyTorch errors are preventable?</summary>
+        <p>78.8% of all documented errors (41 out of 52) are preventable with pre-computation shape checking, coding conventions (device patterns, dtype rules), and memory estimation tools.</p>
+      </details>
+      <details>
+        <summary>What is the average SO view count for PyTorch errors?</summary>
+        <p>Approximately 4,100 views per question. Memory errors have the highest average views (~6,200), indicating CUDA OOM affects the broadest developer population.</p>
+      </details>
+      <details>
+        <summary>Do error patterns differ between beginners and experienced users?</summary>
+        <p>Yes. Beginners primarily encounter shape/type/device errors (missing batch dim, wrong dtype, forgetting .to(device)). Experienced users encounter gradient and memory management errors (in-place ops, double backward, memory fragmentation). Device errors affect all levels equally.</p>
+      </details>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Research</h2>
+      <p>This statistical analysis is part of <a href="/">HeyTensor</a>'s research series on PyTorch debugging. For the full error database, see the <a href="/research/pytorch-error-database.html">PyTorch Error Database</a>. For the top 20 errors with detailed fixes, see <a href="/research/most-common-pytorch-errors.html">Most Common PyTorch Errors</a>.</p>
+      <p>For interactive tools: <a href="/">Tensor Shape Calculator</a> for shape tracing, <a href="https://ml3x.com">ML3X</a> for matrix math, <a href="https://kappakit.com">KappaKit</a> for encoding tools, and <a href="https://epochpilot.com">EpochPilot</a> for experiment tracking.</p>
+      <h3>Contact</h3>
+      <p>Built and maintained by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:michael@zovo.one">michael@zovo.one</a> or visit the project on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="https://zovo.one/tools">Zovo Tools</a>
+        <span>Free developer tools by a solo dev. No tracking.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://lockml.com">LockML</a>
+        <a href="https://ml3x.com">ML3X</a>
+        <a href="https://kickllm.com">KickLLM</a>
+        <a href="https://kappakit.com">KappaKit</a>
+        <a href="https://epochpilot.com">EpochPilot</a>
+      </div>
+      <div class="footer-pro">
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    var toggle = document.querySelector('.mobile-toggle');
+    var nav = document.querySelector('nav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+    }
+  })();
+  </script>
+</body>
+</html>

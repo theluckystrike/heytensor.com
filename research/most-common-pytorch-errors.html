@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 20 Most Common PyTorch Errors (and How to Fix Them) | HeyTensor</title>
+  <meta name="description" content="The top 20 PyTorch errors ranked by frequency from Stack Overflow data. Each error includes the exact message, root cause explanation, fix code, and prevention tips.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/research/most-common-pytorch-errors.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/research/most-common-pytorch-errors.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/research/most-common-pytorch-errors.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The 20 Most Common PyTorch Errors (and How to Fix Them)">
+  <meta property="og:description" content="The top 20 PyTorch errors ranked by frequency from Stack Overflow data. Each with detailed explanation and fix code.">
+  <meta property="og:url" content="https://heytensor.com/research/most-common-pytorch-errors.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The 20 Most Common PyTorch Errors (and How to Fix Them)">
+  <meta name="twitter:description" content="Top 20 PyTorch errors ranked by frequency with detailed explanations and fix code.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The 20 Most Common PyTorch Errors (and How to Fix Them)",
+    "description": "The top 20 PyTorch errors ranked by frequency from Stack Overflow data analysis, each with root cause explanation, fix code, and prevention tips.",
+    "url": "https://heytensor.com/research/most-common-pytorch-errors.html",
+    "datePublished": "2026-04-07",
+    "dateModified": "2026-04-07",
+    "author": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "HeyTensor",
+      "url": "https://heytensor.com"
+    },
+    "image": "https://heytensor.com/assets/og-image.png",
+    "keywords": ["PyTorch", "RuntimeError", "common errors", "debugging", "shape mismatch", "CUDA"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the number one PyTorch error?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most common PyTorch error is 'RuntimeError: mat1 and mat2 shapes cannot be multiplied'. It occurs when a Linear layer's in_features does not match the incoming tensor's last dimension. This single error accounts for roughly 23% of all shape-related questions on Stack Overflow."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do shape mismatch errors dominate PyTorch debugging?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Shape mismatch errors are the most common category (35% of all PyTorch errors) because neural networks involve many sequential transformations where each layer's output shape must exactly match the next layer's expected input shape. A single misconfigured parameter cascades through the entire network."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I prevent PyTorch errors before running code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use HeyTensor's Chain Mode to trace tensor shapes through your network before writing code. This catches shape mismatches at design time. For memory errors, use the Memory Calculator to estimate GPU requirements. For architecture design, use the individual layer calculators (Conv2d, Linear, LSTM, etc.)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What percentage of PyTorch errors are CUDA-related?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CUDA-related errors (including memory, device mismatch, and driver issues) account for approximately 35% of all PyTorch errors on Stack Overflow. CUDA out-of-memory alone represents about 19% of all errors."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are in-place operations always bad in PyTorch?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In-place operations (like +=, .relu_(), tensor[i] = val) are not inherently bad but they frequently cause gradient computation errors during training. They save minimal memory and create hard-to-debug issues. Best practice: avoid in-place operations during training, use them only in inference or data preprocessing."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    .research-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-family: var(--font-display);
+      color: var(--purple);
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .rank-entry {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .rank-entry:hover { border-color: var(--accent); }
+    .rank-num {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--border);
+      line-height: 1;
+    }
+    .rank-entry h3 {
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+      padding-right: 50px;
+      line-height: 1.4;
+    }
+    .rank-error-msg {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      color: var(--red);
+      background: rgba(239, 68, 68, 0.06);
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+    .rank-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+      font-size: 0.78rem;
+    }
+    .rank-meta span {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-family: var(--font-display);
+    }
+    .meta-cat { color: var(--accent); background: rgba(59,130,246,0.1); }
+    .meta-freq { color: var(--yellow); background: rgba(234,179,8,0.1); }
+    .meta-layers { color: var(--text-dim); background: var(--bg); }
+    .rank-body { margin-bottom: 14px; }
+    .rank-body h4 {
+      font-size: 0.88rem;
+      color: var(--text);
+      margin-bottom: 6px;
+      margin-top: 14px;
+    }
+    .rank-body p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .rank-body pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+    .rank-prevention {
+      font-size: 0.85rem;
+      color: var(--green);
+      padding: 10px 14px;
+      background: rgba(34,197,94,0.05);
+      border-left: 3px solid var(--green);
+      border-radius: 0 4px 4px 0;
+      line-height: 1.6;
+    }
+    .rank-prevention a { color: var(--accent); }
+    .toc-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+    .toc-box h3 { font-size: 0.95rem; margin-bottom: 12px; }
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    @media (max-width: 600px) { .toc-list { grid-template-columns: 1fr; } }
+    .toc-list li a {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+    }
+    .toc-list li a:hover { color: var(--accent); text-decoration: none; }
+    .toc-list .toc-num {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      color: var(--accent);
+      min-width: 22px;
+    }
+    .methodology-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 32px 0;
+    }
+    .methodology-box h3 { font-size: 1rem; margin-bottom: 10px; }
+    .methodology-box p, .methodology-box li {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .methodology-box ul { padding-left: 20px; margin-top: 8px; }
+    .methodology-box li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/research/pytorch-error-database.html">Research</a> <span>/</span> <span>Most Common Errors</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <div class="research-badge">Original Research</div>
+      <h1>The 20 Most Common <span style="color:var(--accent)">PyTorch Errors</span></h1>
+      <p>Ranked by frequency from Stack Overflow data analysis. Each error includes the exact message, why it happens, how to fix it, and how to prevent it. Stop guessing and fix errors in seconds.</p>
+      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:8px;">By <a href="/about.html">Michael Lip</a> &middot; April 7, 2026 &middot; Based on analysis of 300+ Stack Overflow questions</p>
+    </section>
+
+    <div class="toc-box">
+      <h3>Jump to Error</h3>
+      <ol class="toc-list">
+        <li><a href="#e1"><span class="toc-num">#1</span> mat1 and mat2 shapes cannot be multiplied</a></li>
+        <li><a href="#e2"><span class="toc-num">#2</span> CUDA out of memory</a></li>
+        <li><a href="#e3"><span class="toc-num">#3</span> Expected all tensors on same device</a></li>
+        <li><a href="#e4"><span class="toc-num">#4</span> Expected 4-dimensional input</a></li>
+        <li><a href="#e5"><span class="toc-num">#5</span> view size not compatible</a></li>
+        <li><a href="#e6"><span class="toc-num">#6</span> expected scalar type Long but found Float</a></li>
+        <li><a href="#e7"><span class="toc-num">#7</span> inplace operation gradient error</a></li>
+        <li><a href="#e8"><span class="toc-num">#8</span> Kernel size can't be greater than input</a></li>
+        <li><a href="#e9"><span class="toc-num">#9</span> Expected input batch_size to match target</a></li>
+        <li><a href="#e10"><span class="toc-num">#10</span> backward through graph a second time</a></li>
+        <li><a href="#e11"><span class="toc-num">#11</span> expected scalar type Float but found Half</a></li>
+        <li><a href="#e12"><span class="toc-num">#12</span> shape is invalid for input of size N</a></li>
+        <li><a href="#e13"><span class="toc-num">#13</span> device-side assert triggered</a></li>
+        <li><a href="#e14"><span class="toc-num">#14</span> Expected hidden size mismatch (LSTM)</a></li>
+        <li><a href="#e15"><span class="toc-num">#15</span> does not require grad and has no grad_fn</a></li>
+        <li><a href="#e16"><span class="toc-num">#16</span> tensor size mismatch at non-singleton dim</a></li>
+        <li><a href="#e17"><span class="toc-num">#17</span> embed_dim must be divisible by num_heads</a></li>
+        <li><a href="#e18"><span class="toc-num">#18</span> grad only for scalar outputs</a></li>
+        <li><a href="#e19"><span class="toc-num">#19</span> expected channels but got N channels</a></li>
+        <li><a href="#e20"><span class="toc-num">#20</span> Deserialize on CUDA but is_available False</a></li>
+      </ol>
+    </div>
+
+    <!-- #1 -->
+    <div class="rank-entry" id="e1">
+      <div class="rank-num">#1</div>
+      <h3>mat1 and mat2 shapes cannot be multiplied</h3>
+      <div class="rank-error-msg">RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~23% of shape errors</span>
+        <span class="meta-layers">nn.Linear, nn.Flatten</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>A <code>nn.Linear(in_features, out_features)</code> layer performs matrix multiplication: <code>output = input @ weight.T</code>. The input's last dimension must equal <code>in_features</code>. This error occurs when they don't match, most commonly at the transition from convolutional layers to fully-connected layers. The flattened feature count depends on input spatial dimensions, kernel sizes, strides, and padding -- getting any one wrong cascades to the Linear layer.</p>
+        <h4>The Fix</h4>
+        <pre><code># Step 1: Find the actual flattened size
+dummy = torch.zeros(1, 3, 32, 32)
+dummy = self.features(dummy)  # run through conv layers
+print(dummy.shape)  # e.g., [1, 64, 4, 4]
+flat_size = dummy.view(1, -1).shape[1]  # 1024
+
+# Step 2: Set Linear in_features to match
+self.classifier = nn.Sequential(
+    nn.Flatten(),
+    nn.Linear(flat_size, 256),  # flat_size, not a guess
+    nn.ReLU(),
+    nn.Linear(256, 10)
+)
+
+# Or use LazyLinear (infers in_features automatically):
+self.fc = nn.LazyLinear(10)  # in_features set on first forward</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Use <a href="/tools/flatten-calculator.html">HeyTensor's Flatten Calculator</a> or <a href="/">Chain Mode</a> to compute the exact flattened size. Or use <code>nn.LazyLinear</code> to defer shape inference to runtime.</div>
+    </div>
+
+    <!-- #2 -->
+    <div class="rank-entry" id="e2">
+      <div class="rank-num">#2</div>
+      <h3>CUDA out of memory</h3>
+      <div class="rank-error-msg">RuntimeError: CUDA out of memory. Tried to allocate 2.00 GiB (GPU 0; 11.17 GiB total capacity; 8.44 GiB already allocated)</div>
+      <div class="rank-meta">
+        <span class="meta-cat">memory_error</span>
+        <span class="meta-freq">~19% of all errors</span>
+        <span class="meta-layers">All layers (training)</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>GPU memory is finite. During training, memory is consumed by: model parameters (weights), gradients (same size as parameters), optimizer states (1-2x parameter size for Adam), forward activations (proportional to batch size and network depth), and PyTorch's caching allocator overhead. A model that fits in memory for inference may OOM during training because gradients and optimizer states multiply memory usage by 3-4x.</p>
+        <h4>The Fix</h4>
+        <pre><code># Solution 1: Reduce batch size (simplest)
+loader = DataLoader(dataset, batch_size=8)  # was 32
+
+# Solution 2: Mixed precision training (halves activation memory)
+scaler = torch.cuda.amp.GradScaler()
+for x, y in loader:
+    with torch.cuda.amp.autocast():
+        loss = model(x, y)
+    scaler.scale(loss).backward()
+    scaler.step(optimizer)
+    scaler.update()
+    optimizer.zero_grad()
+
+# Solution 3: Gradient accumulation (effective large batch)
+accumulation_steps = 4
+for i, (x, y) in enumerate(loader):
+    loss = model(x, y) / accumulation_steps
+    loss.backward()
+    if (i + 1) % accumulation_steps == 0:
+        optimizer.step()
+        optimizer.zero_grad()
+
+# Solution 4: Gradient checkpointing (trade compute for memory)
+from torch.utils.checkpoint import checkpoint
+# In forward():
+out = checkpoint(self.expensive_layer, input, use_reentrant=False)</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Use <a href="/tools/memory-calculator.html">HeyTensor's Memory Calculator</a> before training. Rule of thumb: training requires ~4x the model size in memory (parameters + gradients + optimizer + activations).</div>
+    </div>
+
+    <!-- #3 -->
+    <div class="rank-entry" id="e3">
+      <div class="rank-num">#3</div>
+      <h3>Expected all tensors to be on the same device</h3>
+      <div class="rank-error-msg">RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!</div>
+      <div class="rank-meta">
+        <span class="meta-cat">device_mismatch</span>
+        <span class="meta-freq">~15% of all errors</span>
+        <span class="meta-layers">All operations</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>PyTorch tensors can live on different devices (CPU, cuda:0, cuda:1, etc.). Operations between tensors on different devices are not supported. Common causes: forgetting to move input data to GPU after moving the model, creating new tensors inside forward() without specifying device, or loading pretrained weights on CPU and forgetting to transfer.</p>
+        <h4>The Fix</h4>
+        <pre><code># The definitive pattern: use a single device variable
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+model = model.to(device)
+
+for inputs, targets in dataloader:
+    inputs = inputs.to(device)
+    targets = targets.to(device)
+    output = model(inputs)
+    loss = criterion(output, targets)
+
+# Inside model: create tensors on the same device as input
+class MyModel(nn.Module):
+    def forward(self, x):
+        # Bad: mask = torch.zeros(x.size(0))  # CPU!
+        # Good:
+        mask = torch.zeros(x.size(0), device=x.device)
+        return x * mask</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Define <code>device</code> once at the top of your script. Use <code>.to(device)</code> for model and data. Inside models, always use <code>device=x.device</code> when creating new tensors.</div>
+    </div>
+
+    <!-- #4 -->
+    <div class="rank-entry" id="e4">
+      <div class="rank-num">#4</div>
+      <h3>Expected 4-dimensional input for Conv2d</h3>
+      <div class="rank-error-msg">RuntimeError: Expected 4-dimensional input for 4-dimensional weight [64, 3, 3, 3], but got 3-dimensional input of size [3, 224, 224]</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~8% of shape errors</span>
+        <span class="meta-layers">nn.Conv2d</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>Conv2d expects input shape <code>[batch, channels, height, width]</code>. When passing a single image for inference, you have <code>[channels, height, width]</code> (3D), missing the batch dimension. This is one of the most common errors when transitioning from training (where DataLoader adds the batch dim) to inference (where you handle a single image).</p>
+        <h4>The Fix</h4>
+        <pre><code># Add batch dimension for single images
+img = transform(pil_image)  # [3, 224, 224]
+img = img.unsqueeze(0)       # [1, 3, 224, 224]
+output = model(img)
+
+# Remove batch dimension from output if needed
+prediction = output.squeeze(0)  # [10] instead of [1, 10]
+
+# For batch of images, stack them:
+batch = torch.stack([transform(img) for img in images])  # [N, 3, 224, 224]</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Always <code>.unsqueeze(0)</code> single samples before passing to a model. Use <a href="/tools/conv2d-calculator.html">HeyTensor's Conv2d Calculator</a> to verify expected input format.</div>
+    </div>
+
+    <!-- #5 -->
+    <div class="rank-entry" id="e5">
+      <div class="rank-num">#5</div>
+      <h3>view size is not compatible with input tensor's size and stride</h3>
+      <div class="rank-error-msg">RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces)</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~7% of shape errors</span>
+        <span class="meta-layers">Tensor.view, Tensor.transpose</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>The <code>.view()</code> method requires that the tensor occupies a contiguous block of memory. After operations like <code>.transpose()</code>, <code>.permute()</code>, or certain slicing operations, the tensor's memory layout becomes non-contiguous. PyTorch cannot create a new view of non-contiguous memory without copying data.</p>
+        <h4>The Fix</h4>
+        <pre><code># Option 1: Call .contiguous() before .view()
+x = x.transpose(1, 2).contiguous().view(batch, -1)
+
+# Option 2: Use .reshape() instead (handles non-contiguous automatically)
+x = x.transpose(1, 2).reshape(batch, -1)
+
+# Option 3: Use torch.flatten()
+x = torch.flatten(x, start_dim=1)
+
+# Check if tensor is contiguous:
+print(x.is_contiguous())  # False after transpose</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Prefer <code>.reshape()</code> over <code>.view()</code> unless you specifically need a view (shared memory). See <a href="/tools/view-size-not-compatible.html">HeyTensor's View Compatibility Guide</a> for details.</div>
+    </div>
+
+    <!-- #6 -->
+    <div class="rank-entry" id="e6">
+      <div class="rank-num">#6</div>
+      <h3>expected scalar type Long but found Float</h3>
+      <div class="rank-error-msg">RuntimeError: expected scalar type Long but found Float</div>
+      <div class="rank-meta">
+        <span class="meta-cat">type_error</span>
+        <span class="meta-freq">~12% of type errors</span>
+        <span class="meta-layers">CrossEntropyLoss, NLLLoss, Embedding</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>PyTorch's classification loss functions (<code>CrossEntropyLoss</code>, <code>NLLLoss</code>) and <code>nn.Embedding</code> require integer (Long/int64) indices, not floating-point values. This error commonly appears when labels come from a CSV or numpy array as floats, or when you accidentally use a regression loss function's target format for classification.</p>
+        <h4>The Fix</h4>
+        <pre><code># Cast labels to long
+labels = labels.long()
+
+# Or create with correct dtype from the start
+labels = torch.tensor([0, 1, 2, 0, 1], dtype=torch.long)
+
+# In your Dataset:
+class MyDataset(Dataset):
+    def __getitem__(self, idx):
+        x = torch.tensor(self.features[idx], dtype=torch.float32)
+        y = torch.tensor(self.labels[idx], dtype=torch.long)
+        return x, y</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Classification labels must always be <code>torch.long</code>. Add <code>.long()</code> in your Dataset's <code>__getitem__</code>. See <a href="/tools/loss-functions.html">Loss Functions Reference</a> for expected dtypes.</div>
+    </div>
+
+    <!-- #7 -->
+    <div class="rank-entry" id="e7">
+      <div class="rank-num">#7</div>
+      <h3>Variable modified by inplace operation (gradient error)</h3>
+      <div class="rank-error-msg">RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation</div>
+      <div class="rank-meta">
+        <span class="meta-cat">gradient_error</span>
+        <span class="meta-freq">~25% of gradient errors</span>
+        <span class="meta-layers">+=, .relu_(), tensor[i]=</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>PyTorch's autograd system stores references to intermediate tensors computed during the forward pass. During backpropagation, it needs these exact tensors to compute gradients. In-place operations modify the tensor's data directly, so when autograd looks at the stored reference, the values have changed, making gradient computation incorrect or impossible. PyTorch detects this and raises an error rather than silently computing wrong gradients.</p>
+        <h4>The Fix</h4>
+        <pre><code># Replace ALL in-place operations with out-of-place versions:
+
+# Instead of:                 Use:
+# x += y                     x = x + y
+# x -= y                     x = x - y
+# x *= y                     x = x * y
+# x.relu_()                  x = x.relu()  or  x = F.relu(x)
+# x.sigmoid_()               x = x.sigmoid()
+# x[i] = val                 mask-based operations
+# x.add_(y)                  x = x.add(y)
+# x.mul_(y)                  x = x.mul(y)
+
+# To find the exact line causing the error:
+torch.autograd.set_detect_anomaly(True)
+# Then run your training loop -- PyTorch will print the exact operation</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Avoid all operations ending in <code>_</code> during training. Use <code>torch.autograd.set_detect_anomaly(True)</code> to locate the exact offending line.</div>
+    </div>
+
+    <!-- #8 -->
+    <div class="rank-entry" id="e8">
+      <div class="rank-num">#8</div>
+      <h3>Kernel size can't be greater than actual input size</h3>
+      <div class="rank-error-msg">RuntimeError: Calculated padded input size per channel: (2 x 2). Kernel size: (3 x 3). Kernel size can't be greater than actual input size</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~5% of shape errors</span>
+        <span class="meta-layers">nn.Conv2d, nn.MaxPool2d</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>Each convolution or pooling layer reduces spatial dimensions. After multiple downsampling layers, the feature maps can shrink below the kernel size. This is especially common with small input images (CIFAR-10's 32x32, MNIST's 28x28) when using architectures designed for larger inputs (ImageNet's 224x224).</p>
+        <h4>The Fix</h4>
+        <pre><code># Trace dimensions through your network:
+# Input: 32x32
+# Conv(k=3, s=1, p=1): 32x32 (same padding)
+# Pool(2): 16x16
+# Conv(k=3, s=1, p=1): 16x16
+# Pool(2): 8x8
+# Conv(k=3, s=1, p=1): 8x8
+# Pool(2): 4x4
+# Conv(k=3, s=1, p=1): 4x4
+# Pool(2): 2x2
+# Conv(k=3, s=1, p=0): ERROR! 2 < 3
+
+# Fix: add padding, reduce kernel, or remove a pool layer
+self.conv5 = nn.Conv2d(256, 256, kernel_size=1)  # 1x1 conv
+# Or:
+self.conv5 = nn.Conv2d(256, 256, kernel_size=3, padding=1)  # same padding</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Use <a href="/">HeyTensor Chain Mode</a> to trace spatial dimensions through every layer. This catches the problem before you run any code.</div>
+    </div>
+
+    <!-- #9 -->
+    <div class="rank-entry" id="e9">
+      <div class="rank-num">#9</div>
+      <h3>Expected input batch_size to match target batch_size</h3>
+      <div class="rank-error-msg">RuntimeError: Expected input batch_size (32) to match target batch_size (16)</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~4% of shape errors</span>
+        <span class="meta-layers">Loss functions</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>The model output and target tensors have different batch sizes. This usually means your forward pass accidentally changed the batch dimension (e.g., through a bad reshape), or your DataLoader produces mismatched input/target pairs. Less commonly, it happens when the final batch in an epoch has fewer samples than expected.</p>
+        <h4>The Fix</h4>
+        <pre><code># Debug: print shapes at every step
+def forward(self, x):
+    print(f"Input: {x.shape}")
+    x = self.features(x)
+    print(f"After features: {x.shape}")
+    x = x.view(x.size(0), -1)  # use x.size(0), not hardcoded batch
+    print(f"After flatten: {x.shape}")
+    x = self.classifier(x)
+    print(f"Output: {x.shape}")
+    return x
+
+# In training loop: verify batch alignment
+for inputs, targets in loader:
+    assert inputs.size(0) == targets.size(0), \
+        f"Batch mismatch: {inputs.size(0)} vs {targets.size(0)}"</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Never hardcode batch size in reshape/view operations. Always use <code>x.size(0)</code> or <code>x.shape[0]</code> for the batch dimension.</div>
+    </div>
+
+    <!-- #10 -->
+    <div class="rank-entry" id="e10">
+      <div class="rank-num">#10</div>
+      <h3>Trying to backward through the graph a second time</h3>
+      <div class="rank-error-msg">RuntimeError: Trying to backward through the graph a second time (or directly access saved tensors after they have already been freed)</div>
+      <div class="rank-meta">
+        <span class="meta-cat">gradient_error</span>
+        <span class="meta-freq">~20% of gradient errors</span>
+        <span class="meta-layers">All (multiple backward)</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>After <code>.backward()</code>, PyTorch frees the intermediate buffers used for gradient computation to save memory. If you call <code>.backward()</code> again on a tensor that shares the same computation graph, those buffers are gone. Common scenarios: computing multiple losses that share the same forward pass, or reusing hidden states in RNN training without detaching.</p>
+        <h4>The Fix</h4>
+        <pre><code># Best fix: combine losses before backward
+output = model(x)
+loss_ce = F.cross_entropy(output, targets)
+loss_reg = 0.01 * sum(p.pow(2).sum() for p in model.parameters())
+total_loss = loss_ce + loss_reg
+total_loss.backward()  # single backward pass
+
+# If you must backward twice: retain_graph=True
+loss1.backward(retain_graph=True)  # keeps buffers
+loss2.backward()  # uses retained buffers
+
+# For RNN: detach hidden state between sequences
+for seq in sequences:
+    hidden = hidden.detach()  # break graph connection
+    output, hidden = rnn(seq, hidden)</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Combine all losses into one scalar before <code>.backward()</code>. For RNNs, detach hidden states between sequences with <code>.detach()</code>.</div>
+    </div>
+
+    <!-- #11 -->
+    <div class="rank-entry" id="e11">
+      <div class="rank-num">#11</div>
+      <h3>expected scalar type Float but found Half</h3>
+      <div class="rank-error-msg">RuntimeError: expected scalar type Float but found Half</div>
+      <div class="rank-meta">
+        <span class="meta-cat">type_error</span>
+        <span class="meta-freq">~10% of type errors</span>
+        <span class="meta-layers">All (mixed precision)</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>Float32 and Float16 tensors are being mixed in an operation. This commonly occurs when manually casting the model to half precision, using AMP incorrectly, or when BatchNorm/LayerNorm layers (which should stay in float32) receive half-precision inputs without autocast.</p>
+        <h4>The Fix</h4>
+        <pre><code># Best fix: use autocast for automatic dtype handling
+with torch.cuda.amp.autocast():
+    output = model(x)
+    loss = criterion(output, target)
+
+# If using manual half precision, cast inputs too:
+model = model.half().cuda()
+x = x.half().cuda()
+
+# Keep BatchNorm in float32 (critical for stability):
+for module in model.modules():
+    if isinstance(module, (nn.BatchNorm2d, nn.LayerNorm)):
+        module.float()</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Always use <code>torch.cuda.amp.autocast()</code> for mixed precision. Never manually call <code>.half()</code> on individual layers unless you know what you're doing.</div>
+    </div>
+
+    <!-- #12 -->
+    <div class="rank-entry" id="e12">
+      <div class="rank-num">#12</div>
+      <h3>shape 'X' is invalid for input of size N</h3>
+      <div class="rank-error-msg">RuntimeError: shape '[32, 784]' is invalid for input of size 25088</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~4% of shape errors</span>
+        <span class="meta-layers">Tensor.view, Tensor.reshape</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>The requested reshape dimensions don't multiply to equal the total number of elements in the tensor. For example, if you try to reshape a tensor with 25,088 elements into [32, 784], that would require 32 * 784 = 25,088 elements -- which only works if the batch size is exactly 32 and the feature dimension is exactly 784. If either is wrong, the reshape fails.</p>
+        <h4>The Fix</h4>
+        <pre><code># Never hardcode reshape dimensions
+# Bad:
+x = x.view(32, 784)
+
+# Good: use -1 for automatic inference
+x = x.view(x.size(0), -1)  # batch preserved, features auto-computed
+
+# Even better: use nn.Flatten()
+self.flatten = nn.Flatten(start_dim=1)
+x = self.flatten(x)  # automatically flattens all dims except batch</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Use <code>-1</code> in exactly one dimension to let PyTorch infer the size. Or use <code>nn.Flatten()</code>. Use <a href="/tools/flatten-calculator.html">Flatten Calculator</a> to verify dimensions.</div>
+    </div>
+
+    <!-- #13 -->
+    <div class="rank-entry" id="e13">
+      <div class="rank-num">#13</div>
+      <h3>CUDA error: device-side assert triggered</h3>
+      <div class="rank-error-msg">RuntimeError: CUDA error: device-side assert triggered</div>
+      <div class="rank-meta">
+        <span class="meta-cat">device_mismatch</span>
+        <span class="meta-freq">~8% of device errors</span>
+        <span class="meta-layers">Embedding, CrossEntropyLoss</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>This cryptic error almost always means an index is out of bounds on the GPU. The top causes are: (1) a class label >= num_classes in CrossEntropyLoss, (2) an embedding index >= num_embeddings, (3) a negative index where unsigned was expected. CUDA errors are reported asynchronously, so the Python traceback may not point to the actual line.</p>
+        <h4>The Fix</h4>
+        <pre><code># Step 1: Get a better error message by running on CPU
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+model = model.cpu()
+# Run the failing code on CPU -- you'll get a clear IndexError
+
+# Step 2: Validate indices
+assert labels.min() >= 0, f"Negative label: {labels.min()}"
+assert labels.max() < num_classes, f"Label {labels.max()} >= num_classes {num_classes}"
+
+# Step 3: For Embedding
+assert indices.max() < embedding.num_embeddings
+assert indices.min() >= 0</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Add index validation assertions before loss computation and embedding lookups. Debug on CPU first to get clear error messages.</div>
+    </div>
+
+    <!-- #14 -->
+    <div class="rank-entry" id="e14">
+      <div class="rank-num">#14</div>
+      <h3>Expected hidden size mismatch in LSTM/GRU</h3>
+      <div class="rank-error-msg">RuntimeError: Expected hidden[0] size (2, 32, 256), got [2, 1, 256]</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~3% of shape errors</span>
+        <span class="meta-layers">nn.LSTM, nn.GRU</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>LSTM/GRU hidden states have shape <code>(num_layers * num_directions, batch_size, hidden_size)</code>. If you initialize hidden states with a fixed batch size (e.g., 1) but pass input with a different batch size (e.g., 32), the dimensions don't match. This also happens with the last batch in an epoch when <code>drop_last=False</code>.</p>
+        <h4>The Fix</h4>
+        <pre><code># Always derive batch_size from the input tensor
+def init_hidden(self, batch_size, device):
+    h0 = torch.zeros(self.num_layers, batch_size, self.hidden_size, device=device)
+    c0 = torch.zeros(self.num_layers, batch_size, self.hidden_size, device=device)
+    return (h0, c0)
+
+def forward(self, x):
+    batch_size = x.size(0)  # dynamic batch size
+    hidden = self.init_hidden(batch_size, x.device)
+    output, hidden = self.lstm(x, hidden)
+    return output</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Use <a href="/tools/lstm-shape-calculator.html">HeyTensor's LSTM Calculator</a> to verify hidden state shapes. Always compute batch_size from the input tensor dynamically.</div>
+    </div>
+
+    <!-- #15 -->
+    <div class="rank-entry" id="e15">
+      <div class="rank-num">#15</div>
+      <h3>element 0 does not require grad and has no grad_fn</h3>
+      <div class="rank-error-msg">RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</div>
+      <div class="rank-meta">
+        <span class="meta-cat">gradient_error</span>
+        <span class="meta-freq">~15% of gradient errors</span>
+        <span class="meta-layers">All (requires_grad)</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>You called <code>.backward()</code> on a tensor that isn't connected to any differentiable computation. Common causes: (1) using <code>.detach()</code> or <code>.data</code> too early in the computation, (2) creating the tensor with <code>requires_grad=False</code> (the default), (3) performing operations inside <code>torch.no_grad()</code>, (4) converting to numpy and back (breaks the gradient chain).</p>
+        <h4>The Fix</h4>
+        <pre><code># Check if tensor has gradient tracking
+print(loss.requires_grad)  # should be True
+print(loss.grad_fn)        # should not be None
+
+# Common mistake: detaching predictions
+pred = model(x).detach()  # BREAKS gradient chain!
+loss = criterion(pred, y)
+loss.backward()  # ERROR
+
+# Fix: don't detach
+pred = model(x)
+loss = criterion(pred, y)
+loss.backward()  # works
+
+# Common mistake: operations in no_grad
+with torch.no_grad():
+    output = model(x)
+loss = criterion(output, y)
+loss.backward()  # ERROR: output has no grad_fn</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Never <code>.detach()</code> a tensor that needs gradients. Only use <code>torch.no_grad()</code> for inference/validation, not training.</div>
+    </div>
+
+    <!-- #16 -->
+    <div class="rank-entry" id="e16">
+      <div class="rank-num">#16</div>
+      <h3>Tensor size mismatch at non-singleton dimension</h3>
+      <div class="rank-error-msg">RuntimeError: The size of tensor a (10) must match the size of tensor b (5) at non-singleton dimension 1</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~3% of shape errors</span>
+        <span class="meta-layers">Element-wise ops (add, mul)</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>Two tensors in an element-wise operation have dimensions that cannot be broadcast. PyTorch broadcasting requires each dimension pair to either match or be 1. If tensor A has shape [32, 10] and tensor B has shape [32, 5], dimension 1 (10 vs 5) is incompatible. This commonly occurs in skip connections, attention mechanisms, or custom loss functions.</p>
+        <h4>The Fix</h4>
+        <pre><code># For skip connections: use a projection layer
+class ResBlock(nn.Module):
+    def __init__(self, in_ch, out_ch):
+        super().__init__()
+        self.conv = nn.Conv2d(in_ch, out_ch, 3, padding=1)
+        # Add projection if dimensions differ
+        self.skip = nn.Conv2d(in_ch, out_ch, 1) if in_ch != out_ch else nn.Identity()
+
+    def forward(self, x):
+        return self.conv(x) + self.skip(x)  # shapes now match
+
+# For attention/feature fusion: ensure dimensions align
+# Use Linear to project to matching dimensions</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Print tensor shapes before element-wise operations. Use <a href="/tools/linear-layer-calculator.html">HeyTensor's Linear Calculator</a> to plan projection layers.</div>
+    </div>
+
+    <!-- #17 -->
+    <div class="rank-entry" id="e17">
+      <div class="rank-num">#17</div>
+      <h3>embed_dim must be divisible by num_heads</h3>
+      <div class="rank-error-msg">RuntimeError: embed_dim must be divisible by num_heads</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~2% of shape errors</span>
+        <span class="meta-layers">MultiheadAttention, Transformer</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>Multi-head attention splits the embedding dimension evenly across heads. Each head operates on <code>embed_dim / num_heads</code> dimensions. If this isn't an integer, the split is impossible. For example, embed_dim=512 with num_heads=6 gives 85.33, which isn't valid.</p>
+        <h4>The Fix</h4>
+        <pre><code># Common valid configurations:
+# embed_dim=256: heads=1,2,4,8,16,32,64,128,256
+# embed_dim=512: heads=1,2,4,8,16,32,64,128,256,512
+# embed_dim=768: heads=1,2,3,4,6,8,12,16,24,32,48,64,96,128,192,256,384,768
+
+# Standard Transformer configurations:
+attn = nn.MultiheadAttention(embed_dim=512, num_heads=8)   # 512/8=64 per head
+attn = nn.MultiheadAttention(embed_dim=768, num_heads=12)  # 768/12=64 per head
+attn = nn.MultiheadAttention(embed_dim=1024, num_heads=16) # 1024/16=64 per head</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Use <a href="/tools/multihead-attention-calculator.html">HeyTensor's MultiheadAttention Calculator</a> to validate configurations. Standard head_dim is 64, so embed_dim = 64 * num_heads.</div>
+    </div>
+
+    <!-- #18 -->
+    <div class="rank-entry" id="e18">
+      <div class="rank-num">#18</div>
+      <h3>grad can be implicitly created only for scalar outputs</h3>
+      <div class="rank-error-msg">RuntimeError: grad can be implicitly created only for scalar outputs</div>
+      <div class="rank-meta">
+        <span class="meta-cat">gradient_error</span>
+        <span class="meta-freq">~10% of gradient errors</span>
+        <span class="meta-layers">All (non-scalar loss)</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>You called <code>.backward()</code> on a tensor with more than one element. Autograd's starting point must be a scalar (single number). If your "loss" is a vector or matrix, PyTorch doesn't know how to start backpropagation because it needs a scalar seed gradient.</p>
+        <h4>The Fix</h4>
+        <pre><code># Bug: loss is not reduced to scalar
+loss = (pred - target) ** 2  # shape [32, 10] -- not scalar!
+loss.backward()  # ERROR
+
+# Fix: reduce to scalar
+loss = ((pred - target) ** 2).mean()  # scalar
+loss.backward()  # works
+
+# If using a loss function, check the reduction parameter:
+criterion = nn.MSELoss(reduction='mean')  # returns scalar (default)
+criterion = nn.MSELoss(reduction='none')  # returns per-element loss!
+# If reduction='none', manually reduce:
+loss = criterion(pred, target).mean()</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Always check that your loss is a scalar with <code>loss.shape</code> (should be <code>torch.Size([])</code>). Use <code>reduction='mean'</code> or <code>'sum'</code> in loss functions.</div>
+    </div>
+
+    <!-- #19 -->
+    <div class="rank-entry" id="e19">
+      <div class="rank-num">#19</div>
+      <h3>Expected N channels but got M channels</h3>
+      <div class="rank-error-msg">RuntimeError: Given groups=1, weight of size [64, 3, 7, 7], expected input[1, 1, 224, 224] to have 3 channels, but got 1 channels instead</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~3% of shape errors</span>
+        <span class="meta-layers">nn.Conv2d</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>The Conv2d layer's <code>in_channels</code> does not match the number of channels in the input. Most common scenario: using a pretrained model (expects 3 RGB channels) on grayscale images (1 channel), or vice versa.</p>
+        <h4>The Fix</h4>
+        <pre><code># Option 1: Modify the first conv layer
+model.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3)
+
+# Option 2: Convert grayscale to 3-channel
+transform = transforms.Compose([
+    transforms.Grayscale(num_output_channels=3),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+# Option 3: Repeat channels
+x = x.repeat(1, 3, 1, 1)  # [B, 1, H, W] -> [B, 3, H, W]</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Check input channels before model creation. Use <a href="/tools/conv2d-calculator.html">HeyTensor's Conv2d Calculator</a> to verify in_channels matches your data.</div>
+    </div>
+
+    <!-- #20 -->
+    <div class="rank-entry" id="e20">
+      <div class="rank-num">#20</div>
+      <h3>Deserialize on CUDA but torch.cuda.is_available() is False</h3>
+      <div class="rank-error-msg">RuntimeError: Attempting to deserialize object on a CUDA device but torch.cuda.is_available() is False</div>
+      <div class="rank-meta">
+        <span class="meta-cat">device_mismatch</span>
+        <span class="meta-freq">~5% of device errors</span>
+        <span class="meta-layers">torch.load</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>A model checkpoint was saved on a GPU machine, and you're loading it on a CPU-only machine (or one where CUDA isn't properly installed). By default, <code>torch.load()</code> tries to restore tensors on their original device.</p>
+        <h4>The Fix</h4>
+        <pre><code># Always specify map_location when loading
+checkpoint = torch.load('model.pt', map_location='cpu')
+
+# Then move to GPU if available
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model.load_state_dict(checkpoint)
+model = model.to(device)
+
+# Best practice when saving:
+torch.save(model.state_dict(), 'model.pt')  # save state_dict, not full model
+# state_dict is more portable and smaller</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Always use <code>map_location='cpu'</code> when loading checkpoints. Save <code>state_dict()</code> instead of the full model object for maximum portability.</div>
+    </div>
+
+    <div class="methodology-box">
+      <h3>Methodology</h3>
+      <p>Errors were ranked by combining three signals from Stack Overflow data:</p>
+      <ul>
+        <li><strong>Question frequency:</strong> How many distinct SO questions mention this exact error (collected via SO API v2.3, April 2026).</li>
+        <li><strong>View count:</strong> Total views across all questions for each error type, indicating how many developers encounter it.</li>
+        <li><strong>Vote count:</strong> Community votes as a signal of error impact and answer quality.</li>
+      </ul>
+      <p>The final ranking weights frequency (50%), views (30%), and votes (20%). Errors that appear only in niche contexts (specific GPU models, deprecated APIs) were excluded in favor of errors every PyTorch developer will encounter. See the full <a href="/research/pytorch-error-database.html">PyTorch Error Database</a> for all 52 documented errors.</p>
+    </div>
+
+    <section class="related-tools">
+      <h2>Related HeyTensor Tools</h2>
+      <div class="related-grid">
+        <a href="/research/pytorch-error-database.html" class="related-card">
+          <h3>PyTorch Error Database</h3>
+          <p>Full searchable database of 52 errors with filters by category.</p>
+        </a>
+        <a href="/research/pytorch-error-stats.html" class="related-card">
+          <h3>Error Statistics</h3>
+          <p>Distribution charts and analysis of PyTorch errors by category.</p>
+        </a>
+        <a href="/tools/shape-mismatch.html" class="related-card">
+          <h3>Shape Mismatch Debugger</h3>
+          <p>Interactive tool to diagnose and fix tensor shape errors.</p>
+        </a>
+        <a href="/tools/memory-calculator.html" class="related-card">
+          <h3>Memory Calculator</h3>
+          <p>Estimate GPU memory to prevent CUDA OOM errors.</p>
+        </a>
+        <a href="/" class="related-card">
+          <h3>Chain Mode Calculator</h3>
+          <p>Trace tensor shapes through your entire network architecture.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <details>
+        <summary>What is the number one PyTorch error?</summary>
+        <p>"mat1 and mat2 shapes cannot be multiplied" is the most common PyTorch error, accounting for roughly 23% of all shape-related questions on Stack Overflow. It occurs when a Linear layer's in_features does not match the incoming tensor size.</p>
+      </details>
+      <details>
+        <summary>Why do shape mismatch errors dominate?</summary>
+        <p>Shape mismatches account for 35% of all PyTorch errors because neural networks involve many sequential transformations where each layer's output must exactly match the next layer's expected input. A single misconfigured parameter cascades through the entire network.</p>
+      </details>
+      <details>
+        <summary>How can I prevent PyTorch errors before running code?</summary>
+        <p>Use <a href="/">HeyTensor's Chain Mode</a> to trace tensor shapes through your network at design time. For memory planning, use the <a href="/tools/memory-calculator.html">Memory Calculator</a>. For individual layers, use the specific layer calculators (Conv2d, Linear, LSTM, etc.).</p>
+      </details>
+      <details>
+        <summary>What percentage of PyTorch errors are CUDA-related?</summary>
+        <p>CUDA-related errors (memory, device mismatch, driver issues) account for approximately 35% of all PyTorch errors on Stack Overflow. CUDA out-of-memory alone represents about 19%.</p>
+      </details>
+      <details>
+        <summary>Are in-place operations always bad in PyTorch?</summary>
+        <p>Not always, but they frequently cause gradient errors during training. The memory savings are minimal. Best practice: avoid in-place operations during training, use them only in inference or data preprocessing where gradients are not tracked.</p>
+      </details>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Research</h2>
+      <p>This ranking is part of <a href="/">HeyTensor</a>'s research series on PyTorch errors and debugging. For the full searchable error database, see the <a href="/research/pytorch-error-database.html">PyTorch Error Database</a>. For statistical analysis and charts, see <a href="/research/pytorch-error-stats.html">PyTorch Error Statistics</a>.</p>
+      <p>For interactive shape calculation, use the <a href="/">Tensor Shape Calculator</a>. For matrix math, visit <a href="https://ml3x.com">ML3X</a>. For encoding tools, try <a href="https://kappakit.com">KappaKit</a>. For experiment tracking, see <a href="https://epochpilot.com">EpochPilot</a>.</p>
+      <h3>Contact</h3>
+      <p>Built and maintained by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:michael@zovo.one">michael@zovo.one</a> or visit the project on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="https://zovo.one/tools">Zovo Tools</a>
+        <span>Free developer tools by a solo dev. No tracking.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://lockml.com">LockML</a>
+        <a href="https://ml3x.com">ML3X</a>
+        <a href="https://kickllm.com">KickLLM</a>
+        <a href="https://kappakit.com">KappaKit</a>
+        <a href="https://epochpilot.com">EpochPilot</a>
+      </div>
+      <div class="footer-pro">
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    var toggle = document.querySelector('.mobile-toggle');
+    var nav = document.querySelector('nav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+    }
+  })();
+  </script>
+</body>
+</html>

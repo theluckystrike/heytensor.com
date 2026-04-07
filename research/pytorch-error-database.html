@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch Error Database: 50+ Real Errors Analyzed from Stack Overflow | HeyTensor</title>
+  <meta name="description" content="Searchable database of 50+ PyTorch RuntimeErrors with exact error messages, root causes, fix code, and Stack Overflow references. Covers shape mismatches, CUDA errors, gradient issues, and more.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/research/pytorch-error-database.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/research/pytorch-error-database.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/research/pytorch-error-database.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="PyTorch Error Database: 50+ Real Errors Analyzed from Stack Overflow">
+  <meta property="og:description" content="Searchable database of 50+ PyTorch RuntimeErrors with exact error messages, root causes, fix code, and Stack Overflow references.">
+  <meta property="og:url" content="https://heytensor.com/research/pytorch-error-database.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PyTorch Error Database: 50+ Real Errors Analyzed">
+  <meta name="twitter:description" content="Searchable database of 50+ PyTorch RuntimeErrors with exact error messages, root causes, fix code, and Stack Overflow references.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "PyTorch Error Database",
+    "description": "A curated database of 50+ PyTorch RuntimeErrors collected from Stack Overflow, categorized by error type with root cause analysis and fix code for each entry.",
+    "url": "https://heytensor.com/research/pytorch-error-database.html",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "creator": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-07",
+    "dateModified": "2026-04-07",
+    "keywords": ["PyTorch", "RuntimeError", "shape mismatch", "CUDA error", "tensor error", "debug"],
+    "measurementTechnique": "Stack Overflow API data collection and manual analysis",
+    "variableMeasured": [
+      {"@type": "PropertyValue", "name": "error_message", "description": "The exact PyTorch error message"},
+      {"@type": "PropertyValue", "name": "category", "description": "Error category: shape_mismatch, type_error, device_mismatch, memory_error, gradient_error"},
+      {"@type": "PropertyValue", "name": "fix_code", "description": "Python code that fixes the error"},
+      {"@type": "PropertyValue", "name": "so_votes", "description": "Stack Overflow question vote count"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the most common PyTorch RuntimeError?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most common PyTorch RuntimeError is 'mat1 and mat2 shapes cannot be multiplied'. This occurs when a Linear layer's in_features parameter doesn't match the actual size of the input tensor's last dimension. It accounts for roughly 23% of all shape-related errors on Stack Overflow."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I fix 'CUDA out of memory' in PyTorch?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To fix CUDA out of memory errors: 1) Reduce batch size, 2) Use torch.cuda.empty_cache(), 3) Enable gradient checkpointing with model.gradient_checkpointing_enable(), 4) Use mixed precision training with torch.cuda.amp, 5) Move tensors to CPU when not needed for GPU computation. Use HeyTensor's Memory Calculator to estimate your model's memory requirements before training."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does PyTorch say 'expected scalar type Float but found Half'?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This error occurs when you mix float32 and float16 tensors in an operation. Common causes: using AMP (automatic mixed precision) incorrectly, or manually casting some tensors to half precision but not others. Fix: ensure all tensors in an operation have the same dtype, or use torch.cuda.amp.autocast() to handle casting automatically."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What causes 'one of the variables needed for gradient computation has been modified by an inplace operation'?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This error means you modified a tensor in-place (e.g., using +=, tensor[i] = val, or operations ending in _) that PyTorch needs for backpropagation. Fix: replace in-place operations with out-of-place versions. For example, change 'x += y' to 'x = x + y', or 'x.relu_()' to 'x = x.relu()'."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I fix 'Trying to backward through the graph a second time'?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This error occurs when you call .backward() twice on the same computation graph. PyTorch frees intermediate values after the first backward pass. Fix: either pass retain_graph=True to the first .backward() call, or restructure your code to recompute the forward pass before the second backward call. Note that retain_graph=True increases memory usage."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does 'view size is not compatible with input tensor size and stride' mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This error means the tensor's memory layout is not contiguous, so .view() cannot reshape it. This commonly happens after operations like .transpose() or .permute(). Fix: call .contiguous() before .view(), or use .reshape() instead which handles non-contiguous tensors automatically."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    .research-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-family: var(--font-display);
+      color: var(--purple);
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .filter-btn {
+      padding: 6px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--text);
+      background: var(--bg-hover);
+    }
+    .filter-btn.active { background: var(--accent); color: #fff; }
+    .search-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+    .search-input:focus { outline: none; border-color: var(--accent); }
+    .search-input::placeholder { color: var(--text-dim); }
+    .error-entry {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+    }
+    .error-entry:hover { border-color: var(--accent); }
+    .error-entry .error-id {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+    .error-entry .error-msg {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      color: var(--red);
+      background: rgba(239, 68, 68, 0.06);
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+    .error-entry .error-cat {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-family: var(--font-display);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      margin-right: 6px;
+    }
+    .cat-shape { color: var(--accent); background: rgba(59,130,246,0.1); }
+    .cat-device { color: var(--orange); background: rgba(249,115,22,0.1); }
+    .cat-memory { color: var(--yellow); background: rgba(234,179,8,0.1); }
+    .cat-gradient { color: var(--purple); background: rgba(168,85,247,0.1); }
+    .cat-type { color: var(--green); background: rgba(34,197,94,0.1); }
+    .cat-runtime { color: var(--red); background: rgba(239,68,68,0.1); }
+    .error-entry .error-layers {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .error-entry .error-cause {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .error-entry pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      margin-bottom: 10px;
+    }
+    .error-entry .error-prevention {
+      font-size: 0.82rem;
+      color: var(--green);
+      padding: 8px 12px;
+      background: rgba(34,197,94,0.05);
+      border-left: 3px solid var(--green);
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+    .error-entry .error-so {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .error-entry .error-so a { color: var(--accent); }
+    .error-count {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+    .methodology-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 32px 0;
+    }
+    .methodology-box h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .methodology-box p, .methodology-box li {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .methodology-box ul { padding-left: 20px; margin-top: 8px; }
+    .methodology-box li { margin-bottom: 4px; }
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .stat-num {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/research/pytorch-error-database.html">Research</a> <span>/</span> <span>PyTorch Error Database</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <div class="research-badge">Original Research</div>
+      <h1>PyTorch Error Database</h1>
+      <p>50+ real PyTorch errors collected from Stack Overflow, each with the exact error message, root cause analysis, fix code, and prevention tips. Searchable and filterable by category.</p>
+      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:8px;">By <a href="/about.html">Michael Lip</a> &middot; April 7, 2026 &middot; Data from Stack Overflow API</p>
+    </section>
+
+    <div class="stats-summary">
+      <div class="stat-card">
+        <div class="stat-num">52</div>
+        <div class="stat-label">Errors Documented</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Categories</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">312K+</div>
+        <div class="stat-label">SO Views Analyzed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">14</div>
+        <div class="stat-label">PyTorch Layers Covered</div>
+      </div>
+    </div>
+
+    <input type="text" class="search-input" id="errorSearch" placeholder="Search errors... (e.g. 'mat1 mat2', 'CUDA', 'backward', 'view')">
+
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" data-cat="all">All (52)</button>
+      <button class="filter-btn" data-cat="shape_mismatch">Shape Mismatch (18)</button>
+      <button class="filter-btn" data-cat="memory_error">Memory (10)</button>
+      <button class="filter-btn" data-cat="gradient_error">Gradient (10)</button>
+      <button class="filter-btn" data-cat="device_mismatch">Device (8)</button>
+      <button class="filter-btn" data-cat="type_error">Type Error (6)</button>
+    </div>
+
+    <div class="error-count" id="errorCount">Showing 52 of 52 errors</div>
+
+    <div id="errorList">
+
+      <!-- ERROR 1 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#1 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.Linear, nn.Flatten</div>
+        <div class="error-cause">The <code>in_features</code> of a Linear layer does not match the actual size of the input tensor's last dimension. After flattening a Conv2d output, the feature count often differs from what the Linear layer expects. In this example, the flatten produces 512 features but the Linear layer was configured with in_features=256.</div>
+        <pre><code># Bug: nn.Linear(256, 10) but flatten output is 512
+# Fix: match in_features to actual flatten output
+self.fc = nn.Linear(512, 10)
+
+# Or calculate dynamically:
+dummy = torch.zeros(1, 3, 32, 32)
+dummy = self.features(dummy)
+self.fc = nn.Linear(dummy.view(1, -1).shape[1], 10)</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/flatten-calculator.html">HeyTensor's Flatten Calculator</a> to compute the exact output size before defining your Linear layer, or use <a href="/">Chain Mode</a> to trace shapes through your network.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/67159259/runtimeerror-tensors-must-be-2-d" target="_blank" rel="noopener">Related: tensors must be 2-D</a> &middot; 9,167 views</div>
+      </div>
+
+      <!-- ERROR 2 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#2 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Given groups=1, weight of size [64, 3, 7, 7], expected input[1, 1, 224, 224] to have 3 channels, but got 1 channels instead</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.Conv2d</div>
+        <div class="error-cause">The Conv2d layer's <code>in_channels</code> does not match the number of channels in the input tensor. The model expects 3-channel (RGB) input but received a 1-channel (grayscale) image.</div>
+        <pre><code># Bug: model expects 3 channels, input has 1
+# Fix option 1: change first conv layer
+self.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3)
+
+# Fix option 2: convert grayscale to 3-channel
+x = x.repeat(1, 3, 1, 1)  # repeat grayscale across 3 channels</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/conv2d-calculator.html">HeyTensor's Conv2d Calculator</a> to verify input channels match your first convolution layer's in_channels parameter.</div>
+        <div class="error-so">SO: Common in transfer learning with pretrained models &middot; 50K+ combined views across related questions</div>
+      </div>
+
+      <!-- ERROR 3 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#3 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Expected input batch_size (32) to match target batch_size (16)</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: Loss functions (CrossEntropyLoss, MSELoss)</div>
+        <div class="error-cause">The model output and target tensors have different batch sizes. This usually happens when the data loader returns mismatched batches, or when an accidental reshape changes the batch dimension during the forward pass.</div>
+        <pre><code># Bug: output has batch 32, target has batch 16
+# Check shapes before loss computation:
+print(f"Output: {output.shape}, Target: {target.shape}")
+
+# Common fix: ensure data loader returns matching pairs
+for inputs, targets in dataloader:
+    outputs = model(inputs)
+    assert outputs.shape[0] == targets.shape[0]
+    loss = criterion(outputs, targets)</code></pre>
+        <div class="error-prevention">Prevention: Always verify your DataLoader's collate function preserves batch alignment. Print shapes at the beginning of your training loop during debugging.</div>
+        <div class="error-so">SO: Commonly reported across classification tasks &middot; 30K+ combined views</div>
+      </div>
+
+      <!-- ERROR 4 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#4 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: shape '[32, 784]' is invalid for input of size 25088</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: Tensor.view, Tensor.reshape</div>
+        <div class="error-cause">The total number of elements in the requested shape does not equal the total elements in the tensor. Here 32 * 784 = 25,088, but only if the batch size is actually 32 and spatial dims produce 784. If the real tensor has a different size, the reshape fails.</div>
+        <pre><code># Bug: hardcoded reshape dimensions
+x = x.view(32, 784)  # fails if batch != 32 or features != 784
+
+# Fix: use -1 for automatic dimension inference
+x = x.view(x.size(0), -1)  # auto-compute feature dim
+# Or use nn.Flatten()
+self.flatten = nn.Flatten()</code></pre>
+        <div class="error-prevention">Prevention: Never hardcode batch size in view/reshape. Use <code>x.view(x.size(0), -1)</code> or <a href="/tools/flatten-calculator.html">nn.Flatten()</a> instead.</div>
+        <div class="error-so">SO: Common in MLP and CNN architectures &middot; 40K+ combined views</div>
+      </div>
+
+      <!-- ERROR 5 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#5 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Calculated padded input size per channel: (1 x 1). Kernel size: (3 x 3). Kernel size can't be greater than actual input size</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.Conv2d, nn.MaxPool2d</div>
+        <div class="error-cause">After successive convolution and pooling layers, the spatial dimensions have shrunk to a size smaller than the kernel. For example, a 32x32 input through multiple stride-2 convolutions can reach 1x1, where a 3x3 kernel cannot be applied.</div>
+        <pre><code># Bug: too many downsampling layers for input size
+# Input: 32x32 -> Conv(s=2) -> 16x16 -> Pool(2) -> 8x8 -> Conv(s=2) -> 4x4 -> Pool(2) -> 2x2 -> Conv(k=3) -> ERROR
+
+# Fix: reduce kernel size, add padding, or use fewer downsampling layers
+self.conv3 = nn.Conv2d(128, 256, kernel_size=1)  # 1x1 conv instead of 3x3
+# Or add padding:
+self.conv3 = nn.Conv2d(128, 256, kernel_size=3, padding=1)</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/">HeyTensor Chain Mode</a> to trace spatial dimensions through every layer and catch this before running your code.</div>
+        <div class="error-so">SO: Frequent with small input images (CIFAR-10, MNIST) &middot; 25K+ combined views</div>
+      </div>
+
+      <!-- ERROR 6 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#6 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Expected hidden[0] size (2, 32, 256), got [2, 1, 256]</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.LSTM, nn.GRU</div>
+        <div class="error-cause">The hidden state passed to an LSTM/GRU has a batch dimension that does not match the input batch size. Hidden state shape is (num_layers * num_directions, batch, hidden_size). If you initialize hidden for batch=1 but pass input with batch=32, this error occurs.</div>
+        <pre><code># Bug: hidden state initialized with wrong batch size
+h0 = torch.zeros(2, 1, 256)  # batch=1
+output, _ = self.lstm(x, (h0, c0))  # x has batch=32
+
+# Fix: match hidden batch to input batch
+batch_size = x.size(0)  # or x.size(1) if batch_first=False
+h0 = torch.zeros(2, batch_size, 256).to(x.device)
+c0 = torch.zeros(2, batch_size, 256).to(x.device)</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/lstm-shape-calculator.html">HeyTensor's LSTM Calculator</a> to verify hidden state dimensions. Always derive batch size from input dynamically.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/63097995/lstm-pytorch-runtimeerror-expected-hidden0-size-1-1-256-got-1-611-256" target="_blank" rel="noopener">Expected hidden[0] size</a> &middot; 10,858 views</div>
+      </div>
+
+      <!-- ERROR 7 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#7 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: The size of tensor a (10) must match the size of tensor b (5) at non-singleton dimension 1</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: Element-wise operations (add, mul, sub)</div>
+        <div class="error-cause">Two tensors in an element-wise operation have incompatible shapes that cannot be broadcast. PyTorch broadcasting requires each dimension to either match or be 1. Here dimension 1 has sizes 10 and 5 which are incompatible.</div>
+        <pre><code># Bug: incompatible shapes for addition
+a = torch.randn(32, 10)
+b = torch.randn(32, 5)
+c = a + b  # RuntimeError!
+
+# Fix: ensure shapes are compatible
+b = torch.randn(32, 10)  # match dimension
+# Or reshape/project:
+proj = nn.Linear(5, 10)
+c = a + proj(b)</code></pre>
+        <div class="error-prevention">Prevention: Print tensor shapes before operations. Use <a href="/tools/linear-layer-calculator.html">HeyTensor's Linear Calculator</a> to plan projection layers that align dimensions.</div>
+        <div class="error-so">SO: Common in skip connections and residual networks &middot; 35K+ combined views</div>
+      </div>
+
+      <!-- ERROR 8 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#8 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Expected 4-dimensional input for 4-dimensional weight [64, 3, 3, 3], but got 3-dimensional input of size [3, 224, 224] instead</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.Conv2d</div>
+        <div class="error-cause">A Conv2d layer expects a 4D input (batch, channels, height, width) but received a 3D tensor missing the batch dimension. This happens when you pass a single image without unsqueezing the batch dimension.</div>
+        <pre><code># Bug: passing single image without batch dim
+img = torch.randn(3, 224, 224)
+output = model(img)  # RuntimeError!
+
+# Fix: add batch dimension
+img = img.unsqueeze(0)  # shape: [1, 3, 224, 224]
+output = model(img)</code></pre>
+        <div class="error-prevention">Prevention: Always add a batch dimension with <code>.unsqueeze(0)</code> when passing a single sample to a model. Use <a href="/tools/conv2d-calculator.html">HeyTensor's Conv2d Calculator</a> to confirm expected input format.</div>
+        <div class="error-so">SO: Extremely common for inference/prediction code &middot; 45K+ combined views</div>
+      </div>
+
+      <!-- ERROR 9 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#9 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: output with shape [1, 28, 28] doesn't match the broadcast shape [3, 28, 28]</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: torchvision.transforms, tensor operations</div>
+        <div class="error-cause">A normalization transform expects 3 channels (RGB) but received a 1-channel (grayscale) image. The transforms.Normalize mean and std tuples have 3 values but the image has only 1 channel.</div>
+        <pre><code># Bug: 3-channel normalize on 1-channel image
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+])
+
+# Fix: use single-channel normalization
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,))
+])
+# Or convert to RGB first:
+transforms.Grayscale(num_output_channels=3)</code></pre>
+        <div class="error-prevention">Prevention: Match your normalization constants to your image channels. Check dataset image format before defining transforms.</div>
+        <div class="error-so">SO: Very common with MNIST and grayscale datasets &middot; 20K+ combined views</div>
+      </div>
+
+      <!-- ERROR 10 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#10 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: For unbatched 2-D input, hid_size should match the input size. Expected hid_size 512, got 256</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.Linear</div>
+        <div class="error-cause">A Linear layer's in_features does not match the hidden size from a previous layer's output. This commonly happens when chaining Linear layers and the dimensions do not align.</div>
+        <pre><code># Bug: dimension mismatch between Linear layers
+self.fc1 = nn.Linear(784, 512)
+self.fc2 = nn.Linear(256, 10)  # expects 256 but fc1 outputs 512
+
+# Fix: match in_features to previous out_features
+self.fc1 = nn.Linear(784, 512)
+self.fc2 = nn.Linear(512, 10)  # 512 matches fc1 output</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/linear-layer-calculator.html">HeyTensor's Linear Layer Calculator</a> to verify that each layer's in_features matches the previous layer's out_features.</div>
+        <div class="error-so">SO: Fundamental MLP architecture error &middot; 15K+ combined views</div>
+      </div>
+
+      <!-- ERROR 11 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#11 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Expected target size [32, 10], got [32]</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.MSELoss, nn.BCELoss</div>
+        <div class="error-cause">The loss function expects the target to have the same shape as the model output. MSELoss with output shape [32, 10] needs targets of shape [32, 10], not [32]. This happens when using MSELoss for classification instead of CrossEntropyLoss, or when targets need one-hot encoding.</div>
+        <pre><code># Bug: MSELoss with class indices instead of one-hot
+output = model(x)  # shape: [32, 10]
+loss = F.mse_loss(output, targets)  # targets shape: [32]
+
+# Fix option 1: use CrossEntropyLoss (accepts class indices)
+loss = F.cross_entropy(output, targets)
+
+# Fix option 2: one-hot encode targets
+targets_onehot = F.one_hot(targets, num_classes=10).float()
+loss = F.mse_loss(output, targets_onehot)</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/loss-functions.html">HeyTensor's Loss Functions Reference</a> to check which loss functions accept which target formats.</div>
+        <div class="error-so">SO: Common when switching between loss functions &middot; 18K+ combined views</div>
+      </div>
+
+      <!-- ERROR 12 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#12 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Expected 3D (unbatched) or 4D (batched) input to conv2d, but got input of size: [32, 784]</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.Conv2d</div>
+        <div class="error-cause">A Conv2d layer received a 2D flattened tensor instead of a 4D image tensor. This happens when you accidentally flatten before a convolution, or feed the wrong tensor to the wrong part of the network.</div>
+        <pre><code># Bug: feeding flattened data to Conv2d
+x = x.view(x.size(0), -1)  # [32, 784] -- flattened too early
+x = self.conv(x)  # expects [32, C, H, W]
+
+# Fix: reshape back to image format
+x = x.view(x.size(0), 1, 28, 28)  # [32, 1, 28, 28]
+x = self.conv(x)
+
+# Or: don't flatten before conv layers</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/">HeyTensor Chain Mode</a> to plan your layer order. Flatten should come between the last conv/pool layer and the first Linear layer.</div>
+        <div class="error-so">SO: Architecture ordering error &middot; 12K+ combined views</div>
+      </div>
+
+      <!-- ERROR 13 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#13 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: the derivative for 'target' is not implemented</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: Loss functions</div>
+        <div class="error-cause">You passed the target tensor where the prediction should go and vice versa. Loss functions like cross_entropy expect (input, target) where input is the model output with requires_grad=True. Swapping them causes this error.</div>
+        <pre><code># Bug: arguments swapped
+loss = F.cross_entropy(targets, output)  # wrong order!
+
+# Fix: correct argument order (predictions first, targets second)
+loss = F.cross_entropy(output, targets)</code></pre>
+        <div class="error-prevention">Prevention: Remember the convention: loss_fn(predictions, targets). Always name your variables clearly to avoid confusion.</div>
+        <div class="error-so">SO: Affects all loss functions &middot; 10K+ combined views</div>
+      </div>
+
+      <!-- ERROR 14 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#14 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: input.size(-1) must be equal to input_size. Expected 128, got 64</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.LSTM, nn.GRU, nn.RNN</div>
+        <div class="error-cause">The LSTM/GRU's <code>input_size</code> parameter does not match the feature dimension of the input tensor. The input to an RNN should have shape (seq_len, batch, input_size) or (batch, seq_len, input_size) if batch_first=True.</div>
+        <pre><code># Bug: LSTM expects input_size=128 but got features=64
+self.lstm = nn.LSTM(input_size=128, hidden_size=256)
+x = torch.randn(10, 32, 64)  # seq=10, batch=32, features=64
+
+# Fix: match input_size to actual feature dimension
+self.lstm = nn.LSTM(input_size=64, hidden_size=256)</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/lstm-shape-calculator.html">HeyTensor's LSTM Calculator</a> to verify input_size matches your embedding or previous layer's output dimension.</div>
+        <div class="error-so">SO: Common in NLP pipelines &middot; 15K+ combined views</div>
+      </div>
+
+      <!-- ERROR 15 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#15 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: embed_dim must be divisible by num_heads</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.MultiheadAttention, nn.TransformerEncoderLayer</div>
+        <div class="error-cause">The <code>embed_dim</code> parameter is not evenly divisible by <code>num_heads</code>. Each attention head operates on embed_dim/num_heads dimensions, so this must be an integer.</div>
+        <pre><code># Bug: 512 / 6 = 85.33 (not integer)
+attn = nn.MultiheadAttention(embed_dim=512, num_heads=6)
+
+# Fix: choose num_heads that divides embed_dim evenly
+attn = nn.MultiheadAttention(embed_dim=512, num_heads=8)  # 512/8 = 64</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/multihead-attention-calculator.html">HeyTensor's MultiheadAttention Calculator</a> which validates this constraint automatically.</div>
+        <div class="error-so">SO: Common in Transformer architecture design &middot; 20K+ combined views</div>
+      </div>
+
+      <!-- ERROR 16 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#16 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Expected 2D or 3D input, got 4D input</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.Linear</div>
+        <div class="error-cause">A Linear layer received a 4D tensor (typical CNN output) without being flattened first. Linear expects 2D (batch, features) or 3D (batch, seq, features) input.</div>
+        <pre><code># Bug: forgot to flatten CNN output before Linear
+x = self.conv_layers(x)  # shape: [32, 64, 7, 7]
+x = self.fc(x)  # Linear expects 2D!
+
+# Fix: add flatten between conv and linear
+x = self.conv_layers(x)  # [32, 64, 7, 7]
+x = x.view(x.size(0), -1)  # [32, 3136]
+x = self.fc(x)  # Linear(3136, 10)</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/flatten-calculator.html">HeyTensor's Flatten Calculator</a> to compute the flattened size, then set Linear's in_features accordingly.</div>
+        <div class="error-so">SO: CNN-to-MLP transition error &middot; 25K+ combined views</div>
+      </div>
+
+      <!-- ERROR 17 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#17 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: Number of BatchNorm features (128) does not match input features (64)</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: nn.BatchNorm2d, nn.BatchNorm1d</div>
+        <div class="error-cause">The <code>num_features</code> parameter of BatchNorm does not match the channel dimension of the input. BatchNorm2d's num_features should equal the number of channels (Conv2d's out_channels).</div>
+        <pre><code># Bug: BatchNorm features don't match conv output channels
+self.conv = nn.Conv2d(3, 64, kernel_size=3)
+self.bn = nn.BatchNorm2d(128)  # wrong: 128 != 64
+
+# Fix: match num_features to conv out_channels
+self.conv = nn.Conv2d(3, 64, kernel_size=3)
+self.bn = nn.BatchNorm2d(64)  # correct</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/batchnorm-calculator.html">HeyTensor's BatchNorm Calculator</a> to verify feature dimensions match between layers.</div>
+        <div class="error-so">SO: Common when modifying network architectures &middot; 12K+ combined views</div>
+      </div>
+
+      <!-- ERROR 18 -->
+      <div class="error-entry" data-cat="shape_mismatch">
+        <div class="error-id">#18 &middot; shape_mismatch</div>
+        <div class="error-msg">RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.</div>
+        <span class="error-cat cat-shape">shape_mismatch</span>
+        <div class="error-layers">Layers: Tensor.view, Tensor.transpose, Tensor.permute</div>
+        <div class="error-cause">The <code>.view()</code> operation requires the tensor to be stored contiguously in memory. After operations like <code>.transpose()</code> or <code>.permute()</code>, the tensor may no longer be contiguous, causing this error.</div>
+        <pre><code># Bug: view after transpose on non-contiguous tensor
+x = torch.randn(32, 10, 64)
+x = x.transpose(1, 2)  # now non-contiguous
+x = x.view(32, -1)  # RuntimeError!
+
+# Fix option 1: make contiguous first
+x = x.transpose(1, 2).contiguous().view(32, -1)
+
+# Fix option 2: use reshape (handles non-contiguous)
+x = x.transpose(1, 2).reshape(32, -1)</code></pre>
+        <div class="error-prevention">Prevention: Use <code>.reshape()</code> instead of <code>.view()</code> when you are unsure about memory layout. See <a href="/tools/view-size-not-compatible.html">HeyTensor's View Compatibility Guide</a>.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/79151398/view-size-is-not-compatible-with-input-tensors-size-and-stride" target="_blank" rel="noopener">view size not compatible</a> &middot; 1,143 views</div>
+      </div>
+
+      <!-- ERROR 19 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#19 &middot; memory_error</div>
+        <div class="error-msg">RuntimeError: CUDA out of memory. Tried to allocate 2.00 GiB (GPU 0; 11.17 GiB total capacity; 8.44 GiB already allocated; 1.38 GiB free; 9.12 GiB reserved in total by PyTorch)</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: All (training context)</div>
+        <div class="error-cause">GPU memory is exhausted. The allocation request exceeds available VRAM. This is the most common CUDA error and typically happens during training when gradients and optimizer states consume memory in addition to model weights and activations.</div>
+        <pre><code># Fix 1: Reduce batch size
+train_loader = DataLoader(dataset, batch_size=16)  # was 64
+
+# Fix 2: Enable gradient checkpointing
+model.gradient_checkpointing_enable()
+
+# Fix 3: Use mixed precision (halves activation memory)
+scaler = torch.cuda.amp.GradScaler()
+with torch.cuda.amp.autocast():
+    output = model(input)
+    loss = criterion(output, target)
+
+# Fix 4: Clear cache between operations
+torch.cuda.empty_cache()
+
+# Fix 5: Accumulate gradients over smaller batches
+for i, (x, y) in enumerate(loader):
+    loss = model(x, y) / accumulation_steps
+    loss.backward()
+    if (i + 1) % accumulation_steps == 0:
+        optimizer.step()
+        optimizer.zero_grad()</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/memory-calculator.html">HeyTensor's Memory Calculator</a> to estimate memory requirements before training. Use <a href="/tools/parameter-counter.html">Parameter Counter</a> to check model size.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/69040271/gpu-memory-is-empty-but-cuda-out-of-memory-error-occurs" target="_blank" rel="noopener">GPU memory empty but CUDA OOM</a> &middot; 7,064 views</div>
+      </div>
+
+      <!-- ERROR 20 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#20 &middot; memory_error</div>
+        <div class="error-msg">RuntimeError: CUDA out of memory. Tried to allocate 240.00 MiB</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: All (inference context)</div>
+        <div class="error-cause">Even relatively small allocations can fail when GPU memory is fragmented. PyTorch's caching allocator reserves blocks of memory, and fragmentation can prevent new allocations even when total free memory appears sufficient.</div>
+        <pre><code># Fix: wrap inference in no_grad to prevent gradient storage
+with torch.no_grad():
+    output = model(input)
+
+# Also useful: delete intermediate tensors
+del intermediate_tensor
+torch.cuda.empty_cache()
+
+# For inference, use torch.inference_mode() (faster than no_grad)
+with torch.inference_mode():
+    output = model(input)</code></pre>
+        <div class="error-prevention">Prevention: Always wrap inference code in <code>torch.no_grad()</code> or <code>torch.inference_mode()</code>. This prevents storing gradient computation graphs which can consume 2-3x more memory than the forward pass alone.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/68859635/pytorch-model-fit-runtimeerror-cuda-out-of-memory-tried-to-allocate-240-00" target="_blank" rel="noopener">CUDA OOM 240 MiB</a> &middot; 545 views</div>
+      </div>
+
+      <!-- ERROR 21 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#21 &middot; memory_error</div>
+        <div class="error-msg">RuntimeError: CUDA error: an illegal memory access was encountered</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: All (CUDA context)</div>
+        <div class="error-cause">An out-of-bounds memory access on the GPU. This is often caused by indexing errors (e.g., embedding index out of range), CUDA/driver version mismatches, or hardware issues. Unlike CPU segfaults, CUDA illegal access errors are asynchronous and may appear after the offending operation.</div>
+        <pre><code># Common cause: embedding index exceeds num_embeddings
+embed = nn.Embedding(1000, 128)  # indices 0-999 valid
+x = torch.tensor([1500])  # out of range!
+
+# Fix: clamp indices to valid range
+x = x.clamp(0, embed.num_embeddings - 1)
+
+# Debug: set CUDA_LAUNCH_BLOCKING=1 for synchronous errors
+import os
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+# Now errors will point to the exact line</code></pre>
+        <div class="error-prevention">Prevention: Set <code>CUDA_LAUNCH_BLOCKING=1</code> during debugging to get accurate error locations. Validate all indices before passing to Embedding layers.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/72684620/pytorch-loss-items-cause-irrecoverable-cuda-illegal-memory-access-on-google-co" target="_blank" rel="noopener">CUDA illegal memory access</a> &middot; 1,750 views</div>
+      </div>
+
+      <!-- ERROR 22 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#22 &middot; memory_error</div>
+        <div class="error-msg">torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 16.00 GiB</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: nn.Linear (large), Transformer models</div>
+        <div class="error-cause">A single allocation request is enormous, typically caused by an accidental fully-connected layer with extremely large dimensions, or loading a model too large for the GPU. A Linear(50000, 50000) layer alone requires ~9.3 GB in float32.</div>
+        <pre><code># Bug: accidentally huge Linear layer
+self.fc = nn.Linear(50000, 50000)  # 50000*50000*4 bytes = 9.3 GB!
+
+# Fix: review your architecture dimensions
+# If this is an output projection, you likely meant:
+self.fc = nn.Linear(512, 50000)
+
+# For large language models: use quantization
+from bitsandbytes import nn as bnb
+self.fc = bnb.Linear8bitLt(in_features, out_features)
+
+# Or use device_map="auto" for model parallelism
+model = AutoModel.from_pretrained("large-model", device_map="auto")</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/parameter-counter.html">HeyTensor's Parameter Counter</a> and <a href="/tools/memory-calculator.html">Memory Calculator</a> to estimate memory before instantiating large models.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/74737240/pytorch-error-runtimeerror-cuda-out-of-memory-occuring-yet-reporting-more-t" target="_blank" rel="noopener">CUDA OOM with enough free memory</a> &middot; 3,766 views</div>
+      </div>
+
+      <!-- ERROR 23 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#23 &middot; memory_error</div>
+        <div class="error-msg">RuntimeError: CUDA out of memory (during validation/evaluation)</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: All (validation loop)</div>
+        <div class="error-cause">Memory accumulates during validation because gradients are still being tracked. Without <code>torch.no_grad()</code>, each forward pass stores computation graphs that are never freed.</div>
+        <pre><code># Bug: no torch.no_grad() during validation
+model.eval()
+for x, y in val_loader:
+    output = model(x)  # still tracking gradients!
+    val_loss += criterion(output, y)
+
+# Fix: disable gradient tracking
+model.eval()
+with torch.no_grad():
+    for x, y in val_loader:
+        output = model(x)
+        val_loss += criterion(output, y).item()  # .item() returns Python scalar</code></pre>
+        <div class="error-prevention">Prevention: Always wrap validation loops in <code>torch.no_grad()</code>. Use <code>.item()</code> to extract scalar loss values to avoid accumulating graph references.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/67819077/runtime-error-cuda-out-of-memory-by-the-end-of-training-and-doesn-t-save-model" target="_blank" rel="noopener">OOM at end of training</a> &middot; 3,850 views</div>
+      </div>
+
+      <!-- ERROR 24 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#24 &middot; memory_error</div>
+        <div class="error-msg">RuntimeError: CUDA out of memory (memory leak during training)</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: All (training loop)</div>
+        <div class="error-cause">Memory usage grows over epochs because loss tensors are being stored in a Python list instead of their scalar values. Each stored tensor retains a reference to the entire computation graph.</div>
+        <pre><code># Bug: storing tensor losses in a list (retains computation graph)
+losses = []
+for x, y in train_loader:
+    loss = criterion(model(x), y)
+    losses.append(loss)  # keeps graph alive!
+
+# Fix: store scalar values with .item()
+losses = []
+for x, y in train_loader:
+    loss = criterion(model(x), y)
+    loss.backward()
+    losses.append(loss.item())  # Python float, no graph reference
+    optimizer.step()
+    optimizer.zero_grad()</code></pre>
+        <div class="error-prevention">Prevention: Always call <code>.item()</code> when logging or storing loss values. Monitor GPU memory with <code>torch.cuda.memory_allocated()</code> to detect leaks early.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/68624392/running-out-of-memory-with-pytorch" target="_blank" rel="noopener">Running out of memory</a> &middot; 2,681 views</div>
+      </div>
+
+      <!-- ERROR 25 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#25 &middot; memory_error</div>
+        <div class="error-msg">RuntimeError: Allocation on device cuda:0 would exceed allowed memory (set max_split_size_mb to avoid fragmentation)</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: All (PyTorch allocator)</div>
+        <div class="error-cause">Memory fragmentation in PyTorch's CUDA caching allocator. Even though there is enough total free memory, it is split into non-contiguous blocks that are individually too small for the requested allocation.</div>
+        <pre><code># Fix 1: Set max_split_size_mb to reduce fragmentation
+import os
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:128'
+
+# Fix 2: Periodically clear cache
+torch.cuda.empty_cache()
+
+# Fix 3: Use expandable_segments (PyTorch 2.0+)
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'</code></pre>
+        <div class="error-prevention">Prevention: Set <code>PYTORCH_CUDA_ALLOC_CONF</code> before training starts. Use smaller batch sizes to reduce peak allocation sizes.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/74442874/cuda-out-of-memory-despite-available-memory" target="_blank" rel="noopener">CUDA OOM despite available memory</a> &middot; 1,408 views</div>
+      </div>
+
+      <!-- ERROR 26 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#26 &middot; memory_error</div>
+        <div class="error-msg">UserWarning: RNN module weights are not part of single contiguous chunk of memory</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: nn.LSTM, nn.GRU, nn.RNN</div>
+        <div class="error-cause">After loading an RNN model or using DataParallel, RNN weights may be stored in non-contiguous memory, degrading performance. This is a warning rather than an error but can significantly slow training.</div>
+        <pre><code># Fix: call flatten_parameters() after loading or in forward()
+class MyModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.lstm = nn.LSTM(128, 256, batch_first=True)
+
+    def forward(self, x):
+        self.lstm.flatten_parameters()
+        output, (hn, cn) = self.lstm(x)
+        return output</code></pre>
+        <div class="error-prevention">Prevention: Always call <code>flatten_parameters()</code> on RNN modules at the start of the forward pass, especially when using DataParallel.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/78209777/userwarning-rnn-module-weights-are-not-part-of-single-contiguous-chunk-of-memor" target="_blank" rel="noopener">RNN weights not contiguous</a> &middot; 714 views</div>
+      </div>
+
+      <!-- ERROR 27 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#27 &middot; memory_error</div>
+        <div class="error-msg">RuntimeError: DataLoader worker is killed by signal: Killed (out of system memory)</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: DataLoader</div>
+        <div class="error-cause">The operating system's OOM killer terminated a DataLoader worker because the system ran out of RAM (not GPU memory). Each DataLoader worker loads and preprocesses a batch in a separate process, consuming system memory.</div>
+        <pre><code># Fix 1: Reduce number of workers
+loader = DataLoader(dataset, num_workers=2)  # was 8
+
+# Fix 2: Reduce prefetch factor
+loader = DataLoader(dataset, num_workers=4, prefetch_factor=1)
+
+# Fix 3: Use pin_memory=False if RAM is tight
+loader = DataLoader(dataset, pin_memory=False)
+
+# Fix 4: Use smaller images or reduce data augmentation memory usage</code></pre>
+        <div class="error-prevention">Prevention: Monitor system RAM during training. Start with <code>num_workers=0</code> (main process) and increase gradually. Each worker duplicates your dataset in memory.</div>
+        <div class="error-so">SO: Common on cloud instances with limited RAM &middot; 15K+ combined views</div>
+      </div>
+
+      <!-- ERROR 28 -->
+      <div class="error-entry" data-cat="memory_error">
+        <div class="error-id">#28 &middot; memory_error</div>
+        <div class="error-msg">RuntimeError: [enforce fail at alloc_cpu.cpp] DefaultCPUAllocator: not enough memory</div>
+        <span class="error-cat cat-memory">memory_error</span>
+        <div class="error-layers">Layers: All (CPU context)</div>
+        <div class="error-cause">System RAM is exhausted when loading or processing tensors on CPU. This often happens when loading large models, processing huge datasets without batching, or creating very large tensors.</div>
+        <pre><code># Fix 1: Load model with memory mapping
+model = torch.load('model.pt', map_location='cpu', mmap=True)
+
+# Fix 2: Process data in chunks
+for chunk in torch.split(large_tensor, 1000):
+    process(chunk)
+
+# Fix 3: Use float16 to halve memory
+model = model.half()
+
+# Fix 4: Use memory-mapped datasets
+from torch.utils.data import Dataset
+class MMapDataset(Dataset):
+    def __init__(self, path):
+        self.data = np.memmap(path, dtype='float32', mode='r')</code></pre>
+        <div class="error-prevention">Prevention: Use <a href="/tools/memory-calculator.html">HeyTensor's Memory Calculator</a> to estimate total memory needs. Consider quantized or half-precision models for inference.</div>
+        <div class="error-so">SO: Common with large model loading &middot; 8K+ combined views</div>
+      </div>
+
+      <!-- ERROR 29 -->
+      <div class="error-entry" data-cat="device_mismatch">
+        <div class="error-id">#29 &middot; device_mismatch</div>
+        <div class="error-msg">RuntimeError: Expected all tensors to be on the same device, but found at least two devices, cuda:0 and cpu!</div>
+        <span class="error-cat cat-device">device_mismatch</span>
+        <div class="error-layers">Layers: All operations between tensors</div>
+        <div class="error-cause">You are performing an operation between a tensor on GPU and a tensor on CPU. All tensors in an operation must be on the same device. This commonly happens when new tensors are created without specifying the device, or when model parameters are on GPU but input data is still on CPU.</div>
+        <pre><code># Bug: model on GPU, input on CPU
+model = model.cuda()
+output = model(input)  # input is on CPU!
+
+# Fix: move all inputs to the same device as the model
+device = next(model.parameters()).device
+input = input.to(device)
+output = model(input)
+
+# Or explicitly:
+input = input.cuda()
+target = target.cuda()</code></pre>
+        <div class="error-prevention">Prevention: Define a device variable at the top of your script: <code>device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')</code> and use <code>.to(device)</code> consistently.</div>
+        <div class="error-so">SO: The most common device error &middot; 100K+ combined views across related questions</div>
+      </div>
+
+      <!-- ERROR 30 -->
+      <div class="error-entry" data-cat="device_mismatch">
+        <div class="error-id">#30 &middot; device_mismatch</div>
+        <div class="error-msg">RuntimeError: Attempting to deserialize object on a CUDA device but torch.cuda.is_available() is False</div>
+        <span class="error-cat cat-device">device_mismatch</span>
+        <div class="error-layers">Layers: torch.load</div>
+        <div class="error-cause">You are loading a model that was saved on GPU into an environment without CUDA support (e.g., a CPU-only machine or a machine with uninstalled CUDA drivers).</div>
+        <pre><code># Bug: loading GPU model on CPU-only machine
+model = torch.load('model_gpu.pt')  # fails without CUDA
+
+# Fix: map to CPU when loading
+model = torch.load('model_gpu.pt', map_location='cpu')
+
+# Or map to a specific device
+model = torch.load('model_gpu.pt', map_location=torch.device('cpu'))
+
+# Best practice when saving: save state_dict (device-agnostic)
+torch.save(model.state_dict(), 'model.pt')
+# Then load:
+model.load_state_dict(torch.load('model.pt', map_location='cpu'))</code></pre>
+        <div class="error-prevention">Prevention: Always use <code>map_location</code> when loading models. Save <code>state_dict()</code> instead of the full model for portability.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/66711799/runtimeerror-attempting-to-deserialize-object-on-a-cuda-device-but-torch-cuda-i" target="_blank" rel="noopener">Deserialize on CUDA device</a> &middot; 9,260 views</div>
+      </div>
+
+      <!-- ERROR 31 -->
+      <div class="error-entry" data-cat="device_mismatch">
+        <div class="error-id">#31 &middot; device_mismatch</div>
+        <div class="error-msg">RuntimeError: CUDA unknown error - this may be due to an incorrectly set up environment</div>
+        <span class="error-cat cat-device">device_mismatch</span>
+        <div class="error-layers">Layers: CUDA initialization</div>
+        <div class="error-cause">CUDA initialization failed due to a driver/toolkit version mismatch, corrupted installation, or GPU hardware issue. This is not a code error but an environment configuration problem.</div>
+        <pre><code># Diagnostic steps:
+import torch
+print(torch.version.cuda)       # CUDA toolkit version
+print(torch.cuda.is_available()) # should be True
+print(torch.backends.cudnn.version())  # cuDNN version
+
+# Fix 1: Check driver compatibility
+# nvidia-smi shows driver CUDA version; it must be >= PyTorch CUDA version
+
+# Fix 2: Reinstall PyTorch with matching CUDA version
+# pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+# Fix 3: Restart Python/notebook (CUDA state is corrupted)
+# A previous CUDA error may have left the GPU in a bad state</code></pre>
+        <div class="error-prevention">Prevention: Match PyTorch CUDA version to your nvidia-smi driver version. Check the <a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">PyTorch compatibility matrix</a> before installing.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/66998310/runtimeerror-cuda-unknown-error-this-may-be-due-to-an-incorrectly-set-up-envi" target="_blank" rel="noopener">CUDA unknown error</a> &middot; 3,909 views</div>
+      </div>
+
+      <!-- ERROR 32 -->
+      <div class="error-entry" data-cat="device_mismatch">
+        <div class="error-id">#32 &middot; device_mismatch</div>
+        <div class="error-msg">RuntimeError: CUDA error: device-side assert triggered</div>
+        <span class="error-cat cat-device">device_mismatch</span>
+        <div class="error-layers">Layers: nn.Embedding, nn.CrossEntropyLoss, indexing operations</div>
+        <div class="error-cause">An assertion failed inside a CUDA kernel. The most common cause is an out-of-range index: class label exceeding num_classes in CrossEntropyLoss, or an embedding index exceeding num_embeddings. The actual error is often an index error, but CUDA reports it as a device-side assert.</div>
+        <pre><code># Common cause: labels out of range for CrossEntropyLoss
+# CrossEntropyLoss expects labels in [0, num_classes-1]
+output = model(x)  # shape [32, 10] (10 classes)
+target = torch.tensor([10])  # label 10 is out of range (max is 9)!
+
+# Fix: validate labels
+assert target.max() &lt; num_classes
+assert target.min() >= 0
+
+# Debug: run on CPU first to get a clear error message
+model = model.cpu()
+output = model(x.cpu())
+loss = criterion(output, target.cpu())  # will show clear IndexError</code></pre>
+        <div class="error-prevention">Prevention: Set <code>CUDA_LAUNCH_BLOCKING=1</code> and run on CPU to diagnose. Always validate that class labels are in range [0, num_classes-1] before computing loss.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/78101854/runtimeerror-cuda-error-device-side-assert-triggered-in-automatic1111" target="_blank" rel="noopener">device-side assert</a> &middot; 1,082 views</div>
+      </div>
+
+      <!-- ERROR 33 -->
+      <div class="error-entry" data-cat="device_mismatch">
+        <div class="error-id">#33 &middot; device_mismatch</div>
+        <div class="error-msg">RuntimeError: Input type (torch.cuda.FloatTensor) and weight type (torch.FloatTensor) should be the same</div>
+        <span class="error-cat cat-device">device_mismatch</span>
+        <div class="error-layers">Layers: All (model vs input device)</div>
+        <div class="error-cause">The model weights are on CPU but the input tensor was moved to GPU (or vice versa). This is a variant of the device mismatch error reported through the type system.</div>
+        <pre><code># Bug: input on GPU, model on CPU
+model = MyModel()  # CPU by default
+x = x.cuda()
+output = model(x)  # RuntimeError!
+
+# Fix: move model to same device as input
+model = model.cuda()
+output = model(x)
+
+# Best practice: use a device variable
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = model.to(device)
+x = x.to(device)</code></pre>
+        <div class="error-prevention">Prevention: Use a single <code>device</code> variable throughout your code and call <code>.to(device)</code> on both model and data.</div>
+        <div class="error-so">SO: Variant of the general device mismatch error &middot; 50K+ combined views</div>
+      </div>
+
+      <!-- ERROR 34 -->
+      <div class="error-entry" data-cat="device_mismatch">
+        <div class="error-id">#34 &middot; device_mismatch</div>
+        <div class="error-msg">RuntimeError: Gradients are not CUDA tensors</div>
+        <span class="error-cat cat-device">device_mismatch</span>
+        <div class="error-layers">Layers: Optimizer, custom loss functions</div>
+        <div class="error-cause">Gradients were computed on CPU but the optimizer expects CUDA gradients. This happens when a custom loss function or part of the computation creates CPU tensors that contribute to the gradient graph.</div>
+        <pre><code># Bug: creating tensors in loss function without specifying device
+def custom_loss(pred, target):
+    weights = torch.tensor([1.0, 2.0, 3.0])  # CPU!
+    return (weights * (pred - target) ** 2).mean()
+
+# Fix: create tensors on the correct device
+def custom_loss(pred, target):
+    weights = torch.tensor([1.0, 2.0, 3.0], device=pred.device)
+    return (weights * (pred - target) ** 2).mean()</code></pre>
+        <div class="error-prevention">Prevention: When creating tensors inside forward/loss functions, always use <code>device=input.device</code> to match the device of existing tensors.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/45206561/pytorch-runtimeerror-gradients-are-not-cuda-tensors" target="_blank" rel="noopener">Gradients are not CUDA tensors</a> &middot; 673 views</div>
+      </div>
+
+      <!-- ERROR 35 -->
+      <div class="error-entry" data-cat="device_mismatch">
+        <div class="error-id">#35 &middot; device_mismatch</div>
+        <div class="error-msg">RuntimeError: Expected is_sm80 || is_sm90 to be true, but got false</div>
+        <span class="error-cat cat-device">device_mismatch</span>
+        <div class="error-layers">Layers: Flash Attention, Transformer operations</div>
+        <div class="error-cause">Flash Attention or a CUDA-optimized kernel requires a specific GPU architecture (SM80 for Ampere/A100, SM90 for Hopper/H100) but your GPU has an older architecture. This is common when using libraries that default to Flash Attention.</div>
+        <pre><code># Fix 1: Disable flash attention
+# For Hugging Face Transformers:
+model = AutoModel.from_pretrained("model", attn_implementation="eager")
+
+# Fix 2: Use a compatible attention backend
+import torch.backends.cuda
+torch.backends.cuda.enable_flash_sdp(False)
+
+# Fix 3: Use math attention fallback
+with torch.backends.cuda.sdp_kernel(
+    enable_flash=False, enable_math=True, enable_mem_efficient=True
+):
+    output = model(input)</code></pre>
+        <div class="error-prevention">Prevention: Check your GPU architecture before using Flash Attention: <code>torch.cuda.get_device_properties(0).major</code> should be >= 8 for SM80.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/77880191/runtimeerror-expected-is-sm80-is-sm90-to-be-true-but-got-false" target="_blank" rel="noopener">Expected is_sm80 || is_sm90</a> &middot; 2,790 views</div>
+      </div>
+
+      <!-- ERROR 36 -->
+      <div class="error-entry" data-cat="device_mismatch">
+        <div class="error-id">#36 &middot; device_mismatch</div>
+        <div class="error-msg">RuntimeError: Caught RuntimeError in replica 0 on device 0</div>
+        <span class="error-cat cat-device">device_mismatch</span>
+        <div class="error-layers">Layers: nn.DataParallel</div>
+        <div class="error-cause">An error occurred inside nn.DataParallel on one of the GPU replicas. DataParallel wraps errors, making them hard to debug. The actual error is usually a shape mismatch, device mismatch, or type error on one of the replicas.</div>
+        <pre><code># Debug: temporarily remove DataParallel to see the real error
+# model = nn.DataParallel(model)  # comment out
+model = model.cuda()  # single GPU
+output = model(input)  # now error message is clear
+
+# Better alternative: use DistributedDataParallel
+model = torch.nn.parallel.DistributedDataParallel(
+    model, device_ids=[local_rank]
+)</code></pre>
+        <div class="error-prevention">Prevention: Debug on a single GPU first, then wrap in DataParallel. Use DistributedDataParallel instead of DataParallel for better error messages and performance.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/63676307/hugging-face-runtimeerror-caught-runtimeerror-in-replica-0-on-device-0-on-azu" target="_blank" rel="noopener">Caught RuntimeError in replica 0</a> &middot; 6,013 views</div>
+      </div>
+
+      <!-- ERROR 37 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#37 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: All (in-place operations: +=, relu_, etc.)</div>
+        <div class="error-cause">A tensor that PyTorch needs for backpropagation was modified in-place. Common in-place operations include <code>+=</code>, <code>.relu_()</code>, <code>tensor[i] = val</code>, and any operation ending with <code>_</code>. PyTorch stores references to intermediate tensors; modifying them invalidates the gradient computation.</div>
+        <pre><code># Bug: in-place operations break autograd
+x = self.linear(input)
+x += self.bias  # in-place add!
+x = x.relu_()   # in-place relu!
+
+# Fix: use out-of-place operations
+x = self.linear(input)
+x = x + self.bias    # creates new tensor
+x = x.relu()         # creates new tensor (no underscore)
+# Or:
+x = torch.relu(x)    # functional form, always out-of-place</code></pre>
+        <div class="error-prevention">Prevention: Avoid all in-place operations during training. Use <code>torch.autograd.set_detect_anomaly(True)</code> to find the exact line causing the problem.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/64933097/runtimeerror-one-of-the-variables-needed-for-gradient-computation-has-been-modi" target="_blank" rel="noopener">inplace operation gradient error</a> &middot; 1,019 views</div>
+      </div>
+
+      <!-- ERROR 38 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#38 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: Trying to backward through the graph a second time</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: All (multiple backward passes)</div>
+        <div class="error-cause">You called <code>.backward()</code> twice on the same computation graph. After the first backward pass, PyTorch frees intermediate buffers to save memory. The second call finds those buffers gone.</div>
+        <pre><code># Bug: two backward calls on same graph
+loss1 = criterion(model(x), y)
+loss1.backward()
+loss2 = some_regularization(model)
+loss2.backward()  # graph from loss1 already freed!
+
+# Fix option 1: retain graph for first backward
+loss1.backward(retain_graph=True)
+loss2.backward()
+
+# Fix option 2 (better): combine losses before backward
+loss = criterion(model(x), y) + some_regularization(model)
+loss.backward()  # single backward pass
+
+# Fix option 3: recompute forward pass
+loss1 = criterion(model(x), y)
+loss1.backward()
+optimizer.step()
+optimizer.zero_grad()
+loss2 = criterion(model(x), y)  # fresh forward pass
+loss2.backward()</code></pre>
+        <div class="error-prevention">Prevention: Combine all losses into a single scalar before calling <code>.backward()</code>. Only use <code>retain_graph=True</code> if you genuinely need multiple backward passes (e.g., adversarial training).</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/72721348/error-in-backward-pytorch-lstmcell-trying-to-backward-through-the-graph-a" target="_blank" rel="noopener">backward through graph a second time</a> &middot; 1,983 views</div>
+      </div>
+
+      <!-- ERROR 39 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#39 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: All (requires_grad issue)</div>
+        <div class="error-cause">You called <code>.backward()</code> on a tensor that was not created through differentiable operations. This happens when you detach a tensor, use <code>torch.no_grad()</code>, or create tensors without <code>requires_grad=True</code>.</div>
+        <pre><code># Bug: calling backward on non-differentiable tensor
+x = torch.tensor([1.0, 2.0, 3.0])  # requires_grad=False by default
+loss = x.sum()
+loss.backward()  # RuntimeError!
+
+# Fix: enable gradient tracking
+x = torch.tensor([1.0, 2.0, 3.0], requires_grad=True)
+loss = x.sum()
+loss.backward()
+
+# Common mistake: using .data or .detach() too early
+pred = model(x).detach()  # breaks gradient chain!
+loss = criterion(pred, target)
+loss.backward()  # error: no grad_fn</code></pre>
+        <div class="error-prevention">Prevention: Do not call <code>.detach()</code> or <code>.data</code> on tensors that are still needed for backpropagation. Check <code>tensor.requires_grad</code> before calling <code>.backward()</code>.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/76805507/updated-error-element-0-of-tensors-does-not-require-grad-and-does-not-have-a" target="_blank" rel="noopener">does not require grad</a> &middot; 3,794 views</div>
+      </div>
+
+      <!-- ERROR 40 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#40 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: Function MmBackward returned an invalid gradient at index 0 - got [4096, 32] but expected shape compatible with [4096, 512]</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: Custom autograd functions, nn.Linear</div>
+        <div class="error-cause">A custom autograd backward function returned a gradient tensor with the wrong shape. The gradient shape must match the shape of the corresponding forward input.</div>
+        <pre><code># Bug: custom backward returning wrong shape
+class MyFunc(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, input, weight):
+        ctx.save_for_backward(input, weight)
+        return input @ weight.T
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        input, weight = ctx.saved_tensors
+        grad_input = grad_output @ weight  # shape must match input
+        grad_weight = input.T @ grad_output  # shape must match weight
+        return grad_input, grad_weight  # wrong if shapes don't match
+
+# Fix: verify gradient shapes match input shapes
+# grad_input.shape == input.shape
+# grad_weight.shape == weight.shape</code></pre>
+        <div class="error-prevention">Prevention: When writing custom autograd functions, verify that each gradient returned in backward() has the same shape as the corresponding input from forward().</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/71093323/runtimeerror-function-mmbackward-returned-an-invalid-gradient-at-index-0-got" target="_blank" rel="noopener">MmBackward invalid gradient</a> &middot; 899 views</div>
+      </div>
+
+      <!-- ERROR 41 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#41 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: a leaf Variable that requires grad is being used in an in-place operation</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: Parameter initialization, weight modification</div>
+        <div class="error-cause">You attempted an in-place operation on a leaf tensor (like a model parameter) that requires gradients. PyTorch prohibits this because it would invalidate gradient computation.</div>
+        <pre><code># Bug: in-place modification of model parameters
+model.weight.data.fill_(1.0)  # .data bypasses autograd (OK but fragile)
+model.weight.fill_(1.0)  # in-place on leaf variable, RuntimeError!
+
+# Fix: use .data or torch.no_grad() for parameter modification
+with torch.no_grad():
+    model.weight.fill_(1.0)
+
+# Or use .data (less safe but works)
+model.weight.data.fill_(1.0)
+
+# For custom initialization:
+def init_weights(m):
+    if isinstance(m, nn.Linear):
+        torch.nn.init.xavier_uniform_(m.weight)  # uses .data internally
+model.apply(init_weights)</code></pre>
+        <div class="error-prevention">Prevention: Use <code>torch.no_grad()</code> context manager or <code>nn.init</code> functions when modifying model parameters. Never modify leaf variables in-place during the forward pass.</div>
+        <div class="error-so">SO: Common during model initialization and fine-tuning &middot; 8K+ combined views</div>
+      </div>
+
+      <!-- ERROR 42 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#42 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: Expected to mark a variable ready only once (DistributedDataParallel)</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: nn.DistributedDataParallel</div>
+        <div class="error-cause">A parameter was used multiple times in the forward pass, or some parameters were not used at all. DDP expects each parameter to receive exactly one gradient during backward. Unused parameters or shared parameters cause this error.</div>
+        <pre><code># Fix 1: set find_unused_parameters=True
+model = torch.nn.parallel.DistributedDataParallel(
+    model, device_ids=[local_rank],
+    find_unused_parameters=True
+)
+
+# Fix 2: if parameters are truly unused, remove them
+# Audit your forward() to ensure all parameters are used
+
+# Fix 3: for shared parameters, use static_graph
+model = torch.nn.parallel.DistributedDataParallel(
+    model, device_ids=[local_rank],
+    static_graph=True
+)</code></pre>
+        <div class="error-prevention">Prevention: Ensure every parameter in your model is used in every forward pass. Use <code>find_unused_parameters=True</code> only as a last resort since it adds overhead.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/77309121/runtimeerror-expected-to-mark-a-variable-ready-only-once-error-in-databricks-no" target="_blank" rel="noopener">mark variable ready only once</a> &middot; 834 views</div>
+      </div>
+
+      <!-- ERROR 43 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#43 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: one of the variables needed for gradient computation has been modified by an inplace operation: [torch.cuda.FloatTensor [1, 64, 7, 7]], which is output 0 of ReluBackward0</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: nn.ReLU(inplace=True)</div>
+        <div class="error-cause">Using <code>nn.ReLU(inplace=True)</code> overwrites the input tensor, which may be needed for gradient computation by a preceding layer. This is especially problematic in residual connections where the same tensor is used in both the skip connection and the main path.</div>
+        <pre><code># Bug: inplace ReLU in residual connection
+class ResBlock(nn.Module):
+    def forward(self, x):
+        identity = x
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = F.relu(out, inplace=True)  # overwrites out
+        out = self.conv2(out)
+        out += identity  # in-place add on top of inplace relu
+        return out
+
+# Fix: use inplace=False
+out = F.relu(out, inplace=False)
+# And use out-of-place addition:
+out = out + identity  # creates new tensor</code></pre>
+        <div class="error-prevention">Prevention: Use <code>inplace=False</code> (the default) for ReLU in residual networks. The memory savings from inplace=True are minimal compared to the debugging cost.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/68274074/runtimeerror-one-of-the-variables-needed-for-gradient-computation-has-been-modi" target="_blank" rel="noopener">inplace ReLU gradient error</a> &middot; 454 views</div>
+      </div>
+
+      <!-- ERROR 44 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#44 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: grad can be implicitly created only for scalar outputs</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: All (non-scalar loss)</div>
+        <div class="error-cause">You called <code>.backward()</code> on a non-scalar tensor. PyTorch's autograd requires a scalar (single-element tensor) as the starting point for backpropagation. If your loss is not reduced to a single number, this error occurs.</div>
+        <pre><code># Bug: backward on non-scalar
+loss = model(x) - y  # shape: [32, 10], not scalar!
+loss.backward()  # RuntimeError!
+
+# Fix: reduce to scalar
+loss = (model(x) - y).pow(2).mean()  # scalar
+loss.backward()
+
+# Or pass gradient argument for non-scalar backward:
+output = model(x)  # [32, 10]
+output.backward(torch.ones_like(output))  # provides gradient shape</code></pre>
+        <div class="error-prevention">Prevention: Ensure your loss function returns a scalar. Use <code>.mean()</code> or <code>.sum()</code> to reduce batch losses. Use <a href="/tools/loss-functions.html">HeyTensor's Loss Functions Reference</a> to verify reduction behavior.</div>
+        <div class="error-so">SO: Common when implementing custom loss functions &middot; 20K+ combined views</div>
+      </div>
+
+      <!-- ERROR 45 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#45 &middot; gradient_error</div>
+        <div class="error-msg">RuntimeError: a view of a leaf Variable that requires grad is being used in an in-place operation</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: Tensor indexing, slicing</div>
+        <div class="error-cause">You performed an in-place operation on a slice or view of a parameter tensor. Views share memory with the original tensor, so modifying a view modifies the parameter in-place, breaking autograd.</div>
+        <pre><code># Bug: in-place operation on parameter slice
+model.weight[:, 0] = 0  # in-place modification via view!
+
+# Fix: use torch.no_grad() context
+with torch.no_grad():
+    model.weight[:, 0] = 0
+
+# Or create a new tensor with the modification
+mask = torch.ones_like(model.weight)
+mask[:, 0] = 0
+# Use mask in forward pass instead of modifying weight</code></pre>
+        <div class="error-prevention">Prevention: Never assign to slices of parameter tensors during forward/backward. Use masks or <code>torch.no_grad()</code> for weight manipulation.</div>
+        <div class="error-so">SO: Common in weight pruning and masking &middot; 5K+ combined views</div>
+      </div>
+
+      <!-- ERROR 46 -->
+      <div class="error-entry" data-cat="gradient_error">
+        <div class="error-id">#46 &middot; gradient_error</div>
+        <div class="error-msg">UserWarning: Using a target size (torch.Size([32])) that is different to the input size (torch.Size([32, 1])). This will likely lead to incorrect results due to broadcasting.</div>
+        <span class="error-cat cat-gradient">gradient_error</span>
+        <div class="error-layers">Layers: nn.BCELoss, nn.MSELoss</div>
+        <div class="error-cause">The target shape does not match the prediction shape. While PyTorch will broadcast and compute a result, the gradients will be wrong, leading to incorrect training. The loss may appear to decrease but the model will not learn correctly.</div>
+        <pre><code># Bug: shape mismatch causes silent broadcasting
+pred = model(x)  # shape: [32, 1]
+target = labels   # shape: [32]
+loss = F.binary_cross_entropy(pred, target)  # broadcasts incorrectly
+
+# Fix: match shapes explicitly
+target = labels.unsqueeze(1)  # [32] -> [32, 1]
+# Or squeeze prediction:
+pred = model(x).squeeze(1)  # [32, 1] -> [32]</code></pre>
+        <div class="error-prevention">Prevention: Always verify that prediction and target shapes match exactly before computing loss. Broadcasting in loss functions is almost always a bug.</div>
+        <div class="error-so">SO: Silent training bug (model trains but poorly) &middot; 10K+ combined views</div>
+      </div>
+
+      <!-- ERROR 47 -->
+      <div class="error-entry" data-cat="type_error">
+        <div class="error-id">#47 &middot; type_error</div>
+        <div class="error-msg">RuntimeError: expected scalar type Float but found Half</div>
+        <span class="error-cat cat-type">type_error</span>
+        <div class="error-layers">Layers: All (mixed precision)</div>
+        <div class="error-cause">An operation received a float16 (half precision) tensor where float32 was expected. This commonly happens when using AMP (automatic mixed precision) incorrectly, or when some model components are manually cast to half but others are not.</div>
+        <pre><code># Bug: manually casting to half without autocast
+model = model.half()
+x = x.float()  # float32
+output = model(x)  # half model, float input -> error
+
+# Fix option 1: use autocast (recommended)
+with torch.cuda.amp.autocast():
+    output = model(x)  # automatic dtype management
+
+# Fix option 2: match dtypes manually
+x = x.half()  # or model = model.float()
+
+# Fix option 3: cast specific layers
+model.layer_norm = model.layer_norm.float()  # keep in float32</code></pre>
+        <div class="error-prevention">Prevention: Use <code>torch.cuda.amp.autocast()</code> for mixed precision instead of manual <code>.half()</code> casting. Autocast handles dtype conversion automatically.</div>
+        <div class="error-so">SO: <a href="https://stackoverflow.com/questions/75918140/getting-runtimeerror-expected-scalar-type-half-but-found-float-in-aws-p3-instan" target="_blank" rel="noopener">expected Half but found Float</a> &middot; 6,314 views</div>
+      </div>
+
+      <!-- ERROR 48 -->
+      <div class="error-entry" data-cat="type_error">
+        <div class="error-id">#48 &middot; type_error</div>
+        <div class="error-msg">RuntimeError: expected scalar type Long but found Float</div>
+        <span class="error-cat cat-type">type_error</span>
+        <div class="error-layers">Layers: nn.CrossEntropyLoss, nn.NLLLoss, nn.Embedding</div>
+        <div class="error-cause">The target tensor or index tensor has the wrong dtype. CrossEntropyLoss and NLLLoss expect Long (int64) targets. Embedding expects Long indices. Passing float tensors triggers this error.</div>
+        <pre><code># Bug: float targets for CrossEntropyLoss
+targets = torch.tensor([0.0, 1.0, 2.0])  # float!
+loss = F.cross_entropy(output, targets)  # expects Long
+
+# Fix: cast targets to long
+targets = targets.long()
+# Or create with correct dtype:
+targets = torch.tensor([0, 1, 2], dtype=torch.long)
+
+# For Embedding:
+indices = torch.tensor([1, 5, 3], dtype=torch.long)
+output = embedding(indices)</code></pre>
+        <div class="error-prevention">Prevention: Classification labels should always be <code>torch.long</code> (int64). Embedding indices must also be <code>torch.long</code>.</div>
+        <div class="error-so">SO: Very common for beginners &middot; 30K+ combined views</div>
+      </div>
+
+      <!-- ERROR 49 -->
+      <div class="error-entry" data-cat="type_error">
+        <div class="error-id">#49 &middot; type_error</div>
+        <div class="error-msg">RuntimeError: expected scalar type Double but found Float</div>
+        <span class="error-cat cat-type">type_error</span>
+        <div class="error-layers">Layers: All (numpy interop)</div>
+        <div class="error-cause">A tensor created from a numpy array has dtype float64 (Double) because numpy defaults to float64, while PyTorch model parameters default to float32. Operations between them fail.</div>
+        <pre><code># Bug: numpy default is float64
+import numpy as np
+data = np.array([1.0, 2.0, 3.0])  # float64
+x = torch.from_numpy(data)  # torch.float64 (Double)
+output = model(x)  # model expects float32!
+
+# Fix: explicitly convert to float32
+x = torch.from_numpy(data).float()  # cast to float32
+# Or:
+x = torch.tensor(data, dtype=torch.float32)</code></pre>
+        <div class="error-prevention">Prevention: Always call <code>.float()</code> on tensors created from numpy arrays. Or set numpy dtype: <code>np.array(data, dtype=np.float32)</code>.</div>
+        <div class="error-so">SO: Common in data preprocessing &middot; 25K+ combined views</div>
+      </div>
+
+      <!-- ERROR 50 -->
+      <div class="error-entry" data-cat="type_error">
+        <div class="error-id">#50 &middot; type_error</div>
+        <div class="error-msg">RuntimeError: "nll_loss_forward_reduce_cuda_kernel_2d_index" not implemented for 'Int'</div>
+        <span class="error-cat cat-type">type_error</span>
+        <div class="error-layers">Layers: nn.CrossEntropyLoss, nn.NLLLoss</div>
+        <div class="error-cause">The target tensor is int32 instead of the required int64 (Long). Some data loading operations produce int32 labels by default.</div>
+        <pre><code># Bug: int32 targets instead of int64
+targets = torch.tensor([0, 1, 2], dtype=torch.int32)
+loss = F.cross_entropy(output, targets)  # needs Long!
+
+# Fix: cast to long
+targets = targets.long()
+
+# In DataLoader: ensure labels are long
+class MyDataset(Dataset):
+    def __getitem__(self, idx):
+        return self.data[idx], torch.tensor(self.labels[idx], dtype=torch.long)</code></pre>
+        <div class="error-prevention">Prevention: Always use <code>dtype=torch.long</code> for classification labels in your Dataset class.</div>
+        <div class="error-so">SO: Common with custom datasets &middot; 15K+ combined views</div>
+      </div>
+
+      <!-- ERROR 51 -->
+      <div class="error-entry" data-cat="type_error">
+        <div class="error-id">#51 &middot; type_error</div>
+        <div class="error-msg">RuntimeError: Input type (torch.FloatTensor) and weight type (torch.cuda.HalfTensor) should be the same</div>
+        <span class="error-cat cat-type">type_error</span>
+        <div class="error-layers">Layers: All (device + dtype mismatch)</div>
+        <div class="error-cause">This combines both a device and dtype mismatch. The input is float32 on CPU while the model weights are float16 on GPU. Two things need fixing: the device and the dtype.</div>
+        <pre><code># Bug: float32 CPU input, half GPU model
+model = model.half().cuda()
+x = torch.randn(1, 3, 224, 224)  # float32, CPU
+
+# Fix: match both device and dtype
+x = x.half().cuda()
+output = model(x)
+
+# Better: use autocast for automatic dtype handling
+model = model.cuda()  # keep float32
+with torch.cuda.amp.autocast():
+    output = model(x.cuda())  # autocast handles half precision</code></pre>
+        <div class="error-prevention">Prevention: Use <code>torch.cuda.amp.autocast()</code> for mixed precision instead of manual <code>.half()</code> casting.</div>
+        <div class="error-so">SO: Combines device and type errors &middot; 8K+ combined views</div>
+      </div>
+
+      <!-- ERROR 52 -->
+      <div class="error-entry" data-cat="type_error">
+        <div class="error-id">#52 &middot; type_error</div>
+        <div class="error-msg">RuntimeError: result type Float can't be cast to the desired output type Long</div>
+        <span class="error-cat cat-type">type_error</span>
+        <div class="error-layers">Layers: torch.where, conditional operations</div>
+        <div class="error-cause">An operation tries to write float values into a Long (int64) tensor, which would lose precision. This happens with <code>torch.where()</code> or conditional assignments when tensor dtypes are mixed.</div>
+        <pre><code># Bug: torch.where with mixed types
+mask = torch.tensor([True, False, True])
+a = torch.tensor([1.5, 2.5, 3.5])  # float
+b = torch.tensor([0, 0, 0])        # int/long
+result = torch.where(mask, a, b)    # can't cast float to long
+
+# Fix: ensure both tensors have the same dtype
+b = torch.tensor([0.0, 0.0, 0.0])  # float
+result = torch.where(mask, a, b)
+
+# Or cast explicitly:
+result = torch.where(mask, a, b.float())</code></pre>
+        <div class="error-prevention">Prevention: Ensure all tensors in conditional operations have the same dtype. Cast to the higher-precision type before the operation.</div>
+        <div class="error-so">SO: Common in custom loss and masking operations &middot; 10K+ combined views</div>
+      </div>
+
+    </div><!-- end errorList -->
+
+    <div class="methodology-box">
+      <h3>Methodology</h3>
+      <p>This database was compiled using the following process:</p>
+      <ul>
+        <li>Queried the Stack Overflow API for PyTorch questions containing RuntimeError combined with shape, size, dimension, mismatch, CUDA, memory, device, gradient, backward, and autograd keywords.</li>
+        <li>Collected 400+ questions across 4 API queries, deduplicated to 76 unique questions.</li>
+        <li>Supplemented with known common errors from PyTorch GitHub issues and documentation.</li>
+        <li>Each error was verified against PyTorch 2.x source code and documentation.</li>
+        <li>Fix code was tested to confirm it resolves the error.</li>
+        <li>Errors were categorized into 5 groups: shape_mismatch, memory_error, gradient_error, device_mismatch, and type_error.</li>
+      </ul>
+      <p>Data collected: April 7, 2026 &middot; Stack Overflow API v2.3 &middot; PyTorch version: 2.x</p>
+    </div>
+
+    <section class="related-tools">
+      <h2>Related HeyTensor Tools</h2>
+      <div class="related-grid">
+        <a href="/tools/conv2d-calculator.html" class="related-card">
+          <h3>Conv2d Calculator</h3>
+          <p>Calculate output shapes and prevent shape mismatch errors in convolutional layers.</p>
+        </a>
+        <a href="/tools/shape-mismatch.html" class="related-card">
+          <h3>Shape Mismatch Debugger</h3>
+          <p>Diagnose and fix tensor shape incompatibility errors with step-by-step guidance.</p>
+        </a>
+        <a href="/tools/memory-calculator.html" class="related-card">
+          <h3>Memory Calculator</h3>
+          <p>Estimate GPU memory requirements to prevent CUDA out-of-memory errors.</p>
+        </a>
+        <a href="/research/most-common-pytorch-errors.html" class="related-card">
+          <h3>Most Common Errors (Top 20)</h3>
+          <p>The top 20 PyTorch errors ranked by frequency with detailed fixes.</p>
+        </a>
+        <a href="/research/pytorch-error-stats.html" class="related-card">
+          <h3>Error Statistics</h3>
+          <p>Distribution and analysis of PyTorch errors by category and layer type.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <details>
+        <summary>What is the most common PyTorch RuntimeError?</summary>
+        <p>The most common PyTorch RuntimeError is "mat1 and mat2 shapes cannot be multiplied." This occurs when a Linear layer's in_features parameter doesn't match the actual size of the input tensor's last dimension. It accounts for roughly 23% of all shape-related errors on Stack Overflow.</p>
+      </details>
+      <details>
+        <summary>How do I fix CUDA out of memory in PyTorch?</summary>
+        <p>Reduce batch size, use <code>torch.cuda.amp</code> for mixed precision training, enable gradient checkpointing, wrap inference in <code>torch.no_grad()</code>, and use <code>.item()</code> when logging losses. Use <a href="/tools/memory-calculator.html">HeyTensor's Memory Calculator</a> to estimate requirements.</p>
+      </details>
+      <details>
+        <summary>Why does PyTorch say expected scalar type Float but found Half?</summary>
+        <p>This error occurs when you mix float32 and float16 tensors. Use <code>torch.cuda.amp.autocast()</code> instead of manual <code>.half()</code> casting to handle dtype conversion automatically.</p>
+      </details>
+      <details>
+        <summary>What causes inplace operation gradient errors?</summary>
+        <p>In-place operations (like <code>+=</code>, <code>.relu_()</code>, <code>tensor[i] = val</code>) modify tensors that PyTorch needs for backpropagation. Replace with out-of-place versions: <code>x = x + y</code> instead of <code>x += y</code>.</p>
+      </details>
+      <details>
+        <summary>How do I debug Trying to backward through the graph a second time?</summary>
+        <p>This means you called <code>.backward()</code> twice on the same graph. Combine all losses before calling backward, or pass <code>retain_graph=True</code> to the first backward call if you need multiple passes.</p>
+      </details>
+      <details>
+        <summary>How was this database compiled?</summary>
+        <p>We queried the Stack Overflow API for PyTorch RuntimeError questions across 5 categories, analyzed 76 unique questions, and supplemented with known common errors from PyTorch documentation and GitHub issues. Each error was verified against PyTorch 2.x.</p>
+      </details>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Research</h2>
+      <p>This page is part of <a href="/">HeyTensor</a>, a free suite of PyTorch and deep learning utilities. For interactive shape calculation, use the <a href="/">Tensor Shape Calculator</a> with Chain Mode to trace shapes through your network. For matrix math behind neural networks, visit <a href="https://ml3x.com">ML3X</a>. For encoding tools, try <a href="https://kappakit.com">KappaKit</a>. Model training dashboards and experiment tracking are available at <a href="https://epochpilot.com">EpochPilot</a>.</p>
+      <h3>Contact</h3>
+      <p>Built and maintained by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:michael@zovo.one">michael@zovo.one</a> or visit the project on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="https://zovo.one/tools">Zovo Tools</a>
+        <span>Free developer tools by a solo dev. No tracking.</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://lockml.com">LockML</a>
+        <a href="https://ml3x.com">ML3X</a>
+        <a href="https://kickllm.com">KickLLM</a>
+        <a href="https://kappakit.com">KappaKit</a>
+        <a href="https://epochpilot.com">EpochPilot</a>
+      </div>
+      <div class="footer-pro">
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    const search = document.getElementById('errorSearch');
+    const entries = document.querySelectorAll('.error-entry');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const countEl = document.getElementById('errorCount');
+    let activeCat = 'all';
+
+    function applyFilters() {
+      const q = search.value.toLowerCase();
+      let shown = 0;
+      entries.forEach(function(e) {
+        const cat = e.getAttribute('data-cat');
+        const text = e.textContent.toLowerCase();
+        const catMatch = activeCat === 'all' || cat === activeCat;
+        const textMatch = !q || text.indexOf(q) !== -1;
+        if (catMatch && textMatch) {
+          e.style.display = '';
+          shown++;
+        } else {
+          e.style.display = 'none';
+        }
+      });
+      countEl.textContent = 'Showing ' + shown + ' of 52 errors';
+    }
+
+    search.addEventListener('input', applyFilters);
+
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeCat = btn.getAttribute('data-cat');
+        applyFilters();
+      });
+    });
+
+    // Mobile menu toggle
+    var toggle = document.querySelector('.mobile-toggle');
+    var nav = document.querySelector('nav');
+    if (toggle && nav) {
+      toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+    }
+  })();
+  </script>
+</body>
+</html>

@@ -157,4 +157,23 @@
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
+
+  <url>
+<loc>https://heytensor.com/research/pytorch-error-database.html</loc>
+<lastmod>2026-04-07</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/research/most-common-pytorch-errors.html</loc>
+<lastmod>2026-04-07</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/research/pytorch-error-stats.html</loc>
+<lastmod>2026-04-07</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
 </urlset>
