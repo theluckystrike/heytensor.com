@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch Broadcasting Error Debugger | HeyTensor</title>
+  <meta name="description" content="Debug PyTorch broadcasting errors. Enter two tensor shapes to see if they can broadcast, the result shape, and how to fix incompatible dimensions.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/broadcast-error.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/broadcast-error.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/broadcast-error.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PyTorch Broadcasting Error Debugger | HeyTensor">
+  <meta property="og:description" content="Debug PyTorch broadcasting errors. Enter two tensor shapes to check compatibility.">
+  <meta property="og:url" content="https://heytensor.com/tools/broadcast-error.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PyTorch Broadcasting Error Debugger | HeyTensor">
+  <meta name="twitter:description" content="Debug broadcasting errors between two tensor shapes.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"PyTorch Broadcasting Error Debugger","url":"https://heytensor.com/tools/broadcast-error.html","description":"Debug PyTorch broadcasting errors between tensor shapes.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"},"datePublished":"2026-04-10","dateModified":"2026-04-10"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are PyTorch broadcasting rules?","acceptedAnswer":{"@type":"Answer","text":"Two tensors are broadcastable if, comparing dimensions from right to left: (1) dimensions are equal, (2) one of them is 1, or (3) one tensor has fewer dimensions (it gets prepended with 1s). For example, [3,1] and [1,4] broadcast to [3,4]. But [3,2] and [4,2] do not broadcast because 3≠4 and neither is 1."}},{"@type":"Question","name":"What does 'The size of tensor a must match the size of tensor b' mean?","acceptedAnswer":{"@type":"Answer","text":"This error means two tensors in an element-wise operation (add, multiply, etc.) have incompatible shapes that cannot be broadcast. Check both shapes, align them right-to-left, and find the dimension where sizes differ and neither is 1. Fix: unsqueeze one tensor to add a dimension of size 1."}},{"@type":"Question","name":"How do I fix broadcasting errors?","acceptedAnswer":{"@type":"Answer","text":"Common fixes: (1) unsqueeze to add a dimension of size 1: tensor.unsqueeze(-1). (2) expand to explicitly broadcast: tensor.expand(target_shape). (3) reshape to align dimensions. (4) Check if you accidentally squeezed a dimension earlier in your pipeline."}},{"@type":"Question","name":"Does broadcasting copy data?","acceptedAnswer":{"@type":"Answer","text":"No. Broadcasting is a virtual expansion — no data is copied. PyTorch uses stride tricks to make a dimension of size 1 appear repeated. This means broadcasting is memory-efficient. The expanded tensor shares the same underlying storage."}}]}
+  </script>
+</head>
+<body>
+  <header><div class="container header-inner"><a href="/" class="logo">Hey<span>Tensor</span></a><button class="mobile-toggle" aria-label="Menu">&#9776;</button><nav><a href="/">Calculator</a><a href="/tools/" class="active">Tools</a><a href="/about.html">About</a><a href="/blog/">Blog</a><div class="nav-right"><a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a><a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a></div></nav></div></header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Broadcasting Error Debugger</span></nav>
+    <section class="hero tool-hero">
+      <h1>PyTorch Broadcasting Error Debugger</h1>
+      <p>Debug PyTorch broadcasting errors. Enter two tensor shapes to see if they can broadcast, the result shape, and how to fix incompatible dimensions.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+    </section>
+
+    <div id="tool-container" data-component="error-debugger" data-config='{"error":"broadcast"}'></div>
+    <div class="last-updated"><time datetime="2026-04-10">Last updated: April 10, 2026</time></div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <details><summary>What are PyTorch broadcasting rules?</summary><p>Two tensors are broadcastable if, comparing dimensions from right to left: (1) dimensions are equal, (2) one of them is 1, or (3) one tensor has fewer dimensions. For example, [3,1] and [1,4] broadcast to [3,4]. But [3,2] and [4,2] do not broadcast because 3≠4 and neither is 1.</p></details>
+      <details><summary>What does "The size of tensor a must match tensor b" mean?</summary><p>This error means two tensors in an element-wise operation have incompatible shapes. Align shapes right-to-left and find where sizes differ and neither is 1. Fix: <code>unsqueeze</code> one tensor to add a dimension of size 1.</p></details>
+      <details><summary>How do I fix broadcasting errors?</summary><p>Common fixes: (1) <code>unsqueeze</code> to add a size-1 dimension. (2) <code>expand</code> to explicitly broadcast. (3) <code>reshape</code> to align dimensions. (4) Check if you accidentally squeezed a dimension earlier.</p></details>
+      <details><summary>Does broadcasting copy data?</summary><p>No. Broadcasting uses stride tricks to make a dimension of size 1 appear repeated. No data is copied, making it memory-efficient.</p></details>
+    </section>
+
+    <section class="related-tools">
+      <h2>Related Tools</h2>
+      <div class="related-grid">
+        <a href="/tools/shape-mismatch.html" class="related-card"><h3>Shape Mismatch Debugger</h3><p>Debug general shape mismatches between layers...</p></a>
+        <a href="/tools/mat1-mat2-shapes.html" class="related-card"><h3>Mat1 Mat2 Shapes Debugger</h3><p>Debug matrix multiplication shape errors...</p></a>
+        <a href="/tools/reshape-calculator.html" class="related-card"><h3>Reshape Calculator</h3><p>Validate reshape and view operations...</p></a>
+      </div>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Tool</h2>
+      <p>Part of <a href="/">HeyTensor</a>. All calculations run in your browser. Source code on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+      <h3>Contact</h3>
+      <p>Built by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
+    </section>
+  </main>
+
+  <div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+    <span style="font-size:0.85rem;color:#8b949e;">Based on real data from our <a href="/research/pytorch-error-database.html" style="color:#58a6ff;">PyTorch Error Database</a></span>
+  </div>
+
+  <footer class="site-footer"><div class="footer-inner"><div class="footer-brand">Zovo Tools</div><div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div><a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a><div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div></div></footer>
+<nav class="zovo-network" aria-label="Zovo Tools Network"><div class="zovo-network-inner"><h3 class="zovo-network-title">Explore More Tools</h3><div class="zovo-network-links"><a href="https://abwex.com">ABWex — A/B Testing</a><a href="https://claudflow.com">ClaudFlow — Workflows</a><a href="https://claudhq.com">ClaudHQ — Prompts</a><a href="https://claudkit.com">ClaudKit — API</a><a href="https://enhio.com">Enhio — Text Tools</a><a href="https://epochpilot.com">EpochPilot — Timestamps</a><a href="https://gen8x.com">Gen8X — Color Tools</a><a href="https://gpt0x.com">GPT0X — AI Models</a><a href="https://invokebot.com">InvokeBot — Webhooks</a><a href="https://kappafy.com">Kappafy — JSON</a><a href="https://kappakit.com">KappaKit — Dev Toolkit</a><a href="https://kickllm.com">KickLLM — LLM Costs</a><a href="https://krzen.com">Krzen — Image Tools</a><a href="https://lochbot.com">LochBot — Security</a><a href="https://lockml.com">LockML — ML Compare</a><a href="https://ml3x.com">ML3X — Matrix Math</a></div></div></nav>
+
+  <script src="/assets/js/app.js"></script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

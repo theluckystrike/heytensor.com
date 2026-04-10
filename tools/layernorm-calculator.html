@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LayerNorm Shape Calculator — PyTorch | HeyTensor</title>
+  <meta name="description" content="Calculate PyTorch LayerNorm output shapes and parameter counts. LayerNorm preserves input shape. Enter normalized_shape to see dimensions and trainable params.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/layernorm-calculator.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/layernorm-calculator.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/layernorm-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="LayerNorm Shape Calculator — PyTorch | HeyTensor">
+  <meta property="og:description" content="Calculate PyTorch LayerNorm output shapes and parameter counts. Enter normalized_shape to see dimensions.">
+  <meta property="og:url" content="https://heytensor.com/tools/layernorm-calculator.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LayerNorm Shape Calculator — PyTorch | HeyTensor">
+  <meta name="twitter:description" content="Calculate PyTorch LayerNorm output shapes and parameter counts.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "LayerNorm Shape Calculator",
+    "url": "https://heytensor.com/tools/layernorm-calculator.html",
+    "description": "Calculate PyTorch LayerNorm output shapes and parameter counts.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
+    "datePublished": "2026-04-10",
+    "dateModified": "2026-04-10"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does LayerNorm change the output shape?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. LayerNorm always outputs the same shape as the input. It normalizes across the dimensions specified by normalized_shape but does not change any dimensions. If input is [batch, seq, features], output is [batch, seq, features]."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between LayerNorm and BatchNorm?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "BatchNorm normalizes across the batch dimension (each feature independently across samples). LayerNorm normalizes across feature dimensions (each sample independently). LayerNorm works with any batch size and is the standard in Transformers. BatchNorm is standard in CNNs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What should normalized_shape be?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "normalized_shape should match the last N dimensions of your input tensor. For a Transformer with input [batch, seq_len, d_model], set normalized_shape=[d_model] or normalized_shape=d_model. For normalizing over both seq and features, use [seq_len, d_model]."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How many parameters does LayerNorm have?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "With elementwise_affine=True (default), LayerNorm has 2 × product(normalized_shape) trainable parameters: one gamma (weight) and one beta (bias) per element. For normalized_shape=[512], that is 1,024 parameters. With elementwise_affine=False, it has zero."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>LayerNorm Shape Calculator</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <h1>LayerNorm Shape Calculator</h1>
+      <p>Calculate PyTorch LayerNorm output shapes and parameter counts. LayerNorm preserves input shape. Enter normalized_shape to see dimensions and trainable params.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+    </section>
+
+    <div id="tool-container"
+         data-component="shape-calculator"
+         data-config='{"layer":"LayerNorm"}'>
+    </div>
+
+    <div class="last-updated"><time datetime="2026-04-10">Last updated: April 10, 2026</time></div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <details>
+        <summary>Does LayerNorm change the output shape?</summary>
+        <p>No. LayerNorm always outputs the same shape as the input. It normalizes across the dimensions specified by normalized_shape but does not change any dimensions.</p>
+      </details>
+      <details>
+        <summary>What is the difference between LayerNorm and BatchNorm?</summary>
+        <p>BatchNorm normalizes across the batch dimension (each feature independently across samples). LayerNorm normalizes across feature dimensions (each sample independently). LayerNorm works with any batch size and is the standard in Transformers. BatchNorm is standard in CNNs.</p>
+      </details>
+      <details>
+        <summary>What should normalized_shape be?</summary>
+        <p>normalized_shape should match the last N dimensions of your input tensor. For a Transformer with input [batch, seq_len, d_model], set normalized_shape=[d_model]. For normalizing over both seq and features, use [seq_len, d_model].</p>
+      </details>
+      <details>
+        <summary>How many parameters does LayerNorm have?</summary>
+        <p>With elementwise_affine=True (default), LayerNorm has 2 × product(normalized_shape) trainable parameters. For normalized_shape=[512], that is 1,024 parameters. With elementwise_affine=False, it has zero.</p>
+      </details>
+    </section>
+
+    <section class="related-tools">
+      <h2>Related Tools</h2>
+      <div class="related-grid">
+        <a href="/tools/batchnorm-calculator.html" class="related-card">
+          <h3>BatchNorm Calculator</h3>
+          <p>Calculate BatchNorm output shapes and running statistics dimensions...</p>
+        </a>
+        <a href="/tools/multihead-attention-calculator.html" class="related-card">
+          <h3>MultiheadAttention Calculator</h3>
+          <p>Calculate attention output shapes. LayerNorm is applied before/after attention in Transformers...</p>
+        </a>
+        <a href="/tools/parameter-counter.html" class="related-card">
+          <h3>Parameter Counter</h3>
+          <p>Count total trainable parameters across your entire model architecture...</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Tool</h2>
+      <p>This tool is part of <a href="/">HeyTensor</a>, a free suite of PyTorch utilities. All calculations run in your browser. Source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+      <h3>Contact</h3>
+      <p>HeyTensor is built by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:support@zovo.one">support@zovo.one</a> for feedback.</p>
+    </section>
+  </main>
+
+  <div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+    <span style="font-size:0.85rem;color:#8b949e;">Based on real data from our <a href="/research/most-common-pytorch-errors.html" style="color:#58a6ff;">Most Common PyTorch Errors</a> — shape mismatches ranked by frequency</span>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
+        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+    </div>
+</footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex — A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ — Prompts</a>
+            <a href="https://claudkit.com">ClaudKit — API</a>
+            <a href="https://enhio.com">Enhio — Text Tools</a>
+            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
+            <a href="https://gen8x.com">Gen8X — Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X — AI Models</a>
+            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
+            <a href="https://kappafy.com">Kappafy — JSON</a>
+            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
+            <a href="https://krzen.com">Krzen — Image Tools</a>
+            <a href="https://lochbot.com">LochBot — Security</a>
+            <a href="https://lockml.com">LockML — ML Compare</a>
+            <a href="https://ml3x.com">ML3X — Matrix Math</a>
+        </div>
+    </div>
+</nav>
+
+  <script src="/assets/js/app.js"></script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

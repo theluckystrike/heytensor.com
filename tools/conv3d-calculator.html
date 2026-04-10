@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conv3d Output Size Calculator — PyTorch | HeyTensor</title>
+  <meta name="description" content="Calculate PyTorch Conv3d output depth, height, and width. Enter input shape, kernel size, stride, padding, and dilation for 3D convolution output dimensions.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/conv3d-calculator.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/conv3d-calculator.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/conv3d-calculator.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Conv3d Output Size Calculator — PyTorch | HeyTensor">
+  <meta property="og:description" content="Calculate PyTorch Conv3d output depth, height, and width for 3D convolution layers.">
+  <meta property="og:url" content="https://heytensor.com/tools/conv3d-calculator.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Conv3d Output Size Calculator — PyTorch | HeyTensor">
+  <meta name="twitter:description" content="Calculate PyTorch Conv3d output dimensions for 3D convolution layers.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Conv3d Output Size Calculator","url":"https://heytensor.com/tools/conv3d-calculator.html","description":"Calculate PyTorch Conv3d output depth, height, and width.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"},"datePublished":"2026-04-10","dateModified":"2026-04-10"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the Conv3d output size formula?","acceptedAnswer":{"@type":"Answer","text":"The formula is the same as Conv2d but applied to 3 spatial dimensions (depth, height, width): D_out = floor((D_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies independently to height and width."}},{"@type":"Question","name":"When should I use Conv3d instead of Conv2d?","acceptedAnswer":{"@type":"Answer","text":"Use Conv3d for volumetric data: 3D medical images (MRI, CT scans), video frames (time × height × width), and point cloud voxelizations. The input shape is (batch, channels, depth, height, width) — 5 dimensions total."}},{"@type":"Question","name":"How many parameters does Conv3d have?","acceptedAnswer":{"@type":"Answer","text":"Conv3d parameters = out_channels × (in_channels × kernel_d × kernel_h × kernel_w + 1 if bias). A Conv3d(3, 64, kernel_size=3) has 64 × (3 × 3 × 3 × 3 + 1) = 5,248 parameters. This is 3× more per kernel element than Conv2d."}},{"@type":"Question","name":"Why is Conv3d so memory-intensive?","acceptedAnswer":{"@type":"Answer","text":"Conv3d processes 3 spatial dimensions, so the output tensor has 5 dimensions (batch, channels, D, H, W). A single feature map at 64×64×64 uses 262K floats vs 4K for a 64×64 Conv2d map. Memory scales cubically with spatial resolution."}}]}
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Conv3d Output Size Calculator</span></nav>
+    <section class="hero tool-hero">
+      <h1>Conv3d Output Size Calculator</h1>
+      <p>Calculate PyTorch Conv3d output depth, height, and width. Enter input shape, kernel size, stride, padding, and dilation for 3D convolution output dimensions.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+    </section>
+
+    <div id="tool-container" data-component="shape-calculator" data-config='{"layer":"Conv3d"}'></div>
+    <div class="last-updated"><time datetime="2026-04-10">Last updated: April 10, 2026</time></div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <details><summary>What is the Conv3d output size formula?</summary><p>The formula is the same as Conv2d but applied to 3 spatial dimensions: D_out = floor((D_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies independently to height and width.</p></details>
+      <details><summary>When should I use Conv3d instead of Conv2d?</summary><p>Use Conv3d for volumetric data: 3D medical images (MRI, CT scans), video frames (time × height × width), and point cloud voxelizations. The input shape is (batch, channels, depth, height, width) — 5 dimensions total.</p></details>
+      <details><summary>How many parameters does Conv3d have?</summary><p>Conv3d parameters = out_channels × (in_channels × kernel_d × kernel_h × kernel_w + 1 if bias). A Conv3d(3, 64, kernel_size=3) has 64 × (3 × 3 × 3 × 3 + 1) = 5,248 parameters. This is 3× more per kernel element than Conv2d.</p></details>
+      <details><summary>Why is Conv3d so memory-intensive?</summary><p>Conv3d processes 3 spatial dimensions, so the output tensor has 5 dimensions. A single feature map at 64×64×64 uses 262K floats vs 4K for a 64×64 Conv2d map. Memory scales cubically with spatial resolution.</p></details>
+    </section>
+
+    <section class="related-tools">
+      <h2>Related Tools</h2>
+      <div class="related-grid">
+        <a href="/tools/conv2d-calculator.html" class="related-card"><h3>Conv2d Calculator</h3><p>Calculate 2D convolution output sizes for image processing networks...</p></a>
+        <a href="/tools/conv1d-calculator.html" class="related-card"><h3>Conv1d Calculator</h3><p>Calculate 1D convolution output sizes for sequence and audio processing...</p></a>
+        <a href="/tools/memory-calculator.html" class="related-card"><h3>Memory Calculator</h3><p>Estimate GPU memory usage for your model. Essential for Conv3d workloads...</p></a>
+      </div>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Tool</h2>
+      <p>Part of <a href="/">HeyTensor</a>. All calculations run in your browser. Source code on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+      <h3>Contact</h3>
+      <p>Built by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
+    </section>
+  </main>
+
+  <div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+    <span style="font-size:0.85rem;color:#8b949e;">Based on real data from our <a href="/research/pytorch-error-database.html" style="color:#58a6ff;">PyTorch Error Database</a></span>
+  </div>
+
+  <footer class="site-footer"><div class="footer-inner"><div class="footer-brand">Zovo Tools</div><div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div><a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a><div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div></div></footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network"><div class="zovo-network-inner"><h3 class="zovo-network-title">Explore More Tools</h3><div class="zovo-network-links"><a href="https://abwex.com">ABWex — A/B Testing</a><a href="https://claudflow.com">ClaudFlow — Workflows</a><a href="https://claudhq.com">ClaudHQ — Prompts</a><a href="https://claudkit.com">ClaudKit — API</a><a href="https://enhio.com">Enhio — Text Tools</a><a href="https://epochpilot.com">EpochPilot — Timestamps</a><a href="https://gen8x.com">Gen8X — Color Tools</a><a href="https://gpt0x.com">GPT0X — AI Models</a><a href="https://invokebot.com">InvokeBot — Webhooks</a><a href="https://kappafy.com">Kappafy — JSON</a><a href="https://kappakit.com">KappaKit — Dev Toolkit</a><a href="https://kickllm.com">KickLLM — LLM Costs</a><a href="https://krzen.com">Krzen — Image Tools</a><a href="https://lochbot.com">LochBot — Security</a><a href="https://lockml.com">LockML — ML Compare</a><a href="https://ml3x.com">ML3X — Matrix Math</a></div></div></nav>
+
+  <script src="/assets/js/app.js"></script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

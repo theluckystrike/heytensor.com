@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expected Input Size Error Debugger — PyTorch | HeyTensor</title>
+  <meta name="description" content="Debug PyTorch expected input size errors. Fix 'Expected N-dimensional input' and 'expected input batch_size' RuntimeErrors with step-by-step guidance.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/expected-input-size.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/expected-input-size.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/expected-input-size.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Expected Input Size Error Debugger | HeyTensor">
+  <meta property="og:description" content="Debug PyTorch expected input size errors with step-by-step guidance.">
+  <meta property="og:url" content="https://heytensor.com/tools/expected-input-size.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Expected Input Size Error Debugger | HeyTensor">
+  <meta name="twitter:description" content="Debug PyTorch expected input size RuntimeErrors.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Expected Input Size Error Debugger","url":"https://heytensor.com/tools/expected-input-size.html","description":"Debug PyTorch expected input size errors.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"},"datePublished":"2026-04-10","dateModified":"2026-04-10"}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does Expected 4-dimensional input mean?","acceptedAnswer":{"@type":"Answer","text":"Conv2d and BatchNorm2d expect 4D input: (batch, channels, height, width). If you pass a 3D tensor (e.g., a single image without batch dimension), you get this error. Fix: add a batch dimension with tensor.unsqueeze(0)."}},{"@type":"Question","name":"What does Expected input batch_size to match target batch_size mean?","acceptedAnswer":{"@type":"Answer","text":"Your model's output and your labels have different batch sizes. For example, model output has 32 samples but labels have 16. This usually happens when data is incorrectly split or when a reshape accidentally changes the batch dimension."}},{"@type":"Question","name":"Why does my model expect a different number of channels?","acceptedAnswer":{"@type":"Answer","text":"Conv2d's in_channels must match the channel dimension of your input. Grayscale images have 1 channel, RGB has 3, RGBA has 4. If you load grayscale images as RGB (3 channels) but your model expects 1, use transforms.Grayscale() or change Conv2d's in_channels."}},{"@type":"Question","name":"How do I debug input size errors systematically?","acceptedAnswer":{"@type":"Answer","text":"(1) Print input.shape before the failing layer. (2) Check the layer's expected input: Conv2d wants 4D, Linear wants 2D+, LSTM wants 3D. (3) Compare in_channels/in_features with your actual input dimensions. (4) Use HeyTensor's Chain Mode to trace shapes through your network."}}]}
+  </script>
+</head>
+<body>
+  <header><div class="container header-inner"><a href="/" class="logo">Hey<span>Tensor</span></a><button class="mobile-toggle" aria-label="Menu">&#9776;</button><nav><a href="/">Calculator</a><a href="/tools/" class="active">Tools</a><a href="/about.html">About</a><a href="/blog/">Blog</a><div class="nav-right"><a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a><a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a></div></nav></div></header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Expected Input Size Debugger</span></nav>
+    <section class="hero tool-hero">
+      <h1>Expected Input Size Error Debugger</h1>
+      <p>Debug PyTorch expected input size errors. Fix "Expected N-dimensional input" and "expected input batch_size" RuntimeErrors with step-by-step guidance.</p>
+      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+    </section>
+
+    <div id="tool-container" data-component="error-debugger" data-config='{"error":"expected-input-size"}'></div>
+    <div class="last-updated"><time datetime="2026-04-10">Last updated: April 10, 2026</time></div>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <details><summary>What does Expected 4-dimensional input mean?</summary><p>Conv2d and BatchNorm2d expect 4D input: (batch, channels, height, width). If you pass a 3D tensor (single image without batch), you get this error. Fix: <code>tensor.unsqueeze(0)</code>.</p></details>
+      <details><summary>What does Expected input batch_size to match target mean?</summary><p>Model output and labels have different batch sizes. Usually happens when data is incorrectly split or reshape changes the batch dimension.</p></details>
+      <details><summary>Why does my model expect different channels?</summary><p>Conv2d's in_channels must match input channels. Grayscale=1, RGB=3, RGBA=4. If loading grayscale as RGB, use <code>transforms.Grayscale()</code> or change in_channels.</p></details>
+      <details><summary>How to debug systematically?</summary><p>(1) Print <code>input.shape</code> before failing layer. (2) Check expected dimensionality: Conv2d→4D, Linear→2D+, LSTM→3D. (3) Compare in_channels/in_features with actual input. (4) Use Chain Mode to trace shapes.</p></details>
+    </section>
+
+    <section class="related-tools">
+      <h2>Related Tools</h2>
+      <div class="related-grid">
+        <a href="/tools/conv2d-calculator.html" class="related-card"><h3>Conv2d Calculator</h3><p>Verify Conv2d expects your input dimensions...</p></a>
+        <a href="/tools/shape-mismatch.html" class="related-card"><h3>Shape Mismatch Debugger</h3><p>Debug general shape mismatches between layers...</p></a>
+        <a href="/tools/flatten-calculator.html" class="related-card"><h3>Flatten Calculator</h3><p>Calculate flattened size before Linear layers...</p></a>
+      </div>
+    </section>
+
+    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+      <h2>About This Tool</h2>
+      <p>Part of <a href="/">HeyTensor</a>. All calculations run in your browser. Source code on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+      <h3>Contact</h3>
+      <p>Built by <a href="https://zovo.one">Michael Lip</a>. Email <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
+    </section>
+  </main>
+
+  <div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+    <span style="font-size:0.85rem;color:#8b949e;">Based on real data from our <a href="/research/most-common-pytorch-errors.html" style="color:#58a6ff;">Most Common PyTorch Errors</a></span>
+  </div>
+
+  <footer class="site-footer"><div class="footer-inner"><div class="footer-brand">Zovo Tools</div><div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div><a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a><div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div></div></footer>
+<nav class="zovo-network" aria-label="Zovo Tools Network"><div class="zovo-network-inner"><h3 class="zovo-network-title">Explore More Tools</h3><div class="zovo-network-links"><a href="https://abwex.com">ABWex — A/B Testing</a><a href="https://claudflow.com">ClaudFlow — Workflows</a><a href="https://claudhq.com">ClaudHQ — Prompts</a><a href="https://claudkit.com">ClaudKit — API</a><a href="https://enhio.com">Enhio — Text Tools</a><a href="https://epochpilot.com">EpochPilot — Timestamps</a><a href="https://gen8x.com">Gen8X — Color Tools</a><a href="https://gpt0x.com">GPT0X — AI Models</a><a href="https://invokebot.com">InvokeBot — Webhooks</a><a href="https://kappafy.com">Kappafy — JSON</a><a href="https://kappakit.com">KappaKit — Dev Toolkit</a><a href="https://kickllm.com">KickLLM — LLM Costs</a><a href="https://krzen.com">Krzen — Image Tools</a><a href="https://lochbot.com">LochBot — Security</a><a href="https://lockml.com">LockML — ML Compare</a><a href="https://ml3x.com">ML3X — Matrix Math</a></div></div></nav>
+
+  <script src="/assets/js/app.js"></script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

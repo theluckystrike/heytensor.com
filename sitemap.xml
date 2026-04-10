@@ -176,4 +176,64 @@
 <changefreq>monthly</changefreq>
 <priority>0.8</priority>
 </url>
+  <url>
+<loc>https://heytensor.com/tools/gru-shape-calculator.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/layernorm-calculator.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/conv3d-calculator.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/adaptiveavgpool2d-calculator.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/reshape-calculator.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/broadcast-error.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/dimension-out-of-range.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/expected-input-size.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/flops-calculator.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/tools/learning-rate-finder.html</loc>
+<lastmod>2026-04-10</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
 </urlset>
