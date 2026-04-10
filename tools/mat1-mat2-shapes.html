@@ -73,6 +73,22 @@
           "@type": "Answer",
           "text": "Changing kernel_size, stride, or padding in Conv2d changes the output spatial dimensions. If you then Flatten and feed into a Linear layer, the flattened size changes. You must recalculate: in_features = out_channels * H_out * W_out."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this tool free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All HeyTensor tools are free, run in your browser, and require no signup."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this work offline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load."
+        }
       }
     ]
   }
@@ -130,6 +146,8 @@
         <summary>Why does this happen after changing Conv2d parameters?</summary>
         <p>Changing kernel_size, stride, or padding in Conv2d changes the output spatial dimensions. If you then Flatten and feed into a Linear layer, the flattened size changes. You must recalculate: in_features = out_channels * H_out * W_out.</p>
       </details>
+      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

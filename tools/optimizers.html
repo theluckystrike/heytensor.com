@@ -73,6 +73,22 @@
           "@type": "Answer",
           "text": "SGD with momentum: 1x parameters (momentum buffer). Adam/AdamW: 2x parameters (first and second moment estimates). So Adam uses 2x more optimizer memory than SGD. For a 1B parameter model in float32, that's 4GB (SGD) vs 8GB (Adam) of optimizer states."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this tool free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All HeyTensor tools are free, run in your browser, and require no signup."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this work offline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load."
+        }
       }
     ]
   }
@@ -130,6 +146,8 @@
         <summary>How much memory do optimizers use?</summary>
         <p>SGD with momentum: 1x parameters (momentum buffer). Adam/AdamW: 2x parameters (first and second moment estimates). So Adam uses 2x more optimizer memory than SGD. For a 1B parameter model in float32, that&#39;s 4GB (SGD) vs 8GB (Adam) of optimizer states.</p>
       </details>
+      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

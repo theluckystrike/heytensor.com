@@ -73,6 +73,22 @@
           "@type": "Answer",
           "text": "Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this tool free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All HeyTensor tools are free, run in your browser, and require no signup."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does this work offline?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load."
+        }
       }
     ]
   }
@@ -114,6 +130,30 @@
 
     <div class="last-updated"><time datetime="2026-04-06">Last updated: April 6, 2026</time></div>
 
+    <section class="code-examples" style="max-width:720px;margin:2rem auto;">
+  <h2>PyTorch Linear Layer Code</h2>
+  <pre><code>import torch.nn as nn
+
+# Define Linear layer
+linear = nn.Linear(in_features=512, out_features=10)
+
+# Input: batch=32, features=512
+x = torch.randn(32, 512)
+output = linear(x)
+print(output.shape)  # torch.Size([32, 10])
+
+# Parameters: in_features * out_features + out_features (bias)
+print(sum(p.numel() for p in linear.parameters()))  # 5130
+
+# Common pattern: flatten CNN output → Linear
+model = nn.Sequential(
+    nn.Flatten(),           # (batch, C, H, W) → (batch, C*H*W)
+    nn.Linear(512 * 7 * 7, 4096),
+    nn.ReLU(),
+    nn.Linear(4096, 1000)
+)</code></pre>
+</section>
+
     <section class="faq-section">
       <h2>Frequently Asked Questions</h2>
             <details>
@@ -130,6 +170,8 @@
         <summary>Why do I get a shape error with Linear after Conv2d?</summary>
         <p>Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W.</p>
       </details>
+      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">
