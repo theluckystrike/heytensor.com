@@ -117,6 +117,31 @@
         <p>Verify transformer attention layer configuration and output shapes.</p>
         <span class="tool-tag">Shape Calculator</span>
       </a>
+      <a href="/tools/gru-shape-calculator.html" class="tool-card">
+        <h3>GRU Output Shape Calculator</h3>
+        <p>Calculate output shape for GRU layers including bidirectional mode.</p>
+        <span class="tool-tag">Shape Calculator</span>
+      </a>
+      <a href="/tools/layernorm-calculator.html" class="tool-card">
+        <h3>LayerNorm Shape Calculator</h3>
+        <p>Verify LayerNorm normalized_shape configuration and parameter count.</p>
+        <span class="tool-tag">Shape Calculator</span>
+      </a>
+      <a href="/tools/conv3d-calculator.html" class="tool-card">
+        <h3>Conv3d Output Size Calculator</h3>
+        <p>Calculate output depth, height, and width for 3D convolution layers.</p>
+        <span class="tool-tag">Shape Calculator</span>
+      </a>
+      <a href="/tools/adaptiveavgpool2d-calculator.html" class="tool-card">
+        <h3>AdaptiveAvgPool2d Calculator</h3>
+        <p>Calculate output shape for adaptive average pooling layers.</p>
+        <span class="tool-tag">Shape Calculator</span>
+      </a>
+      <a href="/tools/reshape-calculator.html" class="tool-card">
+        <h3>Reshape / View Calculator</h3>
+        <p>Validate reshape operations and infer missing dimensions with -1.</p>
+        <span class="tool-tag">Shape Calculator</span>
+      </a>
     </div>
 
     <h2 class="tools-section-title">Error Debuggers</h2>
@@ -139,6 +164,21 @@
       <a href="/tools/view-size-not-compatible.html" class="tool-card">
         <h3>view size not compatible — Fix</h3>
         <p>Understand contiguous memory, view vs reshape, and how to fix it.</p>
+        <span class="tool-tag">Error Debugger</span>
+      </a>
+      <a href="/tools/broadcast-error.html" class="tool-card">
+        <h3>Broadcasting Error Debugger</h3>
+        <p>Fix "cannot be broadcast together" with shape analysis and rules.</p>
+        <span class="tool-tag">Error Debugger</span>
+      </a>
+      <a href="/tools/dimension-out-of-range.html" class="tool-card">
+        <h3>Dimension Out of Range — Fix</h3>
+        <p>Diagnose and fix IndexError for tensor dimension access.</p>
+        <span class="tool-tag">Error Debugger</span>
+      </a>
+      <a href="/tools/expected-input-size.html" class="tool-card">
+        <h3>Expected Input Size Error — Fix</h3>
+        <p>Fix "expected input of size" errors for BatchNorm, Conv, and Linear.</p>
         <span class="tool-tag">Error Debugger</span>
       </a>
     </div>
@@ -177,6 +217,16 @@
       <a href="/tools/memory-calculator.html" class="tool-card">
         <h3>GPU Memory Calculator for Training</h3>
         <p>Estimate VRAM for parameters, gradients, optimizer states, and activations.</p>
+        <span class="tool-tag">Model Tool</span>
+      </a>
+      <a href="/tools/flops-calculator.html" class="tool-card">
+        <h3>FLOPs Calculator</h3>
+        <p>Estimate floating-point operations per forward pass for your model.</p>
+        <span class="tool-tag">Model Tool</span>
+      </a>
+      <a href="/tools/learning-rate-finder.html" class="tool-card">
+        <h3>Learning Rate Finder</h3>
+        <p>Simulate LR range test to find optimal learning rate for training.</p>
         <span class="tool-tag">Model Tool</span>
       </a>
     </div>
