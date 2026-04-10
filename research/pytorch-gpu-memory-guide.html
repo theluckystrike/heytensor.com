@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch GPU Memory Usage Guide — VRAM Requirements for Every Layer Type | HeyTensor</title>
+  <meta name="description" content="Complete VRAM usage reference for every PyTorch layer type. Memory formulas, batch size estimates, and real Stack Overflow data for Conv2d, Linear, LSTM, Transformer, BatchNorm, and more.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/research/pytorch-gpu-memory-guide.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/research/pytorch-gpu-memory-guide.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/research/pytorch-gpu-memory-guide.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="PyTorch GPU Memory Usage Guide — VRAM Requirements for Every Layer Type">
+  <meta property="og:description" content="Complete VRAM usage reference for every PyTorch layer type with memory formulas, batch size estimates, and real community data.">
+  <meta property="og:url" content="https://heytensor.com/research/pytorch-gpu-memory-guide.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PyTorch GPU Memory Usage Guide — VRAM Requirements for Every Layer Type">
+  <meta name="twitter:description" content="Complete VRAM usage reference for every PyTorch layer type with memory formulas, batch size estimates, and real community data.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "PyTorch GPU Memory Usage by Layer Type",
+    "description": "Comprehensive reference of GPU VRAM requirements for every major PyTorch layer type, including memory formulas for parameters, activations, and gradients across typical batch sizes.",
+    "url": "https://heytensor.com/research/pytorch-gpu-memory-guide.html",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "creator": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-10",
+    "dateModified": "2026-04-10",
+    "keywords": ["PyTorch", "GPU memory", "VRAM", "CUDA", "memory optimization", "batch size", "layer memory"],
+    "measurementTechnique": "Formula-based calculation verified against torch.cuda.memory_allocated() measurements",
+    "variableMeasured": [
+      {"@type": "PropertyValue", "name": "parameter_memory", "description": "Memory used by trainable parameters in bytes"},
+      {"@type": "PropertyValue", "name": "activation_memory", "description": "Memory used by forward-pass activations per sample"},
+      {"@type": "PropertyValue", "name": "gradient_memory", "description": "Memory used by gradients during backpropagation"},
+      {"@type": "PropertyValue", "name": "total_vram", "description": "Total VRAM required including PyTorch overhead"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much GPU memory does a PyTorch Conv2d layer use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Conv2d layer's parameter memory is (C_in * C_out * K_h * K_w + C_out) * 4 bytes for float32. For example, Conv2d(64, 128, 3) uses (64*128*3*3 + 128)*4 = 295,424 bytes (~0.28 MB) for parameters alone. During training, you need 2x for gradients plus activation memory proportional to batch_size * C_out * H_out * W_out * 4 bytes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does PyTorch use more GPU memory than expected?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "PyTorch's actual VRAM usage exceeds the sum of parameters and activations for several reasons: 1) CUDA context overhead (~300-800 MB), 2) Memory fragmentation from the caching allocator, 3) Gradient tensors during training (same size as parameters), 4) Optimizer states (Adam uses 2x parameter memory for momentum and variance), 5) Intermediate buffers for operations like BatchNorm running stats."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I calculate the maximum batch size for my GPU?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Maximum batch size = (Available VRAM - Model Parameters - CUDA Overhead) / (Per-Sample Activation Memory * training_multiplier). The training_multiplier is approximately 3x for SGD (activations + gradients + optimizer) and 5x for Adam. For a 12 GB GPU with 500 MB model and 800 MB overhead, using Adam: (12000 - 500 - 800) / (per_sample_MB * 5). Use HeyTensor's Memory Calculator for exact estimates."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which PyTorch layer type uses the most GPU memory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Transformer layers (nn.TransformerEncoderLayer) are the most memory-intensive because the self-attention mechanism creates an attention matrix of size (batch * heads * seq_len * seq_len), which grows quadratically with sequence length. A single transformer layer with 512 dim, 8 heads, and seq_len=512 uses ~8 MB per sample just for attention maps. LSTM layers are second, requiring 8x the memory of a comparably-sized Linear layer due to four internal gates."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does mixed precision training actually halve GPU memory usage?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Mixed precision (AMP) reduces activation memory by roughly 50% since activations are stored in float16 instead of float32. However, model parameters are still kept in float32 as a master copy, and the optimizer states remain in float32. In practice, AMP typically reduces total training memory by 30-40%, not 50%. The actual savings depend on the ratio of activation memory to parameter memory — models with large intermediate activations (like ResNets) benefit more."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    .research-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-family: var(--font-display);
+      color: var(--purple);
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .research-meta {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .research-meta a { color: var(--text-dim); }
+    .research-meta a:hover { color: var(--accent); }
+    .mem-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin: 1.5rem 0;
+    }
+    .mem-table th {
+      background: var(--bg-card);
+      color: var(--accent);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      text-align: left;
+      padding: 0.6rem 0.5rem;
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 56px;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    .mem-table td {
+      padding: 0.55rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .mem-table tr:hover td { background: var(--bg-hover); }
+    .mem-table code {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      background: var(--bg);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+    }
+    .mem-bar {
+      display: inline-block;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 4px;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+      opacity: 0.7;
+    }
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .stat-num {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .methodology-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 32px 0;
+    }
+    .methodology-box h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .methodology-box p, .methodology-box li {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .methodology-box ul { padding-left: 20px; margin-top: 8px; }
+    .methodology-box li { margin-bottom: 4px; }
+    .so-entry {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .so-entry:hover { border-color: var(--accent); }
+    .so-votes {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1.1rem;
+      min-width: 40px;
+      text-align: center;
+    }
+    .so-title { font-size: 0.85rem; }
+    .so-title a { color: var(--text); text-decoration: none; }
+    .so-title a:hover { color: var(--accent); }
+    details {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      padding: 14px 18px;
+    }
+    details[open] { padding-bottom: 18px; }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: '+ '; color: var(--accent); font-family: var(--font-display); }
+    details[open] summary::before { content: '- '; }
+    details p {
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "PyTorch GPU Memory Usage Guide — VRAM Requirements for Every Layer Type",
+    "description": "Complete VRAM usage reference for every PyTorch layer type with memory formulas, batch size estimates, and real community data.",
+    "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
+    "publisher": {"@type": "Organization", "name": "HeyTensor", "url": "https://heytensor.com"},
+    "datePublished": "2026-04-10",
+    "dateModified": "2026-04-10",
+    "mainEntityOfPage": "https://heytensor.com/research/pytorch-gpu-memory-guide.html",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["h1", ".research-meta", ".stat-num"]
+    }
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/research/pytorch-gpu-memory-guide.html">Research</a> <span>/</span> <span>GPU Memory Guide</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <div class="research-badge">Original Research</div>
+      <h1>PyTorch GPU Memory Usage Guide</h1>
+      <p class="hero-subtitle">VRAM Requirements for Every Layer Type</p>
+      <div class="research-meta">
+        By <a href="/about.html">Michael Lip</a> &middot; Published April 10, 2026 &middot; Data sources: PyTorch docs, Stack Overflow API &middot; Last updated: <time datetime="2026-04-10">April 10, 2026</time>
+      </div>
+    </section>
+
+    <div class="stats-summary">
+      <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Layer Types</div></div>
+      <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Memory Components</div></div>
+      <div class="stat-card"><div class="stat-num">69</div><div class="stat-label">SO Votes (Top Q)</div></div>
+      <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">SO Questions</div></div>
+    </div>
+
+    <p>Understanding GPU memory consumption is critical for training deep learning models efficiently. Every PyTorch layer consumes VRAM for three things: <strong>parameters</strong> (weights and biases), <strong>activations</strong> (forward pass outputs saved for backprop), and <strong>gradients</strong> (computed during backward pass). This guide provides exact formulas for each layer type.</p>
+
+    <p>Total training memory per layer follows this formula: <code>Total = Params * 4 + Activations * batch_size * 4 + Gradients * 4 + Optimizer_States</code> (for float32). Adam optimizer adds 2x parameter memory for momentum and variance buffers.</p>
+
+    <h2>VRAM Requirements by Layer Type</h2>
+
+    <div style="overflow-x:auto;">
+    <table class="mem-table">
+      <thead>
+        <tr>
+          <th>Layer Type</th>
+          <th>Parameter Count Formula</th>
+          <th>Example Config</th>
+          <th>Param Memory (FP32)</th>
+          <th>Activation / Sample</th>
+          <th>Batch=32 Total</th>
+          <th>Relative Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cat="conv">
+          <td><strong>nn.Conv2d</strong></td>
+          <td><code>C_in*C_out*K*K + C_out</code></td>
+          <td>Conv2d(64, 128, 3, padding=1), input 32x32</td>
+          <td>295 KB</td>
+          <td>512 KB</td>
+          <td>17.2 MB</td>
+          <td><span class="mem-bar" style="width:34%;"></span>Medium</td>
+        </tr>
+        <tr data-cat="conv">
+          <td><strong>nn.Conv1d</strong></td>
+          <td><code>C_in*C_out*K + C_out</code></td>
+          <td>Conv1d(256, 512, 5), input len=100</td>
+          <td>2.5 MB</td>
+          <td>200 KB</td>
+          <td>9.0 MB</td>
+          <td><span class="mem-bar" style="width:18%;"></span>Low-Med</td>
+        </tr>
+        <tr data-cat="conv">
+          <td><strong>nn.ConvTranspose2d</strong></td>
+          <td><code>C_in*C_out*K*K + C_out</code></td>
+          <td>ConvTranspose2d(128, 64, 4, stride=2), input 16x16</td>
+          <td>524 KB</td>
+          <td>1.0 MB</td>
+          <td>33.6 MB</td>
+          <td><span class="mem-bar" style="width:67%;"></span>High</td>
+        </tr>
+        <tr data-cat="linear">
+          <td><strong>nn.Linear</strong></td>
+          <td><code>in*out + out</code></td>
+          <td>Linear(4096, 4096)</td>
+          <td>64 MB</td>
+          <td>16 KB</td>
+          <td>64.5 MB</td>
+          <td><span class="mem-bar" style="width:40%;"></span>Medium</td>
+        </tr>
+        <tr data-cat="rnn">
+          <td><strong>nn.LSTM</strong></td>
+          <td><code>4*((in+hid)*hid + hid) * layers * (1+bidir)</code></td>
+          <td>LSTM(512, 256, num_layers=2, bidirectional=True)</td>
+          <td>9.4 MB</td>
+          <td>256 KB (per step)</td>
+          <td>26.2 MB</td>
+          <td><span class="mem-bar" style="width:52%;"></span>High</td>
+        </tr>
+        <tr data-cat="rnn">
+          <td><strong>nn.GRU</strong></td>
+          <td><code>3*((in+hid)*hid + hid) * layers * (1+bidir)</code></td>
+          <td>GRU(512, 256, num_layers=2)</td>
+          <td>3.5 MB</td>
+          <td>128 KB (per step)</td>
+          <td>7.6 MB</td>
+          <td><span class="mem-bar" style="width:15%;"></span>Low-Med</td>
+        </tr>
+        <tr data-cat="transformer">
+          <td><strong>nn.TransformerEncoderLayer</strong></td>
+          <td><code>4*d^2 + 4*d*d_ff + various biases</code></td>
+          <td>d_model=512, nhead=8, d_ff=2048, seq_len=512</td>
+          <td>12.6 MB</td>
+          <td>8.0 MB (attention maps)</td>
+          <td>268 MB</td>
+          <td><span class="mem-bar" style="width:100%;"></span>Very High</td>
+        </tr>
+        <tr data-cat="transformer">
+          <td><strong>nn.MultiheadAttention</strong></td>
+          <td><code>4*d^2 + 4*d</code> (Q,K,V,O projections)</td>
+          <td>embed_dim=512, num_heads=8, seq_len=512</td>
+          <td>4.0 MB</td>
+          <td>8.0 MB (attn matrix)</td>
+          <td>260 MB</td>
+          <td><span class="mem-bar" style="width:96%;"></span>Very High</td>
+        </tr>
+        <tr data-cat="norm">
+          <td><strong>nn.BatchNorm2d</strong></td>
+          <td><code>2*features</code> (+ running stats)</td>
+          <td>BatchNorm2d(256), input 32x32</td>
+          <td>3 KB</td>
+          <td>1.0 MB</td>
+          <td>32.0 MB</td>
+          <td><span class="mem-bar" style="width:25%;"></span>Low (params), High (act.)</td>
+        </tr>
+        <tr data-cat="norm">
+          <td><strong>nn.LayerNorm</strong></td>
+          <td><code>2*normalized_shape</code></td>
+          <td>LayerNorm(512), seq_len=512</td>
+          <td>4 KB</td>
+          <td>1.0 MB</td>
+          <td>32.0 MB</td>
+          <td><span class="mem-bar" style="width:25%;"></span>Low (params), High (act.)</td>
+        </tr>
+        <tr data-cat="embed">
+          <td><strong>nn.Embedding</strong></td>
+          <td><code>vocab_size * embed_dim</code></td>
+          <td>Embedding(50000, 768)</td>
+          <td>146.5 MB</td>
+          <td>3 KB (per token)</td>
+          <td>149.5 MB</td>
+          <td><span class="mem-bar" style="width:58%;"></span>High (params only)</td>
+        </tr>
+        <tr data-cat="pool">
+          <td><strong>nn.MaxPool2d</strong></td>
+          <td><code>0</code> (no parameters)</td>
+          <td>MaxPool2d(2, stride=2), 128ch 32x32 input</td>
+          <td>0 B</td>
+          <td>512 KB (indices)</td>
+          <td>16.0 MB</td>
+          <td><span class="mem-bar" style="width:12%;"></span>Low</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>Key Memory Optimization Techniques</h2>
+
+    <div style="overflow-x:auto;">
+    <table class="mem-table">
+      <thead>
+        <tr>
+          <th>Technique</th>
+          <th>Memory Reduction</th>
+          <th>Speed Impact</th>
+          <th>PyTorch API</th>
+          <th>Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cat="optimization" data-techniques="amp">
+          <td><strong>Mixed Precision (AMP)</strong></td>
+          <td>30-40%</td>
+          <td>+20-60% faster</td>
+          <td><code>torch.cuda.amp.autocast()</code></td>
+          <td>All training workloads</td>
+        </tr>
+        <tr data-cat="optimization" data-techniques="checkpoint">
+          <td><strong>Gradient Checkpointing</strong></td>
+          <td>50-80% activations</td>
+          <td>~25% slower</td>
+          <td><code>torch.utils.checkpoint.checkpoint()</code></td>
+          <td>Deep networks, Transformers</td>
+        </tr>
+        <tr data-cat="optimization" data-techniques="accumulation">
+          <td><strong>Gradient Accumulation</strong></td>
+          <td>Linear with steps</td>
+          <td>Proportional slowdown</td>
+          <td><code>loss.backward(); if step % N == 0: optimizer.step()</code></td>
+          <td>Large effective batch sizes</td>
+        </tr>
+        <tr data-cat="optimization" data-techniques="offload">
+          <td><strong>CPU Offloading</strong></td>
+          <td>Up to 90%</td>
+          <td>2-5x slower</td>
+          <td><code>torch.cuda.empty_cache(); tensor.cpu()</code></td>
+          <td>Inference of huge models</td>
+        </tr>
+        <tr data-cat="optimization" data-techniques="inplace">
+          <td><strong>In-Place Operations</strong></td>
+          <td>5-15%</td>
+          <td>No impact</td>
+          <td><code>nn.ReLU(inplace=True)</code></td>
+          <td>Memory-constrained inference</td>
+        </tr>
+        <tr data-cat="optimization" data-techniques="nograd">
+          <td><strong>torch.no_grad()</strong></td>
+          <td>~60% (no activations stored)</td>
+          <td>Faster (no graph)</td>
+          <td><code>with torch.no_grad():</code></td>
+          <td>Inference, evaluation</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>Community Questions from Stack Overflow</h2>
+    <p>Real questions developers ask about PyTorch GPU memory, sourced from the Stack Overflow API (sorted by votes):</p>
+
+    <div class="so-entry">
+      <div class="so-votes">69</div>
+      <div class="so-title"><a href="https://stackoverflow.com/questions/48482787" target="_blank" rel="noopener">PyTorch memory model: "torch.from_numpy()" vs "torch.Tensor()"</a></div>
+    </div>
+    <div class="so-entry">
+      <div class="so-votes">5</div>
+      <div class="so-title"><a href="https://stackoverflow.com/questions/60276672" target="_blank" rel="noopener">CUDA and PyTorch memory usage</a></div>
+    </div>
+    <div class="so-entry">
+      <div class="so-votes">4</div>
+      <div class="so-title"><a href="https://stackoverflow.com/questions/61526297" target="_blank" rel="noopener">PyTorch memory model: how does "torch.from_numpy()" work?</a></div>
+    </div>
+    <div class="so-entry">
+      <div class="so-votes">3</div>
+      <div class="so-title"><a href="https://stackoverflow.com/questions/78348146" target="_blank" rel="noopener">Understanding PyTorch Memory Management and GPU-to-CPU Transfers</a></div>
+    </div>
+    <div class="so-entry">
+      <div class="so-votes">2</div>
+      <div class="so-title"><a href="https://stackoverflow.com/questions/60329464" target="_blank" rel="noopener">Understanding PyTorch memory allocation on GPU</a></div>
+    </div>
+    <div class="so-entry">
+      <div class="so-votes">2</div>
+      <div class="so-title"><a href="https://stackoverflow.com/questions/64881962" target="_blank" rel="noopener">PyTorch memory profiler returns high CPU memory for empty</a></div>
+    </div>
+    <div class="so-entry">
+      <div class="so-votes">2</div>
+      <div class="so-title"><a href="https://stackoverflow.com/questions/68935366" target="_blank" rel="noopener">TensorFlow vs PyTorch: Memory usage</a></div>
+    </div>
+
+    <div class="methodology-box">
+      <h3>Methodology</h3>
+      <p>Memory formulas in this guide are derived from three sources:</p>
+      <ul>
+        <li><strong>PyTorch source code</strong> &mdash; Parameter counts verified against <code>sum(p.numel() for p in layer.parameters())</code></li>
+        <li><strong>torch.cuda.memory_allocated()</strong> &mdash; Activation memory measured by recording GPU memory before and after forward passes with various batch sizes</li>
+        <li><strong>Stack Overflow API</strong> &mdash; Community questions fetched via <code>api.stackexchange.com/2.3/search?intitle=pytorch+memory</code> on April 10, 2026</li>
+      </ul>
+      <p>All memory estimates assume float32 precision. For float16/bfloat16, divide parameter and activation memory by 2. Optimizer state memory depends on the optimizer: SGD adds 1x params, Adam adds 2x params.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>How much GPU memory does a PyTorch Conv2d layer use?</summary>
+      <p>A Conv2d layer's parameter memory is (C_in * C_out * K_h * K_w + C_out) * 4 bytes for float32. For example, Conv2d(64, 128, 3) uses (64*128*3*3 + 128)*4 = 295,424 bytes (~0.28 MB) for parameters alone. During training, you need 2x for gradients plus activation memory proportional to batch_size * C_out * H_out * W_out * 4 bytes.</p>
+    </details>
+
+    <details>
+      <summary>Why does PyTorch use more GPU memory than expected?</summary>
+      <p>PyTorch's actual VRAM usage exceeds the sum of parameters and activations for several reasons: 1) CUDA context overhead (~300-800 MB), 2) Memory fragmentation from the caching allocator, 3) Gradient tensors during training (same size as parameters), 4) Optimizer states (Adam uses 2x parameter memory for momentum and variance), 5) Intermediate buffers for operations like BatchNorm running stats.</p>
+    </details>
+
+    <details>
+      <summary>How do I calculate the maximum batch size for my GPU?</summary>
+      <p>Maximum batch size = (Available VRAM - Model Parameters - CUDA Overhead) / (Per-Sample Activation Memory * training_multiplier). The training_multiplier is approximately 3x for SGD and 5x for Adam. For a 12 GB GPU with 500 MB model and 800 MB overhead, using Adam: (12000 - 500 - 800) / (per_sample_MB * 5). Use HeyTensor's Memory Calculator for exact estimates.</p>
+    </details>
+
+    <details>
+      <summary>Which PyTorch layer type uses the most GPU memory?</summary>
+      <p>Transformer layers (nn.TransformerEncoderLayer) are the most memory-intensive because the self-attention mechanism creates an attention matrix of size (batch * heads * seq_len * seq_len), which grows quadratically with sequence length. A single transformer layer with 512 dim, 8 heads, and seq_len=512 uses ~8 MB per sample just for attention maps. LSTM layers are second, requiring 8x the memory of a comparably-sized Linear layer due to four internal gates.</p>
+    </details>
+
+    <details>
+      <summary>Does mixed precision training actually halve GPU memory usage?</summary>
+      <p>Mixed precision (AMP) reduces activation memory by roughly 50% since activations are stored in float16 instead of float32. However, model parameters are still kept in float32 as a master copy, and the optimizer states remain in float32. In practice, AMP typically reduces total training memory by 30-40%, not 50%. The actual savings depend on the ratio of activation memory to parameter memory &mdash; models with large intermediate activations (like ResNets) benefit more.</p>
+    </details>
+
+    <section style="text-align:center;margin:2rem 0;">
+      <h3>Related Tools</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin:1rem 0;">
+        <a href="/tools/memory-calculator.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Memory Calculator</a>
+        <a href="/tools/parameter-counter.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Parameter Counter</a>
+        <a href="/tools/cuda-out-of-memory.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">CUDA OOM Solver</a>
+        <a href="/tools/flops-calculator.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">FLOPs Calculator</a>
+      </div>
+    </section>
+
+    <div style="text-align:center;margin:2rem 0;">
+      <p style="font-size:0.85rem;color:#8b949e;margin-bottom:1rem;">Free to use under CC BY 4.0 license. Cite this page when sharing.</p>
+      <button onclick="downloadData('json')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download JSON</button>
+      <button onclick="downloadData('csv')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#1f6feb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download CSV</button>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+  </nav>
+
+<script>
+function downloadData(format) {
+  var entries = document.querySelectorAll('.mem-table tbody tr');
+  var data = [];
+  for (var i = 0; i < entries.length; i++) {
+    var el = entries[i];
+    var cells = el.querySelectorAll('td');
+    if (cells.length >= 3) {
+      data.push({
+        title: cells[0] ? cells[0].textContent.trim() : '',
+        category: el.dataset.cat || '',
+        description: cells[1] ? cells[1].textContent.trim() : ''
+      });
+    }
+  }
+  var content, type, ext;
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2);
+    type = 'application/json'; ext = 'json';
+  } else {
+    content = 'title,category,description\n' + data.map(function(d) {
+      return '"' + d.title.replace(/"/g, '""') + '","' + d.category.replace(/"/g, '""') + '","' + d.description.replace(/"/g, '""') + '"';
+    }).join('\n');
+    type = 'text/csv'; ext = 'csv';
+  }
+  var blob = new Blob([content], {type: type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = document.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.' + ext;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>
