@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Many Parameters Does Linear(1024, 512) Have? | HeyTensor</title>
+  <meta name="description" content="Linear(1024, 512) has 524,800 parameters. Formula: in_features * out_features + out_features = 1024 * 512 + 512 = 524,800.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/parameters-linear-1024-to-512.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How Many Parameters Does Linear(1024, 512) Have?">
+  <meta property="og:description" content="Linear(1024, 512) has 524,800 parameters. Formula: in_features * out_features + out_features = 1024 * 512 + 512 = 524,800.">
+  <meta property="og:url" content="https://heytensor.com/answers/parameters-linear-1024-to-512.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How Many Parameters Does Linear(1024, 512) Have?">
+  <meta name="twitter:description" content="Linear(1024, 512) has 524,800 parameters. Formula: in_features * out_features + out_features = 1024 * 512 + 512 = 524,800.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "How Many Parameters Does Linear(1024, 512) Have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Linear(1024, 512) has 524,800 parameters. The formula is: in_features * out_features + out_features (bias) = 1024 * 512 + 512 = 524,800. The weight matrix has 524,288 elements and the bias vector has 512 elements."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Parameters Linear(1024, 512)</span>
+    </nav>
+
+    <article>
+      <h1>How Many Parameters Does Linear(1024, 512) Have?</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>Linear(1024, 512) has 524,800 trainable parameters.</strong> This includes 524,288 weights and 512 bias terms.</p>
+      </div>
+
+      <h2>Formula Breakdown</h2>
+      <p>For a Linear layer, the parameter count is:</p>
+      <pre><code>parameters = in_features * out_features + out_features (bias)
+parameters = 1024 * 512 + 512
+parameters = 524,288 + 512
+parameters = 524,800</code></pre>
+      <p>The weight matrix <code>W</code> has shape (512, 1024) = 524,288 values. The bias vector <code>b</code> has 512 values. Together: <strong>524,800 trainable parameters</strong>.</p>
+
+      <h2>Memory Usage</h2>
+      <p>In float32, this layer uses 2.00 MB of memory for weights alone. During training with Adam optimizer, multiply by 3 (weights + momentum + variance) = 6.01 MB.</p>
+
+      <h2>Architecture Context</h2>
+      <p>This layer configuration is found in general-purpose classifier heads. Understanding parameter counts helps you estimate model size, memory requirements, and the risk of overfitting. Layers with more parameters need more training data and compute to train effectively.</p>
+      <p>Linear layers are often the most parameter-heavy part of a network. For example, VGG-16 has ~124M parameters in its three fully connected layers versus only ~14M in all its convolutional layers. Modern architectures minimize linear layers by using global average pooling.</p>
+
+      <h2>PyTorch Code to Verify</h2>
+      <pre><code>import torch.nn as nn
+
+layer = nn.Linear(1024, 512)
+
+# Count parameters
+total = sum(p.numel() for p in layer.parameters())
+print(f"Total parameters: {total}")  # 524,800
+
+# Break it down
+print(f"Weight shape: {layer.weight.shape}")  # (512, 1024)
+print(f"Weight params: {layer.weight.numel()}")  # 524,288
+print(f"Bias shape: {layer.bias.shape}")  # (512,)
+print(f"Bias params: {layer.bias.numel()}")  # 512
+
+# Without bias
+layer_no_bias = nn.Linear(1024, 512, bias=False)
+print(f"Without bias: {sum(p.numel() for p in layer_no_bias.parameters())}")  # 524,288</code></pre>
+
+      <h2>Comparison: With vs. Without Bias</h2>
+      <table style="width:100%;border-collapse:collapse;margin:1rem 0;">
+        <tr style="border-bottom:2px solid var(--border);">
+          <th style="padding:0.5rem;text-align:left;">Configuration</th>
+          <th style="padding:0.5rem;text-align:right;">Parameters</th>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:0.5rem;">Linear(1024, 512) (with bias)</td>
+          <td style="padding:0.5rem;text-align:right;">524,800</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:0.5rem;">Linear(1024, 512, bias=False) </td>
+          <td style="padding:0.5rem;text-align:right;">524,288</td>
+        </tr>
+      </table>
+      <p>When using BatchNorm after a convolutional layer, the bias is redundant because BatchNorm has its own bias term. Setting <code>bias=False</code> saves 512 parameters per layer.</p>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/parameters-linear-768-to-3072.html">How many parameters does Linear(768, 3072) have?</a></li>
+        <li><a href="/answers/parameters-linear-4096-to-4096.html">How many parameters does Linear(4096, 4096) have?</a></li>
+        <li><a href="/answers/parameters-linear-2048-to-1000.html">How many parameters does Linear(2048, 1000) have?</a></li>
+        <li><a href="/answers/how-many-parameters-resnet50.html">How many parameters does ResNet-50 have?</a></li>
+        <li><a href="/answers/how-many-parameters-bert-base.html">How many parameters does BERT-base have?</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/parameter-counter.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Parameter Counter</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

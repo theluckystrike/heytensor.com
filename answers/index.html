@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch Answers &mdash; Shape Calculations, Parameters &amp; Error Fixes | HeyTensor</title>
+  <meta name="description" content="Quick answers to common PyTorch questions: Conv2d output shapes, layer parameter counts, and error message fixes with code examples.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PyTorch Answers &mdash; HeyTensor">
+  <meta property="og:description" content="Quick answers to common PyTorch questions with code examples.">
+  <meta property="og:url" content="https://heytensor.com/answers/">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <span>Answers</span>
+    </nav>
+
+    <h1>PyTorch Answers</h1>
+    <p>Quick answers to common PyTorch questions &mdash; Conv2d output shapes, layer parameter counts, and error message fixes. Each answer includes the formula, step-by-step calculation, and PyTorch code you can copy.</p>
+
+    <h2>All Questions (67)</h2>
+    <ul>
+        <li><a href="/answers/batch-norm-input-shape.html">Batch Norm Input Shape</a></li>
+        <li><a href="/answers/cannot-broadcast-tensors.html">Cannot Broadcast Tensors</a></li>
+        <li><a href="/answers/conv2d-output-112x112-kernel-3-stride-2.html">Conv2d Output 112x112 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-128x128-kernel-3-stride-2.html">Conv2d Output 128x128 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-128x128-kernel-3.html">Conv2d Output 128x128 Kernel 3</a></li>
+        <li><a href="/answers/conv2d-output-128x128-kernel-5-stride-2.html">Conv2d Output 128x128 Kernel 5 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-128x128-kernel-7-stride-2.html">Conv2d Output 128x128 Kernel 7 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-14x14-kernel-3-stride-2.html">Conv2d Output 14x14 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-11-stride-4.html">Conv2d Output 224x224 Kernel 11 Stride 4</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-3-stride-2.html">Conv2d Output 224x224 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-3.html">Conv2d Output 224x224 Kernel 3</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-5-stride-2.html">Conv2d Output 224x224 Kernel 5 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-5.html">Conv2d Output 224x224 Kernel 5</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html">Conv2d Output 224x224 Kernel 7 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-256x256-kernel-3-stride-2.html">Conv2d Output 256x256 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-256x256-kernel-3.html">Conv2d Output 256x256 Kernel 3</a></li>
+        <li><a href="/answers/conv2d-output-256x256-kernel-5-stride-2.html">Conv2d Output 256x256 Kernel 5 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-256x256-kernel-7-stride-2.html">Conv2d Output 256x256 Kernel 7 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-28x28-kernel-3-stride-2.html">Conv2d Output 28x28 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-32x32-kernel-3-pad-1.html">Conv2d Output 32x32 Kernel 3 Pad 1</a></li>
+        <li><a href="/answers/conv2d-output-32x32-kernel-3.html">Conv2d Output 32x32 Kernel 3</a></li>
+        <li><a href="/answers/conv2d-output-32x32-kernel-5.html">Conv2d Output 32x32 Kernel 5</a></li>
+        <li><a href="/answers/conv2d-output-512x512-kernel-3-stride-2.html">Conv2d Output 512x512 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-512x512-kernel-3.html">Conv2d Output 512x512 Kernel 3</a></li>
+        <li><a href="/answers/conv2d-output-512x512-kernel-7-stride-2.html">Conv2d Output 512x512 Kernel 7 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-56x56-kernel-3-stride-2.html">Conv2d Output 56x56 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-64x64-kernel-3-stride-2.html">Conv2d Output 64x64 Kernel 3 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-64x64-kernel-3.html">Conv2d Output 64x64 Kernel 3</a></li>
+        <li><a href="/answers/conv2d-output-64x64-kernel-5-stride-2.html">Conv2d Output 64x64 Kernel 5 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-64x64-kernel-5.html">Conv2d Output 64x64 Kernel 5</a></li>
+        <li><a href="/answers/conv2d-output-64x64-kernel-7-stride-2.html">Conv2d Output 64x64 Kernel 7 Stride 2</a></li>
+        <li><a href="/answers/conv2d-output-7x7-kernel-7.html">Conv2d Output 7x7 Kernel 7</a></li>
+        <li><a href="/answers/cuda-out-of-memory-fix.html">Cuda Out Of Memory Fix</a></li>
+        <li><a href="/answers/difference-between-relu-and-gelu.html">Difference Between Relu And Gelu</a></li>
+        <li><a href="/answers/expected-4d-input-got-3d.html">Expected 4d Input Got 3d</a></li>
+        <li><a href="/answers/expected-float-got-long.html">Expected Float Got Long</a></li>
+        <li><a href="/answers/flatten-after-conv2d.html">Flatten After Conv2d</a></li>
+        <li><a href="/answers/gradient-is-none-fix.html">Gradient Is None Fix</a></li>
+        <li><a href="/answers/how-many-parameters-bert-base.html">How Many Parameters Bert Base</a></li>
+        <li><a href="/answers/how-many-parameters-resnet50.html">How Many Parameters Resnet50</a></li>
+        <li><a href="/answers/input-target-batch-size-mismatch.html">Input Target Batch Size Mismatch</a></li>
+        <li><a href="/answers/linear-layer-512-to-10.html">Linear Layer 512 To 10</a></li>
+        <li><a href="/answers/lstm-output-shape-bidirectional.html">Lstm Output Shape Bidirectional</a></li>
+        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">Mat1 Mat2 Shapes Cannot Be Multiplied</a></li>
+        <li><a href="/answers/maxpool2d-output-size.html">Maxpool2d Output Size</a></li>
+        <li><a href="/answers/no-module-named-torch.html">No Module Named Torch</a></li>
+        <li><a href="/answers/parameters-conv2d-128-256-kernel-3.html">Parameters Conv2d 128 256 Kernel 3</a></li>
+        <li><a href="/answers/parameters-conv2d-256-512-kernel-3.html">Parameters Conv2d 256 512 Kernel 3</a></li>
+        <li><a href="/answers/parameters-conv2d-3-64-kernel-7.html">Parameters Conv2d 3 64 Kernel 7</a></li>
+        <li><a href="/answers/parameters-conv2d-512-512-kernel-3.html">Parameters Conv2d 512 512 Kernel 3</a></li>
+        <li><a href="/answers/parameters-conv2d-64-128-kernel-3.html">Parameters Conv2d 64 128 Kernel 3</a></li>
+        <li><a href="/answers/parameters-linear-1024-to-512.html">Parameters Linear 1024 To 512</a></li>
+        <li><a href="/answers/parameters-linear-2048-to-1000.html">Parameters Linear 2048 To 1000</a></li>
+        <li><a href="/answers/parameters-linear-256-to-10.html">Parameters Linear 256 To 10</a></li>
+        <li><a href="/answers/parameters-linear-4096-to-4096.html">Parameters Linear 4096 To 4096</a></li>
+        <li><a href="/answers/parameters-linear-768-to-3072.html">Parameters Linear 768 To 3072</a></li>
+        <li><a href="/answers/pytorch-vs-tensorflow-2026.html">Pytorch Vs Tensorflow 2026</a></li>
+        <li><a href="/answers/resnet50-layer-shapes.html">Resnet50 Layer Shapes</a></li>
+        <li><a href="/answers/runtime-error-expected-scalar-type-float.html">Runtime Error Expected Scalar Type Float</a></li>
+        <li><a href="/answers/sizes-of-tensors-must-match.html">Sizes Of Tensors Must Match</a></li>
+        <li><a href="/answers/transformer-encoder-input-shape.html">Transformer Encoder Input Shape</a></li>
+        <li><a href="/answers/variable-modified-for-gradient.html">Variable Modified For Gradient</a></li>
+        <li><a href="/answers/vgg16-layer-shapes.html">Vgg16 Layer Shapes</a></li>
+        <li><a href="/answers/view-size-not-compatible.html">View Size Not Compatible</a></li>
+        <li><a href="/answers/weight-on-cpu-input-on-cuda.html">Weight On Cpu Input On Cuda</a></li>
+        <li><a href="/answers/what-is-padding-same-pytorch.html">What Is Padding Same Pytorch</a></li>
+        <li><a href="/answers/what-is-stride-in-conv2d.html">What Is Stride In Conv2d</a></li>
+    </ul>
+
+    <div style="text-align:center;margin:2rem 0;">
+      <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

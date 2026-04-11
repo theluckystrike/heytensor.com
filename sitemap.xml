@@ -411,4 +411,262 @@
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
+  <url>
+<loc>https://heytensor.com/answers/</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.6</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-64x64-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-64x64-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-64x64-kernel-5.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-64x64-kernel-5-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-64x64-kernel-7-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-128x128-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-128x128-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-128x128-kernel-5-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-128x128-kernel-7-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-224x224-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-224x224-kernel-5.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-224x224-kernel-5-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-224x224-kernel-11-stride-4.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-256x256-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-256x256-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-256x256-kernel-5-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-256x256-kernel-7-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-512x512-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-512x512-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-512x512-kernel-7-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-32x32-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-32x32-kernel-3-pad-1.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-7x7-kernel-7.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-14x14-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-56x56-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-28x28-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-112x112-kernel-3-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-linear-1024-to-512.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-linear-768-to-3072.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-linear-4096-to-4096.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-linear-2048-to-1000.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-linear-256-to-10.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-conv2d-3-64-kernel-7.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-conv2d-64-128-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-conv2d-128-256-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-conv2d-256-512-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/parameters-conv2d-512-512-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/expected-float-got-long.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/sizes-of-tensors-must-match.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/input-target-batch-size-mismatch.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/variable-modified-for-gradient.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
 </urlset>

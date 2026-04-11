@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Fix "expected dtype Float but got dtype Long" in PyTorch | HeyTensor</title>
+  <meta name="description" content="Fix PyTorch "expected dtype Float but got dtype Long" by converting tensors with .float() or .to(torch.float32). Common with integer labels and loss functions.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/expected-float-got-long.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix "expected dtype Float but got dtype Long" in PyTorch">
+  <meta property="og:description" content="Fix PyTorch "expected dtype Float but got dtype Long" by converting tensors with .float() or .to(torch.float32). Common with integer labels and loss functions.">
+  <meta property="og:url" content="https://heytensor.com/answers/expected-float-got-long.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Fix "expected dtype Float but got dtype Long" in PyTorch">
+  <meta name="twitter:description" content="Fix PyTorch "expected dtype Float but got dtype Long" by converting tensors with .float() or .to(torch.float32). Common with integer labels and loss functions.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "How to Fix \"expected dtype Float but got dtype Long\" in PyTorch",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This error occurs when a function expects float32 tensors but receives int64 (Long) tensors. Fix it by calling .float() or .to(torch.float32) on the tensor. This commonly happens with labels in regression tasks, or when loading data that defaults to integer types."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Expected Float Got Long</span>
+    </nav>
+
+    <article>
+      <h1>How to Fix "expected dtype Float but got dtype Long" in PyTorch</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>The error <code>expected dtype Float but got dtype Long</code> means pyTorch operations like loss functions, matrix multiplications, and neural network layers expect float tensors. When you pass integer (Long) tensors, PyTorch raises this error because it does not auto-cast between these types.</strong></p>
+      </div>
+
+      <h2>What Causes This Error</h2>
+      <p>PyTorch operations like loss functions, matrix multiplications, and neural network layers expect float tensors. When you pass integer (Long) tensors, PyTorch raises this error because it does not auto-cast between these types.</p>
+
+      <h2>Scenario 1: Labels in Binary Classification (BCELoss)</h2>
+      <p>BCELoss and BCEWithLogitsLoss expect float targets, but integer labels are common.</p>
+      <h3>The Error</h3>
+      <pre><code>labels = torch.tensor([0, 1, 1, 0])  # dtype: torch.int64 (Long)
+output = model(x)  # float32
+loss = nn.BCEWithLogitsLoss()(output, labels)
+# RuntimeError: expected dtype Float but got dtype Long</code></pre>
+      <h3>The Fix</h3>
+      <pre><code>labels = torch.tensor([0, 1, 1, 0]).float()  # Convert to float32
+output = model(x)
+loss = nn.BCEWithLogitsLoss()(output, labels)  # Works!
+
+# Alternative: specify dtype at creation
+labels = torch.tensor([0, 1, 1, 0], dtype=torch.float32)</code></pre>
+      <p>Binary cross-entropy needs float targets because it computes log probabilities. Integer labels must be cast to float first.</p>
+
+      <h2>Scenario 2: Regression with MSELoss</h2>
+      <p>MSELoss needs float inputs but data loading may produce integers.</p>
+      <h3>The Error</h3>
+      <pre><code>targets = torch.tensor([3, 7, 2, 9])  # int64
+predictions = model(x)  # float32
+loss = nn.MSELoss()(predictions, targets)
+# RuntimeError: expected dtype Float but got dtype Long</code></pre>
+      <h3>The Fix</h3>
+      <pre><code>targets = torch.tensor([3, 7, 2, 9]).float()  # float32
+predictions = model(x)
+loss = nn.MSELoss()(predictions, targets)  # Works!
+
+# Or in your Dataset.__getitem__:
+def __getitem__(self, idx):
+    return self.features[idx].float(), self.targets[idx].float()</code></pre>
+      <p>MSE computes (prediction - target)^2, which requires both tensors to be floating point. Converting in your Dataset is the cleanest fix.</p>
+
+      <h2>Scenario 3: Matrix Multiplication with Integer Tensors</h2>
+      <p>torch.matmul and @ operator require float tensors for most operations.</p>
+      <h3>The Error</h3>
+      <pre><code>a = torch.tensor([[1, 2], [3, 4]])  # int64
+b = torch.tensor([[5, 6], [7, 8]])  # int64
+# On some operations this works, but mixing with float fails:
+w = torch.randn(2, 2)  # float32
+result = a @ w
+# RuntimeError: expected dtype Float but got dtype Long</code></pre>
+      <h3>The Fix</h3>
+      <pre><code>a = torch.tensor([[1, 2], [3, 4]]).float()
+w = torch.randn(2, 2)
+result = a @ w  # Works! Both are float32
+
+# Or use .to() for explicit control:
+a = torch.tensor([[1, 2], [3, 4]]).to(torch.float32)</code></pre>
+      <p>When mixing tensor types in arithmetic, PyTorch requires explicit casting. Using .float() or .to(torch.float32) converts Long tensors to Float.</p>
+
+      <h2>Quick Debugging Checklist</h2>
+      <ul>
+        <li>Print tensor <code>.dtype</code> and <code>.device</code> before operations</li>
+        <li>Check for in-place operations: <code>+=</code>, <code>*=</code>, <code>.add_()</code>, <code>.mul_()</code></li>
+        <li>Verify shapes with <code>print(tensor.shape)</code> at each step</li>
+        <li>Use <code>torch.autograd.set_detect_anomaly(True)</code> to pinpoint the exact operation</li>
+      </ul>
+      <pre><code># Enable anomaly detection to find the exact line
+torch.autograd.set_detect_anomaly(True)
+
+# Check tensor properties
+print(f"dtype: {tensor.dtype}, device: {tensor.device}, shape: {tensor.shape}")
+print(f"requires_grad: {tensor.requires_grad}")</code></pre>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/runtime-error-expected-scalar-type-float.html">Fix "expected scalar type Float"</a></li>
+        <li><a href="/answers/cuda-out-of-memory-fix.html">Fix CUDA out of memory</a></li>
+        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">Fix mat1 mat2 shapes cannot be multiplied</a></li>
+        <li><a href="/answers/cannot-broadcast-tensors.html">Fix cannot broadcast tensors</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Solver</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

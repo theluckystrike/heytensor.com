@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Fix "one of the variables needed for gradient computation has been modified" in PyTorch | HeyTensor</title>
+  <meta name="description" content="Fix PyTorch "one of the variables needed for gradient computation has been modified" by avoiding in-place operations on tensors that require grad. Use out-of-place alternatives.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/variable-modified-for-gradient.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How to Fix "one of the variables needed for gradient computation has been modified" in PyTorch">
+  <meta property="og:description" content="Fix PyTorch "one of the variables needed for gradient computation has been modified" by avoiding in-place operations on tensors that require grad. Use out-of-place alternatives.">
+  <meta property="og:url" content="https://heytensor.com/answers/variable-modified-for-gradient.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Fix "one of the variables needed for gradient computation has been modified" in PyTorch">
+  <meta name="twitter:description" content="Fix PyTorch "one of the variables needed for gradient computation has been modified" by avoiding in-place operations on tensors that require grad. Use out-of-place alternatives.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "How to Fix \"one of the variables needed for gradient computation has been modified\" in PyTorch",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This error occurs when you modify a tensor in-place that is needed for gradient computation during backward(). PyTorch stores references to intermediate values for backpropagation, and in-place modifications corrupt these saved values. Fix by replacing in-place operations (like +=, .add_(), .mul_(), .zero_()) with out-of-place alternatives (like + , .add(), .mul(), .clone())."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Variable Modified for Gradient</span>
+    </nav>
+
+    <article>
+      <h1>How to Fix "one of the variables needed for gradient computation has been modified" in PyTorch</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>The error <code>one of the variables needed for gradient computation has been modified</code> means pyTorch autograd records operations to build a computation graph for backpropagation. When you modify a tensor in-place (e.g., x += 1, x.add_(1), x[:] = value), the saved reference becomes invalid because the underlying data changed. This causes incorrect gradients or this error.</strong></p>
+      </div>
+
+      <h2>What Causes This Error</h2>
+      <p>PyTorch autograd records operations to build a computation graph for backpropagation. When you modify a tensor in-place (e.g., x += 1, x.add_(1), x[:] = value), the saved reference becomes invalid because the underlying data changed. This causes incorrect gradients or this error.</p>
+
+      <h2>Scenario 1: In-place Addition in Forward Pass</h2>
+      <p>Using += instead of + modifies tensors in place.</p>
+      <h3>The Error</h3>
+      <pre><code>class Model(nn.Module):
+    def forward(self, x):
+        out = self.layer1(x)
+        out += self.residual(x)  # In-place! Modifies out
+        out = self.layer2(out)
+        return out
+
+# RuntimeError: one of the variables needed for gradient computation
+# has been modified by an inplace operation</code></pre>
+      <h3>The Fix</h3>
+      <pre><code>class Model(nn.Module):
+    def forward(self, x):
+        out = self.layer1(x)
+        out = out + self.residual(x)  # Out-of-place: creates new tensor
+        out = self.layer2(out)
+        return out
+
+# Or use torch.add explicitly:
+# out = torch.add(out, self.residual(x))</code></pre>
+      <p>Replace += with = ... + to create a new tensor instead of modifying in place. This preserves the original values needed for gradient computation.</p>
+
+      <h2>Scenario 2: In-place Activation Functions</h2>
+      <p>Using inplace=True on activations that feed into operations needing gradients.</p>
+      <h3>The Error</h3>
+      <pre><code>model = nn.Sequential(
+    nn.Linear(256, 128),
+    nn.ReLU(inplace=True),  # In-place modification
+    nn.Linear(128, 10)
+)
+# May cause &quot;modified by an inplace operation&quot; in some graph configurations</code></pre>
+      <h3>The Fix</h3>
+      <pre><code>model = nn.Sequential(
+    nn.Linear(256, 128),
+    nn.ReLU(inplace=False),  # Safe: creates new tensor
+    nn.Linear(128, 10)
+)
+
+# inplace=True saves memory but risks gradient errors.
+# Only use inplace=True when you're certain the tensor isn't
+# needed by other branches of the computation graph.</code></pre>
+      <p>While inplace=True saves memory, it can break gradient computation in networks with skip connections or shared parameters. Default to inplace=False unless profiling shows a clear memory benefit.</p>
+
+      <h2>Scenario 3: Modifying Weight Tensors During Forward</h2>
+      <p>Directly modifying parameters or buffers during forward pass.</p>
+      <h3>The Error</h3>
+      <pre><code>class Model(nn.Module):
+    def forward(self, x):
+        self.weight.data.zero_()  # In-place modification of parameter!
+        self.weight.data.add_(compute_weight(x))
+        return F.linear(x, self.weight)
+# RuntimeError: one of the variables needed for gradient computation
+# has been modified by an inplace operation</code></pre>
+      <h3>The Fix</h3>
+      <pre><code>class Model(nn.Module):
+    def forward(self, x):
+        # Create a new weight tensor instead of modifying in-place
+        w = compute_weight(x)  # Compute fresh weights
+        return F.linear(x, w)
+
+# If you need conditional weights, clone first:
+# w = self.weight.clone()
+# w = w + delta  # out-of-place modification on clone</code></pre>
+      <p>Never modify .data of parameters during forward pass. Use functional operations that create new tensors, or .clone() first to avoid corrupting the computation graph.</p>
+
+      <h2>Quick Debugging Checklist</h2>
+      <ul>
+        <li>Print tensor <code>.dtype</code> and <code>.device</code> before operations</li>
+        <li>Check for in-place operations: <code>+=</code>, <code>*=</code>, <code>.add_()</code>, <code>.mul_()</code></li>
+        <li>Verify shapes with <code>print(tensor.shape)</code> at each step</li>
+        <li>Use <code>torch.autograd.set_detect_anomaly(True)</code> to pinpoint the exact operation</li>
+      </ul>
+      <pre><code># Enable anomaly detection to find the exact line
+torch.autograd.set_detect_anomaly(True)
+
+# Check tensor properties
+print(f"dtype: {tensor.dtype}, device: {tensor.device}, shape: {tensor.shape}")
+print(f"requires_grad: {tensor.requires_grad}")</code></pre>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/gradient-is-none-fix.html">Fix "gradient is None"</a></li>
+        <li><a href="/answers/cuda-out-of-memory-fix.html">Fix CUDA out of memory</a></li>
+        <li><a href="/answers/runtime-error-expected-scalar-type-float.html">Fix "expected scalar type Float"</a></li>
+        <li><a href="/answers/no-module-named-torch.html">Fix "No module named torch"</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Debug Shape Errors</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

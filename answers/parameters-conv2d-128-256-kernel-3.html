@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Many Parameters Does Conv2d(128, 256, 3) Have? | HeyTensor</title>
+  <meta name="description" content="Conv2d(128, 256, 3) has 295,168 parameters. Formula: in_ch * out_ch * kernel^2 + out_ch = 128 * 256 * 3^2 + 256 = 295,168.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/parameters-conv2d-128-256-kernel-3.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How Many Parameters Does Conv2d(128, 256, 3) Have?">
+  <meta property="og:description" content="Conv2d(128, 256, 3) has 295,168 parameters. Formula: in_ch * out_ch * kernel^2 + out_ch = 128 * 256 * 3^2 + 256 = 295,168.">
+  <meta property="og:url" content="https://heytensor.com/answers/parameters-conv2d-128-256-kernel-3.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How Many Parameters Does Conv2d(128, 256, 3) Have?">
+  <meta name="twitter:description" content="Conv2d(128, 256, 3) has 295,168 parameters. Formula: in_ch * out_ch * kernel^2 + out_ch = 128 * 256 * 3^2 + 256 = 295,168.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "How Many Parameters Does Conv2d(128, 256, 3) Have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Conv2d(128, 256, 3) has 295,168 parameters. The formula is: in_channels * out_channels * kernel_size^2 + out_channels (bias) = 128 * 256 * 3 * 3 + 256 = 295,168. Each of the 256 filters has a 128x3x3 weight tensor plus one bias value."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Parameters Conv2d(128, 256, 3)</span>
+    </nav>
+
+    <article>
+      <h1>How Many Parameters Does Conv2d(128, 256, 3) Have?</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>Conv2d(128, 256, 3) has 295,168 trainable parameters.</strong> This includes 294,912 weights and 256 bias terms.</p>
+      </div>
+
+      <h2>Formula Breakdown</h2>
+      <p>For a Conv2d layer, the parameter count is:</p>
+      <pre><code>parameters = in_channels * out_channels * kernel_size^2 + out_channels (bias)
+parameters = 128 * 256 * 3 * 3 + 256
+parameters = 128 * 256 * 9 + 256
+parameters = 294,912 + 256
+parameters = 295,168</code></pre>
+      <p>Each of the 256 output filters is a 3D kernel of shape (128, 3, 3). That gives 256 &times; 128 &times; 3 &times; 3 = 294,912 weights, plus 256 bias terms. Total: <strong>295,168 trainable parameters</strong>.</p>
+
+      <h2>Memory Usage</h2>
+      <p>In float32, this layer uses 1.13 MB of memory for weights alone. During training with Adam optimizer, multiply by 3 = 3.38 MB.</p>
+
+      <h2>Architecture Context</h2>
+      <p>This layer configuration is found in the 128-to-256 channel expansion in VGG and ResNet deeper stages. Understanding parameter counts helps you estimate model size, memory requirements, and the risk of overfitting. Layers with more parameters need more training data and compute to train effectively.</p>
+      <p>Convolutional layers are parameter-efficient compared to fully connected layers because weights are shared across spatial positions. A Conv2d(128, 256, 3) processes any input spatial size with the same 295,168 parameters.</p>
+
+      <h2>PyTorch Code to Verify</h2>
+      <pre><code>import torch.nn as nn
+
+layer = nn.Conv2d(128, 256, kernel_size=3)
+
+# Count parameters
+total = sum(p.numel() for p in layer.parameters())
+print(f"Total parameters: {total}")  # 295,168
+
+# Break it down
+print(f"Weight shape: {layer.weight.shape}")  # (256, 128, 3, 3)
+print(f"Weight params: {layer.weight.numel()}")  # 294,912
+print(f"Bias shape: {layer.bias.shape}")  # (256,)
+print(f"Bias params: {layer.bias.numel()}")  # 256
+
+# Without bias (common in batch-normalized networks)
+layer_no_bias = nn.Conv2d(128, 256, kernel_size=3, bias=False)
+print(f"Without bias: {sum(p.numel() for p in layer_no_bias.parameters())}")  # 294,912</code></pre>
+
+      <h2>Comparison: With vs. Without Bias</h2>
+      <table style="width:100%;border-collapse:collapse;margin:1rem 0;">
+        <tr style="border-bottom:2px solid var(--border);">
+          <th style="padding:0.5rem;text-align:left;">Configuration</th>
+          <th style="padding:0.5rem;text-align:right;">Parameters</th>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:0.5rem;">Conv2d(128, 256, 3) (with bias)</td>
+          <td style="padding:0.5rem;text-align:right;">295,168</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);">
+          <td style="padding:0.5rem;">Conv2d(128, 256, 3, bias=False) </td>
+          <td style="padding:0.5rem;text-align:right;">294,912</td>
+        </tr>
+      </table>
+      <p>When using BatchNorm after a convolutional layer, the bias is redundant because BatchNorm has its own bias term. Setting <code>bias=False</code> saves 256 parameters per layer.</p>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/parameters-linear-1024-to-512.html">How many parameters does Linear(1024, 512) have?</a></li>
+        <li><a href="/answers/parameters-linear-768-to-3072.html">How many parameters does Linear(768, 3072) have?</a></li>
+        <li><a href="/answers/parameters-linear-4096-to-4096.html">How many parameters does Linear(4096, 4096) have?</a></li>
+        <li><a href="/answers/how-many-parameters-resnet50.html">How many parameters does ResNet-50 have?</a></li>
+        <li><a href="/answers/how-many-parameters-bert-base.html">How many parameters does BERT-base have?</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/parameter-counter.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Parameter Counter</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>
