@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResNet-50 Layer Shapes — Complete Shape Trace | HeyTensor</title>
+  <meta name="description" content="ResNet-50 shape trace: 224 → Conv7x7/2 → 112 → MaxPool/2 → 56 → Layer1 → 56 → Layer2 → 28 → Layer3 → 14 → Layer4 → 7 → AvgPool → 1 → FC → 1000.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/resnet50-layer-shapes.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ResNet-50 Layer Shapes — Complete Shape Trace">
+  <meta property="og:description" content="Complete shape trace through ResNet-50: 224→112→56→56→28→14→7→1→1000.">
+  <meta property="og:url" content="https://heytensor.com/answers/resnet50-layer-shapes.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ResNet-50 Layer Shapes">
+  <meta name="twitter:description" content="Complete shape trace through ResNet-50: 224→112→56→28→14→7→1→1000.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What are the layer shapes in ResNet-50?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ResNet-50 shape trace with 224x224 input: Input (3, 224, 224) → Conv1 7x7/s2 → (64, 112, 112) → MaxPool 3x3/s2 → (64, 56, 56) → Layer1 (3 blocks) → (256, 56, 56) → Layer2 (4 blocks) → (512, 28, 28) → Layer3 (6 blocks) → (1024, 14, 14) → Layer4 (3 blocks) → (2048, 7, 7) → AdaptiveAvgPool → (2048, 1, 1) → Flatten → (2048) → FC → (1000). Total: 25.6M parameters."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>ResNet-50 Layer Shapes</span>
+    </nav>
+
+    <article>
+      <h1>ResNet-50 Layer Shapes &mdash; Complete Shape Trace</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>ResNet-50: Input 224 &rarr; Conv7&times;7/s2 &rarr; 112 &rarr; MaxPool/s2 &rarr; 56 &rarr; Layer1 &rarr; 56 &rarr; Layer2 &rarr; 28 &rarr; Layer3 &rarr; 14 &rarr; Layer4 &rarr; 7 &rarr; AvgPool &rarr; 1 &rarr; FC &rarr; 1000</strong></p>
+      </div>
+
+      <h2>Complete Shape Trace</h2>
+      <pre><code>Input:              (batch,    3, 224, 224)
+
+Conv1:   7x7, s2    (batch,   64, 112, 112)   # floor((224-7+2*3)/2)+1 = 112
+BN + ReLU           (batch,   64, 112, 112)
+MaxPool: 3x3, s2    (batch,   64,  56,  56)   # floor((112-3+2*1)/2)+1 = 56
+
+Layer1 (3 blocks):  (batch,  256,  56,  56)   # no spatial change
+Layer2 (4 blocks):  (batch,  512,  28,  28)   # first block has stride=2
+Layer3 (6 blocks):  (batch, 1024,  14,  14)   # first block has stride=2
+Layer4 (3 blocks):  (batch, 2048,   7,   7)   # first block has stride=2
+
+AdaptiveAvgPool2d:  (batch, 2048,   1,   1)   # global average pooling
+Flatten:            (batch, 2048)
+FC:                 (batch, 1000)               # classification head</code></pre>
+
+      <h2>Bottleneck Block (Used in ResNet-50)</h2>
+      <p>Each "block" in Layer1-4 is a bottleneck with three convolutions:</p>
+      <pre><code># Example: one block in Layer3
+# Input: (batch, 512, 28, 28)
+Conv1x1:  reduce channels    (batch, 256, 28, 28)   # 1x1 conv
+Conv3x3:  spatial processing  (batch, 256, 28, 28)   # 3x3 conv
+Conv1x1:  expand channels     (batch, 1024, 28, 28)  # 1x1 conv
++ skip connection (with 1x1 projection if needed)</code></pre>
+
+      <h2>PyTorch Verification</h2>
+      <pre><code>import torchvision.models as models
+import torch
+
+model = models.resnet50()
+x = torch.randn(1, 3, 224, 224)
+
+# Trace through each stage
+x = model.conv1(x);    print(f"conv1:  {x.shape}")  # [1, 64, 112, 112]
+x = model.bn1(x);      x = model.relu(x)
+x = model.maxpool(x);  print(f"pool:   {x.shape}")  # [1, 64, 56, 56]
+x = model.layer1(x);   print(f"layer1: {x.shape}")  # [1, 256, 56, 56]
+x = model.layer2(x);   print(f"layer2: {x.shape}")  # [1, 512, 28, 28]
+x = model.layer3(x);   print(f"layer3: {x.shape}")  # [1, 1024, 14, 14]
+x = model.layer4(x);   print(f"layer4: {x.shape}")  # [1, 2048, 7, 7]
+x = model.avgpool(x);  print(f"avgpool:{x.shape}")  # [1, 2048, 1, 1]
+x = torch.flatten(x, 1)
+x = model.fc(x);       print(f"fc:     {x.shape}")  # [1, 1000]</code></pre>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/how-many-parameters-resnet50.html">How many parameters does ResNet-50 have?</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html">What does Conv2d output with kernel=7, stride=2?</a></li>
+        <li><a href="/answers/vgg16-layer-shapes.html">What are all the layer shapes in VGG-16?</a></li>
+        <li><a href="/answers/maxpool2d-output-size.html">What does MaxPool2d output?</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/parameter-counter.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Parameter Counter</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Fix "Expected Scalar Type Float" in PyTorch | HeyTensor</title>
+  <meta name="description" content="Your tensor is the wrong dtype. Fix: x = x.float() or x = x.to(torch.float32). Common when loading images as uint8 or using double tensors with float32 models.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/runtime-error-expected-scalar-type-float.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Fix: Expected Scalar Type Float — PyTorch dtype Error">
+  <meta property="og:description" content="Your tensor has the wrong dtype. Fix with x.float() or x.to(torch.float32).">
+  <meta property="og:url" content="https://heytensor.com/answers/runtime-error-expected-scalar-type-float.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fix: Expected Scalar Type Float in PyTorch">
+  <meta name="twitter:description" content="Your tensor has the wrong dtype. Fix with x.float() or x.to(torch.float32).">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "How to fix expected scalar type Float but found Double or Byte in PyTorch?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your tensor is the wrong dtype. Fix: x = x.float() or x = x.to(torch.float32) before passing to the model. This commonly happens when: 1) NumPy arrays default to float64 (Double) but PyTorch models use float32, 2) Image data is loaded as uint8 (Byte) without conversion, 3) You mix float32 and float64 tensors. Always ensure input tensors match your model's parameter dtype."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Expected Scalar Type Float</span>
+    </nav>
+
+    <article>
+      <h1>How to Fix "Expected Scalar Type Float" in PyTorch</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>Your tensor is the wrong dtype.</strong> Fix: <code>x = x.float()</code> or <code>x = x.to(torch.float32)</code> before passing to the model.</p>
+      </div>
+
+      <h2>Common Causes and Fixes</h2>
+
+      <h3>1. NumPy float64 to PyTorch (most common)</h3>
+      <pre><code>import numpy as np
+import torch
+
+data = np.array([1.0, 2.0, 3.0])        # float64 by default
+tensor = torch.from_numpy(data)           # torch.float64 (Double)
+# model(tensor)  # ERROR: expected Float, got Double
+
+# Fix:
+tensor = torch.from_numpy(data).float()   # torch.float32 ✓
+# or
+tensor = torch.tensor(data, dtype=torch.float32)  # ✓</code></pre>
+
+      <h3>2. Image loaded as uint8</h3>
+      <pre><code># Raw image data is 0-255 uint8
+image = torch.ByteTensor([[[128, 255], [0, 64]]])  # torch.uint8
+# model(image)  # ERROR: expected Float, got Byte
+
+# Fix: convert and normalize
+image = image.float() / 255.0   # torch.float32, range [0, 1] ✓</code></pre>
+
+      <h3>3. Mixing float32 model with float64 input</h3>
+      <pre><code># Models default to float32
+model = nn.Linear(10, 5)                          # float32 weights
+x = torch.randn(32, 10, dtype=torch.float64)      # float64 input
+# model(x)  # ERROR
+
+# Fix: match the model's dtype
+x = x.float()   # convert to float32 ✓
+# or convert model to float64 (not recommended):
+# model = model.double()</code></pre>
+
+      <h2>Check Dtype</h2>
+      <pre><code>print(x.dtype)                    # torch.float64, torch.uint8, etc.
+print(next(model.parameters()).dtype)  # torch.float32 (typical)</code></pre>
+
+      <h2>Quick Reference</h2>
+      <pre><code>x.float()    # -> torch.float32 (most common)
+x.double()   # -> torch.float64
+x.half()     # -> torch.float16
+x.int()      # -> torch.int32
+x.long()     # -> torch.int64 (for labels/indices)</code></pre>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a></li>
+        <li><a href="/answers/cuda-out-of-memory-fix.html">How to fix CUDA out of memory?</a></li>
+        <li><a href="/answers/cannot-broadcast-tensors.html">How to fix "cannot broadcast tensors"?</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Solver</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

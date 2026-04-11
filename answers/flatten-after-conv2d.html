@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Shape Does nn.Flatten() Produce After Conv2d? | HeyTensor</title>
+  <meta name="description" content="After Conv2d outputting (batch, 64, 7, 7), nn.Flatten() produces (batch, 3136). Calculate: 64 x 7 x 7 = 3,136. Essential for connecting CNNs to Linear layers.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/flatten-after-conv2d.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="What Shape Does nn.Flatten() Produce After Conv2d?">
+  <meta property="og:description" content="After Conv2d outputting (batch, 64, 7, 7), nn.Flatten() produces (batch, 3136). Calculate: 64 x 7 x 7 = 3,136.">
+  <meta property="og:url" content="https://heytensor.com/answers/flatten-after-conv2d.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What Shape Does nn.Flatten() Produce After Conv2d?">
+  <meta name="twitter:description" content="After Conv2d outputting (batch, 64, 7, 7), nn.Flatten() produces (batch, 3136).">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What shape does nn.Flatten() produce after Conv2d?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "After Conv2d outputting (batch, 64, 7, 7), nn.Flatten() produces (batch, 3136). The calculation is: channels * height * width = 64 * 7 * 7 = 3,136. nn.Flatten() by default starts from dimension 1 (preserving the batch dimension) and flattens all remaining dimensions into one. This flattened output can then be passed to nn.Linear(3136, num_classes)."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Flatten After Conv2d</span>
+    </nav>
+
+    <article>
+      <h1>What Shape Does nn.Flatten() Produce After Conv2d?</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>After Conv2d outputting (batch, 64, 7, 7), nn.Flatten() produces (batch, 3136).</strong> Calculate: 64 &times; 7 &times; 7 = 3,136. The batch dimension is preserved; everything else is flattened.</p>
+      </div>
+
+      <h2>How nn.Flatten() Works</h2>
+      <p><code>nn.Flatten(start_dim=1)</code> collapses dimensions from <code>start_dim</code> onward into a single dimension. By default, start_dim=1, which preserves the batch dimension:</p>
+      <pre><code>(batch, C, H, W) -> (batch, C * H * W)
+(batch, 64, 7, 7) -> (batch, 64 * 7 * 7) -> (batch, 3136)</code></pre>
+
+      <h2>Common Examples</h2>
+      <pre><code># After typical CNN feature extractors:
+(batch, 512, 7, 7)   -> Flatten -> (batch, 25088)   # VGG-16
+(batch, 2048, 1, 1)  -> Flatten -> (batch, 2048)    # ResNet-50 after AvgPool
+(batch, 256, 6, 6)   -> Flatten -> (batch, 9216)    # AlexNet
+(batch, 64, 7, 7)    -> Flatten -> (batch, 3136)    # Small CNN</code></pre>
+
+      <h2>PyTorch Code</h2>
+      <pre><code>import torch
+import torch.nn as nn
+
+# CNN -> Flatten -> Linear pattern
+model = nn.Sequential(
+    nn.Conv2d(1, 32, 3, padding=1),   # (batch, 32, 28, 28)
+    nn.ReLU(),
+    nn.MaxPool2d(2),                   # (batch, 32, 14, 14)
+    nn.Conv2d(32, 64, 3, padding=1),  # (batch, 64, 14, 14)
+    nn.ReLU(),
+    nn.MaxPool2d(2),                   # (batch, 64, 7, 7)
+    nn.Flatten(),                      # (batch, 3136)
+    nn.Linear(3136, 10)               # (batch, 10)
+)
+
+x = torch.randn(32, 1, 28, 28)
+output = model(x)
+print(output.shape)  # torch.Size([32, 10])</code></pre>
+
+      <h2>Tip: Find the Right Size</h2>
+      <p>If you are not sure what size to use for the Linear layer, run a forward pass and print the shape before Flatten:</p>
+      <pre><code># Quick way to find the flatten size
+x = torch.randn(1, 1, 28, 28)
+x = feature_extractor(x)
+print(x.shape)  # e.g., torch.Size([1, 64, 7, 7])
+flatten_size = x.shape[1] * x.shape[2] * x.shape[3]  # 3136</code></pre>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/linear-layer-512-to-10.html">What shape does nn.Linear(512, 10) output?</a></li>
+        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a></li>
+        <li><a href="/answers/maxpool2d-output-size.html">What does MaxPool2d output?</a></li>
+        <li><a href="/answers/view-size-not-compatible.html">How to fix "view size is not compatible"?</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/flatten-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Flatten Calculator</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

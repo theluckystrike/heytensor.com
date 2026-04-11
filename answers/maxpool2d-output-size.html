@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Does MaxPool2d Output? Kernel 2 Stride 2 Size Calculator | HeyTensor</title>
+  <meta name="description" content="MaxPool2d with kernel=2, stride=2 halves spatial dimensions. Input (batch, C, 14, 14) outputs (batch, C, 7, 7). No parameters, channels unchanged.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/maxpool2d-output-size.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="What Does MaxPool2d Output? Kernel 2 Stride 2 Size Calculator">
+  <meta property="og:description" content="MaxPool2d with kernel=2, stride=2 halves spatial dimensions. Input (batch, C, 14, 14) outputs (batch, C, 7, 7).">
+  <meta property="og:url" content="https://heytensor.com/answers/maxpool2d-output-size.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What Does MaxPool2d Output?">
+  <meta name="twitter:description" content="MaxPool2d with kernel=2, stride=2 halves spatial dimensions.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What does MaxPool2d with kernel 2 stride 2 output?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MaxPool2d with kernel_size=2, stride=2 halves spatial dimensions. Input (batch, C, 14, 14) produces output (batch, C, 7, 7). The number of channels is unchanged. MaxPool2d has zero trainable parameters. The formula is: output_size = floor((input_size - kernel_size) / stride) + 1 = floor((14 - 2) / 2) + 1 = 7."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>MaxPool2d Output Size</span>
+    </nav>
+
+    <article>
+      <h1>What Does MaxPool2d Output with Kernel 2, Stride 2?</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>MaxPool2d with kernel_size=2, stride=2 halves spatial dimensions.</strong> Input (batch, C, 14, 14) produces output (batch, C, 7, 7). Channels are unchanged. Zero trainable parameters.</p>
+      </div>
+
+      <h2>Formula</h2>
+      <pre><code>output_size = floor((input_size - kernel_size + 2 * padding) / stride) + 1</code></pre>
+      <p>For kernel=2, stride=2, padding=0:</p>
+      <pre><code>output = floor((14 - 2 + 0) / 2) + 1
+output = floor(12 / 2) + 1
+output = 6 + 1
+output = 7</code></pre>
+
+      <h2>Common MaxPool2d Configurations</h2>
+      <pre><code># MaxPool2d(2, stride=2) — standard halving
+(batch, 64, 224, 224)  -> (batch, 64, 112, 112)
+(batch, 128, 56, 56)   -> (batch, 128, 28, 28)
+(batch, 256, 14, 14)   -> (batch, 256, 7, 7)
+
+# MaxPool2d(3, stride=2, padding=1) — ResNet style
+(batch, 64, 112, 112)  -> (batch, 64, 56, 56)
+
+# MaxPool2d(3, stride=2) — no padding
+(batch, 64, 112, 112)  -> (batch, 64, 55, 55)</code></pre>
+
+      <h2>PyTorch Code</h2>
+      <pre><code>import torch
+import torch.nn as nn
+
+pool = nn.MaxPool2d(kernel_size=2, stride=2)
+x = torch.randn(1, 64, 14, 14)
+output = pool(x)
+print(output.shape)  # torch.Size([1, 64, 7, 7])</code></pre>
+
+      <h2>Key Points</h2>
+      <ul>
+        <li>MaxPool2d has <strong>zero parameters</strong> &mdash; it simply takes the maximum value in each kernel window</li>
+        <li>When stride is not specified, it defaults to kernel_size</li>
+        <li>Channel count never changes through pooling layers</li>
+        <li>In VGG, five MaxPool2d(2,2) layers reduce 224 to 7: 224 &rarr; 112 &rarr; 56 &rarr; 28 &rarr; 14 &rarr; 7</li>
+      </ul>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/conv2d-output-224x224-kernel-3.html">What does Conv2d output with 224&times;224 input, kernel=3?</a></li>
+        <li><a href="/answers/flatten-after-conv2d.html">What shape does Flatten produce after Conv2d?</a></li>
+        <li><a href="/answers/vgg16-layer-shapes.html">What are all the layer shapes in VGG-16?</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/maxpool2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the MaxPool2d Calculator</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

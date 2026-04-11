@@ -260,4 +260,155 @@
 <changefreq>monthly</changefreq>
 <priority>0.7</priority>
 </url>
+
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-224x224-kernel-3.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-224x224-kernel-7-stride-2.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/conv2d-output-32x32-kernel-5.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/linear-layer-512-to-10.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/lstm-output-shape-bidirectional.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/flatten-after-conv2d.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/maxpool2d-output-size.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/batch-norm-input-shape.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/mat1-mat2-shapes-cannot-be-multiplied.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/expected-4d-input-got-3d.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/cuda-out-of-memory-fix.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/view-size-not-compatible.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/cannot-broadcast-tensors.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/runtime-error-expected-scalar-type-float.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/no-module-named-torch.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/gradient-is-none-fix.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/resnet50-layer-shapes.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/vgg16-layer-shapes.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/how-many-parameters-resnet50.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/how-many-parameters-bert-base.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/transformer-encoder-input-shape.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/what-is-stride-in-conv2d.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/what-is-padding-same-pytorch.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/difference-between-relu-and-gelu.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+  <url>
+<loc>https://heytensor.com/answers/pytorch-vs-tensorflow-2026.html</loc>
+<lastmod>2026-04-11</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
 </urlset>

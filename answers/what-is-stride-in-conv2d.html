@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Is Stride in Conv2d? PyTorch Stride Explained | HeyTensor</title>
+  <meta name="description" content="Stride controls how far the kernel moves between positions. stride=2 halves the output size. stride=1 (default) keeps the size with proper padding. Visual explanation.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/what-is-stride-in-conv2d.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="What Is Stride in Conv2d? PyTorch Stride Explained">
+  <meta property="og:description" content="Stride controls how far the kernel moves. stride=2 halves output size. stride=1 preserves size.">
+  <meta property="og:url" content="https://heytensor.com/answers/what-is-stride-in-conv2d.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What Is Stride in Conv2d?">
+  <meta name="twitter:description" content="Stride controls kernel movement. stride=2 halves output, stride=1 preserves size.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What is stride in Conv2d?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Stride controls how far the convolution kernel moves between positions. With stride=1 (default), the kernel moves one pixel at a time, keeping the output size the same (with proper padding). With stride=2, the kernel skips every other position, halving the output dimensions. Stride is used as an alternative to pooling for downsampling — ResNet uses stride=2 convolutions instead of MaxPool for spatial reduction in residual blocks."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>What Is Stride in Conv2d</span>
+    </nav>
+
+    <article>
+      <h1>What Is Stride in Conv2d?</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>Stride controls how far the kernel moves between positions.</strong> stride=2 halves the output size. stride=1 (default) keeps the size with proper padding.</p>
+      </div>
+
+      <h2>How Stride Affects Output Size</h2>
+      <pre><code>output_size = floor((input - kernel + 2*padding) / stride) + 1</code></pre>
+      <pre><code># 224x224 input, kernel=3, padding=1
+stride=1:  floor((224 - 3 + 2) / 1) + 1 = 224  (same size)
+stride=2:  floor((224 - 3 + 2) / 2) + 1 = 112  (half size)
+stride=4:  floor((224 - 3 + 2) / 4) + 1 = 56   (quarter size)</code></pre>
+
+      <h2>PyTorch Examples</h2>
+      <pre><code>import torch
+import torch.nn as nn
+
+x = torch.randn(1, 3, 224, 224)
+
+# stride=1: preserves spatial size
+conv_s1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1)
+print(conv_s1(x).shape)  # [1, 64, 224, 224]
+
+# stride=2: halves spatial size
+conv_s2 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1)
+print(conv_s2(x).shape)  # [1, 64, 112, 112]
+
+# stride=2 with kernel=7: ResNet conv1
+conv_resnet = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3)
+print(conv_resnet(x).shape)  # [1, 64, 112, 112]</code></pre>
+
+      <h2>Stride vs Pooling for Downsampling</h2>
+      <ul>
+        <li><strong>MaxPool2d(2, 2)</strong> &mdash; takes the max value in each 2&times;2 window, no learnable parameters</li>
+        <li><strong>Conv2d(stride=2)</strong> &mdash; learnable downsampling, the network learns how to downsample</li>
+      </ul>
+      <p>Modern architectures (ResNet, EfficientNet) prefer strided convolutions over pooling because the network can learn what information to preserve during downsampling.</p>
+
+      <h2>Asymmetric Strides</h2>
+      <pre><code># Different stride for height and width
+conv = nn.Conv2d(3, 64, kernel_size=3, stride=(2, 1), padding=1)
+x = torch.randn(1, 3, 224, 224)
+print(conv(x).shape)  # [1, 64, 112, 224] — height halved, width same</code></pre>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/what-is-padding-same-pytorch.html">What is padding='same' in PyTorch?</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-3.html">What does Conv2d output with 224&times;224, kernel=3?</a></li>
+        <li><a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html">What does Conv2d output with kernel=7, stride=2?</a></li>
+        <li><a href="/answers/maxpool2d-output-size.html">What does MaxPool2d output?</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

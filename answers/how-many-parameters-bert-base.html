@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How Many Parameters Does BERT-base Have? | HeyTensor</title>
+  <meta name="description" content="BERT-base has 109,482,240 parameters (~110M). 12 transformer layers, hidden size 768, 12 attention heads. Breakdown: embeddings ~23.8M, transformer ~85.1M, pooler ~0.6M.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/how-many-parameters-bert-base.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="How Many Parameters Does BERT-base Have?">
+  <meta property="og:description" content="BERT-base has ~110M parameters. 12 transformer layers, hidden size 768, 12 attention heads.">
+  <meta property="og:url" content="https://heytensor.com/answers/how-many-parameters-bert-base.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How Many Parameters Does BERT-base Have?">
+  <meta name="twitter:description" content="~110M parameters. 12 layers, hidden size 768.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "How many parameters does BERT-base have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "BERT-base has approximately 110 million parameters (109,482,240 exact). It has 12 transformer layers, hidden size 768, 12 attention heads, and vocabulary size 30,522. Breakdown: Word + position + segment embeddings contribute ~23.8M parameters. Each of the 12 transformer layers has ~7.1M parameters (self-attention ~2.4M, feed-forward ~4.7M). The pooler layer adds ~0.6M. BERT-large has 340M parameters."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>BERT-base Parameters</span>
+    </nav>
+
+    <article>
+      <h1>How Many Parameters Does BERT-base Have?</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>BERT-base has approximately 110 million parameters (~109.5M).</strong> 12 transformer layers, hidden size 768, 12 attention heads, vocabulary 30,522.</p>
+      </div>
+
+      <h2>BERT-base Configuration</h2>
+      <pre><code>Hidden size (H):        768
+Intermediate size:      3072  (4 * H)
+Attention heads:        12
+Layers:                 12
+Vocabulary size:        30,522
+Max position:           512</code></pre>
+
+      <h2>Parameter Breakdown</h2>
+      <pre><code>Component                    | Parameters
+-----------------------------|-------------
+Word Embeddings              | 23,440,896   # 30522 * 768
+Position Embeddings          |    393,216   # 512 * 768
+Segment Embeddings           |      1,536   # 2 * 768
+Embedding LayerNorm          |      1,536   # 2 * 768
+
+Per Transformer Layer:
+  Self-Attention (Q,K,V,O)   |  2,362,368   # 4 * (768*768 + 768)
+  Attention LayerNorm        |      1,536   # 2 * 768
+  Feed-Forward (up + down)   |  4,722,432   # 768*3072 + 3072 + 3072*768 + 768
+  FFN LayerNorm              |      1,536   # 2 * 768
+  Per-layer total            |  7,087,872
+
+12 Transformer Layers        | 85,054,464   # 12 * 7,087,872
+
+Pooler (768 → 768)           |    590,592   # 768*768 + 768
+-----------------------------|-------------
+Total                        | ~109,482,240</code></pre>
+
+      <h2>BERT Model Family</h2>
+      <pre><code>BERT-tiny:    4.4M params   (2 layers,  128 hidden)
+BERT-mini:    11.2M params  (4 layers,  256 hidden)
+BERT-small:   28.8M params  (4 layers,  512 hidden)
+BERT-medium:  41.4M params  (8 layers,  512 hidden)
+BERT-base:   109.5M params  (12 layers, 768 hidden)
+BERT-large:  335.1M params  (24 layers, 1024 hidden)</code></pre>
+
+      <h2>Memory Requirements</h2>
+      <pre><code>FP32 inference:  ~418 MB  (params only)
+FP16 inference:  ~209 MB
+Training (Adam): ~1.67 GB (params + grads + 2 optimizer states)</code></pre>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/how-many-parameters-resnet50.html">How many parameters does ResNet-50 have?</a></li>
+        <li><a href="/answers/transformer-encoder-input-shape.html">What is the input shape for TransformerEncoder?</a></li>
+        <li><a href="/answers/cuda-out-of-memory-fix.html">How to fix CUDA out of memory?</a></li>
+        <li><a href="/answers/difference-between-relu-and-gelu.html">What is the difference between ReLU and GELU?</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/parameter-counter.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Parameter Counter</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>

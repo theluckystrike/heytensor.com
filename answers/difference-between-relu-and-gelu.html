@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Is the Difference Between ReLU and GELU? | HeyTensor</title>
+  <meta name="description" content="ReLU: max(0, x) — fast, can cause dead neurons. GELU: x * Phi(x) — smoother, used in BERT/GPT. GELU is better for transformers, ReLU for CNNs.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/answers/difference-between-relu-and-gelu.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Difference Between ReLU and GELU — When to Use Each">
+  <meta property="og:description" content="ReLU: max(0, x), fast, for CNNs. GELU: x*Phi(x), smoother, for transformers. Complete comparison.">
+  <meta property="og:url" content="https://heytensor.com/answers/difference-between-relu-and-gelu.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ReLU vs GELU — When to Use Each">
+  <meta name="twitter:description" content="ReLU for CNNs, GELU for transformers. Full comparison.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "What is the difference between ReLU and GELU activation functions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ReLU (Rectified Linear Unit) computes max(0, x) — it's fast and simple but can cause 'dead neurons' where gradients become permanently zero. GELU (Gaussian Error Linear Unit) computes x * Phi(x) where Phi is the standard Gaussian CDF — it's smoother and allows small negative values through. GELU is the default activation in BERT, GPT, and most modern transformer architectures. ReLU remains the standard for CNNs. GELU is slightly slower than ReLU but generally produces better results in transformers."
+      }
+    }]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:720px;">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>ReLU vs GELU</span>
+    </nav>
+
+    <article>
+      <h1>What Is the Difference Between ReLU and GELU?</h1>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+        <p style="margin:0;line-height:1.7;"><strong>ReLU: max(0, x) &mdash; fast, can cause dead neurons. GELU: x &times; &Phi;(x) &mdash; smoother, used in BERT/GPT.</strong> GELU is better for transformers, ReLU for CNNs.</p>
+      </div>
+
+      <h2>Mathematical Definitions</h2>
+      <pre><code># ReLU: sharp cutoff at 0
+ReLU(x) = max(0, x)
+# x = -2 → 0,  x = 0 → 0,  x = 3 → 3
+
+# GELU: smooth, probabilistic gate
+GELU(x) = x * Φ(x)    # Φ = standard Gaussian CDF
+# x = -2 → -0.045,  x = 0 → 0,  x = 3 → 2.996
+# Approximation: 0.5 * x * (1 + tanh(√(2/π) * (x + 0.044715 * x³)))</code></pre>
+
+      <h2>Side-by-Side Comparison</h2>
+      <pre><code>Property          | ReLU              | GELU
+------------------|--------------------|-----------------------
+Formula           | max(0, x)          | x * Φ(x)
+Negative inputs   | Always 0           | Small negative values
+Smoothness        | Not smooth at 0    | Smooth everywhere
+Dead neurons      | Yes (gradient = 0) | No (always has gradient)
+Speed             | Fastest            | ~15% slower
+Used in           | CNNs (ResNet, VGG) | Transformers (BERT, GPT)
+Parameters        | 0                  | 0</code></pre>
+
+      <h2>PyTorch Code</h2>
+      <pre><code>import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+x = torch.tensor([-2.0, -1.0, 0.0, 1.0, 2.0])
+
+# ReLU
+print(F.relu(x))     # tensor([0., 0., 0., 1., 2.])
+
+# GELU
+print(F.gelu(x))     # tensor([-0.0454, -0.1588, 0.0000, 0.8413, 1.9545])
+
+# As modules
+relu = nn.ReLU()
+gelu = nn.GELU()</code></pre>
+
+      <h2>When to Use Which</h2>
+      <ul>
+        <li><strong>Use ReLU</strong> for CNNs (ResNet, VGG, etc.), simple feedforward networks, and when speed matters most</li>
+        <li><strong>Use GELU</strong> for transformer models, NLP tasks, and when you want smoother gradients</li>
+        <li><strong>Use SiLU/Swish</strong> (x &times; sigmoid(x)) as a middle ground &mdash; used in EfficientNet and some modern CNNs</li>
+      </ul>
+
+      <h2>Related Questions</h2>
+      <ul>
+        <li><a href="/answers/how-many-parameters-bert-base.html">How many parameters does BERT-base have?</a></li>
+        <li><a href="/answers/transformer-encoder-input-shape.html">What is the input shape for TransformerEncoder?</a></li>
+        <li><a href="/answers/resnet50-layer-shapes.html">What are the layer shapes in ResNet-50?</a></li>
+        <li><a href="/answers/pytorch-vs-tensorflow-2026.html">PyTorch vs TensorFlow in 2026</a></li>
+      </ul>
+
+      <div style="text-align:center;margin:2rem 0;">
+        <a href="/tools/activation-functions.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Activation Functions Tool</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+      <h3 class="zovo-network-title">Explore More Tools</h3>
+      <div class="zovo-network-links">
+        <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+        <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+        <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+        <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+        <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+        <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+        <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+        <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+        <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+        <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+        <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+        <a href="https://lochbot.com">LochBot &mdash; Security</a>
+        <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+        <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+      </div>
+    </div>
+  </nav>
+  <script src="/assets/js/share.js"></script>
+</body>
+</html>
