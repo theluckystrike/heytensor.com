@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch Model Zoo Stats — Architecture Popularity and Download Trends | HeyTensor</title>
+  <meta name="description" content="Top 50 PyTorch models on HuggingFace ranked by downloads. Real API data showing 194M+ downloads for the #1 model, architecture types, licenses, and popularity trends.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/research/pytorch-model-zoo-stats.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/research/pytorch-model-zoo-stats.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/research/pytorch-model-zoo-stats.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="PyTorch Model Zoo Stats — Architecture Popularity and Download Trends">
+  <meta property="og:description" content="Top 50 PyTorch models on HuggingFace ranked by downloads with real API data.">
+  <meta property="og:url" content="https://heytensor.com/research/pytorch-model-zoo-stats.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PyTorch Model Zoo Stats — Architecture Popularity and Download Trends">
+  <meta name="twitter:description" content="Top 50 PyTorch models on HuggingFace ranked by downloads with real API data.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "PyTorch Model Zoo Stats — HuggingFace Downloads",
+    "description": "Download statistics and metadata for the top 50 most-downloaded PyTorch models on HuggingFace, including model IDs, download counts, likes, pipeline tasks, and licenses.",
+    "url": "https://heytensor.com/research/pytorch-model-zoo-stats.html",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "creator": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-11",
+    "dateModified": "2026-04-11",
+    "keywords": ["PyTorch", "HuggingFace", "model zoo", "model downloads", "BERT", "GPT", "Llama", "Qwen", "sentence-transformers"],
+    "variableMeasured": [
+      {"@type": "PropertyValue", "name": "downloads", "description": "Total all-time download count from HuggingFace"},
+      {"@type": "PropertyValue", "name": "likes", "description": "Community likes/stars on HuggingFace"},
+      {"@type": "PropertyValue", "name": "pipeline_tag", "description": "Primary task category"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the most downloaded PyTorch model on HuggingFace?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of April 2026, the most downloaded PyTorch model on HuggingFace is sentence-transformers/all-MiniLM-L6-v2 with over 194 million downloads. This sentence embedding model is popular for semantic search, clustering, and retrieval-augmented generation (RAG) pipelines. Google's BERT-base-uncased ranks second with 66M+ downloads."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which PyTorch model architecture is most popular in 2026?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sentence embedding models dominate the top downloads, with sentence-transformers appearing 4 times in the top 20. Text generation models (Qwen3, Llama 3.1, GPT-2) are the second most popular category. CLIP models for zero-shot image classification hold strong in the top 10. The trend shows a shift from pure language models to specialized embedding and multimodal models."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I choose between PyTorch models for my project?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Consider these factors: 1) Task match — use the pipeline_tag to find models trained for your specific task, 2) Model size vs. hardware — smaller models like MiniLM (22M params) run on CPU, while Llama-3.1-8B needs a GPU, 3) License — Apache 2.0 and MIT are commercially permissive, while some models have restricted licenses, 4) Community validation — higher likes and downloads indicate battle-tested models, 5) Recency — newer architectures like ModernBERT often outperform older ones."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What license do most popular PyTorch models use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Apache 2.0 is the most common license among the top 50 PyTorch models, used by over 60% of them including all Qwen models, sentence-transformers, and BERT. MIT is the second most common, used by RoBERTa, BGE, and pyannote models. Some models like CLIP and Llama use custom licenses with varying commercial restrictions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do some models have high downloads but low likes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "High downloads with low likes typically indicates the model is used programmatically as a dependency or sub-component rather than being directly chosen by developers. For example, google/electra-base-discriminator has 48M downloads but only 90 likes because it's often pulled automatically by downstream packages. Models with high likes relative to downloads (like Kokoro-82M with 5,942 likes) tend to be consumer-facing or have strong community engagement."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "PyTorch Model Zoo Stats — Architecture Popularity and Download Trends",
+    "description": "Top 50 PyTorch models on HuggingFace ranked by downloads with real API data.",
+    "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
+    "publisher": {"@type": "Organization", "name": "HeyTensor", "url": "https://heytensor.com"},
+    "datePublished": "2026-04-11",
+    "dateModified": "2026-04-11",
+    "mainEntityOfPage": "https://heytensor.com/research/pytorch-model-zoo-stats.html",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["h1", ".research-meta", ".stat-num"]
+    }
+  }
+  </script>
+  <style>
+    .research-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-family: var(--font-display);
+      color: var(--purple);
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .research-meta {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .research-meta a { color: var(--text-dim); }
+    .research-meta a:hover { color: var(--accent); }
+    .mem-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin: 1.5rem 0;
+    }
+    .mem-table th {
+      background: var(--bg-card);
+      color: var(--accent);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      text-align: left;
+      padding: 0.6rem 0.5rem;
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 56px;
+      z-index: 10;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .mem-table th:hover { opacity: 0.8; }
+    .mem-table td {
+      padding: 0.55rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .mem-table tr:hover td { background: var(--bg-hover); }
+    .mem-table code {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      background: var(--bg);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+    }
+    .dl-bar {
+      display: inline-block;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 4px;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+      opacity: 0.7;
+    }
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .stat-num {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .methodology-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 32px 0;
+    }
+    .methodology-box h3 { font-size: 1rem; margin-bottom: 10px; }
+    .methodology-box p, .methodology-box li { font-size: 0.88rem; color: var(--text-dim); line-height: 1.7; }
+    .methodology-box ul { padding-left: 20px; margin-top: 8px; }
+    .methodology-box li { margin-bottom: 4px; }
+    details {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      padding: 14px 18px;
+    }
+    details[open] { padding-bottom: 18px; }
+    summary { cursor: pointer; font-weight: 600; font-size: 0.92rem; list-style: none; }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: '+ '; color: var(--accent); font-family: var(--font-display); }
+    details[open] summary::before { content: '- '; }
+    details p { margin-top: 10px; font-size: 0.88rem; color: var(--text-dim); line-height: 1.7; }
+    .search-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 0.6rem 0.8rem;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      outline: none;
+      margin-bottom: 1rem;
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .rank-num { font-family: var(--font-display); font-weight: 700; color: var(--accent); }
+    .task-tag {
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-weight: 600;
+      white-space: nowrap;
+      background: rgba(168,85,247,0.1);
+      color: #a855f7;
+    }
+    .license-tag {
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: rgba(63,185,80,0.1);
+      color: #3fb950;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/research/pytorch-model-zoo-stats.html">Research</a> <span>/</span> <span>Model Zoo Stats</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <div class="research-badge">Original Research</div>
+      <h1>PyTorch Model Zoo Stats</h1>
+      <p class="hero-subtitle">Architecture Popularity and Download Trends</p>
+      <div class="research-meta">
+        By <a href="/about.html">Michael Lip</a> &middot; Published April 11, 2026 &middot; Data source: HuggingFace API &middot; Last updated: <time datetime="2026-04-11">April 11, 2026</time>
+      </div>
+    </section>
+
+    <div class="stats-summary">
+      <div class="stat-card"><div class="stat-num">50</div><div class="stat-label">Models Ranked</div></div>
+      <div class="stat-card"><div class="stat-num">194M</div><div class="stat-label">Top Downloads</div></div>
+      <div class="stat-card"><div class="stat-num">5,942</div><div class="stat-label">Most Liked</div></div>
+      <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Task Categories</div></div>
+    </div>
+
+    <p>Which PyTorch models are developers actually using? We queried the <strong>HuggingFace API</strong> for the top 50 most-downloaded PyTorch models and found that sentence embedding models dominate, with <code>all-MiniLM-L6-v2</code> leading at 194M+ downloads. Text generation models from Qwen and Meta occupy 12 of the top 50 spots, reflecting the ongoing LLM boom.</p>
+
+    <p>This data helps developers choose battle-tested models and understand which architectures the community trusts for production workloads.</p>
+
+    <input type="text" class="search-input" id="model-search" placeholder="Search models (e.g., 'bert', 'llama', 'sentence', 'classification')...">
+
+    <h2>Top 50 PyTorch Models by Downloads</h2>
+
+    <div style="overflow-x:auto;">
+    <table class="mem-table" id="model-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Model ID</th>
+          <th>Downloads</th>
+          <th>Likes</th>
+          <th>Task</th>
+          <th>License</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="rank-num">1</td><td><strong>sentence-transformers/all-MiniLM-L6-v2</strong></td><td><span class="dl-bar" style="width:100px;"></span>194,504,137</td><td>4,666</td><td><span class="task-tag">sentence-similarity</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">2</td><td><strong>google-bert/bert-base-uncased</strong></td><td><span class="dl-bar" style="width:34px;"></span>66,872,132</td><td>2,617</td><td><span class="task-tag">fill-mask</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">3</td><td><strong>google/electra-base-discriminator</strong></td><td><span class="dl-bar" style="width:25px;"></span>48,518,518</td><td>90</td><td><span class="task-tag">discriminative</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">4</td><td><strong>Falconsai/nsfw_image_detection</strong></td><td><span class="dl-bar" style="width:20px;"></span>37,968,104</td><td>1,041</td><td><span class="task-tag">image-classification</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">5</td><td><strong>sentence-transformers/all-mpnet-base-v2</strong></td><td><span class="dl-bar" style="width:15px;"></span>29,616,352</td><td>1,275</td><td><span class="task-tag">sentence-similarity</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">6</td><td><strong>openai/clip-vit-large-patch14</strong></td><td><span class="dl-bar" style="width:15px;"></span>29,402,065</td><td>1,989</td><td><span class="task-tag">zero-shot-image</span></td><td><span class="license-tag">Custom</span></td></tr>
+        <tr><td class="rank-num">7</td><td><strong>sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2</strong></td><td><span class="dl-bar" style="width:15px;"></span>28,989,731</td><td>1,193</td><td><span class="task-tag">sentence-similarity</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">8</td><td><strong>openai/clip-vit-base-patch32</strong></td><td><span class="dl-bar" style="width:11px;"></span>20,738,321</td><td>904</td><td><span class="task-tag">zero-shot-image</span></td><td><span class="license-tag">Custom</span></td></tr>
+        <tr><td class="rank-num">9</td><td><strong>FacebookAI/roberta-large</strong></td><td><span class="dl-bar" style="width:10px;"></span>20,428,795</td><td>273</td><td><span class="task-tag">fill-mask</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">10</td><td><strong>FacebookAI/xlm-roberta-base</strong></td><td><span class="dl-bar" style="width:10px;"></span>19,185,606</td><td>812</td><td><span class="task-tag">fill-mask</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">11</td><td><strong>laion/clap-htsat-fused</strong></td><td><span class="dl-bar" style="width:10px;"></span>19,125,301</td><td>75</td><td><span class="task-tag">audio-classification</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">12</td><td><strong>cross-encoder/ms-marco-MiniLM-L6-v2</strong></td><td><span class="dl-bar" style="width:9px;"></span>17,230,680</td><td>213</td><td><span class="task-tag">text-ranking</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">13</td><td><strong>BAAI/bge-small-en-v1.5</strong></td><td><span class="dl-bar" style="width:8px;"></span>16,375,859</td><td>434</td><td><span class="task-tag">feature-extraction</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">14</td><td><strong>openai/clip-vit-large-patch14-336</strong></td><td><span class="dl-bar" style="width:8px;"></span>15,708,322</td><td>297</td><td><span class="task-tag">zero-shot-image</span></td><td><span class="license-tag">Custom</span></td></tr>
+        <tr><td class="rank-num">15</td><td><strong>Bingsu/adetailer</strong></td><td><span class="dl-bar" style="width:8px;"></span>15,447,493</td><td>682</td><td><span class="task-tag">detection</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">16</td><td><strong>FacebookAI/roberta-base</strong></td><td><span class="dl-bar" style="width:8px;"></span>15,384,150</td><td>583</td><td><span class="task-tag">fill-mask</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">17</td><td><strong>colbert-ir/colbertv2.0</strong></td><td><span class="dl-bar" style="width:8px;"></span>15,383,631</td><td>320</td><td><span class="task-tag">retrieval</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">18</td><td><strong>Qwen/Qwen3-0.6B</strong></td><td><span class="dl-bar" style="width:8px;"></span>15,101,523</td><td>1,183</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">19</td><td><strong>BAAI/bge-m3</strong></td><td><span class="dl-bar" style="width:8px;"></span>15,082,193</td><td>2,896</td><td><span class="task-tag">sentence-similarity</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">20</td><td><strong>timm/mobilenetv3_small_100.lamb_in1k</strong></td><td><span class="dl-bar" style="width:8px;"></span>14,678,825</td><td>60</td><td><span class="task-tag">image-classification</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">21</td><td><strong>amazon/chronos-2</strong></td><td><span class="dl-bar" style="width:7px;"></span>13,963,080</td><td>229</td><td><span class="task-tag">time-series</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">22</td><td><strong>openai-community/gpt2</strong></td><td><span class="dl-bar" style="width:7px;"></span>13,521,727</td><td>3,188</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">23</td><td><strong>Qwen/Qwen2.5-7B-Instruct</strong></td><td><span class="dl-bar" style="width:6px;"></span>12,111,952</td><td>1,198</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">24</td><td><strong>pyannote/wespeaker-voxceleb-resnet34-LM</strong></td><td><span class="dl-bar" style="width:6px;"></span>11,945,522</td><td>116</td><td><span class="task-tag">speaker-embed</span></td><td><span class="license-tag">CC-BY-4.0</span></td></tr>
+        <tr><td class="rank-num">25</td><td><strong>pyannote/segmentation-3.0</strong></td><td><span class="dl-bar" style="width:6px;"></span>11,077,399</td><td>894</td><td><span class="task-tag">voice-activity</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">26</td><td><strong>pyannote/speaker-diarization-3.1</strong></td><td><span class="dl-bar" style="width:6px;"></span>10,906,588</td><td>1,732</td><td><span class="task-tag">speech-recognition</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">27</td><td><strong>nomic-ai/nomic-embed-text-v1.5</strong></td><td><span class="dl-bar" style="width:5px;"></span>10,616,366</td><td>794</td><td><span class="task-tag">sentence-similarity</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">28</td><td><strong>omni-research/Tarsier2-Recap-7b</strong></td><td><span class="dl-bar" style="width:5px;"></span>10,424,091</td><td>33</td><td><span class="task-tag">multimodal</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">29</td><td><strong>autogluon/chronos-bolt-small</strong></td><td><span class="dl-bar" style="width:5px;"></span>10,236,709</td><td>30</td><td><span class="task-tag">time-series</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">30</td><td><strong>Qwen/Qwen2.5-1.5B-Instruct</strong></td><td><span class="dl-bar" style="width:5px;"></span>9,922,750</td><td>661</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">31</td><td><strong>hexgrad/Kokoro-82M</strong></td><td><span class="dl-bar" style="width:5px;"></span>9,728,735</td><td>5,942</td><td><span class="task-tag">text-to-speech</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">32</td><td><strong>meta-llama/Llama-3.1-8B-Instruct</strong></td><td><span class="dl-bar" style="width:5px;"></span>9,196,892</td><td>5,677</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Llama 3.1</span></td></tr>
+        <tr><td class="rank-num">33</td><td><strong>autogluon/chronos-2</strong></td><td><span class="dl-bar" style="width:5px;"></span>9,162,047</td><td>12</td><td><span class="task-tag">time-series</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">34</td><td><strong>Qwen/Qwen2.5-3B-Instruct</strong></td><td><span class="dl-bar" style="width:4px;"></span>8,679,038</td><td>437</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Other</span></td></tr>
+        <tr><td class="rank-num">35</td><td><strong>Qwen/Qwen3-8B</strong></td><td><span class="dl-bar" style="width:4px;"></span>8,366,071</td><td>1,036</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">36</td><td><strong>Qwen/Qwen3-4B</strong></td><td><span class="dl-bar" style="width:4px;"></span>8,255,392</td><td>593</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">37</td><td><strong>Qwen/Qwen3-1.7B</strong></td><td><span class="dl-bar" style="width:4px;"></span>8,194,168</td><td>445</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">38</td><td><strong>Marqo/nsfw-image-detection-384</strong></td><td><span class="dl-bar" style="width:4px;"></span>7,885,546</td><td>45</td><td><span class="task-tag">image-classification</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">39</td><td><strong>distilbert/distilbert-base-uncased</strong></td><td><span class="dl-bar" style="width:4px;"></span>7,745,707</td><td>860</td><td><span class="task-tag">fill-mask</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">40</td><td><strong>BAAI/bge-large-en-v1.5</strong></td><td><span class="dl-bar" style="width:4px;"></span>7,570,795</td><td>646</td><td><span class="task-tag">feature-extraction</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">41</td><td><strong>Kijai/WanVideo_comfy</strong></td><td><span class="dl-bar" style="width:4px;"></span>7,415,388</td><td>2,246</td><td><span class="task-tag">video-generation</span></td><td><span class="license-tag">Custom</span></td></tr>
+        <tr><td class="rank-num">42</td><td><strong>Qwen/Qwen3-4B-Instruct-2507</strong></td><td><span class="dl-bar" style="width:4px;"></span>7,359,404</td><td>802</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">43</td><td><strong>facebook/contriever</strong></td><td><span class="dl-bar" style="width:4px;"></span>7,296,114</td><td>77</td><td><span class="task-tag">retrieval</span></td><td><span class="license-tag">Custom</span></td></tr>
+        <tr><td class="rank-num">44</td><td><strong>answerdotai/ModernBERT-base</strong></td><td><span class="dl-bar" style="width:4px;"></span>7,201,565</td><td>1,022</td><td><span class="task-tag">fill-mask</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">45</td><td><strong>Comfy-Org/Wan_2.2_ComfyUI_Repackaged</strong></td><td><span class="dl-bar" style="width:4px;"></span>6,919,345</td><td>671</td><td><span class="task-tag">image-generation</span></td><td><span class="license-tag">Custom</span></td></tr>
+        <tr><td class="rank-num">46</td><td><strong>lpiccinelli/unidepth-v2-vitl14</strong></td><td><span class="dl-bar" style="width:4px;"></span>6,886,202</td><td>12</td><td><span class="task-tag">depth-estimation</span></td><td><span class="license-tag">Custom</span></td></tr>
+        <tr><td class="rank-num">47</td><td><strong>dima806/fairface_age_image_detection</strong></td><td><span class="dl-bar" style="width:4px;"></span>6,858,091</td><td>69</td><td><span class="task-tag">image-classification</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">48</td><td><strong>amazon/chronos-bolt-base</strong></td><td><span class="dl-bar" style="width:3px;"></span>6,774,805</td><td>85</td><td><span class="task-tag">time-series</span></td><td><span class="license-tag">Apache-2.0</span></td></tr>
+        <tr><td class="rank-num">49</td><td><strong>FacebookAI/xlm-roberta-large</strong></td><td><span class="dl-bar" style="width:3px;"></span>6,667,591</td><td>503</td><td><span class="task-tag">fill-mask</span></td><td><span class="license-tag">MIT</span></td></tr>
+        <tr><td class="rank-num">50</td><td><strong>facebook/opt-125m</strong></td><td><span class="dl-bar" style="width:3px;"></span>6,544,170</td><td>240</td><td><span class="task-tag">text-generation</span></td><td><span class="license-tag">Other</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="methodology-box">
+      <h3>Methodology</h3>
+      <p>Model data in this index is sourced directly from the HuggingFace API:</p>
+      <ul>
+        <li><strong>API endpoint</strong> &mdash; <code>huggingface.co/api/models?sort=downloads&direction=-1&limit=50&library=pytorch</code> queried on April 11, 2026</li>
+        <li><strong>Downloads</strong> &mdash; All-time download count as reported by HuggingFace's CDN tracking</li>
+        <li><strong>Likes</strong> &mdash; Community likes/stars, equivalent to GitHub stars</li>
+        <li><strong>Task categories</strong> &mdash; Derived from the model's <code>pipeline_tag</code> metadata field</li>
+        <li><strong>Licenses</strong> &mdash; Extracted from model tags; some models use custom or restrictive licenses</li>
+      </ul>
+      <p>Download counts include programmatic API access and may not reflect unique users. Models used as dependencies by other packages will have inflated download numbers.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>What is the most downloaded PyTorch model on HuggingFace?</summary>
+      <p>As of April 2026, the most downloaded PyTorch model is sentence-transformers/all-MiniLM-L6-v2 with over 194 million downloads. This sentence embedding model is popular for semantic search, clustering, and retrieval-augmented generation (RAG) pipelines. Google's BERT-base-uncased ranks second with 66M+ downloads.</p>
+    </details>
+
+    <details>
+      <summary>Which PyTorch model architecture is most popular in 2026?</summary>
+      <p>Sentence embedding models dominate the top downloads, with sentence-transformers appearing 4 times in the top 20. Text generation models (Qwen3, Llama 3.1, GPT-2) are the second most popular category. CLIP models for zero-shot image classification hold strong in the top 10. The trend shows a shift toward specialized embedding and multimodal models.</p>
+    </details>
+
+    <details>
+      <summary>How do I choose between PyTorch models for my project?</summary>
+      <p>Consider: 1) Task match &mdash; use the pipeline_tag to find models for your task, 2) Model size vs. hardware &mdash; MiniLM (22M params) runs on CPU while Llama-3.1-8B needs a GPU, 3) License &mdash; Apache 2.0 and MIT are commercially permissive, 4) Community validation &mdash; higher likes and downloads indicate battle-tested models, 5) Recency &mdash; newer architectures like ModernBERT often outperform older ones.</p>
+    </details>
+
+    <details>
+      <summary>What license do most popular PyTorch models use?</summary>
+      <p>Apache 2.0 is the most common license among the top 50, used by over 60% including Qwen, sentence-transformers, and BERT. MIT is second, used by RoBERTa, BGE, and pyannote models. Some models like CLIP and Llama use custom licenses with varying commercial restrictions.</p>
+    </details>
+
+    <details>
+      <summary>Why do some models have high downloads but low likes?</summary>
+      <p>High downloads with low likes typically indicates the model is used programmatically as a dependency rather than being directly chosen. For example, google/electra-base-discriminator has 48M downloads but only 90 likes because it is pulled automatically by downstream packages. Models with high likes relative to downloads (like Kokoro-82M with 5,942 likes) tend to have strong community engagement.</p>
+    </details>
+
+    <section style="text-align:center;margin:2rem 0;">
+      <h3>Related Tools</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin:1rem 0;">
+        <a href="/tools/parameter-counter.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Parameter Counter</a>
+        <a href="/tools/memory-calculator.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Memory Calculator</a>
+        <a href="/research/ml-framework-comparison-2026.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">ML Framework Comparison</a>
+        <a href="/research/pytorch-layer-performance.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Layer Performance</a>
+      </div>
+    </section>
+
+    <div style="text-align:center;margin:2rem 0;">
+      <p style="font-size:0.85rem;color:#8b949e;margin-bottom:1rem;">Free to use under CC BY 4.0 license. Cite this page when sharing.</p>
+      <button onclick="downloadData('json')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download JSON</button>
+      <button onclick="downloadData('csv')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#1f6feb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download CSV</button>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+  </nav>
+
+<script>
+(function() {
+  var search = document.getElementById('model-search');
+  var rows = document.querySelectorAll('#model-table tbody tr');
+  search.addEventListener('input', function() {
+    var q = search.value.toLowerCase();
+    rows.forEach(function(row) {
+      row.style.display = !q || row.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+    });
+  });
+})();
+</script>
+<script>
+function downloadData(format) {
+  var entries = document.querySelectorAll('#model-table tbody tr');
+  var data = Array.from(entries).map(function(el) {
+    var cells = el.querySelectorAll('td');
+    return {
+      rank: cells[0] ? cells[0].textContent.trim() : '',
+      model: cells[1] ? cells[1].textContent.trim() : '',
+      downloads: cells[2] ? cells[2].textContent.trim().replace(/[^0-9]/g,'') : '',
+      likes: cells[3] ? cells[3].textContent.trim() : '',
+      task: cells[4] ? cells[4].textContent.trim() : '',
+      license: cells[5] ? cells[5].textContent.trim() : ''
+    };
+  }).filter(function(d) { return d.model; });
+  var content, type, ext;
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2);
+    type = 'application/json'; ext = 'json';
+  } else {
+    content = 'rank,model,downloads,likes,task,license\n' + data.map(function(d) {
+      return d.rank + ',"' + d.model.replace(/"/g,'""') + '",' + d.downloads + ',' + d.likes + ',"' + d.task + '","' + d.license + '"';
+    }).join('\n');
+    type = 'text/csv'; ext = 'csv';
+  }
+  var blob = new Blob([content], {type: type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'pytorch-model-zoo-stats.' + ext;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>

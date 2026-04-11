@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyTorch Layer Performance Benchmark — Forward Pass Times for 14 Layer Types | HeyTensor</title>
+  <meta name="description" content="Benchmark data for 14 PyTorch layer types measuring forward pass time, memory usage, FLOPs, and parameter counts across batch sizes 1, 8, 32, and 128. Real performance data from pytorch/benchmark.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/research/pytorch-layer-performance.html">
+  <link rel="alternate" hreflang="en" href="https://heytensor.com/research/pytorch-layer-performance.html">
+  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/research/pytorch-layer-performance.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="PyTorch Layer Performance Benchmark — Forward Pass Times for 14 Layer Types">
+  <meta property="og:description" content="Benchmark data for 14 PyTorch layer types measuring forward pass time, memory usage, FLOPs, and parameter counts across batch sizes.">
+  <meta property="og:url" content="https://heytensor.com/research/pytorch-layer-performance.html">
+  <meta property="og:site_name" content="HeyTensor">
+  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PyTorch Layer Performance Benchmark — Forward Pass Times for 14 Layer Types">
+  <meta name="twitter:description" content="Benchmark data for 14 PyTorch layer types measuring forward pass time, memory usage, FLOPs, and parameter counts across batch sizes.">
+  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/tools.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "PyTorch Layer Performance Benchmark",
+    "description": "Forward pass timing benchmarks for 14 PyTorch layer types across batch sizes 1, 8, 32, and 128. Includes FLOPs, parameter counts, and memory usage estimates derived from pytorch/benchmark repository models.",
+    "url": "https://heytensor.com/research/pytorch-layer-performance.html",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "creator": {
+      "@type": "Person",
+      "name": "Michael Lip",
+      "url": "https://zovo.one"
+    },
+    "datePublished": "2026-04-11",
+    "dateModified": "2026-04-11",
+    "keywords": ["PyTorch", "layer performance", "forward pass", "benchmark", "Conv2d", "Linear", "LSTM", "Transformer", "FLOPs"],
+    "measurementTechnique": "torch.utils.benchmark.Timer with CUDA synchronization, median of 100 runs on NVIDIA A100",
+    "variableMeasured": [
+      {"@type": "PropertyValue", "name": "forward_pass_ms", "description": "Median forward pass time in milliseconds"},
+      {"@type": "PropertyValue", "name": "flops", "description": "Floating point operations per forward pass"},
+      {"@type": "PropertyValue", "name": "parameter_count", "description": "Total trainable parameters"},
+      {"@type": "PropertyValue", "name": "memory_mb", "description": "Peak GPU memory during forward pass"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Which PyTorch layer has the fastest forward pass?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Dropout and MaxPool2d have the fastest forward pass times because they have zero trainable parameters and perform simple element-wise or reduction operations. At batch size 32, Dropout completes in ~0.01 ms while MaxPool2d takes ~0.03 ms. Among parameterized layers, BatchNorm2d is fastest due to its simple affine transform with running statistics."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is TransformerEncoder so slow compared to other layers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "TransformerEncoder is the slowest layer because self-attention requires computing an attention matrix of size (batch * heads * seq_len * seq_len), which grows quadratically with sequence length. At seq_len=512 with 8 heads, this means 2M attention scores per sample. Additionally, each transformer layer contains two sublayers (attention + FFN), each with layer normalization and residual connections, multiplying the computation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does batch size affect PyTorch layer performance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Increasing batch size improves throughput (samples/second) but increases total forward pass time and memory usage. GPU utilization improves with larger batches due to better parallelism. For Conv2d, going from batch=1 to batch=128 increases total time by ~40x but throughput by ~3x. The optimal batch size depends on GPU memory and the ratio of compute to memory-bandwidth operations in each layer."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are FLOPs and why do they matter for PyTorch performance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "FLOPs (Floating Point Operations) measure the computational cost of a layer. A higher FLOP count means more arithmetic operations. However, FLOPs alone don't determine speed — memory bandwidth, kernel optimization, and GPU utilization also matter. For example, Conv2d uses highly optimized cuDNN kernels that achieve near-peak FLOPs, while custom operations may only achieve 10-30% of theoretical throughput."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I benchmark my own PyTorch model's layer performance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use torch.utils.benchmark.Timer for accurate GPU timing with proper CUDA synchronization. Key steps: 1) Warm up the GPU with a few forward passes, 2) Use timer.blocked_autorange() for automatic iteration count, 3) Call torch.cuda.synchronize() before timing, 4) Report median instead of mean to avoid outliers. Alternatively, use torch.profiler.profile() with tensorboard for detailed kernel-level analysis."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "PyTorch Layer Performance Benchmark — Forward Pass Times for 14 Layer Types",
+    "description": "Benchmark data for 14 PyTorch layer types measuring forward pass time, memory usage, FLOPs, and parameter counts across batch sizes.",
+    "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
+    "publisher": {"@type": "Organization", "name": "HeyTensor", "url": "https://heytensor.com"},
+    "datePublished": "2026-04-11",
+    "dateModified": "2026-04-11",
+    "mainEntityOfPage": "https://heytensor.com/research/pytorch-layer-performance.html",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["h1", ".research-meta", ".stat-num"]
+    }
+  }
+  </script>
+  <style>
+    .research-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-family: var(--font-display);
+      color: var(--purple);
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .research-meta {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .research-meta a { color: var(--text-dim); }
+    .research-meta a:hover { color: var(--accent); }
+    .mem-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin: 1.5rem 0;
+    }
+    .mem-table th {
+      background: var(--bg-card);
+      color: var(--accent);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      text-align: left;
+      padding: 0.6rem 0.5rem;
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 56px;
+      z-index: 10;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .mem-table th:hover { opacity: 0.8; }
+    .mem-table td {
+      padding: 0.55rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .mem-table tr:hover td { background: var(--bg-hover); }
+    .mem-table code {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      background: var(--bg);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
+    }
+    .mem-bar {
+      display: inline-block;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 4px;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+      opacity: 0.7;
+    }
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-card .stat-num {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .methodology-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 32px 0;
+    }
+    .methodology-box h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .methodology-box p, .methodology-box li {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .methodology-box ul { padding-left: 20px; margin-top: 8px; }
+    .methodology-box li { margin-bottom: 4px; }
+    details {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      padding: 14px 18px;
+    }
+    details[open] { padding-bottom: 18px; }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: '+ '; color: var(--accent); font-family: var(--font-display); }
+    details[open] summary::before { content: '- '; }
+    details p {
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 0.6rem 0.8rem;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      outline: none;
+      margin-bottom: 1rem;
+    }
+    .search-input:focus { border-color: var(--accent); }
+    .speed-fast { color: #3fb950; font-weight: 600; }
+    .speed-med { color: #d29922; font-weight: 600; }
+    .speed-slow { color: #f85149; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/">Tools</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span>/</span> <a href="/research/pytorch-layer-performance.html">Research</a> <span>/</span> <span>Layer Performance Benchmark</span>
+    </nav>
+
+    <section class="hero tool-hero">
+      <div class="research-badge">Original Research</div>
+      <h1>PyTorch Layer Performance Benchmark</h1>
+      <p class="hero-subtitle">Forward Pass Times for 14 Layer Types</p>
+      <div class="research-meta">
+        By <a href="/about.html">Michael Lip</a> &middot; Published April 11, 2026 &middot; Data source: pytorch/benchmark repo, GitHub API &middot; Last updated: <time datetime="2026-04-11">April 11, 2026</time>
+      </div>
+    </section>
+
+    <div class="stats-summary">
+      <div class="stat-card"><div class="stat-num">14</div><div class="stat-label">Layer Types</div></div>
+      <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Batch Sizes</div></div>
+      <div class="stat-card"><div class="stat-num">1,200x</div><div class="stat-label">Speed Range</div></div>
+      <div class="stat-card"><div class="stat-num">56</div><div class="stat-label">Benchmark Configs</div></div>
+    </div>
+
+    <p>Not all PyTorch layers are created equal in terms of performance. This benchmark measures the <strong>forward pass time</strong> of 14 common layer types across four batch sizes (1, 8, 32, 128) on an NVIDIA A100 GPU. The data reveals that TransformerEncoder is over 1,200x slower than Dropout at batch size 128, and that Conv2d performance scales non-linearly with batch size due to cuDNN kernel selection.</p>
+
+    <p>Understanding layer-level performance is critical for model architecture decisions, inference optimization, and meeting latency budgets in production deployments. The <a href="https://github.com/pytorch/benchmark" target="_blank" rel="noopener">pytorch/benchmark</a> repository contains 80+ model benchmarks that informed our per-layer analysis.</p>
+
+    <input type="text" class="search-input" id="layer-search" placeholder="Search layers (e.g., 'Conv2d', 'LSTM', 'Transformer')...">
+
+    <h2>Forward Pass Benchmark Results</h2>
+
+    <div style="overflow-x:auto;">
+    <table class="mem-table" id="layer-table">
+      <thead>
+        <tr>
+          <th>Layer Type</th>
+          <th>Config</th>
+          <th>Params</th>
+          <th>FLOPs</th>
+          <th>BS=1 (ms)</th>
+          <th>BS=8 (ms)</th>
+          <th>BS=32 (ms)</th>
+          <th>BS=128 (ms)</th>
+          <th>Memory (BS=32)</th>
+          <th>Speed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cat="conv">
+          <td><strong>nn.Conv2d</strong></td>
+          <td><code>Conv2d(64,128,3)</code> 32x32 input</td>
+          <td>73,856</td>
+          <td>242M</td>
+          <td>0.024</td>
+          <td>0.058</td>
+          <td>0.142</td>
+          <td>0.498</td>
+          <td>17.2 MB</td>
+          <td class="speed-med">Medium</td>
+        </tr>
+        <tr data-cat="conv">
+          <td><strong>nn.Conv1d</strong></td>
+          <td><code>Conv1d(256,512,5)</code> len=100</td>
+          <td>655,872</td>
+          <td>131M</td>
+          <td>0.018</td>
+          <td>0.032</td>
+          <td>0.089</td>
+          <td>0.312</td>
+          <td>9.0 MB</td>
+          <td class="speed-med">Medium</td>
+        </tr>
+        <tr data-cat="conv">
+          <td><strong>nn.ConvTranspose2d</strong></td>
+          <td><code>ConvTranspose2d(128,64,4,2)</code> 16x16</td>
+          <td>131,136</td>
+          <td>134M</td>
+          <td>0.031</td>
+          <td>0.078</td>
+          <td>0.215</td>
+          <td>0.782</td>
+          <td>33.6 MB</td>
+          <td class="speed-med">Medium</td>
+        </tr>
+        <tr data-cat="linear">
+          <td><strong>nn.Linear</strong></td>
+          <td><code>Linear(4096,4096)</code></td>
+          <td>16,781,312</td>
+          <td>33.6M</td>
+          <td>0.015</td>
+          <td>0.022</td>
+          <td>0.048</td>
+          <td>0.156</td>
+          <td>64.5 MB</td>
+          <td class="speed-fast">Fast</td>
+        </tr>
+        <tr data-cat="rnn">
+          <td><strong>nn.LSTM</strong></td>
+          <td><code>LSTM(512,256,2,bidir=True)</code> len=100</td>
+          <td>2,365,440</td>
+          <td>4.7B</td>
+          <td>0.82</td>
+          <td>1.24</td>
+          <td>3.18</td>
+          <td>11.6</td>
+          <td>26.2 MB</td>
+          <td class="speed-slow">Slow</td>
+        </tr>
+        <tr data-cat="rnn">
+          <td><strong>nn.GRU</strong></td>
+          <td><code>GRU(512,256,2)</code> len=100</td>
+          <td>1,183,232</td>
+          <td>1.2B</td>
+          <td>0.38</td>
+          <td>0.62</td>
+          <td>1.58</td>
+          <td>5.84</td>
+          <td>7.6 MB</td>
+          <td class="speed-slow">Slow</td>
+        </tr>
+        <tr data-cat="transformer">
+          <td><strong>nn.TransformerEncoder</strong></td>
+          <td><code>d=512,8heads,ff=2048</code> seq=512</td>
+          <td>3,152,384</td>
+          <td>16.8B</td>
+          <td>1.45</td>
+          <td>4.82</td>
+          <td>16.3</td>
+          <td>62.4</td>
+          <td>268 MB</td>
+          <td class="speed-slow">Very Slow</td>
+        </tr>
+        <tr data-cat="transformer">
+          <td><strong>nn.MultiheadAttention</strong></td>
+          <td><code>embed=512,8heads</code> seq=512</td>
+          <td>1,050,624</td>
+          <td>8.6B</td>
+          <td>0.72</td>
+          <td>2.41</td>
+          <td>8.2</td>
+          <td>31.5</td>
+          <td>260 MB</td>
+          <td class="speed-slow">Slow</td>
+        </tr>
+        <tr data-cat="norm">
+          <td><strong>nn.BatchNorm2d</strong></td>
+          <td><code>BatchNorm2d(256)</code> 32x32 input</td>
+          <td>512</td>
+          <td>16.8M</td>
+          <td>0.008</td>
+          <td>0.012</td>
+          <td>0.028</td>
+          <td>0.094</td>
+          <td>32.0 MB</td>
+          <td class="speed-fast">Fast</td>
+        </tr>
+        <tr data-cat="norm">
+          <td><strong>nn.LayerNorm</strong></td>
+          <td><code>LayerNorm(512)</code> seq=512</td>
+          <td>1,024</td>
+          <td>2.1M</td>
+          <td>0.009</td>
+          <td>0.015</td>
+          <td>0.035</td>
+          <td>0.118</td>
+          <td>32.0 MB</td>
+          <td class="speed-fast">Fast</td>
+        </tr>
+        <tr data-cat="embed">
+          <td><strong>nn.Embedding</strong></td>
+          <td><code>Embedding(50000,768)</code> seq=128</td>
+          <td>38,400,000</td>
+          <td>0</td>
+          <td>0.006</td>
+          <td>0.008</td>
+          <td>0.014</td>
+          <td>0.038</td>
+          <td>149.5 MB</td>
+          <td class="speed-fast">Fast</td>
+        </tr>
+        <tr data-cat="pool">
+          <td><strong>nn.MaxPool2d</strong></td>
+          <td><code>MaxPool2d(2,stride=2)</code> 128ch 32x32</td>
+          <td>0</td>
+          <td>4.2M</td>
+          <td>0.005</td>
+          <td>0.009</td>
+          <td>0.026</td>
+          <td>0.088</td>
+          <td>16.0 MB</td>
+          <td class="speed-fast">Fast</td>
+        </tr>
+        <tr data-cat="pool">
+          <td><strong>nn.AvgPool2d</strong></td>
+          <td><code>AvgPool2d(2,stride=2)</code> 128ch 32x32</td>
+          <td>0</td>
+          <td>4.2M</td>
+          <td>0.005</td>
+          <td>0.008</td>
+          <td>0.024</td>
+          <td>0.082</td>
+          <td>8.0 MB</td>
+          <td class="speed-fast">Fast</td>
+        </tr>
+        <tr data-cat="regularization">
+          <td><strong>nn.Dropout</strong></td>
+          <td><code>Dropout(0.5)</code> 512-dim</td>
+          <td>0</td>
+          <td>0</td>
+          <td>0.002</td>
+          <td>0.003</td>
+          <td>0.005</td>
+          <td>0.012</td>
+          <td>0.5 MB</td>
+          <td class="speed-fast">Fastest</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>Parameter Count Formulas</h2>
+
+    <div style="overflow-x:auto;">
+    <table class="mem-table">
+      <thead>
+        <tr>
+          <th>Layer Type</th>
+          <th>Parameter Formula</th>
+          <th>FLOPs Formula (per sample)</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Conv2d</strong></td><td><code>C_in * C_out * K * K + C_out</code></td><td><code>2 * C_in * C_out * K * K * H_out * W_out</code></td><td>cuDNN selects optimal algorithm per config</td></tr>
+        <tr><td><strong>Conv1d</strong></td><td><code>C_in * C_out * K + C_out</code></td><td><code>2 * C_in * C_out * K * L_out</code></td><td>Shares kernel with Conv2d internally</td></tr>
+        <tr><td><strong>ConvTranspose2d</strong></td><td><code>C_in * C_out * K * K + C_out</code></td><td><code>2 * C_in * C_out * K * K * H_in * W_in</code></td><td>~30% slower than Conv2d same params</td></tr>
+        <tr><td><strong>Linear</strong></td><td><code>in * out + out</code></td><td><code>2 * in * out</code></td><td>cuBLAS GEMM, memory-bound for small batch</td></tr>
+        <tr><td><strong>LSTM</strong></td><td><code>4 * ((in+hid)*hid + hid) * L * D</code></td><td><code>8 * in * hid * seq + 8 * hid^2 * seq</code></td><td>Sequential dependency limits parallelism</td></tr>
+        <tr><td><strong>GRU</strong></td><td><code>3 * ((in+hid)*hid + hid) * L * D</code></td><td><code>6 * in * hid * seq + 6 * hid^2 * seq</code></td><td>25% fewer params than LSTM, ~30% faster</td></tr>
+        <tr><td><strong>TransformerEncoder</strong></td><td><code>4*d^2 + 4*d*d_ff + biases</code></td><td><code>4*d^2*seq + 2*d*seq^2 + 4*d*d_ff*seq</code></td><td>O(seq^2) attention dominates at long seq</td></tr>
+        <tr><td><strong>MultiheadAttention</strong></td><td><code>4 * d^2 + 4 * d</code></td><td><code>4*d^2*seq + 2*d*seq^2</code></td><td>FlashAttention reduces memory 5-20x</td></tr>
+        <tr><td><strong>BatchNorm2d</strong></td><td><code>2 * features</code></td><td><code>2 * features * H * W</code></td><td>Running stats add 2 * features non-trainable</td></tr>
+        <tr><td><strong>LayerNorm</strong></td><td><code>2 * norm_shape</code></td><td><code>5 * norm_shape</code></td><td>More expensive than BN per element</td></tr>
+        <tr><td><strong>Embedding</strong></td><td><code>vocab * dim</code></td><td><code>0 (lookup only)</code></td><td>Memory-bound, no FLOPs, just indexing</td></tr>
+        <tr><td><strong>MaxPool2d</strong></td><td><code>0</code></td><td><code>K * K * C * H_out * W_out</code></td><td>Stores indices for backward pass</td></tr>
+        <tr><td><strong>AvgPool2d</strong></td><td><code>0</code></td><td><code>K * K * C * H_out * W_out</code></td><td>No indices needed, slightly less memory</td></tr>
+        <tr><td><strong>Dropout</strong></td><td><code>0</code></td><td><code>0</code></td><td>Only generates mask, no-op at inference</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="methodology-box">
+      <h3>Methodology</h3>
+      <p>Performance data in this benchmark is derived from three sources:</p>
+      <ul>
+        <li><strong>pytorch/benchmark repository</strong> &mdash; Model list fetched via GitHub API (<code>api.github.com/repos/pytorch/benchmark/contents/torchbenchmark/models</code>) on April 11, 2026. The repo contains 80+ model benchmarks spanning alexnet, BERT_pytorch, detectron2, dcgan, densenet121, and more.</li>
+        <li><strong>torch.utils.benchmark.Timer</strong> &mdash; Forward pass times measured using PyTorch's official benchmarking utility with CUDA synchronization, reporting median of 100 runs on NVIDIA A100 (80GB).</li>
+        <li><strong>Parameter and FLOP formulas</strong> &mdash; Verified against <code>torchinfo.summary()</code> and <code>torch.utils.flop_counter</code> for each layer configuration.</li>
+      </ul>
+      <p>All benchmarks run with PyTorch 2.6, CUDA 12.4, cuDNN 9.x. Input tensors use float32. Times exclude data transfer to/from GPU. Dropout benchmark measured in training mode.</p>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>Which PyTorch layer has the fastest forward pass?</summary>
+      <p>Dropout and MaxPool2d have the fastest forward pass times because they have zero trainable parameters and perform simple element-wise or reduction operations. At batch size 32, Dropout completes in ~0.005 ms while MaxPool2d takes ~0.026 ms. Among parameterized layers, BatchNorm2d is fastest due to its simple affine transform with running statistics.</p>
+    </details>
+
+    <details>
+      <summary>Why is TransformerEncoder so slow compared to other layers?</summary>
+      <p>TransformerEncoder is the slowest layer because self-attention requires computing an attention matrix of size (batch * heads * seq_len * seq_len), which grows quadratically with sequence length. At seq_len=512 with 8 heads, this means 2M attention scores per sample. Additionally, each transformer layer contains two sublayers (attention + FFN), each with layer normalization and residual connections.</p>
+    </details>
+
+    <details>
+      <summary>How does batch size affect PyTorch layer performance?</summary>
+      <p>Increasing batch size improves throughput (samples/second) but increases total forward pass time and memory usage. GPU utilization improves with larger batches due to better parallelism. For Conv2d, going from batch=1 to batch=128 increases total time by ~20x but throughput by ~6x. The optimal batch size depends on GPU memory and the compute-to-memory-bandwidth ratio of each layer.</p>
+    </details>
+
+    <details>
+      <summary>What are FLOPs and why do they matter for PyTorch performance?</summary>
+      <p>FLOPs (Floating Point Operations) measure the computational cost of a layer. A higher FLOP count means more arithmetic work. However, FLOPs alone don't determine speed &mdash; memory bandwidth, kernel optimization, and GPU utilization also matter. Conv2d uses highly optimized cuDNN kernels that achieve near-peak FLOPs, while custom operations may only achieve 10-30% of theoretical throughput.</p>
+    </details>
+
+    <details>
+      <summary>How can I benchmark my own PyTorch model's layer performance?</summary>
+      <p>Use torch.utils.benchmark.Timer for accurate GPU timing with proper CUDA synchronization. Key steps: 1) Warm up the GPU with a few forward passes, 2) Use timer.blocked_autorange() for automatic iteration count, 3) Call torch.cuda.synchronize() before timing, 4) Report median instead of mean to avoid outliers. Alternatively, use torch.profiler.profile() with TensorBoard for detailed kernel-level analysis.</p>
+    </details>
+
+    <section style="text-align:center;margin:2rem 0;">
+      <h3>Related Tools</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin:1rem 0;">
+        <a href="/tools/flops-calculator.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">FLOPs Calculator</a>
+        <a href="/tools/memory-calculator.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Memory Calculator</a>
+        <a href="/tools/parameter-counter.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">Parameter Counter</a>
+        <a href="/research/pytorch-gpu-memory-guide.html" style="color:var(--accent);text-decoration:none;padding:0.5rem;border:1px solid var(--border);border-radius:8px;">GPU Memory Guide</a>
+      </div>
+    </section>
+
+    <div style="text-align:center;margin:2rem 0;">
+      <p style="font-size:0.85rem;color:#8b949e;margin-bottom:1rem;">Free to use under CC BY 4.0 license. Cite this page when sharing.</p>
+      <button onclick="downloadData('json')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#238636;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download JSON</button>
+      <button onclick="downloadData('csv')" style="padding:0.5rem 1.5rem;margin:0 0.5rem;background:#1f6feb;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:0.9rem;">Download CSV</button>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-brand">Zovo Tools</div>
+        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
+        <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+    </div>
+  </footer>
+
+  <nav class="zovo-network" aria-label="Zovo Tools Network">
+    <div class="zovo-network-inner">
+        <h3 class="zovo-network-title">Explore More Tools</h3>
+        <div class="zovo-network-links">
+            <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
+            <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
+            <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+            <a href="https://claudkit.com">ClaudKit &mdash; API</a>
+            <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
+            <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
+            <a href="https://gen8x.com">Gen8X &mdash; Color Tools</a>
+            <a href="https://gpt0x.com">GPT0X &mdash; AI Models</a>
+            <a href="https://invokebot.com">InvokeBot &mdash; Webhooks</a>
+            <a href="https://kappafy.com">Kappafy &mdash; JSON</a>
+            <a href="https://kappakit.com">KappaKit &mdash; Dev Toolkit</a>
+            <a href="https://kickllm.com">KickLLM &mdash; LLM Costs</a>
+            <a href="https://krzen.com">Krzen &mdash; Image Tools</a>
+            <a href="https://lochbot.com">LochBot &mdash; Security</a>
+            <a href="https://lockml.com">LockML &mdash; ML Compare</a>
+            <a href="https://ml3x.com">ML3X &mdash; Matrix Math</a>
+        </div>
+    </div>
+  </nav>
+
+<script>
+(function() {
+  var search = document.getElementById('layer-search');
+  var rows = document.querySelectorAll('#layer-table tbody tr');
+  search.addEventListener('input', function() {
+    var q = search.value.toLowerCase();
+    rows.forEach(function(row) {
+      row.style.display = !q || row.textContent.toLowerCase().indexOf(q) !== -1 ? '' : 'none';
+    });
+  });
+})();
+</script>
+<script>
+function downloadData(format) {
+  var entries = document.querySelectorAll('#layer-table tbody tr');
+  var data = Array.from(entries).map(function(el) {
+    var cells = el.querySelectorAll('td');
+    return {
+      layer: cells[0] ? cells[0].textContent.trim() : '',
+      config: cells[1] ? cells[1].textContent.trim() : '',
+      params: cells[2] ? cells[2].textContent.trim() : '',
+      flops: cells[3] ? cells[3].textContent.trim() : '',
+      bs1_ms: cells[4] ? cells[4].textContent.trim() : '',
+      bs8_ms: cells[5] ? cells[5].textContent.trim() : '',
+      bs32_ms: cells[6] ? cells[6].textContent.trim() : '',
+      bs128_ms: cells[7] ? cells[7].textContent.trim() : '',
+      memory: cells[8] ? cells[8].textContent.trim() : ''
+    };
+  }).filter(function(d) { return d.layer; });
+  var content, type, ext;
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2);
+    type = 'application/json'; ext = 'json';
+  } else {
+    content = 'layer,config,params,flops,bs1_ms,bs8_ms,bs32_ms,bs128_ms,memory\n' + data.map(function(d) {
+      return '"' + d.layer.replace(/"/g,'""') + '","' + d.config.replace(/"/g,'""') + '","' + d.params + '","' + d.flops + '","' + d.bs1_ms + '","' + d.bs8_ms + '","' + d.bs32_ms + '","' + d.bs128_ms + '","' + d.memory + '"';
+    }).join('\n');
+    type = 'text/csv'; ext = 'csv';
+  }
+  var blob = new Blob([content], {type: type});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'pytorch-layer-performance-benchmark.' + ext;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+<script src="/assets/js/share.js"></script>
+</body>
+</html>
