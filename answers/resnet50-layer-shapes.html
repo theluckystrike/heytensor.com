@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"ResNet-50 Layer Shapes"}]}</script>
 </head>
 <body>
   <header>
@@ -61,7 +62,7 @@
     </nav>
 
     <article>
-      <h1>ResNet-50 Layer Shapes &mdash; Complete Shape Trace</h1>
+      <h1>What Are the Layer Shapes in ResNet-50?</h1>
 
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
         <p style="margin:0;line-height:1.7;"><strong>ResNet-50: Input 224 &rarr; Conv7&times;7/s2 &rarr; 112 &rarr; MaxPool/s2 &rarr; 56 &rarr; Layer1 &rarr; 56 &rarr; Layer2 &rarr; 28 &rarr; Layer3 &rarr; 14 &rarr; Layer4 &rarr; 7 &rarr; AvgPool &rarr; 1 &rarr; FC &rarr; 1000</strong></p>
@@ -111,13 +112,15 @@ x = model.avgpool(x);  print(f"avgpool:{x.shape}")  # [1, 2048, 1, 1]
 x = torch.flatten(x, 1)
 x = model.fc(x);       print(f"fc:     {x.shape}")  # [1, 1000]</code></pre>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/how-many-parameters-resnet50.html">How many parameters does ResNet-50 have?</a></li>
-        <li><a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html">What does Conv2d output with kernel=7, stride=2?</a></li>
-        <li><a href="/answers/vgg16-layer-shapes.html">What are all the layer shapes in VGG-16?</a></li>
-        <li><a href="/answers/maxpool2d-output-size.html">What does MaxPool2d output?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/how-many-parameters-resnet50.html" class="related-card">How many parameters does ResNet-50 have?</a>
+          <a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html" class="related-card">What does Conv2d output with kernel=7, stride=2?</a>
+          <a href="/answers/vgg16-layer-shapes.html" class="related-card">What are all the layer shapes in VGG-16?</a>
+          <a href="/answers/maxpool2d-output-size.html" class="related-card">What does MaxPool2d output?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/parameter-counter.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Parameter Counter</a>

@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"LSTM Bidirectional Output Shape"}]}</script>
 </head>
 <body>
   <header>
@@ -95,12 +96,14 @@ fc = nn.Linear(512, 10)  # NOT 256!
 last_output = output[:, -1, :]  # (batch, 512)
 logits = fc(last_output)        # (batch, 10)</code></pre>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/linear-layer-512-to-10.html">What shape does nn.Linear(512, 10) output?</a></li>
-        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a></li>
-        <li><a href="/answers/transformer-encoder-input-shape.html">What is the input shape for TransformerEncoder?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/linear-layer-512-to-10.html" class="related-card">What shape does nn.Linear(512, 10) output?</a>
+          <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a>
+          <a href="/answers/transformer-encoder-input-shape.html" class="related-card">What is the input shape for TransformerEncoder?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/lstm-shape-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the LSTM Calculator</a>

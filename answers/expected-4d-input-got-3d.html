@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Expected 4D Input Got 3D"}]}</script>
 </head>
 <body>
   <header>
@@ -108,12 +109,14 @@ image = image.unsqueeze(0)         # (1, 3, 224, 224) ✓</code></pre>
         <li><strong>"Expected 3D input, got 2D"</strong> &mdash; same issue with Conv1d</li>
       </ul>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/batch-norm-input-shape.html">What input shape does BatchNorm2d expect?</a></li>
-        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a></li>
-        <li><a href="/answers/conv2d-output-224x224-kernel-3.html">What does Conv2d output with 224&times;224 input?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/batch-norm-input-shape.html" class="related-card">What input shape does BatchNorm2d expect?</a>
+          <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a>
+          <a href="/answers/conv2d-output-224x224-kernel-3.html" class="related-card">What does Conv2d output with 224&times;224 input?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Solver</a>

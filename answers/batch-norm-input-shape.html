@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"BatchNorm2d Input Shape"}]}</script>
 </head>
 <body>
   <header>
@@ -109,12 +110,14 @@ print(output.shape)  # torch.Size([32, 64, 224, 224])
         <li><strong>BatchNorm3d(C)</strong> &mdash; expects (batch, C, D, H, W) for 3D volumes</li>
       </ul>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/conv2d-output-224x224-kernel-3.html">What does Conv2d output with 224&times;224 input, kernel=3?</a></li>
-        <li><a href="/answers/expected-4d-input-got-3d.html">How to fix "expected 4D input, got 3D"?</a></li>
-        <li><a href="/answers/resnet50-layer-shapes.html">What are all the layer shapes in ResNet-50?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/conv2d-output-224x224-kernel-3.html" class="related-card">What does Conv2d output with 224&times;224 input, kernel=3?</a>
+          <a href="/answers/expected-4d-input-got-3d.html" class="related-card">How to fix "expected 4D input, got 3D"?</a>
+          <a href="/answers/resnet50-layer-shapes.html" class="related-card">What are all the layer shapes in ResNet-50?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/batchnorm-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the BatchNorm Calculator</a>

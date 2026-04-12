@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Expected Scalar Type Float"}]}</script>
 </head>
 <body>
   <header>
@@ -112,12 +113,14 @@ x.half()     # -> torch.float16
 x.int()      # -> torch.int32
 x.long()     # -> torch.int64 (for labels/indices)</code></pre>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a></li>
-        <li><a href="/answers/cuda-out-of-memory-fix.html">How to fix CUDA out of memory?</a></li>
-        <li><a href="/answers/cannot-broadcast-tensors.html">How to fix "cannot broadcast tensors"?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a>
+          <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">How to fix CUDA out of memory?</a>
+          <a href="/answers/cannot-broadcast-tensors.html" class="related-card">How to fix "cannot broadcast tensors"?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Solver</a>

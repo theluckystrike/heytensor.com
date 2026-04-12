@@ -265,6 +265,129 @@
                    '\nParameters: 3*' + p.embed_dim + '*' + p.embed_dim + ' + ' + p.embed_dim + '*' + p.embed_dim + ' + biases = ~' + (4 * p.embed_dim * p.embed_dim + 4 * p.embed_dim).toLocaleString()
         };
       }
+    },
+    GRU: {
+      label: 'GRU',
+      inputDesc: '[B, seq_len, input_size]',
+      params: [
+        { key: 'batch', label: 'Batch (B)', default: 32 },
+        { key: 'seq_len', label: 'seq_len', default: 100 },
+        { key: 'input_size', label: 'input_size', default: 128 },
+        { key: 'hidden_size', label: 'hidden_size', default: 256 },
+        { key: 'num_layers', label: 'num_layers', default: 1 },
+        { key: 'bidirectional', label: 'bidirectional (0/1)', default: 0 }
+      ],
+      calc: function (p) {
+        var numDir = p.bidirectional ? 2 : 1;
+        var outSize = p.hidden_size * numDir;
+        return {
+          shape: [p.batch, p.seq_len, outSize],
+          formula: 'num_directions = ' + numDir +
+                   '\nOutput: [' + p.batch + ', ' + p.seq_len + ', ' + p.hidden_size + ' * ' + numDir + '] = [' + p.batch + ', ' + p.seq_len + ', ' + outSize + ']' +
+                   '\nh_n: [' + (p.num_layers * numDir) + ', ' + p.batch + ', ' + p.hidden_size + ']'
+        };
+      }
+    },
+    LayerNorm: {
+      label: 'LayerNorm',
+      inputDesc: '[B, *, normalized_shape]',
+      params: [
+        { key: 'batch', label: 'Batch (B)', default: 32 },
+        { key: 'seq_len', label: 'seq_len', default: 128 },
+        { key: 'features', label: 'features', default: 512 },
+        { key: 'normalized_shape', label: 'normalized_shape', default: 512 }
+      ],
+      calc: function (p) {
+        return {
+          shape: [p.batch, p.seq_len, p.features],
+          formula: 'LayerNorm does not change the shape.\nnormalized_shape = ' + p.normalized_shape +
+                   '\nOutput: [' + p.batch + ', ' + p.seq_len + ', ' + p.features + ']' +
+                   '\nParameters: 2 * ' + p.normalized_shape + ' = ' + (2 * p.normalized_shape) + ' (gamma + beta)'
+        };
+      }
+    },
+    Conv3d: {
+      label: 'Conv3d',
+      inputDesc: '[B, C_in, D, H, W]',
+      params: [
+        { key: 'batch', label: 'Batch (B)', default: 1 },
+        { key: 'c_in', label: 'C_in', default: 3 },
+        { key: 'd_in', label: 'D_in', default: 16 },
+        { key: 'h_in', label: 'H_in', default: 112 },
+        { key: 'w_in', label: 'W_in', default: 112 },
+        { key: 'out_channels', label: 'out_channels', default: 64 },
+        { key: 'kernel_size', label: 'kernel_size', default: 3 },
+        { key: 'stride', label: 'stride', default: 1 },
+        { key: 'padding', label: 'padding', default: 1 },
+        { key: 'dilation', label: 'dilation', default: 1 }
+      ],
+      calc: function (p) {
+        var dOut = Math.floor((p.d_in + 2 * p.padding - p.dilation * (p.kernel_size - 1) - 1) / p.stride) + 1;
+        var hOut = Math.floor((p.h_in + 2 * p.padding - p.dilation * (p.kernel_size - 1) - 1) / p.stride) + 1;
+        var wOut = Math.floor((p.w_in + 2 * p.padding - p.dilation * (p.kernel_size - 1) - 1) / p.stride) + 1;
+        if (dOut <= 0 || hOut <= 0 || wOut <= 0) return { error: 'Output dimensions are zero or negative. Increase padding or decrease kernel/dilation.' };
+        return {
+          shape: [p.batch, p.out_channels, dOut, hOut, wOut],
+          formula: 'D_out = floor((' + p.d_in + ' + 2*' + p.padding + ' - ' + p.dilation + '*(' + p.kernel_size + '-1) - 1) / ' + p.stride + ') + 1 = ' + dOut +
+                   '\nH_out = floor((' + p.h_in + ' + 2*' + p.padding + ' - ' + p.dilation + '*(' + p.kernel_size + '-1) - 1) / ' + p.stride + ') + 1 = ' + hOut +
+                   '\nW_out = floor((' + p.w_in + ' + 2*' + p.padding + ' - ' + p.dilation + '*(' + p.kernel_size + '-1) - 1) / ' + p.stride + ') + 1 = ' + wOut +
+                   '\nOutput: [' + p.batch + ', ' + p.out_channels + ', ' + dOut + ', ' + hOut + ', ' + wOut + ']'
+        };
+      }
+    },
+    AdaptiveAvgPool2d: {
+      label: 'AdaptiveAvgPool2d',
+      inputDesc: '[B, C, H, W]',
+      params: [
+        { key: 'batch', label: 'Batch (B)', default: 1 },
+        { key: 'channels', label: 'Channels (C)', default: 512 },
+        { key: 'h_in', label: 'H_in', default: 7 },
+        { key: 'w_in', label: 'W_in', default: 7 },
+        { key: 'output_h', label: 'output_size H', default: 1 },
+        { key: 'output_w', label: 'output_size W', default: 1 }
+      ],
+      calc: function (p) {
+        if (p.output_h <= 0 || p.output_w <= 0) return { error: 'Output size must be positive.' };
+        return {
+          shape: [p.batch, p.channels, p.output_h, p.output_w],
+          formula: 'AdaptiveAvgPool2d adapts kernel/stride to produce the target output size.' +
+                   '\nInput: [' + p.batch + ', ' + p.channels + ', ' + p.h_in + ', ' + p.w_in + ']' +
+                   '\nOutput: [' + p.batch + ', ' + p.channels + ', ' + p.output_h + ', ' + p.output_w + ']'
+        };
+      }
+    },
+    Reshape: {
+      label: 'Reshape / View',
+      inputDesc: '[B, *]',
+      params: [
+        { key: 'batch', label: 'Batch (B)', default: 32 },
+        { key: 'c', label: 'dim 1', default: 64 },
+        { key: 'h', label: 'dim 2', default: 7 },
+        { key: 'w', label: 'dim 3', default: 7 },
+        { key: 'new_d1', label: 'new dim 1', default: 32 },
+        { key: 'new_d2', label: 'new dim 2 (0=auto)', default: 0 }
+      ],
+      calc: function (p) {
+        var totalIn = p.c * p.h * p.w;
+        var d1 = p.new_d1;
+        var d2 = p.new_d2;
+        if (d1 <= 0 && d2 <= 0) return { error: 'At least one target dimension must be positive.' };
+        if (d2 === 0 && d1 > 0) {
+          if (totalIn % d1 !== 0) return { error: 'Cannot reshape: ' + totalIn + ' elements not divisible by ' + d1 + '.' };
+          d2 = totalIn / d1;
+        } else if (d1 === 0 && d2 > 0) {
+          if (totalIn % d2 !== 0) return { error: 'Cannot reshape: ' + totalIn + ' elements not divisible by ' + d2 + '.' };
+          d1 = totalIn / d2;
+        } else {
+          if (d1 * d2 !== totalIn) return { error: 'Cannot reshape: ' + d1 + ' * ' + d2 + ' = ' + (d1 * d2) + ' != ' + totalIn + ' elements.' };
+        }
+        return {
+          shape: [p.batch, d1, d2],
+          formula: 'Input elements (excl. batch): ' + p.c + ' * ' + p.h + ' * ' + p.w + ' = ' + totalIn +
+                   '\nOutput: [' + p.batch + ', ' + d1 + ', ' + d2 + ']' +
+                   '\nTotal elements preserved: ' + totalIn
+        };
+      }
     }
   };
 
@@ -493,6 +616,22 @@
           break;
         case 'MultiheadAttention':
           if (shape.length >= 3) { p.batch = shape[0]; p.seq_len = shape[1]; p.embed_dim = shape[2]; }
+          break;
+        case 'GRU':
+          if (shape.length >= 3) { p.batch = shape[0]; p.seq_len = shape[1]; p.input_size = shape[2]; }
+          break;
+        case 'LayerNorm':
+          if (shape.length >= 3) { p.batch = shape[0]; p.seq_len = shape[1]; p.features = shape[2]; p.normalized_shape = shape[2]; }
+          break;
+        case 'Conv3d':
+          if (shape.length >= 5) { p.batch = shape[0]; p.c_in = shape[1]; p.d_in = shape[2]; p.h_in = shape[3]; p.w_in = shape[4]; }
+          break;
+        case 'AdaptiveAvgPool2d':
+          if (shape.length >= 4) { p.batch = shape[0]; p.channels = shape[1]; p.h_in = shape[2]; p.w_in = shape[3]; }
+          break;
+        case 'Reshape':
+          if (shape.length >= 4) { p.batch = shape[0]; p.c = shape[1]; p.h = shape[2]; p.w = shape[3]; }
+          else if (shape.length === 3) { p.batch = shape[0]; p.c = shape[1]; p.h = shape[2]; p.w = 1; }
           break;
       }
     }

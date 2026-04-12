@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Conv2d 32x32 Kernel 5"}]}</script>
 </head>
 <body>
   <header>
@@ -88,12 +89,14 @@ print(output.shape)  # torch.Size([1, 6, 28, 28])</code></pre>
       <h2>Where This Appears</h2>
       <p>This configuration is the classic LeNet-5 first layer used with CIFAR-10 (32&times;32 images). Without padding, a 5&times;5 kernel loses 2 pixels on each side, shrinking 32 to 28. If you want to preserve the spatial size, add padding=2: output = (32 - 5 + 2&times;2) / 1 + 1 = 32.</p>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/conv2d-output-224x224-kernel-3.html">What does Conv2d output with 224&times;224 input, kernel=3?</a></li>
-        <li><a href="/answers/flatten-after-conv2d.html">What shape does Flatten produce after Conv2d?</a></li>
-        <li><a href="/answers/what-is-padding-same-pytorch.html">What is padding='same' in PyTorch?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/conv2d-output-224x224-kernel-3.html" class="related-card">What does Conv2d output with 224&times;224 input, kernel=3?</a>
+          <a href="/answers/flatten-after-conv2d.html" class="related-card">What shape does Flatten produce after Conv2d?</a>
+          <a href="/answers/what-is-padding-same-pytorch.html" class="related-card">What is padding='same' in PyTorch?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>

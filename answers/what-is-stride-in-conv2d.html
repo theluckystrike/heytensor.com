@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"What Is Stride in Conv2d"}]}</script>
 </head>
 <body>
   <header>
@@ -105,13 +106,15 @@ conv = nn.Conv2d(3, 64, kernel_size=3, stride=(2, 1), padding=1)
 x = torch.randn(1, 3, 224, 224)
 print(conv(x).shape)  # [1, 64, 112, 224] — height halved, width same</code></pre>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/what-is-padding-same-pytorch.html">What is padding='same' in PyTorch?</a></li>
-        <li><a href="/answers/conv2d-output-224x224-kernel-3.html">What does Conv2d output with 224&times;224, kernel=3?</a></li>
-        <li><a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html">What does Conv2d output with kernel=7, stride=2?</a></li>
-        <li><a href="/answers/maxpool2d-output-size.html">What does MaxPool2d output?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/what-is-padding-same-pytorch.html" class="related-card">What is padding='same' in PyTorch?</a>
+          <a href="/answers/conv2d-output-224x224-kernel-3.html" class="related-card">What does Conv2d output with 224&times;224, kernel=3?</a>
+          <a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html" class="related-card">What does Conv2d output with kernel=7, stride=2?</a>
+          <a href="/answers/maxpool2d-output-size.html" class="related-card">What does MaxPool2d output?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>

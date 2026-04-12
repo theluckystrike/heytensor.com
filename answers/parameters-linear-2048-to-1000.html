@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Parameters Linear(2048, 1000)"}]}</script>
 </head>
 <body>
   <header>
@@ -118,14 +119,16 @@ print(f"Without bias: {sum(p.numel() for p in layer_no_bias.parameters())}")  # 
       </table>
       <p>When using BatchNorm after a convolutional layer, the bias is redundant because BatchNorm has its own bias term. Setting <code>bias=False</code> saves 1000 parameters per layer.</p>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/parameters-linear-1024-to-512.html">How many parameters does Linear(1024, 512) have?</a></li>
-        <li><a href="/answers/parameters-linear-768-to-3072.html">How many parameters does Linear(768, 3072) have?</a></li>
-        <li><a href="/answers/parameters-linear-4096-to-4096.html">How many parameters does Linear(4096, 4096) have?</a></li>
-        <li><a href="/answers/how-many-parameters-resnet50.html">How many parameters does ResNet-50 have?</a></li>
-        <li><a href="/answers/how-many-parameters-bert-base.html">How many parameters does BERT-base have?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/parameters-linear-1024-to-512.html" class="related-card">How many parameters does Linear(1024, 512) have?</a>
+          <a href="/answers/parameters-linear-768-to-3072.html" class="related-card">How many parameters does Linear(768, 3072) have?</a>
+          <a href="/answers/parameters-linear-4096-to-4096.html" class="related-card">How many parameters does Linear(4096, 4096) have?</a>
+          <a href="/answers/how-many-parameters-resnet50.html" class="related-card">How many parameters does ResNet-50 have?</a>
+          <a href="/answers/how-many-parameters-bert-base.html" class="related-card">How many parameters does BERT-base have?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/parameter-counter.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Parameter Counter</a>

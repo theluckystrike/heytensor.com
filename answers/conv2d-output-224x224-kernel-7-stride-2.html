@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Conv2d 224x224 Kernel 7 Stride 2"}]}</script>
 </head>
 <body>
   <header>
@@ -89,13 +90,15 @@ print(output.shape)  # torch.Size([1, 64, 112, 112])</code></pre>
       <h2>Why ResNet Uses This</h2>
       <p>ResNet uses a large 7&times;7 kernel with stride=2 as its first layer to quickly reduce spatial dimensions from 224&times;224 to 112&times;112 while capturing large receptive field features. This is followed by a MaxPool2d(3, stride=2) which further reduces to 56&times;56. The aggressive early downsampling keeps the computational cost manageable for the deeper residual blocks that follow.</p>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/conv2d-output-224x224-kernel-3.html">What does Conv2d output with 224&times;224 input, kernel=3?</a></li>
-        <li><a href="/answers/resnet50-layer-shapes.html">What are all the layer shapes in ResNet-50?</a></li>
-        <li><a href="/answers/how-many-parameters-resnet50.html">How many parameters does ResNet-50 have?</a></li>
-        <li><a href="/answers/what-is-stride-in-conv2d.html">What is stride in Conv2d?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/conv2d-output-224x224-kernel-3.html" class="related-card">What does Conv2d output with 224&times;224 input, kernel=3?</a>
+          <a href="/answers/resnet50-layer-shapes.html" class="related-card">What are all the layer shapes in ResNet-50?</a>
+          <a href="/answers/how-many-parameters-resnet50.html" class="related-card">How many parameters does ResNet-50 have?</a>
+          <a href="/answers/what-is-stride-in-conv2d.html" class="related-card">What is stride in Conv2d?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>

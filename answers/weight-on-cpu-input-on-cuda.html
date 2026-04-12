@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Weight CPU Input CUDA"}]}</script>
 </head>
 <body>
   <header>
@@ -150,13 +151,15 @@ torch.autograd.set_detect_anomaly(True)
 print(f"dtype: {tensor.dtype}, device: {tensor.device}, shape: {tensor.shape}")
 print(f"requires_grad: {tensor.requires_grad}")</code></pre>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/cuda-out-of-memory-fix.html">Fix CUDA out of memory</a></li>
-        <li><a href="/answers/runtime-error-expected-scalar-type-float.html">Fix "expected scalar type Float"</a></li>
-        <li><a href="/answers/no-module-named-torch.html">Fix "No module named torch"</a></li>
-        <li><a href="/answers/gradient-is-none-fix.html">Fix "gradient is None"</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">Fix CUDA out of memory</a>
+          <a href="/answers/runtime-error-expected-scalar-type-float.html" class="related-card">Fix "expected scalar type Float"</a>
+          <a href="/answers/no-module-named-torch.html" class="related-card">Fix "No module named torch"</a>
+          <a href="/answers/gradient-is-none-fix.html" class="related-card">Fix "gradient is None"</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/cuda-out-of-memory.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the CUDA OOM Solver</a>

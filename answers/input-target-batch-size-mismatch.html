@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Batch Size Mismatch"}]}</script>
 </head>
 <body>
   <header>
@@ -146,13 +147,15 @@ torch.autograd.set_detect_anomaly(True)
 print(f"dtype: {tensor.dtype}, device: {tensor.device}, shape: {tensor.shape}")
 print(f"requires_grad: {tensor.requires_grad}")</code></pre>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/expected-4d-input-got-3d.html">Fix "expected 4D input got 3D"</a></li>
-        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">Fix "mat1 mat2 shapes cannot be multiplied"</a></li>
-        <li><a href="/answers/flatten-after-conv2d.html">How to flatten after Conv2d</a></li>
-        <li><a href="/answers/view-size-not-compatible.html">Fix "view size not compatible"</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/expected-4d-input-got-3d.html" class="related-card">Fix "expected 4D input got 3D"</a>
+          <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">Fix "mat1 mat2 shapes cannot be multiplied"</a>
+          <a href="/answers/flatten-after-conv2d.html" class="related-card">How to flatten after Conv2d</a>
+          <a href="/answers/view-size-not-compatible.html" class="related-card">Fix "view size not compatible"</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Solver</a>

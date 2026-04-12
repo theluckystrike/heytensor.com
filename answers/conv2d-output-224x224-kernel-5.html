@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Conv2d 224&times;224 Kernel 5"}]}</script>
 </head>
 <body>
   <header>
@@ -111,14 +112,16 @@ parameters = 4,864</code></pre>
         <li><strong>Same padding rule:</strong> For any kernel, setting padding = (kernel_size - 1) / 2 with stride=1 preserves spatial dimensions.</li>
       </ul>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/conv2d-output-224x224-kernel-3-stride-2">Conv2d 224&times;224 Kernel 3 Stride 2 &rarr; 112&times;112</a></li>
-        <li><a href="/answers/conv2d-output-224x224-kernel-5-stride-2">Conv2d 224&times;224 Kernel 5 Stride 2 &rarr; 112&times;112</a></li>
-        <li><a href="/answers/conv2d-output-224x224-kernel-11-stride-4">Conv2d 224&times;224 Kernel 11 Stride 4 &rarr; 55&times;55</a></li>
-        <li><a href="/answers/conv2d-output-64x64-kernel-5">Conv2d 64&times;64 Kernel 5 Stride 1 &rarr; 64&times;64</a></li>
-        <li><a href="/answers/conv2d-output-32x32-kernel-5">Conv2d 32&times;32 Kernel 5 Stride 1 &rarr; 28&times;28</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/conv2d-output-224x224-kernel-3-stride-2" class="related-card">Conv2d 224&times;224 Kernel 3 Stride 2 &rarr; 112&times;112</a>
+          <a href="/answers/conv2d-output-224x224-kernel-5-stride-2" class="related-card">Conv2d 224&times;224 Kernel 5 Stride 2 &rarr; 112&times;112</a>
+          <a href="/answers/conv2d-output-224x224-kernel-11-stride-4" class="related-card">Conv2d 224&times;224 Kernel 11 Stride 4 &rarr; 55&times;55</a>
+          <a href="/answers/conv2d-output-64x64-kernel-5" class="related-card">Conv2d 64&times;64 Kernel 5 Stride 1 &rarr; 64&times;64</a>
+          <a href="/answers/conv2d-output-32x32-kernel-5" class="related-card">Conv2d 32&times;32 Kernel 5 Stride 1 &rarr; 28&times;28</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>

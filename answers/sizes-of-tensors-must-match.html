@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix "Sizes of tensors must match except in dimension" in PyTorch | HeyTensor</title>
+  <title>Fix "Sizes of tensors must match" in PyTorch | HeyTensor</title>
   <meta name="description" content="Fix PyTorch "Sizes of tensors must match except in dimension" by reshaping, padding, or slicing tensors to compatible shapes before concatenation.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/sizes-of-tensors-must-match.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="How to Fix "Sizes of tensors must match except in dimension" in PyTorch">
+  <meta property="og:title" content="Fix "Sizes of tensors must match" in PyTorch | HeyTensor">
   <meta property="og:description" content="Fix PyTorch "Sizes of tensors must match except in dimension" by reshaping, padding, or slicing tensors to compatible shapes before concatenation.">
   <meta property="og:url" content="https://heytensor.com/answers/sizes-of-tensors-must-match.html">
   <meta property="og:site_name" content="HeyTensor">
   <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="How to Fix "Sizes of tensors must match except in dimension" in PyTorch">
+  <meta name="twitter:title" content="Fix "Sizes of tensors must match" in PyTorch | HeyTensor">
   <meta name="twitter:description" content="Fix PyTorch "Sizes of tensors must match except in dimension" by reshaping, padding, or slicing tensors to compatible shapes before concatenation.">
   <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Sizes Must Match"}]}</script>
 </head>
 <body>
   <header>
@@ -149,13 +150,15 @@ torch.autograd.set_detect_anomaly(True)
 print(f"dtype: {tensor.dtype}, device: {tensor.device}, shape: {tensor.shape}")
 print(f"requires_grad: {tensor.requires_grad}")</code></pre>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/cannot-broadcast-tensors.html">Fix "cannot broadcast tensors"</a></li>
-        <li><a href="/answers/view-size-not-compatible.html">Fix "view size not compatible"</a></li>
-        <li><a href="/answers/expected-4d-input-got-3d.html">Fix "expected 4D input got 3D"</a></li>
-        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">Fix "mat1 mat2 shapes cannot be multiplied"</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/cannot-broadcast-tensors.html" class="related-card">Fix "cannot broadcast tensors"</a>
+          <a href="/answers/view-size-not-compatible.html" class="related-card">Fix "view size not compatible"</a>
+          <a href="/answers/expected-4d-input-got-3d.html" class="related-card">Fix "expected 4D input got 3D"</a>
+          <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">Fix "mat1 mat2 shapes cannot be multiplied"</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Solver</a>

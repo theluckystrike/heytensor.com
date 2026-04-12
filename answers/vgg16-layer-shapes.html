@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"VGG-16 Layer Shapes"}]}</script>
 </head>
 <body>
   <header>
@@ -61,7 +62,7 @@
     </nav>
 
     <article>
-      <h1>VGG-16 Layer Shapes &mdash; Complete Shape Trace</h1>
+      <h1>What Are the Layer Shapes in VGG-16?</h1>
 
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
         <p style="margin:0;line-height:1.7;"><strong>VGG-16: 224 &rarr; 224 &rarr; 112 &rarr; 112 &rarr; 56 &rarr; 56 &rarr; 56 &rarr; 28 &rarr; 28 &rarr; 28 &rarr; 14 &rarr; 14 &rarr; 14 &rarr; 7 &rarr; 7 &rarr; 7 &rarr; Flatten(25088) &rarr; 4096 &rarr; 4096 &rarr; 1000</strong></p>
@@ -114,13 +115,15 @@ Linear(4096, 1000)          (batch, 1000)</code></pre>
         <li>Total: ~138M parameters (most in FC layers)</li>
       </ul>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/resnet50-layer-shapes.html">What are all the layer shapes in ResNet-50?</a></li>
-        <li><a href="/answers/how-many-parameters-resnet50.html">How many parameters does ResNet-50 have?</a></li>
-        <li><a href="/answers/flatten-after-conv2d.html">What shape does Flatten produce after Conv2d?</a></li>
-        <li><a href="/answers/maxpool2d-output-size.html">What does MaxPool2d output?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/resnet50-layer-shapes.html" class="related-card">What are all the layer shapes in ResNet-50?</a>
+          <a href="/answers/how-many-parameters-resnet50.html" class="related-card">How many parameters does ResNet-50 have?</a>
+          <a href="/answers/flatten-after-conv2d.html" class="related-card">What shape does Flatten produce after Conv2d?</a>
+          <a href="/answers/maxpool2d-output-size.html" class="related-card">What does MaxPool2d output?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/parameter-counter.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Parameter Counter</a>

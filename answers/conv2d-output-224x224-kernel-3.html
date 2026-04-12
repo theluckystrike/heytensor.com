@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Conv2d Output 224x224 Kernel 3"}]}</script>
 </head>
 <body>
   <header>
@@ -88,14 +89,16 @@ print(output.shape)  # torch.Size([1, 64, 224, 224])</code></pre>
       <h2>Why This Matters</h2>
       <p>A 3&times;3 kernel with padding=1 is the standard "same" convolution that preserves spatial dimensions. This is the most common convolution configuration in modern architectures like VGG, ResNet, and DenseNet. It allows you to stack many convolutional layers without shrinking the feature maps, and only reduce spatial size through explicit pooling or strided convolutions.</p>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html">What does Conv2d output with 224&times;224 input, kernel=7, stride=2?</a></li>
-        <li><a href="/answers/conv2d-output-32x32-kernel-5.html">What does Conv2d output with 32&times;32 input, kernel=5?</a></li>
-        <li><a href="/answers/maxpool2d-output-size.html">What does MaxPool2d output?</a></li>
-        <li><a href="/answers/what-is-stride-in-conv2d.html">What is stride in Conv2d?</a></li>
-        <li><a href="/answers/what-is-padding-same-pytorch.html">What is padding='same' in PyTorch?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html" class="related-card">What does Conv2d output with 224&times;224 input, kernel=7, stride=2?</a>
+          <a href="/answers/conv2d-output-32x32-kernel-5.html" class="related-card">What does Conv2d output with 32&times;32 input, kernel=5?</a>
+          <a href="/answers/maxpool2d-output-size.html" class="related-card">What does MaxPool2d output?</a>
+          <a href="/answers/what-is-stride-in-conv2d.html" class="related-card">What is stride in Conv2d?</a>
+          <a href="/answers/what-is-padding-same-pytorch.html" class="related-card">What is padding='same' in PyTorch?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>

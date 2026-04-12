@@ -36,6 +36,7 @@
     }]
   }
   </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"View Size Not Compatible"}]}</script>
 </head>
 <body>
   <header>
@@ -104,12 +105,14 @@ print(x.t().contiguous().is_contiguous())  # True</code></pre>
       </ul>
       <p>In most cases, <code>.reshape()</code> is the safer choice. Use <code>.view()</code> only when you specifically want to guarantee no data copy.</p>
 
-      <h2>Related Questions</h2>
-      <ul>
-        <li><a href="/answers/flatten-after-conv2d.html">What shape does Flatten produce after Conv2d?</a></li>
-        <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a></li>
-        <li><a href="/answers/cannot-broadcast-tensors.html">How to fix "cannot broadcast tensors"?</a></li>
-      </ul>
+      <section class="related-links">
+        <h2>Related Questions</h2>
+        <div class="related-grid">
+          <a href="/answers/flatten-after-conv2d.html" class="related-card">What shape does Flatten produce after Conv2d?</a>
+          <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a>
+          <a href="/answers/cannot-broadcast-tensors.html" class="related-card">How to fix "cannot broadcast tensors"?</a>
+        </div>
+      </section>
 
       <div style="text-align:center;margin:2rem 0;">
         <a href="/tools/view-size-not-compatible.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the View Error Solver</a>
