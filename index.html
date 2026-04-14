@@ -8,6 +8,7 @@
   <meta name="description" content="Calculate tensor output shapes for Conv2d, Linear, LSTM, and 10+ PyTorch layers. Chain layers, debug shape errors, and explore architecture presets. Free, instant, no sign-up.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/">
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="alternate" hreflang="en" href="https://heytensor.com/">
   <link rel="alternate" hreflang="x-default" href="https://heytensor.com/">
 <link rel="alternate" type="application/atom+xml" title="HeyTensor — PyTorch Tensor Shape Calculator &amp; Error Debugger Blog Feed" href="/blog/feed.xml">
@@ -103,6 +104,8 @@
       <nav>
         <a href="/" class="active">Calculator</a>
         <a href="/tools/">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
         <a href="/about.html">About</a>
         <a href="/blog/">Blog</a>
           <div class="nav-right">
@@ -190,6 +193,94 @@
 
       <h3>Contact</h3>
       <p>HeyTensor is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:support@zovo.one">support@zovo.one</a> or visit the project on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+    </section>
+
+    <!-- Internal Content Discovery -->
+    <section class="content-discovery" style="max-width:960px;margin:3rem auto;padding:0 1rem;">
+      <style>
+        .content-discovery h2 { text-align:center; margin-bottom:2rem; }
+        .content-discovery .disc-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2rem; margin-bottom:2.5rem; }
+        .content-discovery .disc-group h3 { font-size:1.1rem; margin-bottom:0.75rem; color:var(--accent, #14B8A6); border-bottom:1px solid var(--border, #333); padding-bottom:0.5rem; }
+        .content-discovery .disc-group ul { list-style:none; padding:0; margin:0; }
+        .content-discovery .disc-group li { margin-bottom:0.4rem; }
+        .content-discovery .disc-group a { color:var(--text, #e0e0e0); text-decoration:none; font-size:0.9rem; }
+        .content-discovery .disc-group a:hover { color:var(--accent, #14B8A6); text-decoration:underline; }
+        .content-discovery .disc-more { text-align:center; margin-top:0.5rem; }
+        .content-discovery .disc-more a { color:var(--accent, #14B8A6); font-size:0.85rem; text-decoration:none; }
+        .content-discovery .disc-more a:hover { text-decoration:underline; }
+      </style>
+      <h2>Explore HeyTensor</h2>
+      <div class="disc-grid">
+        <div class="disc-group">
+          <h3>Shape Calculators</h3>
+          <ul>
+            <li><a href="/tools/conv2d-calculator.html">Conv2d Shape Calculator</a></li>
+            <li><a href="/tools/conv1d-calculator.html">Conv1d Shape Calculator</a></li>
+            <li><a href="/tools/linear-layer-calculator.html">Linear Layer Calculator</a></li>
+            <li><a href="/tools/lstm-shape-calculator.html">LSTM Shape Calculator</a></li>
+            <li><a href="/tools/maxpool2d-calculator.html">MaxPool2d Calculator</a></li>
+            <li><a href="/tools/flatten-calculator.html">Flatten Calculator</a></li>
+            <li><a href="/tools/einsum-calculator.html">Einsum Calculator</a></li>
+            <li><a href="/tools/parameter-counter.html">Parameter Counter</a></li>
+            <li><a href="/tools/memory-calculator.html">Memory Calculator</a></li>
+            <li><a href="/tools/flops-calculator.html">FLOPs Calculator</a></li>
+          </ul>
+          <div class="disc-more"><a href="/tools/">View all tools &rarr;</a></div>
+        </div>
+        <div class="disc-group">
+          <h3>Error Debuggers</h3>
+          <ul>
+            <li><a href="/tools/mat1-mat2-shapes.html">mat1 and mat2 Shapes Error</a></li>
+            <li><a href="/tools/shape-mismatch.html">Shape Mismatch Error</a></li>
+            <li><a href="/tools/cuda-out-of-memory.html">CUDA Out of Memory</a></li>
+            <li><a href="/tools/view-size-not-compatible.html">View Size Not Compatible</a></li>
+            <li><a href="/tools/broadcast-error.html">Broadcast Error</a></li>
+            <li><a href="/tools/dimension-out-of-range.html">Dimension Out of Range</a></li>
+            <li><a href="/tools/expected-input-size.html">Expected Input Size Error</a></li>
+            <li><a href="/tools/activation-functions.html">Activation Functions Reference</a></li>
+            <li><a href="/tools/loss-functions.html">Loss Functions Reference</a></li>
+            <li><a href="/tools/optimizers.html">Optimizers Reference</a></li>
+          </ul>
+        </div>
+        <div class="disc-group">
+          <h3>Latest Answers</h3>
+          <ul>
+            <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">mat1 and mat2 Shapes Cannot Be Multiplied</a></li>
+            <li><a href="/answers/cuda-out-of-memory-fix.html">CUDA Out of Memory Fix</a></li>
+            <li><a href="/answers/flatten-after-conv2d.html">Flatten After Conv2d</a></li>
+            <li><a href="/answers/resnet50-layer-shapes.html">ResNet50 Layer Shapes</a></li>
+            <li><a href="/answers/how-many-parameters-resnet50.html">How Many Parameters in ResNet50?</a></li>
+            <li><a href="/answers/how-many-parameters-bert-base.html">How Many Parameters in BERT-Base?</a></li>
+            <li><a href="/answers/pytorch-vs-tensorflow-2026.html">PyTorch vs TensorFlow 2026</a></li>
+            <li><a href="/answers/what-is-stride-in-conv2d.html">What Is Stride in Conv2d?</a></li>
+            <li><a href="/answers/difference-between-relu-and-gelu.html">Difference Between ReLU and GELU</a></li>
+            <li><a href="/answers/transformer-encoder-input-shape.html">Transformer Encoder Input Shape</a></li>
+          </ul>
+          <div class="disc-more"><a href="/answers/">View all answers &rarr;</a></div>
+        </div>
+      </div>
+      <div class="disc-grid" style="margin-top:0;">
+        <div class="disc-group">
+          <h3>Research</h3>
+          <ul>
+            <li><a href="/research/pytorch-error-database.html">PyTorch Error Database</a></li>
+            <li><a href="/research/most-common-pytorch-errors.html">Most Common PyTorch Errors</a></li>
+            <li><a href="/research/pytorch-error-stats.html">PyTorch Error Statistics</a></li>
+            <li><a href="/research/pytorch-gpu-memory-guide.html">PyTorch GPU Memory Guide</a></li>
+            <li><a href="/research/ml-framework-comparison-2026.html">ML Framework Comparison 2026</a></li>
+            <li><a href="/research/pytorch-layer-performance.html">PyTorch Layer Performance</a></li>
+            <li><a href="/research/pytorch-model-zoo-stats.html">PyTorch Model Zoo Stats</a></li>
+          </ul>
+        </div>
+        <div class="disc-group">
+          <h3>From the Blog</h3>
+          <ul>
+            <li><a href="/blog/pytorch-shape-errors-explained.html">PyTorch Shape Errors Explained</a></li>
+            <li><a href="/blog/tensor-shape-cheat-sheet.html">Tensor Shape Cheat Sheet</a></li>
+          </ul>
+          <div class="disc-more"><a href="/blog/">View all posts &rarr;</a></div>
+        </div>
+      </div>
     </section>
   </main>
 
