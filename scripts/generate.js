@@ -386,7 +386,7 @@ ${relatedHtml}
       <div class="zovo-network-links">
         <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
         <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
-        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; AI Code Tools & Fixes</a>
         <a href="https://claudkit.com">ClaudKit &mdash; API</a>
         <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
         <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
@@ -665,7 +665,7 @@ ${relatedHtml}
       <div class="zovo-network-links">
         <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
         <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
-        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; AI Code Tools & Fixes</a>
         <a href="https://claudkit.com">ClaudKit &mdash; API</a>
         <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
         <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
@@ -1220,7 +1220,7 @@ ${relatedHtml}
       <div class="zovo-network-links">
         <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
         <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
-        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; AI Code Tools & Fixes</a>
         <a href="https://claudkit.com">ClaudKit &mdash; API</a>
         <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
         <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
@@ -1334,7 +1334,7 @@ ${links}
       <div class="zovo-network-links">
         <a href="https://abwex.com">ABWex &mdash; A/B Testing</a>
         <a href="https://claudflow.com">ClaudFlow &mdash; Workflows</a>
-        <a href="https://claudhq.com">ClaudHQ &mdash; Prompts</a>
+        <a href="https://claudhq.com">ClaudHQ &mdash; AI Code Tools & Fixes</a>
         <a href="https://claudkit.com">ClaudKit &mdash; API</a>
         <a href="https://enhio.com">Enhio &mdash; Text Tools</a>
         <a href="https://epochpilot.com">EpochPilot &mdash; Timestamps</a>
