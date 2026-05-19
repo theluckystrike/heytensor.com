@@ -678,4 +678,46 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- Sprint 7 Auto-Added -->
+  <url>
+    <loc>https://heytensor.com/answers/index.html</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <!-- Sprint 7 Auto-Added -->
+  <url>
+    <loc>https://heytensor.com/blog/index.html</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- Sprint 7 Auto-Added -->
+  <url>
+    <loc>https://heytensor.com/guides/index.html</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- Sprint 7 Auto-Added -->
+  <url>
+    <loc>https://heytensor.com/index.html</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Sprint 7 Auto-Added -->
+  <url>
+    <loc>https://heytensor.com/research/index.html</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- Sprint 7 Auto-Added -->
+  <url>
+    <loc>https://heytensor.com/tools/index.html</loc>
+    <lastmod>2026-05-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>
