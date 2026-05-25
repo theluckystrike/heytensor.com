@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix "Expected 4D Input, Got 3D" in PyTorch Conv2d | HeyTensor</title>
-  <meta name="description" content="Conv2d expects (batch, channels, H, W) but your input is missing the batch dimension. Fix: add x = x.unsqueeze(0) or check your DataLoader batch size.">
+  <title>Fix: Expected 4-dimensional input for 4-dimensional weight — PyTorch Conv2d</title>
+  <meta name="description" content="Conv2d needs (batch, channels, H, W) but got (channels, H, W). One-line fix: x = x.unsqueeze(0) to add the batch dimension. Also check your DataLoader returns batched tensors.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/expected-4d-input-got-3d.html">
   <meta property="og:type" content="article">

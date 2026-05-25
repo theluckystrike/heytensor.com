@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix "mat1 and mat2 shapes cannot be multiplied" in PyTorch | HeyTensor</title>
-  <meta name="description" content="This error means your Linear layer's in_features doesn't match the input tensor's last dimension. Fix: print(x.shape) before the layer, then set nn.Linear(actual_last_dim, out_features).">
+  <title>Fix: RuntimeError: mat1 and mat2 shapes cannot be multiplied — PyTorch</title>
+  <meta name="description" content="Your nn.Linear in_features doesn't match x.shape[-1]. Fix: print(x.shape) before the layer, then set nn.Linear(actual_size, out_features). Usually caused by missing flatten after Conv2d.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/mat1-mat2-shapes-cannot-be-multiplied.html">
   <meta property="og:type" content="article">

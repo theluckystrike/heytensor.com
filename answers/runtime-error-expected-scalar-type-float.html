@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix "Expected Scalar Type Float" in PyTorch | HeyTensor</title>
-  <meta name="description" content="Your tensor is the wrong dtype. Fix: x = x.float() or x = x.to(torch.float32). Common when loading images as uint8 or using double tensors with float32 models.">
+  <title>Fix: RuntimeError: expected scalar type Float but found Half | Byte | Double — PyTorch</title>
+  <meta name="description" content="One-line fix: x = x.float() or x = x.to(torch.float32). This RuntimeError means your tensor dtype doesn't match the model. Common with uint8 images, NumPy float64, or mixed precision.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/runtime-error-expected-scalar-type-float.html">
   <meta property="og:type" content="article">

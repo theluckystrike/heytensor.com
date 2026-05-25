@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix "weight is on CPU but input is on CUDA" in PyTorch | HeyTensor</title>
-  <meta name="description" content="Fix PyTorch "weight is on CPU but input is on CUDA" by moving your model to GPU with model.to("cuda") before passing GPU tensors. Ensure model and data are on the same device.">
+  <title>Fix: RuntimeError: weight is on CPU but input is on CUDA — PyTorch</title>
+  <meta name="description" content="Add model.to('cuda') or model.cuda() before inference. Model weights and input tensors must be on the same device. One-line fix with full explanation.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="How to Fix "weight is on CPU but input is on CUDA" in PyTorch">
-  <meta property="og:description" content="Fix PyTorch "weight is on CPU but input is on CUDA" by moving your model to GPU with model.to("cuda") before passing GPU tensors. Ensure model and data are on the same device.">
+  <meta property="og:title" content="Fix: RuntimeError: weight is on CPU but input is on CUDA — PyTorch">
+  <meta property="og:description" content="Add model.to('cuda') before inference. Model weights and input tensors must be on the same device.">
   <meta property="og:url" content="https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html">
   <meta property="og:site_name" content="HeyTensor">
   <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="How to Fix "weight is on CPU but input is on CUDA" in PyTorch">
-  <meta name="twitter:description" content="Fix PyTorch "weight is on CPU but input is on CUDA" by moving your model to GPU with model.to("cuda") before passing GPU tensors. Ensure model and data are on the same device.">
+  <meta name="twitter:title" content="Fix: RuntimeError: weight is on CPU but input is on CUDA — PyTorch">
+  <meta name="twitter:description" content="Add model.to('cuda') before inference. Model weights and input tensors must be on the same device.">
   <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

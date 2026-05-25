@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix "Gradient Is None" in PyTorch | HeyTensor</title>
-  <meta name="description" content="Ensure requires_grad=True on your tensor and that you called .backward() before accessing .grad. Detached tensors and torch.no_grad() lose gradients.">
+  <title>Fix: .grad is None — Why PyTorch Gradient Is None After backward()</title>
+  <meta name="description" content="Set requires_grad=True on your tensor and call loss.backward() before accessing .grad. Detached tensors, torch.no_grad(), and non-leaf tensors all cause None gradients.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/gradient-is-none-fix.html">
   <meta property="og:type" content="article">

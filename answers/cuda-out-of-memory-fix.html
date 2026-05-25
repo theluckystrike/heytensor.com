@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix CUDA Out of Memory in PyTorch | HeyTensor</title>
-  <meta name="description" content="Fix CUDA out of memory: reduce batch size first, then try mixed precision (autocast), gradient checkpointing, or torch.no_grad() for inference. Step-by-step guide.">
+  <title>Fix: CUDA out of memory. Tried to allocate — PyTorch RuntimeError</title>
+  <meta name="description" content="Reduce batch size first (halves memory). Then: torch.cuda.amp.autocast() saves 30-40%, gradient checkpointing trades compute for memory, torch.no_grad() for inference. 5 fixes ranked by effort.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/cuda-out-of-memory-fix.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="How to Fix CUDA Out of Memory in PyTorch">
-  <meta property="og:description" content="Reduce batch size first. Then try mixed precision, gradient checkpointing, or torch.no_grad() for inference.">
+  <meta property="og:title" content="Fix: CUDA out of memory. Tried to allocate — PyTorch RuntimeError">
+  <meta property="og:description" content="5 fixes ranked by effort: reduce batch size, mixed precision, gradient checkpointing, torch.no_grad(), gradient accumulation.">
   <meta property="og:url" content="https://heytensor.com/answers/cuda-out-of-memory-fix.html">
   <meta property="og:site_name" content="HeyTensor">
   <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fix CUDA Out of Memory in PyTorch">
-  <meta name="twitter:description" content="Reduce batch size, use mixed precision, gradient checkpointing, or torch.no_grad().">
+  <meta name="twitter:title" content="Fix: CUDA out of memory. Tried to allocate — PyTorch">
+  <meta name="twitter:description" content="5 fixes ranked by effort: reduce batch size, mixed precision, gradient checkpointing, torch.no_grad().">
   <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

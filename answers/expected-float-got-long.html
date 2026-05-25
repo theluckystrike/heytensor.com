@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix "expected dtype Float but got dtype Long" in PyTorch | HeyTensor</title>
-  <meta name="description" content="Fix PyTorch "expected dtype Float but got dtype Long" by converting tensors with .float() or .to(torch.float32). Common with integer labels and loss functions.">
+  <title>Fix: RuntimeError: expected scalar type Float but found Long — PyTorch</title>
+  <meta name="description" content="One-line fix: tensor = tensor.float() or tensor.to(torch.float32). This happens when passing integer labels to MSELoss or mixing int/float tensors. Code examples inside.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/expected-float-got-long.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="How to Fix "expected dtype Float but got dtype Long" in PyTorch">
-  <meta property="og:description" content="Fix PyTorch "expected dtype Float but got dtype Long" by converting tensors with .float() or .to(torch.float32). Common with integer labels and loss functions.">
+  <meta property="og:title" content="Fix: RuntimeError: expected scalar type Float but found Long — PyTorch">
+  <meta property="og:description" content="Fix: tensor = tensor.float(). Happens when passing integer labels to MSELoss or mixing int/float tensors.">
   <meta property="og:url" content="https://heytensor.com/answers/expected-float-got-long.html">
   <meta property="og:site_name" content="HeyTensor">
   <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
