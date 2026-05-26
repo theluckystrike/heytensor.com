@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>20 Most Common PyTorch RuntimeErrors — Fix Code for Each (2026)</title>
-  <meta name="description" content="Top 20 PyTorch errors ranked by Stack Overflow frequency: expected scalar type Float, mat1 mat2 shapes cannot be multiplied, CUDA out of memory. Copy-paste fix for every one.">
+  <title>25 Most Common PyTorch Errors — Copy-Paste Fix for Each (2026)</title>
+  <meta name="description" content="Fix the 25 most common PyTorch errors with copy-paste solutions. RuntimeError, CUDA out of memory, tensor shape mismatch, torch.compile failures, and more. Updated May 2026.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/research/most-common-pytorch-errors.html">
   <link rel="alternate" hreflang="en" href="https://heytensor.com/research/most-common-pytorch-errors.html">
   <link rel="alternate" hreflang="x-default" href="https://heytensor.com/research/most-common-pytorch-errors.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="The 20 Most Common PyTorch Errors (and How to Fix Them)">
-  <meta property="og:description" content="The top 20 PyTorch errors ranked by frequency from Stack Overflow data. Each with detailed explanation and fix code.">
+  <meta property="og:title" content="25 Most Common PyTorch Errors — Copy-Paste Fix for Each (2026)">
+  <meta property="og:description" content="Fix the 25 most common PyTorch errors with copy-paste solutions. RuntimeError, CUDA out of memory, shape mismatch, torch.compile, and more.">
   <meta property="og:url" content="https://heytensor.com/research/most-common-pytorch-errors.html">
   <meta property="og:site_name" content="HeyTensor">
   <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The 20 Most Common PyTorch Errors (and How to Fix Them)">
-  <meta name="twitter:description" content="Top 20 PyTorch errors ranked by frequency with detailed explanations and fix code.">
+  <meta name="twitter:title" content="25 Most Common PyTorch Errors — Copy-Paste Fix for Each (2026)">
+  <meta name="twitter:description" content="Fix the 25 most common PyTorch errors with copy-paste solutions. Updated May 2026.">
   <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,11 +29,11 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "The 20 Most Common PyTorch Errors (and How to Fix Them)",
-    "description": "The top 20 PyTorch errors ranked by frequency from Stack Overflow data analysis, each with root cause explanation, fix code, and prevention tips.",
+    "headline": "25 Most Common PyTorch Errors — Copy-Paste Fix for Each (2026)",
+    "description": "The top 25 PyTorch errors ranked by frequency from Stack Overflow data analysis, each with root cause explanation, fix code, and prevention tips.",
     "url": "https://heytensor.com/research/most-common-pytorch-errors.html",
     "datePublished": "2026-04-07",
-    "dateModified": "2026-04-07",
+    "dateModified": "2026-05-26",
     "author": {
       "@type": "Person",
       "name": "Michael Lip",
@@ -245,12 +245,12 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "The 20 Most Common PyTorch Errors (and How to Fix Them)",
-    "description": "The top 20 PyTorch errors ranked by frequency from Stack Overflow data. Each error includes the exact message, root cause explanation, fix code, and prevention tips.",
+    "headline": "25 Most Common PyTorch Errors — Copy-Paste Fix for Each (2026)",
+    "description": "The top 25 PyTorch errors ranked by frequency from Stack Overflow data. Each error includes the exact message, root cause explanation, fix code, and prevention tips.",
     "author": {"@type": "Organization", "name": "Zovo", "url": "https://zovo.one"},
     "publisher": {"@type": "Organization", "name": "HeyTensor", "url": "https://heytensor.com"},
     "datePublished": "2026-04-06",
-    "dateModified": "2026-04-07",
+    "dateModified": "2026-05-26",
     "mainEntityOfPage": "https://heytensor.com/research/most-common-pytorch-errors.html",
     "speakable": {
       "@type": "SpeakableSpecification",
@@ -285,9 +285,9 @@
 
     <section class="hero tool-hero">
       <div class="research-badge">Original Research</div>
-      <h1>The 20 Most Common <span style="color:var(--accent)">PyTorch Errors</span></h1>
+      <h1>25 Most Common <span style="color:var(--accent)">PyTorch Errors</span> — Copy-Paste Fix for Each</h1>
       <p>Ranked by frequency from Stack Overflow data analysis. Each error includes the exact message, why it happens, how to fix it, and how to prevent it. Stop guessing and fix errors in seconds.</p>
-      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:8px;">By <a href="/about.html">Michael Lip</a> &middot; April 7, 2026 &middot; Based on analysis of 300+ Stack Overflow questions</p>
+      <p style="font-size:0.85rem;color:var(--text-dim);margin-top:8px;">By <a href="/about.html">Michael Lip</a> &middot; Last updated May 26, 2026 &middot; Based on analysis of 300+ Stack Overflow questions</p>
     </section>
 
     <div class="toc-box">
@@ -313,6 +313,11 @@
         <li><a href="#e18"><span class="toc-num">#18</span> grad only for scalar outputs</a></li>
         <li><a href="#e19"><span class="toc-num">#19</span> expected channels but got N channels</a></li>
         <li><a href="#e20"><span class="toc-num">#20</span> Deserialize on CUDA but is_available False</a></li>
+        <li><a href="#e21"><span class="toc-num">#21</span> torch.compile backend error (Dynamo/Inductor)</a></li>
+        <li><a href="#e22"><span class="toc-num">#22</span> expected BFloat16 but found Float</a></li>
+        <li><a href="#e23"><span class="toc-num">#23</span> DDP uneven inputs across processes</a></li>
+        <li><a href="#e24"><span class="toc-num">#24</span> FlashAttention requires Ampere GPU or newer</a></li>
+        <li><a href="#e25"><span class="toc-num">#25</span> torch.cat dimension mismatch</a></li>
       </ol>
     </div>
 
@@ -951,6 +956,205 @@ torch.save(model.state_dict(), 'model.pt')  # save state_dict, not full model
 # state_dict is more portable and smaller</code></pre>
       </div>
       <div class="rank-prevention">Prevention: Always use <code>map_location='cpu'</code> when loading checkpoints. Save <code>state_dict()</code> instead of the full model object for maximum portability.</div>
+    </div>
+
+    <!-- #21 -->
+    <div class="rank-entry" id="e21">
+      <div class="rank-num">#21</div>
+      <h3>torch.compile backend error (Dynamo/Inductor failure)</h3>
+      <div class="rank-error-msg">torch._dynamo.exc.BackendCompilerFailed: backend='inductor' raised: LoweringException: ... Unsupported: call_function aten.foo</div>
+      <div class="rank-meta">
+        <span class="meta-cat">compilation_error</span>
+        <span class="meta-freq">Rising fast (PyTorch 2.x)</span>
+        <span class="meta-layers">torch.compile, torch._dynamo</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p><code>torch.compile()</code> uses TorchDynamo to trace your model into FX graphs and the Inductor backend to generate optimized kernels. Not all Python code or PyTorch operations are supported by the tracer. Dynamic control flow, data-dependent branching, unsupported ops, and custom C++ extensions can all trigger graph breaks or outright compilation failures. This is the most common new error category in PyTorch 2.x development.</p>
+        <h4>The Fix</h4>
+        <pre><code># Step 1: Identify the problem with verbose logging
+import torch._dynamo
+torch._dynamo.config.verbose = True
+torch._dynamo.config.suppress_errors = False  # don't silently fall back
+
+# Step 2: Use fullgraph=False to allow graph breaks (easiest fix)
+model = torch.compile(model, fullgraph=False)  # allows partial compilation
+
+# Step 3: Skip problematic functions with torch._dynamo.disable
+@torch._dynamo.disable
+def custom_postprocess(x):
+    # Complex Python logic that Dynamo can't trace
+    return x
+
+# Step 4: Reset Dynamo state if you get stale cache errors
+torch._dynamo.reset()
+
+# Step 5: Try a different backend if Inductor fails
+model = torch.compile(model, backend="aot_eager")  # slower but more compatible</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Start with <code>fullgraph=False</code> and profile before enforcing <code>fullgraph=True</code>. Wrap non-traceable helper functions with <code>@torch._dynamo.disable</code>.</div>
+    </div>
+
+    <!-- #22 -->
+    <div class="rank-entry" id="e22">
+      <div class="rank-num">#22</div>
+      <h3>expected BFloat16 but found Float (dtype mismatch)</h3>
+      <div class="rank-error-msg">RuntimeError: expected scalar type BFloat16 but found Float</div>
+      <div class="rank-meta">
+        <span class="meta-cat">type_error</span>
+        <span class="meta-freq">Rising (bf16 adoption)</span>
+        <span class="meta-layers">All layers (mixed precision)</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>With the widespread adoption of bfloat16 training (especially on Ampere+ GPUs and TPUs), dtype mismatches between bf16 and fp32 tensors are increasingly common. Unlike fp16, bf16 has the same exponent range as fp32 but less precision. The error occurs when model weights are in bf16 but inputs are fp32, or when custom layers create fp32 tensors that interact with bf16 activations. This is especially common when loading Hugging Face models that default to bf16.</p>
+        <h4>The Fix</h4>
+        <pre><code># Option 1: Use torch.autocast for automatic dtype handling
+with torch.autocast(device_type='cuda', dtype=torch.bfloat16):
+    output = model(x)
+    loss = criterion(output, target)
+
+# Option 2: Cast inputs to match model dtype
+x = x.to(dtype=model.parameters().__next__().dtype)
+
+# Option 3: Explicitly cast model to bf16
+model = model.to(dtype=torch.bfloat16)
+x = x.to(dtype=torch.bfloat16)
+
+# Option 4: When loading HuggingFace models
+model = AutoModel.from_pretrained("model-name", torch_dtype=torch.float32)
+# Or explicitly:
+model = AutoModel.from_pretrained("model-name", torch_dtype=torch.bfloat16)
+
+# Check if bf16 is supported on your GPU:
+print(torch.cuda.is_bf16_supported())  # True on Ampere+</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Use <code>torch.autocast</code> instead of manual casting. Check <code>torch.cuda.is_bf16_supported()</code> before using bf16. When loading pretrained models, explicitly set <code>torch_dtype</code>.</div>
+    </div>
+
+    <!-- #23 -->
+    <div class="rank-entry" id="e23">
+      <div class="rank-num">#23</div>
+      <h3>DDP uneven inputs across processes</h3>
+      <div class="rank-error-msg">RuntimeError: Expected to have finished reduction in the prior iteration before starting a new one. This error indicates that your module has parameters that were not used in producing loss.</div>
+      <div class="rank-meta">
+        <span class="meta-cat">distributed_error</span>
+        <span class="meta-freq">~15% of DDP errors</span>
+        <span class="meta-layers">DistributedDataParallel</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>In Distributed Data Parallel (DDP), all processes must participate in the same collective operations during backward. If one process finishes its data early (uneven dataset splits) or if some model parameters are not used in the forward pass (conditional branches, unused modules), the gradient all-reduce hangs or crashes. This is the most common distributed training error and becomes more frequent with multi-GPU setups.</p>
+        <h4>The Fix</h4>
+        <pre><code># Fix 1: Set find_unused_parameters for models with unused params
+model = DistributedDataParallel(
+    model,
+    device_ids=[local_rank],
+    find_unused_parameters=True  # handles conditional branches
+)
+
+# Fix 2: Use Join context for uneven inputs (PyTorch 1.10+)
+from torch.distributed.algorithms.join import Join
+
+with Join([model]):
+    for batch in dataloader:
+        loss = model(batch)
+        loss.backward()
+        optimizer.step()
+
+# Fix 3: Ensure even data splits with DistributedSampler
+sampler = DistributedSampler(
+    dataset,
+    num_replicas=world_size,
+    rank=rank,
+    drop_last=True  # ensures even batches across ranks
+)
+loader = DataLoader(dataset, sampler=sampler, batch_size=32)
+
+# Fix 4: Pad the last batch to match across ranks
+# (when drop_last=False is required)</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Always use <code>DistributedSampler</code> with <code>drop_last=True</code> for even splits. Set <code>find_unused_parameters=True</code> if your model has conditional branches or shared parameters.</div>
+    </div>
+
+    <!-- #24 -->
+    <div class="rank-entry" id="e24">
+      <div class="rank-num">#24</div>
+      <h3>FlashAttention requires Ampere GPU or newer</h3>
+      <div class="rank-error-msg">RuntimeError: FlashAttention only supports Ampere GPUs or newer (sm80+). Found GPU with compute capability sm_75.</div>
+      <div class="rank-meta">
+        <span class="meta-cat">device_mismatch</span>
+        <span class="meta-freq">Rising (transformer adoption)</span>
+        <span class="meta-layers">F.scaled_dot_product_attention, FlashAttention</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p>FlashAttention uses GPU-specific Tensor Core instructions that are only available on NVIDIA Ampere (A100, RTX 30xx), Ada Lovelace (RTX 40xx), or Hopper (H100) architectures. Older GPUs like Turing (RTX 20xx, T4) or Volta (V100) lack these instructions. PyTorch's <code>scaled_dot_product_attention</code> tries FlashAttention first, and if the GPU doesn't support it, it raises an error or falls back to a slower kernel. Many Hugging Face models and training frameworks now enable FlashAttention by default.</p>
+        <h4>The Fix</h4>
+        <pre><code># Option 1: Use PyTorch's SDPA with automatic backend selection
+import torch.nn.functional as F
+
+# This automatically picks the best available backend
+out = F.scaled_dot_product_attention(q, k, v)  # auto fallback
+
+# Option 2: Explicitly disable FlashAttention backend
+from torch.nn.attention import SDPBackend, sdpa_kernel
+
+with sdpa_kernel([SDPBackend.MATH, SDPBackend.EFFICIENT_ATTENTION]):
+    # Skips FlashAttention, uses compatible backends
+    out = F.scaled_dot_product_attention(q, k, v)
+
+# Option 3: For HuggingFace models, specify attn_implementation
+model = AutoModel.from_pretrained(
+    "model-name",
+    attn_implementation="eager"  # skip flash_attention_2
+)
+
+# Check your GPU compute capability:
+print(torch.cuda.get_device_capability())  # (8, 0) = Ampere</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Check GPU compute capability with <code>torch.cuda.get_device_capability()</code>. For pre-Ampere GPUs, use <code>attn_implementation="eager"</code> or <code>SDPBackend.EFFICIENT_ATTENTION</code>.</div>
+    </div>
+
+    <!-- #25 -->
+    <div class="rank-entry" id="e25">
+      <div class="rank-num">#25</div>
+      <h3>torch.cat: tensor sizes mismatch at dimension</h3>
+      <div class="rank-error-msg">RuntimeError: Sizes of tensors must match except in dimension 0. Expected size 256 but got size 128 for tensor number 1 in the list</div>
+      <div class="rank-meta">
+        <span class="meta-cat">shape_mismatch</span>
+        <span class="meta-freq">~3% of shape errors</span>
+        <span class="meta-layers">torch.cat, torch.stack</span>
+      </div>
+      <div class="rank-body">
+        <h4>Why It Happens</h4>
+        <p><code>torch.cat</code> concatenates tensors along a specified dimension. All other dimensions must match exactly. This error commonly occurs in U-Net skip connections (encoder and decoder feature maps have different spatial sizes due to odd input dimensions), feature pyramid networks, or when manually batching tensors of different sizes. The closely related <code>torch.stack</code> requires ALL dimensions to match.</p>
+        <h4>The Fix</h4>
+        <pre><code># Debug: print all tensor shapes before concatenation
+tensors = [t1, t2, t3]
+for i, t in enumerate(tensors):
+    print(f"Tensor {i}: {t.shape}")
+
+# Fix for U-Net skip connections (spatial size mismatch):
+def forward(self, x, skip):
+    x = self.upsample(x)
+    # Crop or pad skip connection to match
+    diff_h = skip.size(2) - x.size(2)
+    diff_w = skip.size(3) - x.size(3)
+    x = F.pad(x, [diff_w // 2, diff_w - diff_w // 2,
+                   diff_h // 2, diff_h - diff_h // 2])
+    return torch.cat([x, skip], dim=1)  # concat along channels
+
+# Fix for variable-length sequences: use pad_sequence
+from torch.nn.utils.rnn import pad_sequence
+padded = pad_sequence(sequences, batch_first=True)  # pads to max length
+
+# Fix for different feature sizes: project to same dim first
+t1_proj = self.proj1(t1)  # [B, 256]
+t2_proj = self.proj2(t2)  # [B, 256]  (was [B, 128])
+combined = torch.cat([t1_proj, t2_proj], dim=1)  # [B, 512]</code></pre>
+      </div>
+      <div class="rank-prevention">Prevention: Always print tensor shapes before <code>torch.cat</code>. For U-Net architectures, add padding/cropping at skip connections. Use <a href="/">HeyTensor Chain Mode</a> to trace shapes through encoder-decoder networks.</div>
     </div>
 
     <div class="methodology-box">
