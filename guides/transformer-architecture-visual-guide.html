@@ -4,31 +4,28 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transformer Architecture Visual Guide — Self-Attention Explained | HeyTensor</title>
-  <meta name="description" content="Interactive step-by-step visual guide to transformer architecture. Animated Q/K/V matrices, attention score computation, softmax, multi-head attention, and positional encoding — all explained visually.">
+  <title>Transformer Architecture Guide — Visual Explainer</title>
+  <meta name="description" content="Interactive visual guide to transformer architecture. Step through Q/K/V matrices, attention scores, softmax, and multi-head attention with diagrams.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
   <link rel="alternate" hreflang="en" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
   <link rel="alternate" hreflang="x-default" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Transformer Architecture Visual Guide — Self-Attention Explained | HeyTensor">
+  <meta property="og:title" content="Transformer Architecture Guide — Visual Explainer">
   <meta property="og:description" content="Interactive canvas-based visualization: step through Q/K/V projection, attention score computation, softmax normalization, and multi-head attention layer by layer.">
   <meta property="og:url" content="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
   <meta property="og:site_name" content="HeyTensor">
   <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Transformer Architecture Visual Guide — Self-Attention Explained">
+  <meta name="twitter:title" content="Transformer Architecture Guide — Visual Explainer">
   <meta name="twitter:description" content="Step through Q/K/V matrices and attention layers interactively. No external libraries.">
   <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/style.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "Transformer Architecture Visual Guide — Self-Attention Explained",
+    "headline": "Transformer Architecture Guide — Visual Explainer",
     "description": "Interactive step-by-step visual guide to transformer architecture with canvas-based diagrams showing Q/K/V matrices, attention scores, and multi-head attention.",
     "datePublished": "2026-05-28",
     "dateModified": "2026-05-28",
@@ -470,7 +467,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
 
     function label(cx, text, x, y, color, size) {
       cx.fillStyle = color || COLORS.text;
-      cx.font = (size || 11) + 'px "Space Mono", monospace';
+      cx.font = (size || 11) + 'px "SF Mono", "Fira Code", "Cascadia Code", monospace';
       cx.textAlign = 'center';
       cx.fillText(text, x, y);
     }
@@ -485,7 +482,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
       var embedH = 100;
       var embedY = 90;
 
-      cx.fillStyle = COLORS.dim; cx.font = '11px "IBM Plex Sans"';
+      cx.fillStyle = COLORS.dim; cx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       cx.textAlign = 'center';
       cx.fillText('Input Tokens', W / 2, 20);
 
@@ -504,7 +501,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
         label(cx, 'd=512', x + bw/2, embedY + embedH/2 + 4, colors[i] + 'cc', 9);
       });
 
-      cx.fillStyle = COLORS.dim; cx.font = '11px "IBM Plex Sans"';
+      cx.fillStyle = COLORS.dim; cx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       cx.textAlign = 'center';
       cx.fillText('Token Embeddings X  \u2208  R^(5 \u00d7 512)', W / 2, embedY + embedH + 22);
     }
@@ -579,7 +576,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
       }
 
       // Dot multiply symbol
-      cx.fillStyle = COLORS.text; cx.font = 'bold 22px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.text; cx.font = 'bold 22px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('\u00b7', kX - 30, H/2 + 6);
 
       // Score matrix
@@ -597,7 +594,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
       }
 
       // = symbol
-      cx.fillStyle = COLORS.text; cx.font = 'bold 22px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.text; cx.font = 'bold 22px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('=', sX - 28, H/2 + 6);
 
       label(cx, 'Raw dot-product scores — higher = more attention', W/2, H - 10, COLORS.dim, 10);
@@ -621,15 +618,15 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
       }
 
       // Divide symbol + sqrt(dk)
-      cx.fillStyle = COLORS.text; cx.font = 'bold 20px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.text; cx.font = 'bold 20px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('\u00f7', rawX + mW + 30, H/2 + 6);
       roundRect(cx, rawX + mW + 42, H/2 - 22, 50, 30, 6, '#22C55E22', '#22C55E');
-      cx.fillStyle = '#22C55E'; cx.font = '10px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = '#22C55E'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('\u221a64', rawX + mW + 67, H/2 - 3);
-      cx.fillStyle = COLORS.dim; cx.font = '9px "IBM Plex Sans"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.dim; cx.font = '9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'; cx.textAlign = 'center';
       cx.fillText('= 8', rawX + mW + 67, H/2 + 12);
 
-      cx.fillStyle = COLORS.text; cx.font = 'bold 20px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.text; cx.font = 'bold 20px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('=', scX - 28, H/2 + 6);
 
       label(cx, 'Scaled Scores', scX + mW/2, scY - 14, '#22C55E', 10);
@@ -670,12 +667,12 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
 
       // Softmax label
       roundRect(cx, inX + mW + 18, H/2 - 22, 70, 34, 6, '#3B82F622', '#3B82F6');
-      cx.fillStyle = '#3B82F6'; cx.font = '10px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = '#3B82F6'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('softmax', inX + mW + 53, H/2 - 6);
       cx.fillStyle = COLORS.dim; cx.font = '9px monospace'; cx.textAlign = 'center';
       cx.fillText('(row-wise)', inX + mW + 53, H/2 + 8);
 
-      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('\u2192', outX - 26, H/2 + 6);
 
       label(cx, 'Attention Weights A', outX + mW/2, outY - 14, COLORS.q, 10);
@@ -714,7 +711,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
         }
       }
 
-      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('\u00b7', vX - 26, H/2);
 
       for (var vi = 0; vi < n; vi++) {
@@ -726,7 +723,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
         cx.fillText('...', vX + 36, vY + vi*cell + cell/2 + 3);
       }
 
-      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('=', oX - 26, H/2);
 
       for (var oi = 0; oi < n; oi++) {
@@ -756,7 +753,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
       for (var h = 0; h < numHeads; h++) {
         var x = startX + h * (headW + gap);
         roundRect(cx, x, headY, headW, headH, 6, headColors[h] + '22', headColors[h]);
-        cx.fillStyle = headColors[h]; cx.font = '10px "Space Mono"'; cx.textAlign = 'center';
+        cx.fillStyle = headColors[h]; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
         cx.fillText('Head ' + (h+1), x + headW/2, headY + 16);
         cx.fillStyle = headColors[h] + 'aa'; cx.font = '9px monospace'; cx.textAlign = 'center';
         cx.fillText('Q_h K_h V_h', x + headW/2, headY + 30);
@@ -769,7 +766,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
 
       // Concat box
       roundRect(cx, startX, concatY, totalW, 38, 6, '#F9731622', '#F97316');
-      cx.fillStyle = '#F97316'; cx.font = '10px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = '#F97316'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('Concat(head_1, ..., head_4)  \u2208  R^(5 \u00d7 d_model)', W/2, concatY + 22);
 
       // Arrow + W_O projection
@@ -778,7 +775,7 @@ print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
       cx.beginPath(); cx.moveTo(W/2 - 4, projY - 10); cx.lineTo(W/2, projY - 4); cx.lineTo(W/2 + 4, projY - 10); cx.stroke();
 
       roundRect(cx, W/2 - 100, projY, 200, 38, 6, COLORS.out + '22', COLORS.out);
-      cx.fillStyle = COLORS.out; cx.font = '10px "Space Mono"'; cx.textAlign = 'center';
+      cx.fillStyle = COLORS.out; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
       cx.fillText('W_O projection  \u2192  R^(5 \u00d7 d_model)', W/2, projY + 22);
 
       label(cx, 'Each head specializes in different relationship types', W/2, H - 10, COLORS.dim, 10);
