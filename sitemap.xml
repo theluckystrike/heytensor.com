@@ -117,4 +117,22 @@
   <url><loc>https://heytensor.com/tools/reshape-calculator.html</loc></url>
   <url><loc>https://heytensor.com/tools/shape-mismatch.html</loc></url>
   <url><loc>https://heytensor.com/tools/view-size-not-compatible.html</loc></url>
+  <url>
+    <loc>https://heytensor.com/tools/cuda-error-decoder-fix-gpu-errors-fast</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heytensor.com/tools/pytorch-memory-calculator-estimate-gpu-vram-usage</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://heytensor.com/tools/training-time-estimator-how-long-will-your-model-take</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
