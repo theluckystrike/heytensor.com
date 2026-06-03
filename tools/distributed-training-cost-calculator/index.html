@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>Distributed Training Cost Calculator — Estimate</title>
+  <meta name="description" content="Estimate multi-GPU training costs across AWS, GCP, Azure. Compare A100, H100, L4, T4, V100 with spot/on-demand pricing. Free interactive calculator.">
+  <meta property="og:title" content="Distributed Training Cost Calculator — heytensor.com">
+  <meta property="og:description" content="Estimate multi-GPU training costs across AWS, GCP, Azure. Compare A100, H100, L4, T4, V100 with spot/on-demand pricing.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://heytensor.com/tools/distributed-training-cost-calculator">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://heytensor.com/tools/distributed-training-cost-calculator">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How are distributed training costs calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Total cost = (GPU price per hour × number of GPUs × training hours) × provider multiplier. Spot instances apply a 60–70% discount on the base GPU rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which GPU is most cost‑effective for large‑scale training?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "H100 offers the highest throughput, but A100 80GB often provides the best balance of memory and cost. L4 and T4 are budget‑friendly for smaller models."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much can I save using spot (preemptible) instances?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Spot instances typically reduce GPU costs by 60–70%, but they can be interrupted. For fault‑tolerant training, spot savings are substantial."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 1.5rem;
+      padding: 1.8rem 1.5rem;
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.6);
+      margin-bottom: 2rem;
+      border: 1px solid #334155;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    select, input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 1rem;
+      color: #f1f5f9;
+      font-size: 1rem;
+      transition: border 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    select:focus, input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-top: 0.2rem;
+    }
+    .toggle-group {
+      display: flex;
+      background: #0f172a;
+      border-radius: 2rem;
+      padding: 0.25rem;
+      border: 1px solid #334155;
+    }
+    .toggle-btn {
+      flex: 1;
+      text-align: center;
+      padding: 0.6rem 0.8rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+    }
+    .toggle-btn.active {
+      background: #38bdf8;
+      color: #0f172a;
+      box-shadow: 0 4px 8px rgba(56,189,248,0.3);
+    }
+    .toggle-btn:not(.active):hover {
+      color: #e2e8f0;
+    }
+    .results-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0 1rem;
+    }
+    .result-item {
+      background: #0f172a;
+      border-radius: 1.2rem;
+      padding: 1rem 1.5rem;
+      flex: 1 1 160px;
+      border: 1px solid #2d3a4e;
+    }
+    .result-item .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #94a3b8;
+    }
+    .result-item .value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-top: 0.2rem;
+    }
+    .result-item .sub {
+      font-size: 0.8rem;
+      color: #38bdf8;
+    }
+    .badge {
+      background: #0f172a;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      color: #38bdf8;
+      border: 1px solid #38bdf8;
+      display: inline-block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0 0.5rem;
+    }
+    th {
+      text-align: left;
+      padding: 0.7rem 0.5rem 0.5rem 0.5rem;
+      color: #94a3b8;
+      font-weight: 500;
+      font-size: 0.8rem;
+      border-bottom: 1px solid #2d3a4e;
+    }
+    td {
+      padding: 0.6rem 0.5rem;
+      border-bottom: 1px solid #1e293b;
+      font-size: 0.95rem;
+    }
+    .chart-container {
+      margin-top: 1.5rem;
+      background: #0f172a;
+      border-radius: 1rem;
+      padding: 1rem 0.5rem 0.5rem 0.5rem;
+    }
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.8rem;
+      height: 120px;
+      padding: 0 0.5rem;
+    }
+    .bar-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .bar {
+      width: 100%;
+      max-width: 60px;
+      background: #38bdf8;
+      border-radius: 8px 8px 4px 4px;
+      transition: height 0.3s ease;
+      min-height: 4px;
+    }
+    .bar-label {
+      margin-top: 0.4rem;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      text-align: center;
+    }
+    .bar-value {
+      font-size: 0.7rem;
+      color: #e2e8f0;
+      margin-bottom: 0.2rem;
+      font-weight: 500;
+    }
+    .footnote {
+      margin-top: 2rem;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.85rem;
+      border-top: 1px solid #1e293b;
+      padding-top: 1.5rem;
+    }
+    .footnote a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    .inline-flex {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 700px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+      header h1 {
+        font-size: 1.6rem;
+      }
+      .card {
+        padding: 1.2rem;
+      }
+      .result-item .value {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>⚡ Distributed Training Cost Calculator</h1>
+    <p>Estimate multi‑GPU expenses · spot savings · provider comparison</p>
+  </header>
+
+  <div class="card">
+    <div class="grid-2">
+      <div>
+        <div class="form-group">
+          <label for="gpuType">GPU type</label>
+          <select id="gpuType">
+            <option value="A100-40">A100 40GB ($3.93/hr)</option>
+            <option value="A100-80">A100 80GB ($4.98/hr)</option>
+            <option value="H100" selected>H100 ($7.89/hr)</option>
+            <option value="L4">L4 ($1.45/hr)</option>
+            <option value="T4">T4 ($0.94/hr)</option>
+            <option value="V100">V100 ($2.48/hr)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="gpuCount">Number of GPUs</label>
+          <input type="number" id="gpuCount" min="1" max="512" value="8">
+          <div class="range-labels"><span>1</span><span>512</span></div>
+        </div>
+        <div class="form-group">
+          <label for="hours">Training hours</label>
+          <input type="number" id="hours" min="0.5" max="10000" step="0.5" value="120">
+        </div>
+      </div>
+      <div>
+        <div class="form-group">
+          <label for="provider">Cloud provider</label>
+          <select id="provider">
+            <option value="aws" selected>AWS (1.0×)</option>
+            <option value="gcp">GCP (0.95×)</option>
+            <option value="azure">Azure (1.05×)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Pricing mode</label>
+          <div class="toggle-group" id="pricingToggle">
+            <button class="toggle-btn active" data-mode="on-demand">On‑Demand</button>
+            <button class="toggle-btn" data-mode="spot">Spot (60‑70% off)</button>
+          </div>
+        </div>
+        <div style="margin-top: 1.8rem; background: #0f172a; border-radius: 1rem; padding: 0.8rem 1rem; border: 1px solid #2d3a4e;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8;">
+            <span>💰 Spot discount</span>
+            <span id="spotDiscountLabel">65%</span>
+          </div>
+          <input type="range" id="spotSlider" min="60" max="70" value="65" style="width:100%; margin-top: 0.3rem; accent-color: #38bdf8;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="card" style="padding-top: 1.2rem;">
+    <div class="results-summary" id="resultsSummary">
+      <div class="result-item"><div class="label">Total cost</div><div class="value" id="totalCost">$0</div><div class="sub" id="totalCostSub"></div></div>
+      <div class="result-item"><div class="label">Cost per GPU‑hour</div><div class="value" id="costPerGpuHr">$0</div></div>
+      <div class="result-item"><div class="label">Spot savings</div><div class="value" id="spotSavings">$0</div><div class="sub" id="spotSavingsPct">0%</div></div>
+    </div>
+
+    <!-- Cost breakdown table -->
+    <h3 style="font-weight: 500; font-size: 1rem; margin: 1.2rem 0 0.2rem; color: #cbd5e1;">📋 Cost breakdown</h3>
+    <div style="overflow-x: auto;">
+      <table id="breakdownTable">
+        <thead><tr><th>Provider</th><th>GPU rate</th><th>Multiplier</th><th>Total (on‑demand)</th><th>Spot total</th></tr></thead>
+        <tbody id="breakdownBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Bar chart -->
+    <div class="chart-container">
+      <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; padding: 0 0.5rem;">
+        <span>Provider cost comparison (on‑demand)</span>
+        <span id="chartMaxLabel">max: $0</span>
+      </div>
+      <div class="chart-bars" id="chartBars">
+        <div class="bar-wrapper"><div class="bar-value" id="barValAws">$0</div><div class="bar" id="barAws" style="height: 10px;"></div><div class="bar-label">AWS</div></div>
+        <div class="bar-wrapper"><div class="bar-value" id="barValGcp">$0</div><div class="bar" id="barGcp" style="height: 10px;"></div><div class="bar-label">GCP</div></div>
+        <div class="bar-wrapper"><div class="bar-value" id="barValAzure">$0</div><div class="bar" id="barAzure" style="height: 10px;"></div><div class="bar-label">Azure</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    © 2025 <a href="https://heytensor.com">heytensor.com</a> — Free ML Engineering Tools<br>
+    <span style="font-size:0.75rem;">All estimates based on public cloud GPU pricing. Spot savings are approximate.</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- GPU base rates ($/hr) -----
+    const gpuRates = {
+      'A100-40': 3.93,
+      'A100-80': 4.98,
+      'H100': 7.89,
+      'L4': 1.45,
+      'T4': 0.94,
+      'V100': 2.48
+    };
+
+    // Provider multipliers
+    const providerMulti = { aws: 1.0, gcp: 0.95, azure: 1.05 };
+
+    // DOM refs
+    const gpuTypeEl = document.getElementById('gpuType');
+    const gpuCountEl = document.getElementById('gpuCount');
+    const hoursEl = document.getElementById('hours');
+    const providerEl = document.getElementById('provider');
+    const spotSlider = document.getElementById('spotSlider');
+    const spotDiscountLabel = document.getElementById('spotDiscountLabel');
+    const pricingToggle = document.getElementById('pricingToggle');
+    const totalCostEl = document.getElementById('totalCost');
+    const totalCostSubEl = document.getElementById('totalCostSub');
+    const costPerGpuHrEl = document.getElementById('costPerGpuHr');
+    const spotSavingsEl = document.getElementById('spotSavings');
+    const spotSavingsPctEl = document.getElementById('spotSavingsPct');
+    const breakdownBody = document.getElementById('breakdownBody');
+    const barAws = document.getElementById('barAws');
+    const barGcp = document.getElementById('barGcp');
+    const barAzure = document.getElementById('barAzure');
+    const barValAws = document.getElementById('barValAws');
+    const barValGcp = document.getElementById('barValGcp');
+    const barValAzure = document.getElementById('barValAzure');
+    const chartMaxLabel = document.getElementById('chartMaxLabel');
+
+    let currentMode = 'on-demand'; // 'on-demand' or 'spot'
+
+    // ----- toggle buttons -----
+    pricingToggle.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        pricingToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentMode = this.dataset.mode;
+        updateCalculator();
+      });
+    });
+
+    // spot slider
+    spotSlider.addEventListener('input', function() {
+      spotDiscountLabel.textContent = this.value + '%';
+      updateCalculator();
+    });
+
+    // all inputs
+    [gpuTypeEl, gpuCountEl, hoursEl, providerEl].forEach(el => el.addEventListener('input', updateCalculator));
+    [gpuTypeEl, gpuCountEl, hoursEl, providerEl].forEach(el => el.addEventListener('change', updateCalculator));
+
+    // ----- main update -----
+    function updateCalculator() {
+      const gpuKey = gpuTypeEl.value;
+      const baseRate = gpuRates[gpuKey] || 3.93;
+      let gpuCount = parseInt(gpuCountEl.value, 10);
+      if (isNaN(gpuCount) || gpuCount < 1) gpuCount = 1;
+      if (gpuCount > 512) gpuCount = 512;
+      let hours = parseFloat(hoursEl.value);
+      if (isNaN(hours) || hours < 0.5) hours = 0.5;
+      if (hours > 10000) hours = 10000;
+
+      const provider = providerEl.value;
+      const mult = providerMulti[provider] || 1.0;
+      const spotDiscount = parseInt(spotSlider.value, 10) / 100; // 0.6-0.7
+
+      const isSpot = (currentMode === 'spot');
+      const effectiveDiscount = isSpot ? spotDiscount : 0;
+
+      // compute per-provider costs (on-demand & spot)
+      const providers = ['aws', 'gcp', 'azure'];
+      const providerNames = { aws: 'AWS', gcp: 'GCP', azure: 'Azure' };
+      const results = providers.map(p => {
+        const m = providerMulti[p];
+        const rateOnDemand = baseRate * m;
+        const totalOnDemand = rateOnDemand * gpuCount * hours;
+        const totalSpot = totalOnDemand * (1 - spotDiscount);
+        return {
+          provider: p,
+          label: providerNames[p],
+          multiplier: m,
+          rateOnDemand,
+          totalOnDemand,
+          totalSpot
+        };
+      });
+
+      // find selected provider result
+      const selectedResult = results.find(r => r.provider === provider) || results[0];
+
+      // total cost based on mode & selected provider
+      let totalCost = isSpot ? selectedResult.totalSpot : selectedResult.totalOnDemand;
+      // cost per GPU-hr
+      const gpuHours = gpuCount * hours;
+      const costPerGpuHr = gpuHours > 0 ? totalCost / gpuHours : 0;
+
+      // spot savings relative to on-demand (selected provider)
+      const onDemandSelected = selectedResult.totalOnDemand;
+      const spotSavingsVal = onDemandSelected - totalCost;
+      const spotSavingsPctVal = onDemandSelected > 0 ? (spotSavingsVal / onDemandSelected) * 100 : 0;
+
+      // update DOM
+      totalCostEl.textContent = `$${totalCost.toFixed(2)}`;
+      totalCostSubEl.textContent = `${isSpot ? 'spot' : 'on-demand'} · ${selectedResult.label}`;
+      costPerGpuHrEl.textContent = `$${costPerGpuHr.toFixed(4)}`;
+      spotSavingsEl.textContent = `$${spotSavingsVal.toFixed(2)}`;
+      spotSavingsPctEl.textContent = `(${spotSavingsPctVal.toFixed(1)}% off)`;
+
+      // breakdown table (all providers)
+      let tbodyHtml = '';
+      results.forEach(r => {
+        const isSelected = (r.provider === provider);
+        const rowClass = isSelected ? ' style="color:#38bdf8; font-weight:500;"' : '';
+        tbodyHtml += `<tr${rowClass}>
+          <td>${r.label} ${isSelected ? '✓' : ''}</td>
+          <td>$${r.rateOnDemand.toFixed(4)}/hr</td>
+          <td>${r.multiplier.toFixed(2)}×</td>
+          <td>$${r.totalOnDemand.toFixed(2)}</td>
+          <td>$${r.totalSpot.toFixed(2)}</td>
+        </tr>`;
+      });
+      breakdownBody.innerHTML = tbodyHtml;
+
+      // bar chart (on-demand values for all providers)
+      const maxVal = Math.max(...results.map(r => r.totalOnDemand), 1);
+      const barMaxHeight = 100; // px
+      const scale = (val) => Math.max(4, (val / maxVal) * barMaxHeight);
+
+      barAws.style.height = scale(results[0].totalOnDemand) + 'px';
+      barGcp.style.height = scale(results[1].totalOnDemand) + 'px';
+      barAzure.style.height = scale(results[2].totalOnDemand) + 'px';
+      barValAws.textContent = `$${results[0].totalOnDemand.toFixed(0)}`;
+      barValGcp.textContent = `$${results[1].totalOnDemand.toFixed(0)}`;
+      barValAzure.textContent = `$${results[2].totalOnDemand.toFixed(0)}`;
+      chartMaxLabel.textContent = `max: $${maxVal.toFixed(2)}`;
+
+      // adjust bar colors for selected provider
+      [barAws, barGcp, barAzure].forEach(b => b.style.background = '#38bdf8');
+      if (provider === 'aws') barAws.style.background = '#facc15';
+      else if (provider === 'gcp') barGcp.style.background = '#4ade80';
+      else if (provider === 'azure') barAzure.style.background = '#60a5fa';
+    }
+
+    // initial update
+    updateCalculator();
+
+    // extra: sync slider label on load
+    spotDiscountLabel.textContent = spotSlider.value + '%';
+  })();
+</script>
+</body>
+</html>
