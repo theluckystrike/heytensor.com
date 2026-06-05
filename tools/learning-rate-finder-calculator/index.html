@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>Learning Rate Finder Calculator · heytensor</title>
+  <meta name="description" content="Interactive LR finder: simulate or paste loss values, compute exponential sweep, EMA smoothing, steepest descent & recommend OneCycleLR policy.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://heytensor.com/tools/learning-rate-finder-calculator">
+  <!-- JSON-LD: WebApplication + FAQPage + BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Learning Rate Finder Calculator",
+        "url": "https://heytensor.com/tools/learning-rate-finder-calculator",
+        "applicationCategory": "Machine Learning Tool",
+        "operatingSystem": "All",
+        "browserRequirements": "JavaScript enabled",
+        "description": "Interactive tool to find optimal learning rate using exponential sweep, EMA smoothing, and steepest descent analysis. Suggests OneCycleLR policy."
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How does the LR finder compute the optimal learning rate?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It performs an exponential sweep from min_lr to max_lr, smooths the loss curve with EMA (β=0.98), then finds the region of steepest descent via finite differences. The recommended LR is 10× before the minimum of the smoothed loss."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the recommended cyclical LR range?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The suggested cyclical range is [optimal_LR/10, optimal_LR/2], which is commonly used as the max_lr for OneCycleLR schedulers."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use my own loss values instead of simulation?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Toggle to 'manual paste loss values' and enter comma or newline-separated loss values. The number of steps must match the length of your loss list."
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "heytensor.com", "item": "https://heytensor.com" },
+          { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools" },
+          { "@type": "ListItem", "position": 3, "name": "Learning Rate Finder Calculator", "item": "https://heytensor.com/tools/learning-rate-finder-calculator" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 1100px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+      color: #f1f5f9;
+    }
+    .subhead {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      border-left: 3px solid #38bdf8;
+      padding-left: 0.75rem;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 1.25rem;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      border: 1px solid #334155;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .input-group {
+      margin-bottom: 1.2rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 0.3rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 0.6rem 0.8rem;
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      transition: border 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+    .inline-flex {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: #38bdf8;
+      color: #0f172a;
+      font-weight: 600;
+      padding: 0.7rem 1.8rem;
+      border: none;
+      border-radius: 2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 0 2px 8px rgba(56,189,248,0.3);
+    }
+    .btn:hover {
+      background: #7dd3fc;
+      transform: scale(1.02);
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+    .toggle-group {
+      display: flex;
+      background: #0f172a;
+      border-radius: 2rem;
+      padding: 0.2rem;
+      border: 1px solid #334155;
+    }
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 0.4rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .toggle-btn.active {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+    .hidden {
+      display: none;
+    }
+    canvas {
+      width: 100%;
+      height: auto;
+      background: #0f172a;
+      border-radius: 0.8rem;
+      border: 1px solid #2d3a52;
+      margin-top: 0.8rem;
+      display: block;
+    }
+    .result-box {
+      background: #0f172a;
+      border-radius: 0.8rem;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0 0.5rem;
+      border-left: 4px solid #38bdf8;
+    }
+    .result-box strong {
+      color: #7dd3fc;
+    }
+    .code-snippet {
+      background: #0b1120;
+      padding: 1rem;
+      border-radius: 0.8rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 1px solid #2a3a5a;
+      color: #a5d6ff;
+    }
+    .footer {
+      margin-top: 2.5rem;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.9rem;
+      border-top: 1px solid #1e293b;
+      padding-top: 1.5rem;
+    }
+    @media (max-width: 700px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+      .card {
+        padding: 1.2rem;
+      }
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+
+<meta property="og:title" content="Learning Rate Finder Calculator · heytensor">
+<meta property="og:description" content="Interactive LR finder: simulate or paste loss values, compute exponential sweep, EMA smoothing, steepest descent & recommend OneCycleLR policy.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://heytensor.com/tools/learning-rate-finder-calculator">
+</head>
+<body>
+<div class="container">
+  <h1>⚡ Learning Rate Finder</h1>
+  <div class="subhead">exponential sweep · EMA smoothing · steepest descent · OneCycleLR suggestion</div>
+
+  <div class="card">
+    <div class="grid-2">
+      <div>
+        <div class="input-group">
+          <label for="minLR">Min LR</label>
+          <input type="number" id="minLR" step="any" value="1e-7" style="font-weight:500;">
+        </div>
+        <div class="input-group">
+          <label for="maxLR">Max LR</label>
+          <input type="number" id="maxLR" step="any" value="1.0">
+        </div>
+        <div class="input-group">
+          <label for="nSteps">Number of steps (50–500)</label>
+          <input type="number" id="nSteps" min="50" max="500" value="200">
+        </div>
+      </div>
+      <div>
+        <div class="input-group">
+          <label>Loss source</label>
+          <div class="inline-flex" style="margin-bottom:0.6rem;">
+            <div class="toggle-group" id="lossToggle">
+              <button class="toggle-btn active" data-mode="simulate">Auto-simulate</button>
+              <button class="toggle-btn" data-mode="manual">Manual paste</button>
+            </div>
+          </div>
+          <div id="manualArea" class="hidden">
+            <label for="lossValues">Paste loss values (comma / newline separated)</label>
+            <textarea id="lossValues" rows="3" placeholder="e.g. 2.5, 2.3, 2.1, 1.9, ..." style="resize:vertical;"></textarea>
+          </div>
+          <div id="simulateInfo" style="font-size:0.85rem; color:#94a3b8; margin-top:0.2rem;">
+            <span>🔮 realistic noisy convex curve (quadratic + noise)</span>
+          </div>
+        </div>
+        <div style="margin-top: 1.2rem; display: flex; justify-content: flex-end;">
+          <button class="btn" id="runFinder">▶ Run Finder</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart + results -->
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+      <h3 style="color:#e2e8f0;">📉 smoothed loss vs log(LR)</h3>
+      <span id="optimalTag" style="background:#1e3a5f; padding:0.2rem 1rem; border-radius:20px; font-size:0.8rem; border:1px solid #38bdf8;">optimal LR: —</span>
+    </div>
+    <canvas id="lossCanvas" width="800" height="350"></canvas>
+    <div id="resultPanel" class="result-box">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+        <div><strong>🔹 suggested LR</strong><br><span id="suggestedLR" style="font-size:1.3rem; font-weight:700; color:#7dd3fc;">—</span></div>
+        <div><strong>🔸 cyclical range</strong><br><span id="cyclicalRange" style="color:#bae6fd;">—</span></div>
+      </div>
+      <div style="margin-top:0.8rem;"><strong>📐 OneCycleLR policy suggestion</strong></div>
+      <div id="codeBlock" class="code-snippet" style="margin-top:0.3rem;"># run finder to see suggestion</div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="footer">
+    © 2025 heytensor.com — Free ML Engineering Tools
+  </div>
+</div>
+
+<script>
+  (function() {
+    // DOM refs
+    const minLRInput = document.getElementById('minLR');
+    const maxLRInput = document.getElementById('maxLR');
+    const nStepsInput = document.getElementById('nSteps');
+    const lossValuesTextarea = document.getElementById('lossValues');
+    const simulateInfo = document.getElementById('simulateInfo');
+    const manualArea = document.getElementById('manualArea');
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
+    const runBtn = document.getElementById('runFinder');
+    const canvas = document.getElementById('lossCanvas');
+    const ctx = canvas.getContext('2d');
+    const suggestedLRspan = document.getElementById('suggestedLR');
+    const cyclicalRangeSpan = document.getElementById('cyclicalRange');
+    const optimalTag = document.getElementById('optimalTag');
+    const codeBlock = document.getElementById('codeBlock');
+
+    let currentMode = 'simulate'; // 'simulate' or 'manual'
+
+    // toggle switch
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        toggleBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentMode = this.dataset.mode;
+        if (currentMode === 'manual') {
+          manualArea.classList.remove('hidden');
+          simulateInfo.style.opacity = '0.4';
+        } else {
+          manualArea.classList.add('hidden');
+          simulateInfo.style.opacity = '1';
+        }
+      });
+    });
+
+    // ---------- core computation ----------
+    function computeLRFinder(minLR, maxLR, nSteps, lossArray) {
+      // exponential sweep
+      const lrs = new Array(nSteps);
+      for (let i = 0; i < nSteps; i++) {
+        lrs[i] = minLR * Math.pow(maxLR / minLR, i / (nSteps - 1));
+      }
+      // loss must be same length
+      if (lossArray.length !== nSteps) {
+        // if mismatch, trim or pad? we require exact.
+        if (lossArray.length < nSteps) {
+          // pad with last value
+          const last = lossArray[lossArray.length-1] || 1.0;
+          while (lossArray.length < nSteps) lossArray.push(last);
+        } else {
+          lossArray = lossArray.slice(0, nSteps);
+        }
+      }
+      // EMA smoothing beta=0.98
+      const beta = 0.98;
+      const smoothed = new Array(nSteps);
+      let ema = lossArray[0];
+      smoothed[0] = ema;
+      for (let i = 1; i < nSteps; i++) {
+        ema = beta * ema + (1 - beta) * lossArray[i];
+        smoothed[i] = ema;
+      }
+      // finite differences (central)
+      const diffs = new Array(nSteps);
+      diffs[0] = smoothed[1] - smoothed[0];
+      diffs[nSteps-1] = smoothed[nSteps-1] - smoothed[nSteps-2];
+      for (let i = 1; i < nSteps-1; i++) {
+        diffs[i] = (smoothed[i+1] - smoothed[i-1]) / 2;
+      }
+      // find steepest descent region: minimum of diffs (most negative)
+      let minDiffIdx = 0;
+      let minDiffVal = diffs[0];
+      for (let i = 1; i < nSteps; i++) {
+        if (diffs[i] < minDiffVal) {
+          minDiffVal = diffs[i];
+          minDiffIdx = i;
+        }
+      }
+      // optimal LR: 10x before the minimum smoothed loss (i.e. 10x smaller LR than the point where loss is minimal)
+      // find index of minimum smoothed loss
+      let minSmoothedIdx = 0;
+      let minSmoothedVal = smoothed[0];
+      for (let i = 1; i < nSteps; i++) {
+        if (smoothed[i] < minSmoothedVal) {
+          minSmoothedVal = smoothed[i];
+          minSmoothedIdx = i;
+        }
+      }
+      // recommended LR = 10x before that index (i.e. divide LR by 10)
+      let recommendedIdx = Math.max(0, minSmoothedIdx - Math.floor(nSteps * 0.05)); // heuristic: step back ~5%
+      // but we want factor 10: find index where lr is lr[minSmoothedIdx]/10
+      const targetLR = lrs[minSmoothedIdx] / 10;
+      let bestIdx = 0;
+      for (let i = 0; i < nSteps; i++) {
+        if (lrs[i] <= targetLR) bestIdx = i;
+      }
+      // ensure we pick a point before steep descent
+      const optimalLR = lrs[bestIdx] || lrs[0];
+      const cyclicalMax = optimalLR * 5;  // optimal/2? actually we want range [optimal/10, optimal/2]
+      const cyclicalMin = optimalLR / 10;
+      // final suggestion: clamp
+      const suggestedLR = optimalLR;
+      const cycMin = Math.min(cyclicalMin, suggestedLR/2);
+      const cycMax = Math.max(suggestedLR/2, suggestedLR*0.8); // but spec: optimal/10 to optimal/2
+      // we'll output exactly optimal/10 and optimal/2
+      const rangeLow = suggestedLR / 10;
+      const rangeHigh = suggestedLR / 2;
+
+      return {
+        lrs,
+        smoothed,
+        diffs,
+        minSmoothedIdx,
+        suggestedLR: suggestedLR,
+        cyclicalRangeLow: rangeLow,
+        cyclicalRangeHigh: rangeHigh,
+        minDiffIdx
+      };
+    }
+
+    // generate simulated loss (noisy convex)
+    function generateSimulatedLoss(nSteps) {
+      const loss = new Array(nSteps);
+      // seed simple: use quadratic + noise
+      for (let i = 0; i < nSteps; i++) {
+        const x = i / (nSteps - 1); // 0..1
+        // convex quadratic with min around x=0.3-0.5
+        const base = 0.8 * (x - 0.35) * (x - 0.35) + 0.2;
+        // noise using pseudo-random seeded by i
+        const seed = i * 12.9898 + 78.233;
+        const noise = (Math.sin(seed) * 0.5 + 0.5) * 0.08; // 0..0.08
+        loss[i] = Math.max(0.05, base + noise - 0.02);
+      }
+      return loss;
+    }
+
+    // draw chart
+    function drawChart(lrs, smoothed, suggestedLR, minSmoothedIdx) {
+      const width = canvas.width;
+      const height = canvas.height;
+      ctx.clearRect(0, 0, width, height);
+      // margins
+      const pad = { top: 20, bottom: 30, left: 50, right: 30 };
+      const plotW = width - pad.left - pad.right;
+      const plotH = height - pad.top - pad.bottom;
+
+      // log10 LR
+      const logLRs = lrs.map(lr => Math.log10(lr));
+      const minLog = Math.min(...logLRs);
+      const maxLog = Math.max(...logLRs);
+      const minLoss = Math.min(...smoothed);
+      const maxLoss = Math.max(...smoothed);
+      const lossRange = maxLoss - minLoss || 0.1;
+
+      // helper
+      function xPos(logVal) { return pad.left + (logVal - minLog) / (maxLog - minLog) * plotW; }
+      function yPos(lossVal) { return pad.top + plotH - (lossVal - minLoss) / lossRange * plotH; }
+
+      // draw grid
+      ctx.strokeStyle = '#2a3a5a';
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 5; i++) {
+        const y = pad.top + (i/5)*plotH;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(pad.left+plotW, y);
+        ctx.stroke();
+      }
+
+      // draw smoothed curve
+      ctx.beginPath();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      for (let i = 0; i < lrs.length; i++) {
+        const x = xPos(logLRs[i]);
+        const y = yPos(smoothed[i]);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // highlight optimal region (10x before min smoothed)
+      if (suggestedLR > 0) {
+        const optLog = Math.log10(suggestedLR);
+        const regionMin = Math.log10(suggestedLR/5); // range around
+        const regionMax = Math.log10(suggestedLR*5);
+        const x1 = xPos(regionMin);
+        const x2 = xPos(regionMax);
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.08)';
+        ctx.fillRect(x1, pad.top, x2-x1, plotH);
+        ctx.strokeStyle = '#7dd3fc';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(xPos(optLog), pad.top);
+        ctx.lineTo(xPos(optLog), pad.top+plotH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // axes labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px system-ui';
+      ctx.textAlign = 'center';
+      // x-axis log ticks
+      const tickVals = [-7, -6, -5, -4, -3, -2, -1, 0];
+      for (const v of tickVals) {
+        if (v >= minLog && v <= maxLog) {
+          const x = xPos(v);
+          ctx.fillText('10^'+v, x, height-6);
+        }
+      }
+      ctx.textAlign = 'right';
+      ctx.fillText('log(LR)', width-10, height-6);
+      // y label
+      ctx.save();
+      ctx.translate(12, pad.top+plotH/2);
+      ctx.rotate(-Math.PI/2);
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('smoothed loss', 0, 0);
+      ctx.restore();
+    }
+
+    // main action
+    function runFinder() {
+      const minLR = parseFloat(minLRInput.value);
+      const maxLR = parseFloat(maxLRInput.value);
+      let nSteps = parseInt(nStepsInput.value, 10);
+      if (isNaN(minLR) || minLR <= 0) { alert('Min LR must be positive'); return; }
+      if (isNaN(maxLR) || maxLR <= minLR) { alert('Max LR must be > Min LR'); return; }
+      if (isNaN(nSteps) || nSteps < 50 || nSteps > 500) { alert('Steps between 50 and 500'); return; }
+
+      let lossValues;
+      if (currentMode === 'simulate') {
+        lossValues = generateSimulatedLoss(nSteps);
+      } else {
+        // manual
+        const raw = lossValuesTextarea.value.trim();
+        if (!raw) { alert('Paste loss values or switch to auto-simulate.'); return; }
+        const parts = raw.split(/[\s,]+/).map(v => parseFloat(v)).filter(v => !isNaN(v));
+        if (parts.length < 10) { alert('Need at least 10 loss values.'); return; }
+        lossValues = parts;
+        nSteps = lossValues.length; // override steps
+        nStepsInput.value = nSteps;
+      }
+
+      // compute
+      const result = computeLRFinder(minLR, maxLR, nSteps, lossValues.slice());
+      const { lrs, smoothed, suggestedLR, cyclicalRangeLow, cyclicalRangeHigh, minSmoothedIdx } = result;
+
+      // display
+      suggestedLRspan.textContent = suggestedLR.toExponential(4);
+      cyclicalRangeSpan.textContent = `[${cyclicalRangeLow.toExponential(3)} , ${cyclicalRangeHigh.toExponential(3)}]`;
+      optimalTag.textContent = `optimal LR: ${suggestedLR.toExponential(3)}`;
+
+      // code snippet
+      const code = `from torch.optim.lr_scheduler import OneCycleLR\n\nscheduler = OneCycleLR(\n    optimizer,\n    max_lr=${suggestedLR.toExponential(4)},\n    steps_per_epoch=len(train_loader),\n    epochs=10,\n    pct_start=0.3,\n    anneal_strategy='cos',\n    div_factor=10.0,\n    final_div_factor=1000.0\n)`;
+      codeBlock.textContent = code;
+
+      // draw chart
+      drawChart(lrs, smoothed, suggestedLR, minSmoothedIdx);
+    }
+
+    // initial run
+    window.addEventListener('load', function() {
+      // set default loss values placeholder
+      const simLoss = generateSimulatedLoss(200);
+      lossValuesTextarea.placeholder = simLoss.slice(0, 20).join(', ') + ', ...';
+      runFinder();
+    });
+
+    runBtn.addEventListener('click', runFinder);
+
+    // responsive canvas
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const w = Math.min(800, rect.width - 10);
+      const ratio = 350/800;
+      canvas.style.width = w + 'px';
+      canvas.style.height = (w * ratio) + 'px';
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas, 50);
+  })();
+</script>
+</body>
+</html>

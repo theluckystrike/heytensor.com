@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>Cosine LR Schedule Visualizer · heytensor.com</title>
+  <meta name="description" content="Interactive cosine learning rate schedule visualizer with warmup, SGDR restarts, constant phase. Real PyTorch code generation.">
+  <meta name="keywords" content="cosine annealing, learning rate, warmup, SGDR, PyTorch, schedule visualizer">
+  <link rel="canonical" href="https://heytensor.com/tools/cosine-lr-schedule-visualizer">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "Cosine LR Schedule Visualizer",
+        "url": "https://heytensor.com/tools/cosine-lr-schedule-visualizer",
+        "applicationCategory": "Machine Learning Tool",
+        "operatingSystem": "All",
+        "browserRequirements": "JavaScript enabled"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is cosine LR schedule?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Cosine annealing reduces the learning rate following a cosine curve from max_lr to min_lr over total steps, often with linear warmup."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does SGDR with warm restarts work?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "SGDR periodically resets the LR to max_lr and restarts the cosine decay. T_0 sets initial restart interval, T_mult multiplies it after each restart."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I export the schedule to PyTorch?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, the tool generates a ready-to-use PyTorch CosineAnnealingLR snippet with your parameters."
+            }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "heytensor.com", "item": "https://heytensor.com" },
+          { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools" },
+          { "@type": "ListItem", "position": 3, "name": "Cosine LR Schedule Visualizer", "item": "https://heytensor.com/tools/cosine-lr-schedule-visualizer" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1100px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+      color: #f1f5f9;
+    }
+    .subhead {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      border-left: 4px solid #38bdf8;
+      padding-left: 1rem;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 1.25rem;
+      padding: 1.5rem 1.8rem;
+      box-shadow: 0 20px 35px -10px rgba(0,0,0,0.6);
+      margin-bottom: 2rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2rem;
+    }
+    @media (max-width: 780px) {
+      .grid-2 { grid-template-columns: 1fr; gap: 1.5rem; }
+      h1 { font-size: 1.8rem; }
+      .card { padding: 1.2rem; }
+    }
+    .param-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .param-item {
+      flex: 1 0 120px;
+      min-width: 100px;
+    }
+    .param-item label {
+      display: block;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #94a3b8;
+      margin-bottom: 0.2rem;
+    }
+    .param-item input, .param-item select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 0.5rem 0.6rem;
+      border-radius: 0.6rem;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+    .param-item input:focus, .param-item select:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px #38bdf855;
+    }
+    .param-item input[type="number"] { -moz-appearance: textfield; }
+    .inline-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    .inline-group .param-item { flex: 1; min-width: 70px; }
+    .btn {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      font-weight: 600;
+      padding: 0.6rem 1.5rem;
+      border-radius: 2rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 0.5rem;
+    }
+    .btn:hover { background: #7dd3fc; transform: scale(1.02); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #38bdf8;
+      color: #38bdf8;
+      margin-left: 0.5rem;
+    }
+    .btn-outline:hover { background: #38bdf822; }
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 600 / 360;
+      background: #0f172a;
+      border-radius: 1rem;
+      display: block;
+      border: 1px solid #2d3a4e;
+      cursor: crosshair;
+    }
+    #tooltip {
+      position: absolute;
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      color: #e2e8f0;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.6rem;
+      font-size: 0.8rem;
+      pointer-events: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      opacity: 0;
+      transition: opacity 0.1s;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.5rem 0 0.8rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th {
+      background: #0f172a;
+      color: #94a3b8;
+      font-weight: 500;
+      padding: 0.5rem 0.3rem;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+    }
+    td {
+      padding: 0.4rem 0.3rem;
+      border-bottom: 1px solid #1e2a3a;
+    }
+    .code-block {
+      background: #0f172a;
+      border-radius: 0.8rem;
+      padding: 1rem 1.2rem;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      border: 1px solid #2d3a4e;
+      color: #a5d6ff;
+    }
+    .stat-badge {
+      display: inline-block;
+      background: #38bdf822;
+      color: #7dd3fc;
+      padding: 0.2rem 0.8rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    footer {
+      margin-top: 2.5rem;
+      color: #475569;
+      font-size: 0.85rem;
+      text-align: center;
+      border-top: 1px solid #1e293b;
+      padding-top: 1.5rem;
+    }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+  </style>
+
+<meta property="og:title" content="Cosine LR Schedule Visualizer · heytensor.com">
+<meta property="og:description" content="Interactive cosine learning rate schedule visualizer with warmup, SGDR restarts, constant phase. Real PyTorch code generation.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://heytensor.com/tools/cosine-lr-schedule-visualizer">
+</head>
+<body>
+<div class="container">
+  <h1>📈 Cosine LR Schedule Visualizer</h1>
+  <div class="subhead">heytensor.com — interactive schedule builder with PyTorch codegen</div>
+
+  <div class="card">
+    <div class="grid-2">
+      <!-- left: controls -->
+      <div>
+        <div class="param-group">
+          <div class="param-item">
+            <label>Total steps</label>
+            <input type="number" id="totalSteps" value="1000" min="10" step="10">
+          </div>
+          <div class="param-item">
+            <label>Warmup steps</label>
+            <input type="number" id="warmupSteps" value="100" min="0" step="5">
+          </div>
+        </div>
+        <div class="param-group">
+          <div class="param-item">
+            <label>Max LR</label>
+            <input type="number" id="maxLr" value="0.01" step="0.0005" min="1e-6">
+          </div>
+          <div class="param-item">
+            <label>Min LR</label>
+            <input type="number" id="minLr" value="1e-7" step="1e-7" min="0">
+          </div>
+        </div>
+        <div class="param-item" style="margin-bottom: 0.8rem;">
+          <label>Schedule type</label>
+          <select id="scheduleType">
+            <option value="cosine">cosine decay</option>
+            <option value="sgdr" selected>cosine with warm restarts (SGDR)</option>
+            <option value="warmup_cosine">linear warmup + cosine</option>
+            <option value="warmup_cosine_const">warmup + cosine + constant end</option>
+          </select>
+        </div>
+        <div id="sgdrParams" style="display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.8rem; background: #0f172a; padding: 0.6rem 1rem; border-radius: 0.8rem;">
+          <div class="param-item" style="min-width: 70px;">
+            <label>T_0</label>
+            <input type="number" id="sgdrT0" value="250" min="10" step="10">
+          </div>
+          <div class="param-item" style="min-width: 70px;">
+            <label>T_mult</label>
+            <input type="number" id="sgdrTmult" value="2" min="1" step="0.5">
+          </div>
+        </div>
+        <div class="flex-between">
+          <button class="btn" id="updateBtn">⟳ Update chart</button>
+          <span id="lrReduction" class="stat-badge">LR reduction: 99.9%</span>
+        </div>
+        <!-- quick table -->
+        <div class="table-wrap">
+          <table id="lrTable">
+            <thead><tr><th>Step</th><th>LR</th></tr></thead>
+            <tbody id="lrTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- right: chart + tooltip -->
+      <div>
+        <div class="chart-wrapper">
+          <canvas id="lrCanvas" width="600" height="360"></canvas>
+          <div id="tooltip"></div>
+        </div>
+        <div style="margin-top: 1rem;">
+          <div class="code-block" id="pytorchCode"># PyTorch snippet will appear here</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>© 2025 heytensor.com</footer>
+</div>
+<script>
+  (function() {
+    const canvas = document.getElementById('lrCanvas');
+    const ctx = canvas.getContext('2d');
+    const tooltip = document.getElementById('tooltip');
+
+    // inputs
+    const totalStepsEl = document.getElementById('totalSteps');
+    const warmupStepsEl = document.getElementById('warmupSteps');
+    const maxLrEl = document.getElementById('maxLr');
+    const minLrEl = document.getElementById('minLr');
+    const scheduleTypeEl = document.getElementById('scheduleType');
+    const sgdrT0El = document.getElementById('sgdrT0');
+    const sgdrTmultEl = document.getElementById('sgdrTmult');
+    const sgdrParamsDiv = document.getElementById('sgdrParams');
+    const updateBtn = document.getElementById('updateBtn');
+    const lrReductionSpan = document.getElementById('lrReduction');
+    const lrTableBody = document.getElementById('lrTableBody');
+    const pytorchCodeDiv = document.getElementById('pytorchCode');
+
+    // helpers
+    function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+    function computeLR(step, total, warmup, maxLr, minLr, type, T0, Tmult) {
+      if (total <= 0) return minLr;
+      step = clamp(step, 0, total);
+      let lr;
+      const effectiveWarmup = Math.min(warmup, total);
+      // warmup phase (linear)
+      if (step < effectiveWarmup && effectiveWarmup > 0) {
+        return minLr + (maxLr - minLr) * (step / effectiveWarmup);
+      }
+      // after warmup
+      const postWarmupStep = step - effectiveWarmup;
+      const postWarmupTotal = total - effectiveWarmup;
+      if (postWarmupTotal <= 0) return maxLr;
+
+      switch (type) {
+        case 'cosine': {
+          const ratio = postWarmupStep / postWarmupTotal;
+          lr = minLr + 0.5 * (maxLr - minLr) * (1 + Math.cos(Math.PI * ratio));
+          break;
+        }
+        case 'sgdr': {
+          // SGDR with restarts
+          let T_cur = postWarmupStep;
+          let T_i = T0 > 0 ? T0 : postWarmupTotal;
+          let totalRestartSteps = 0;
+          // find current restart cycle
+          while (true) {
+            if (T_cur < T_i) break;
+            T_cur -= T_i;
+            totalRestartSteps += T_i;
+            T_i = T_i * Tmult;
+            if (T_i <= 0) { T_i = postWarmupTotal; break; }
+          }
+          const cycleLen = T_i;
+          const ratio = cycleLen > 0 ? T_cur / cycleLen : 0;
+          lr = minLr + 0.5 * (maxLr - minLr) * (1 + Math.cos(Math.PI * ratio));
+          break;
+        }
+        case 'warmup_cosine': {
+          // linear warmup already handled, then cosine
+          const ratio = postWarmupStep / postWarmupTotal;
+          lr = minLr + 0.5 * (maxLr - minLr) * (1 + Math.cos(Math.PI * ratio));
+          break;
+        }
+        case 'warmup_cosine_const': {
+          // warmup + cosine + constant end: last 10% constant minLr
+          const constStart = postWarmupTotal * 0.9;
+          if (postWarmupStep >= constStart) {
+            lr = minLr;
+          } else {
+            const ratio = postWarmupStep / constStart;
+            lr = minLr + 0.5 * (maxLr - minLr) * (1 + Math.cos(Math.PI * ratio));
+          }
+          break;
+        }
+        default: lr = minLr;
+      }
+      return clamp(lr, minLr, maxLr);
+    }
+
+    function generateSchedule() {
+      const total = parseInt(totalStepsEl.value) || 1000;
+      const warmup = parseInt(warmupStepsEl.value) || 0;
+      const maxLr = parseFloat(maxLrEl.value) || 0.01;
+      const minLr = parseFloat(minLrEl.value) || 1e-7;
+      const type = scheduleTypeEl.value;
+      const T0 = parseInt(sgdrT0El.value) || 250;
+      const Tmult = parseFloat(sgdrTmultEl.value) || 2;
+
+      // clamp
+      const totalClamped = Math.max(10, total);
+      const warmupClamped = clamp(warmup, 0, totalClamped);
+
+      const steps = [];
+      const lrs = [];
+      for (let i = 0; i <= totalClamped; i++) {
+        const lr = computeLR(i, totalClamped, warmupClamped, maxLr, minLr, type, T0, Tmult);
+        steps.push(i);
+        lrs.push(lr);
+      }
+      return { steps, lrs, total: totalClamped, warmup: warmupClamped, maxLr, minLr, type, T0, Tmult };
+    }
+
+    function drawChart(data) {
+      const { steps, lrs, total, warmup, maxLr, minLr } = data;
+      const w = canvas.width, h = canvas.height;
+      const pad = { top: 20, bottom: 28, left: 45, right: 20 };
+      const plotW = w - pad.left - pad.right;
+      const plotH = h - pad.top - pad.bottom;
+
+      ctx.clearRect(0, 0, w, h);
+      // background
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, w, h);
+
+      // grid lines
+      ctx.strokeStyle = '#1e2a3a';
+      ctx.lineWidth = 0.6;
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.top + (plotH * i / 4);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(w - pad.right, y);
+        ctx.stroke();
+      }
+
+      // compute min/max lr for scaling
+      let minLrData = Math.min(...lrs);
+      let maxLrData = Math.max(...lrs);
+      if (maxLrData === minLrData) { maxLrData = minLrData + 0.1; }
+      const range = maxLrData - minLrData;
+
+      function xPos(step) { return pad.left + (step / total) * plotW; }
+      function yPos(lr) { return pad.top + plotH - ((lr - minLrData) / range) * plotH; }
+
+      // draw line
+      ctx.beginPath();
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      for (let i = 0; i < lrs.length; i++) {
+        const x = xPos(steps[i]);
+        const y = yPos(lrs[i]);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // warmup vertical line
+      if (warmup > 0 && warmup < total) {
+        ctx.strokeStyle = '#facc15';
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([4, 4]);
+        const xw = xPos(warmup);
+        ctx.beginPath();
+        ctx.moveTo(xw, pad.top);
+        ctx.lineTo(xw, pad.top + plotH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#facc15';
+        ctx.font = '10px sans-serif';
+        ctx.fillText('warmup', xw - 20, pad.top - 5);
+      }
+
+      // axis labels
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('0', pad.left, h - 5);
+      ctx.fillText(total, w - pad.right, h - 5);
+      ctx.textAlign = 'right';
+      ctx.fillText(maxLrData.toFixed(5), pad.left - 6, pad.top + 4);
+      ctx.fillText(minLrData.toFixed(7), pad.left - 6, pad.top + plotH);
+
+      // title
+      ctx.fillStyle = '#cbd5e1';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('LR schedule', w/2, 14);
+    }
+
+    function updateTooltip(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const mouseX = (e.clientX - rect.left) * scaleX;
+      const mouseY = (e.clientY - rect.top) * scaleX;
+
+      const data = generateSchedule();
+      const { steps, lrs, total } = data;
+      if (steps.length === 0) return;
+
+      const pad = { left: 45, right: 20 };
+      const plotW = canvas.width - pad.left - pad.right;
+      let stepIndex = Math.round(((mouseX - pad.left) / plotW) * total);
+      stepIndex = clamp(stepIndex, 0, total);
+
+      const lrVal = lrs[stepIndex];
+      const tooltipEl = document.getElementById('tooltip');
+      tooltipEl.style.opacity = '1';
+      tooltipEl.innerHTML = `step ${stepIndex} &nbsp; LR = ${lrVal.toFixed(8)}`;
+      // position
+      let tx = e.clientX - rect.left + 12;
+      let ty = e.clientY - rect.top - 20;
+      if (tx + 100 > rect.width) tx = e.clientX - rect.left - 120;
+      if (ty < 0) ty = e.clientY - rect.top + 20;
+      tooltipEl.style.left = tx + 'px';
+      tooltipEl.style.top = ty + 'px';
+    }
+
+    function hideTooltip() {
+      document.getElementById('tooltip').style.opacity = '0';
+    }
+
+    function updateTableAndCode(data) {
+      const { steps, lrs, total, warmup, maxLr, minLr, type, T0, Tmult } = data;
+      const keySteps = [0, warmup, Math.round(total*0.25), Math.round(total*0.5), Math.round(total*0.75), total];
+      const uniqueSteps = [...new Set(keySteps)].filter(s => s >=0 && s <= total).sort((a,b)=>a-b);
+      let html = '';
+      for (const s of uniqueSteps) {
+        const lr = lrs[s] || minLr;
+        html += `<tr><td>${s}</td><td>${lr.toFixed(8)}</td></tr>`;
+      }
+      lrTableBody.innerHTML = html;
+
+      // reduction
+      const firstLr = lrs[0] || maxLr;
+      const lastLr = lrs[total] || minLr;
+      let reduction = 0;
+      if (firstLr > 0) reduction = (1 - lastLr / firstLr) * 100;
+      lrReductionSpan.textContent = `LR reduction: ${reduction.toFixed(2)}%`;
+
+      // PyTorch snippet
+      let code = '';
+      if (type === 'cosine' || type === 'warmup_cosine' || type === 'warmup_cosine_const') {
+        code = `# CosineAnnealingLR (total_steps=${total})\nfrom torch.optim.lr_scheduler import CosineAnnealingLR\n\nscheduler = CosineAnnealingLR(\n    optimizer,\n    T_max=${total},\n    eta_min=${minLr.toFixed(8)}\n)\n# Note: warmup/constant phase not built-in; implement manually.`;
+      } else if (type === 'sgdr') {
+        code = `# CosineAnnealingWarmRestarts (SGDR)\nfrom torch.optim.lr_scheduler import CosineAnnealingWarmRestarts\n\nscheduler = CosineAnnealingWarmRestarts(\n    optimizer,\n    T_0=${T0},\n    T_mult=${Tmult},\n    eta_min=${minLr.toFixed(8)}\n)`;
+      } else {
+        code = `# scheduler placeholder`;
+      }
+      pytorchCodeDiv.textContent = code;
+    }
+
+    function fullUpdate() {
+      const data = generateSchedule();
+      drawChart(data);
+      updateTableAndCode(data);
+    }
+
+    // toggle SGDR params visibility
+    function toggleSgdr() {
+      const type = scheduleTypeEl.value;
+      sgdrParamsDiv.style.display = (type === 'sgdr') ? 'flex' : 'none';
+    }
+    scheduleTypeEl.addEventListener('change', toggleSgdr);
+    toggleSgdr();
+
+    // event listeners
+    updateBtn.addEventListener('click', fullUpdate);
+    canvas.addEventListener('mousemove', updateTooltip);
+    canvas.addEventListener('mouseleave', hideTooltip);
+
+    // initial draw
+    fullUpdate();
+
+    // also update on input change (debounce)
+    const inputs = [totalStepsEl, warmupStepsEl, maxLrEl, minLrEl, scheduleTypeEl, sgdrT0El, sgdrTmultEl];
+    inputs.forEach(el => el.addEventListener('input', function() {
+      if (el === scheduleTypeEl) toggleSgdr();
+      fullUpdate();
+    }));
+  })();
+</script>
+</body>
+</html>
