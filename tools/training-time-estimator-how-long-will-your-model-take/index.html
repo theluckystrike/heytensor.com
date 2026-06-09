@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Time Estimator — How Long Will Your Model Take</title>
+  <meta name="description" content="Estimate deep learning training time and cloud cost. Compare single vs multi-GPU with scaling efficiency for popular models.">
+  <link rel="canonical" href="https://heytensor.com/tools/training-time-estimator">
+  <!-- Structured data: WebApplication + BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Training Time Estimator",
+    "url": "https://heytensor.com/tools/training-time-estimator",
+    "description": "Estimate training time and cloud cost for deep learning models. Compare single vs multi-GPU scaling efficiency.",
+    "applicationCategory": "Developer Tool",
+    "operatingSystem": "All",
+    "browserRequirements": "JavaScript enabled"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools" },
+      { "@type": "ListItem", "position": 3, "name": "Training Time Estimator", "item": "https://heytensor.com/tools/training-time-estimator" }
+    ]
+  }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0a0a0a;
+      color: #e5e5e5;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container { max-width: 1200px; width: 100%; }
+    h1 { font-size: 2.2rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.25rem; background: linear-gradient(135deg, #b388ff, #82b1ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .subhead { color: #aaa; margin-bottom: 2rem; font-size: 1rem; border-bottom: 1px solid #222; padding-bottom: 1rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+    .card { background: #111; border: 1px solid #2a2a2a; border-radius: 20px; padding: 1.5rem; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
+    .card h2 { font-size: 1.3rem; margin-bottom: 1.2rem; color: #ccc; font-weight: 500; letter-spacing: 0.3px; }
+    .input-group { margin-bottom: 1.2rem; }
+    .input-group label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 0.3rem; }
+    .input-group input, .input-group select { width: 100%; padding: 0.7rem 0.8rem; background: #1e1e1e; border: 1px solid #333; border-radius: 12px; color: #f0f0f0; font-size: 0.95rem; outline: none; transition: 0.2s; }
+    .input-group input:focus, .input-group select:focus { border-color: #7c4dff; box-shadow: 0 0 0 2px rgba(124,77,255,0.2); }
+    .preset-badge { display: inline-block; background: #2a2a2a; border-radius: 30px; padding: 0.3rem 1rem; margin: 0.2rem 0.2rem 0 0; font-size: 0.75rem; cursor: pointer; border: 1px solid #3a3a3a; transition: all 0.15s; }
+    .preset-badge:hover { background: #3a2a5a; border-color: #7c4dff; }
+    .preset-badge.active { background: #3d2a6a; border-color: #b388ff; color: #d0b0ff; }
+    .flex { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.8rem; }
+    .stat-box { background: #1a1a1a; border-radius: 16px; padding: 0.8rem 1.2rem; margin-top: 0.5rem; display: flex; justify-content: space-between; border: 1px solid #2a2a2a; }
+    .stat-box span:first-child { color: #aaa; }
+    .stat-box .value { font-weight: 600; color: #b388ff; }
+    .cost-value { color: #82b1ff !important; }
+    .gpu-compare { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+    .gpu-row { display: flex; justify-content: space-between; background: #1a1a1a; padding: 0.5rem 1rem; border-radius: 40px; border: 1px solid #2a2a2a; font-size: 0.9rem; }
+    .gpu-row .label { color: #bbb; }
+    .gpu-row .time { color: #b388ff; font-weight: 500; }
+    .gpu-row .efficiency { color: #7ecf8a; }
+    .footnote { font-size: 0.75rem; color: #666; margin-top: 1.5rem; text-align: center; border-top: 1px solid #222; padding-top: 1.2rem; }
+    .inline-icon { margin-right: 6px; opacity: 0.6; }
+    hr { border: none; border-top: 1px solid #222; margin: 1rem 0; }
+  </style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <h1>⏱️ Training Time Estimator</h1>
+  <div class="subhead">Estimate duration & cost · Compare single / multi-GPU scaling</div>
+
+  <div class="grid-2">
+    <!-- LEFT: Inputs -->
+    <div class="card">
+      <h2>⚙️ Configuration</h2>
+      <div class="input-group">
+        <label>🔥 Model presets</label>
+        <div class="flex" id="presetContainer">
+          <span class="preset-badge" data-params='{"samples":1200000,"params":25.6,"batch":256,"epochs":90,"precision":"fp16"}'>ResNet-50</span>
+          <span class="preset-badge" data-params='{"samples":16000000,"params":110,"batch":64,"epochs":40,"precision":"fp16"}'>BERT-base</span>
+          <span class="preset-badge" data-params='{"samples":400000000,"params":124,"batch":32,"epochs":3,"precision":"fp16"}'>GPT-2 (124M)</span>
+          <span class="preset-badge" data-params='{"samples":1400000000,"params":7000,"batch":16,"epochs":2,"precision":"fp16"}'>LLaMA-7B</span>
+          <span class="preset-badge" data-params='{"samples":500000000,"params":860,"batch":8,"epochs":5,"precision":"fp16"}'>Stable Diffusion</span>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>📦 Dataset size (samples)</label>
+        <input type="number" id="datasetSize" value="1200000" step="10000" min="1">
+      </div>
+      <div class="input-group">
+        <label>🧠 Model parameters (millions)</label>
+        <input type="number" id="modelParams" value="25.6" step="0.1" min="0.1">
+      </div>
+      <div class="input-group">
+        <label>🎮 GPU type</label>
+        <select id="gpuSelect">
+          <option value="312" data-tflops="312" data-cost="32.5">H100 SXM (312 TFLOPS FP16) — $32.5/hr</option>
+          <option value="197" data-tflops="197" data-cost="22.8">A100 80GB (197 TFLOPS) — $22.8/hr</option>
+          <option value="156" data-tflops="156" data-cost="18.2">A100 40GB (156 TFLOPS) — $18.2/hr</option>
+          <option value="83" data-tflops="83" data-cost="13.5">A6000 (83 TFLOPS) — $13.5/hr</option>
+          <option value="71" data-tflops="71" data-cost="10.2">A5000 (71 TFLOPS) — $10.2/hr</option>
+          <option value="65" data-tflops="65" data-cost="8.9">RTX 4090 (65 TFLOPS) — $8.9/hr</option>
+          <option value="51" data-tflops="51" data-cost="6.5">RTX 4080 (51 TFLOPS) — $6.5/hr</option>
+          <option value="40" data-tflops="40" data-cost="5.2">RTX 4070 Ti (40 TFLOPS) — $5.2/hr</option>
+          <option value="35" data-tflops="35" data-cost="4.1">RTX 3090 (35 TFLOPS) — $4.1/hr</option>
+          <option value="28" data-tflops="28" data-cost="3.2">RTX 3080 (28 TFLOPS) — $3.2/hr</option>
+          <option value="21" data-tflops="21" data-cost="2.5">RTX 3070 (21 TFLOPS) — $2.5/hr</option>
+          <option value="16" data-tflops="16" data-cost="1.9">RTX 3060 (16 TFLOPS) — $1.9/hr</option>
+          <option value="12" data-tflops="12" data-cost="1.2">T4 (12 TFLOPS) — $1.2/hr</option>
+          <option value="8" data-tflops="8" data-cost="0.9">V100 (8 TFLOPS) — $0.9/hr</option>
+          <option value="6" data-tflops="6" data-cost="0.6">P100 (6 TFLOPS) — $0.6/hr</option>
+          <option value="4.5" data-tflops="4.5" data-cost="0.45">K80 (4.5 TFLOPS) — $0.45/hr</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>📏 Batch size</label>
+        <input type="number" id="batchSize" value="256" min="1">
+      </div>
+      <div class="input-group">
+        <label>🔁 Epochs</label>
+        <input type="number" id="epochs" value="90" min="1">
+      </div>
+      <div class="input-group">
+        <label>🎯 Precision</label>
+        <select id="precisionSelect">
+          <option value="fp32">FP32 (1x)</option>
+          <option value="fp16" selected>FP16 (2x throughput)</option>
+          <option value="bf16">BF16 (2x throughput)</option>
+          <option value="int8">INT8 (4x throughput)</option>
+        </select>
+      </div>
+      <button id="calculateBtn" style="background:#7c4dff; border:none; color:white; padding:0.8rem 2rem; border-radius:40px; font-weight:600; width:100%; margin-top:0.5rem; cursor:pointer; transition:0.2s;">🚀 Calculate</button>
+    </div>
+
+    <!-- RIGHT: Results + comparison -->
+    <div class="card">
+      <h2>📊 Results & multi‑GPU comparison</h2>
+      <div id="resultsArea">
+        <div class="stat-box"><span>⏱️ Time per step</span><span class="value" id="timePerStep">—</span></div>
+        <div class="stat-box"><span>📐 Steps per epoch</span><span class="value" id="stepsPerEpoch">—</span></div>
+        <div class="stat-box"><span>🕒 Total training time</span><span class="value" id="totalTime">—</span></div>
+        <div class="stat-box"><span>💰 Estimated cost (single GPU)</span><span class="value cost-value" id="estimatedCost">—</span></div>
+      </div>
+      <hr>
+      <div><span style="color:#aaa;">🔄 Multi‑GPU scaling (estimated)</span></div>
+      <div class="gpu-compare" id="gpuCompare">
+        <div class="gpu-row"><span class="label">1 GPU</span><span class="time" id="gpu1Time">—</span><span class="efficiency">—</span></div>
+        <div class="gpu-row"><span class="label">2 GPUs</span><span class="time" id="gpu2Time">—</span><span class="efficiency" id="gpu2Eff">—</span></div>
+        <div class="gpu-row"><span class="label">4 GPUs</span><span class="time" id="gpu4Time">—</span><span class="efficiency" id="gpu4Eff">—</span></div>
+        <div class="gpu-row"><span class="label">8 GPUs</span><span class="time" id="gpu8Time">—</span><span class="efficiency" id="gpu8Eff">—</span></div>
+      </div>
+      <div style="margin-top:1rem; background:#1a1a1a; border-radius:20px; padding:0.6rem 1rem; border:1px solid #2a2a2a;">
+        <span style="color:#aaa;">⚡ Scaling efficiency: </span><span id="scalingNote" style="color:#b388ff;">based on workload</span>
+      </div>
+    </div>
+  </div>
+  <div class="footnote">* TFLOPS based on advertised mixed‑precision. Cloud rates approximate (on‑demand). Scaling efficiency assumes 0.85/0.75/0.65 for 2/4/8 GPUs.</div>
+</div>
+<script>
+  (function() {
+    // DOM refs
+    const datasetSize = document.getElementById('datasetSize');
+    const modelParams = document.getElementById('modelParams');
+    const gpuSelect = document.getElementById('gpuSelect');
+    const batchSize = document.getElementById('batchSize');
+    const epochs = document.getElementById('epochs');
+    const precisionSelect = document.getElementById('precisionSelect');
+    const calculateBtn = document.getElementById('calculateBtn');
+
+    // result fields
+    const timePerStepEl = document.getElementById('timePerStep');
+    const stepsPerEpochEl = document.getElementById('stepsPerEpoch');
+    const totalTimeEl = document.getElementById('totalTime');
+    const estimatedCostEl = document.getElementById('estimatedCost');
+    const gpu1Time = document.getElementById('gpu1Time');
+    const gpu2Time = document.getElementById('gpu2Time');
+    const gpu4Time = document.getElementById('gpu4Time');
+    const gpu8Time = document.getElementById('gpu8Time');
+    const gpu2Eff = document.getElementById('gpu2Eff');
+    const gpu4Eff = document.getElementById('gpu4Eff');
+    const gpu8Eff = document.getElementById('gpu8Eff');
+    const scalingNote = document.getElementById('scalingNote');
+
+    // presets
+    const presetContainer = document.getElementById('presetContainer');
+    presetContainer.addEventListener('click', function(e) {
+      if (e.target.classList.contains('preset-badge')) {
+        const data = JSON.parse(e.target.dataset.params);
+        datasetSize.value = data.samples;
+        modelParams.value = data.params;
+        batchSize.value = data.batch;
+        epochs.value = data.epochs;
+        // set precision (best match)
+        if (data.precision === 'fp16') precisionSelect.value = 'fp16';
+        else if (data.precision === 'bf16') precisionSelect.value = 'bf16';
+        else if (data.precision === 'int8') precisionSelect.value = 'int8';
+        else precisionSelect.value = 'fp32';
+        // remove active class from all, add to clicked
+        document.querySelectorAll('.preset-badge').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        calculate();
+      }
+    });
+
+    function calculate() {
+      // read values
+      const samples = parseFloat(datasetSize.value) || 0;
+      const paramsM = parseFloat(modelParams.value) || 0;
+      const batch = parseInt(batchSize.value, 10) || 1;
+      const ep = parseInt(epochs.value, 10) || 1;
+      const precision = precisionSelect.value;
+
+      // GPU specs from selected option
+      const selectedOption = gpuSelect.options[gpuSelect.selectedIndex];
+      const tflops = parseFloat(selectedOption.dataset.tflops) || 10;
+      const costPerHour = parseFloat(selectedOption.dataset.cost) || 1;
+
+      // Precision factor (relative throughput)
+      let precisionFactor = 1.0;
+      if (precision === 'fp16' || precision === 'bf16') precisionFactor = 2.0;
+      else if (precision === 'int8') precisionFactor = 4.0;
+
+      // Effective TFLOPS for training (assume 40% utilization)
+      const effectiveTflops = tflops * 0.4 * precisionFactor; 
+
+      // FLOPs per sample: rough estimate ~ 6 * params (in millions) * 1e6 * 2?  typical: 6 * params * 1e6 forward+backward
+      const params = paramsM * 1e6; // actual parameters
+      const flopsPerSample = 6 * params * 2;  // forward + backward ~ 12 * params (approx)
+      // time per step (seconds) = (batch * flopsPerSample) / (effectiveTflops * 1e12) 
+      const flopsPerStep = batch * flopsPerSample;
+      const tflopsEffective = effectiveTflops * 1e12; // flops per second
+      let timeStepSec = flopsPerStep / tflopsEffective;
+      if (timeStepSec <= 0 || !isFinite(timeStepSec)) timeStepSec = 0.001;
+
+      // steps per epoch
+      const stepsPerEpoch = Math.ceil(samples / batch);
+      // total steps
+      const totalSteps = stepsPerEpoch * ep;
+      // total time in seconds
+      const totalTimeSec = timeStepSec * totalSteps;
+      const totalTimeHours = totalTimeSec / 3600;
+
+      // cost single GPU
+      const costSingle = totalTimeHours * costPerHour;
+
+      // update single GPU results
+      timePerStepEl.textContent = timeStepSec.toFixed(4) + ' s';
+      stepsPerEpochEl.textContent = stepsPerEpoch;
+      totalTimeEl.textContent = totalTimeHours.toFixed(2) + ' h';
+      estimatedCostEl.textContent = '$' + costSingle.toFixed(2);
+
+      // Multi-GPU scaling: assume scaling efficiency 0.85 (2), 0.75 (4), 0.65 (8)
+      const eff2 = 0.85, eff4 = 0.75, eff8 = 0.65;
+      const time1 = totalTimeHours;
+      const time2 = time1 / 2 / eff2;
+      const time4 = time1 / 4 / eff4;
+      const time8 = time1 / 8 / eff8;
+
+      gpu1Time.textContent = time1.toFixed(2) + ' h';
+      gpu2Time.textContent = time2.toFixed(2) + ' h';
+      gpu4Time.textContent = time4.toFixed(2) + ' h';
+      gpu8Time.textContent = time8.toFixed(2) + ' h';
+
+      gpu2Eff.textContent = (eff2*100).toFixed(0) + '% eff.';
+      gpu4Eff.textContent = (eff4*100).toFixed(0) + '% eff.';
+      gpu8Eff.textContent = (eff8*100).toFixed(0) + '% eff.';
+
+      // cost multi (approx per GPU * hours * n)
+      const cost2 = time2 * costPerHour * 2;
+      const cost4 = time4 * costPerHour * 4;
+      const cost8 = time8 * costPerHour * 8;
+      scalingNote.textContent = `2-GPU: $${cost2.toFixed(1)} · 4-GPU: $${cost4.toFixed(1)} · 8-GPU: $${cost8.toFixed(1)} (total cost)`;
+    }
+
+    // initial calculation
+    calculate();
+
+    // attach event listeners
+    calculateBtn.addEventListener('click', calculate);
+    // also recalc on any input change (optional)
+    const inputs = [datasetSize, modelParams, gpuSelect, batchSize, epochs, precisionSelect];
+    inputs.forEach(el => el.addEventListener('change', calculate));
+    // also on keyup for number inputs
+    [datasetSize, modelParams, batchSize, epochs].forEach(el => el.addEventListener('input', calculate));
+  })();
+</script>
+<div style="margin:20px auto;max-width:728px;text-align:center">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+</body>
+</html>
