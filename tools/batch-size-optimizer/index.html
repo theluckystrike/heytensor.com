@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Size Optimizer - ML Tools</title>
+    <meta name="description" content="Calculate optimal batch size for GPU training. Get memory breakdown and gradient accumulation recommendations based on VRAM, model params, and precision.">
+    <meta property="og:title" content="Batch Size Optimizer">
+    <meta property="og:description" content="Calculate optimal batch size for GPU training with memory breakdown and grad accumulation recommendations.">
+    <meta property="og:url" content="https://heytensor.com/tools/batch-size-optimizer">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://heytensor.com/tools/batch-size-optimizer">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Batch Size Optimizer",
+      "description": "Calculate optimal batch size for GPU training",
+      "url": "https://heytensor.com/tools/batch-size-optimizer",
+      "applicationCategory": "UtilityApplication",
+      "author": {
+        "@type": "Organization",
+        "name": "heytensor.com"
+      }
+    }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0e27;
+            color: #e0e6ed;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #00d4aa;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8892b0;
+            margin-bottom: 40px;
+            font-size: 0.95rem;
+        }
+        .controls {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        .control-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #00d4aa;
+            font-size: 0.95rem;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #1f2937;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00d4aa;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00d4aa;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
+        }
+        .value-display {
+            min-width: 100px;
+            text-align: right;
+            font-weight: 600;
+            color: #00d4aa;
+            font-size: 1.05rem;
+        }
+        .select-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        select {
+            padding: 10px 12px;
+            background: #1f2937;
+            color: #e0e6ed;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        select:hover {
+            border-color: #00d4aa;
+        }
+        select:focus {
+            outline: none;
+            border-color: #00d4aa;
+            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+        }
+        .results {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .result-card {
+            background: #0f172a;
+            border-left: 3px solid #00d4aa;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+        }
+        .result-label {
+            color: #8892b0;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #00d4aa;
+        }
+        .result-subtext {
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+        .memory-breakdown {
+            background: #0f172a;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .memory-breakdown h3 {
+            color: #00d4aa;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        .memory-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #1f2937;
+            font-size: 0.95rem;
+        }
+        .memory-item:last-child {
+            border-bottom: none;
+        }
+        .memory-item-value {
+            color: #00d4aa;
+            font-weight: 600;
+        }
+        .recommendation {
+            background: rgba(0, 212, 170, 0.1);
+            border-left: 3px solid #00d4aa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #d1fae5;
+        }
+        footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid #1f2937;
+        }
+    </style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Batch Size Optimizer</h1>
+        <p class="subtitle">Calculate optimal batch size, memory usage, and gradient accumulation strategy</p>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>GPU VRAM (GB)</label>
+                <div class="slider-container">
+                    <input type="range" id="vramSlider" min="4" max="80" value="24" step="1">
+                    <span class="value-display" id="vramValue">24 GB</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Model Parameters</label>
+                <div class="slider-container">
+                    <input type="range" id="paramsSlider" min="1" max="70" value="7" step="0.1">
+                    <span class="value-display" id="paramsValue">7.0 B</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Data Type Precision</label>
+                <div class="select-group">
+                    <select id="precisionSelect">
+                        <option value="fp32">FP32 (4 bytes)</option>
+                        <option value="fp16" selected>FP16 (2 bytes)</option>
+                        <option value="bf16">BF16 (2 bytes)</option>
+                        <option value="int8">INT8 (1 byte)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="results">
+            <div class="result-card">
+                <div class="result-label">Recommended Max Batch Size</div>
+                <div class="result-value" id="batchSizeResult">32</div>
+                <div class="result-subtext">per GPU / per accumulation step</div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-label">Total Batch Size (with Grad Accumulation)</div>
+                <div class="result-value" id="totalBatchResult">256</div>
+                <div class="result-subtext">across accumulation steps</div>
+            </div>
+
+            <div class="result-card">
+                <div class="result-label">Memory Utilization</div>
+                <div class="result-value" id="memoryUtilResult">78%</div>
+                <div class="result-subtext">of available VRAM</div>
+            </div>
+
+            <div class="memory-breakdown">
+                <h3>Memory Breakdown</h3>
+                <div class="memory-item">
+                    <span>Model Weights</span>
+                    <span class="memory-item-value" id="weightsMemory">28.0 GB</span>
+                </div>
+                <div class="memory-item">
+                    <span>Activations (batch)</span>
+                    <span class="memory-item-value" id="activationsMemory">12.0 GB</span>
+                </div>
+                <div class="memory-item">
+                    <span>Gradients</span>
+                    <span class="memory-item-value" id="gradientsMemory">28.0 GB</span>
+                </div>
+                <div class="memory-item">
+                    <span>Optimizer States</span>
+                    <span class="memory-item-value" id="optimizerMemory">14.0 GB</span>
+                </div>
+                <div class="memory-item" style="border-bottom: 2px solid #00d4aa; padding-top: 15px; font-weight: 600;">
+                    <span>Total Per-Batch</span>
+                    <span class="memory-item-value" id="totalMemory">18.8 GB</span>
+                </div>
+            </div>
+
+            <div class="recommendation" id="recommendation">
+                <strong>Recommendation:</strong> Use batch size 32 with 8 gradient accumulation steps for a total batch size of 256. This keeps VRAM usage at ~78% with headroom for intermediate computations.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 heytensor.com — ML Engineering Tools
+    </footer>
+<div style="margin:20px auto;max-width:728px;text-align:center">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+    <script>
+        const vramSlider = document.getElementById('vramSlider');
+        const paramsSlider = document.getElementById('paramsSlider');
+        const precisionSelect = document.getElementById('precisionSelect');
+
+        const vramValue = document.getElementById('vramValue');
+        const paramsValue = document.getElementById('paramsValue');
+        const batchSizeResult = document.getElementById('batchSizeResult');
+        const totalBatchResult = document.getElementById('totalBatchResult');
+        const memoryUtilResult = document.getElementById('memoryUtilResult');
+        const weightsMemory = document.getElementById('weightsMemory');
+        const activationsMemory = document.getElementById('activationsMemory');
+        const gradientsMemory = document.getElementById('gradientsMemory');
+        const optimizerMemory = document.getElementById('optimizerMemory');
+        const totalMemory = document.getElementById('totalMemory');
+        const recommendation = document.getElementById('recommendation');
+
+        function getByteSize(precision) {
+            const sizes = {
+                'fp32': 4,
+                'fp16': 2,
+                'bf16': 2,
+                'int8': 1
+            };
+            return sizes[precision];
+        }
+
+        function calculateBatchSize() {
+            const vram = parseFloat(vramSlider.value);
+            const params = parseFloat(paramsSlider.value) * 1e9;
+            const precision = precisionSelect.value;
+            const byteSize = getByteSize(precision);
+
+            vramValue.textContent = vram + ' GB';
+            paramsValue.textContent = (params / 1e9).toFixed(1) + ' B';
+
+            // Model weights memory
+            const weightsMemGB = (params * byteSize) / (1024 ** 3);
+
+            // Estimate activation memory (rule of thumb: ~2-3x model size for transformer)
+            const activationMultiplier = 2.5;
+
+            // Reserve safety margin
+            const safetyMargin = vram * 0.15;
+            const availableMemory = vram - safetyMargin;
+
+            // Calculate per-batch memory needed (without accumulation overhead)
+            // Simplified: weights + gradients + optimizer states + activations
+            const perBatchMemGBPerUnit = (
+                weightsMemGB * 3 + // weights, gradients, optimizer states (Adam)
+                weightsMemGB * activationMultiplier * 0.1 // rough activation estimate
+            );
+
+            // Estimate max batch size
+            let maxBatchSize = Math.max(1, Math.floor((availableMemory - weightsMemGB) / (weightsMemGB * 2 / 100)));
+
+            // Clamp to reasonable values
+            if (params < 1e9) maxBatchSize = Math.min(maxBatchSize, 256);
+            else if (params < 10e9) maxBatchSize = Math.min(maxBatchSize, 128);
+            else maxBatchSize = Math.min(maxBatchSize, 32);
+
+            // Gradient accumulation steps
+            const targetBatchSize = maxBatchSize * 8;
+            const accumSteps = Math.ceil(targetBatchSize / maxBatchSize);
+
+            // Memory breakdown
+            const weightsMemGBDisplay = weightsMemGB.toFixed(1);
+            const activationsPerBatchGB = (weightsMemGB * activationMultiplier * (maxBatchSize / 100)).toFixed(1);
+            const gradientsGB = weightsMemGB.toFixed(1);
+            const optimizerStatesGB = (weightsMemGB * 1).toFixed(1);
+            const totalPerBatchGB = (parseFloat(weightsMemGBDisplay) + parseFloat(activationsPerBatchGB) + parseFloat(gradientsGB) + parseFloat(optimizerStatesGB)).toFixed(1);
+
+            const memoryUtil = ((parseFloat(totalPerBatchGB) / vram) * 100).toFixed(0);
+
+            // Update display
+            batchSizeResult.textContent = maxBatchSize;
+            totalBatchResult.textContent = targetBatchSize;
+            memoryUtilResult.textContent = memoryUtil + '%';
+
+            weightsMemory.textContent = weightsMemGBDisplay + ' GB';
+            activationsMemory.textContent = activationsPerBatchGB + ' GB';
+            gradientsMemory.textContent = gradientsGB + ' GB';
+            optimizerMemory.textContent = optimizerStatesGB + ' GB';
+            totalMemory.textContent = totalPerBatchGB + ' GB';
+
+            const precisionLabel = {
+                'fp32': 'FP32',
+                'fp16': 'FP16',
+                'bf16': 'BF16',
+                'int8': 'INT8'
+            }[precision];
+
+            recommendation.innerHTML = `<strong>Recommendation:</strong> Use batch size ${maxBatchSize} with ${accumSteps} gradient accumulation steps for a total batch size of ${targetBatchSize}. This keeps VRAM usage at ~${memoryUtil}% with headroom for intermediate computations. ${precisionLabel} precision allows efficient training on your ${vram}GB GPU.`;
+        }
+
+        vramSlider.addEventListener('input', calculateBatchSize);
+        paramsSlider.addEventListener('input', calculateBatchSize);
+        precisionSelect.addEventListener('change', calculateBatchSize);
+
+        // Initial calculation
+        calculateBatchSize();
+    </script>
+</body>
+</html>

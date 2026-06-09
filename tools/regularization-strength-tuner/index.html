@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regularization Strength Tuner</title>
+    <meta name="description" content="Recommend L1/L2/Dropout/Label Smoothing regularization strengths based on model and dataset size. Interactive bias-variance calculator.">
+    <meta property="og:title" content="Regularization Strength Tuner">
+    <meta property="og:description" content="Calculate optimal regularization strengths for L1, L2, Dropout, and Label Smoothing.">
+    <meta property="og:url" content="https://heytensor.com/tools/regularization-strength-tuner">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://heytensor.com/tools/regularization-strength-tuner">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Regularization Strength Tuner",
+      "description": "Calculate optimal regularization strengths for deep learning models",
+      "url": "https://heytensor.com/tools/regularization-strength-tuner",
+      "applicationCategory": "UtilityApplication",
+      "author": {
+        "@type": "Organization",
+        "name": "heytensor.com"
+      }
+    }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e27;
+            color: #e0e6ed;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #00d4aa;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #8892b0;
+            margin-bottom: 40px;
+            font-size: 0.95rem;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .input-panel {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        .control-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #00d4aa;
+            font-size: 0.95rem;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: #1f2937;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00d4aa;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #00d4aa;
+            cursor: pointer;
+            border: none;
+        }
+        .value-display {
+            min-width: 100px;
+            text-align: right;
+            font-weight: 600;
+            color: #00d4aa;
+        }
+        .recommendations {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        .rec-card {
+            background: #0f172a;
+            border-left: 3px solid #00d4aa;
+            padding: 18px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+        }
+        .rec-title {
+            color: #00d4aa;
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .rec-value {
+            color: #d1d5db;
+            font-size: 1.4rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .rec-desc {
+            color: #8892b0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .detail-section {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        .detail-section h3 {
+            color: #00d4aa;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .metric-box {
+            background: #0f172a;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+        .metric-label {
+            color: #8892b0;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+        .metric-value {
+            color: #00d4aa;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        .bias-variance-chart {
+            background: #0f172a;
+            border: 1px solid #374151;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 120px;
+            gap: 10px;
+        }
+        .bar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        .bar {
+            width: 100%;
+            background: linear-gradient(180deg, #00d4aa, #00b89f);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            transition: height 0.3s ease;
+        }
+        .bar-label {
+            color: #8892b0;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .explanation {
+            background: rgba(0, 212, 170, 0.08);
+            border-left: 3px solid #00d4aa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #d1d5db;
+            line-height: 1.6;
+        }
+        footer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid #1f2937;
+        }
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Regularization Strength Tuner</h1>
+        <p class="subtitle">Calculate optimal regularization strengths for bias-variance tradeoff</p>
+
+        <div class="main-grid">
+            <div class="input-panel">
+                <h2 style="color: #00d4aa; margin-bottom: 20px; font-size: 1.2rem;">Model Configuration</h2>
+
+                <div class="control-group">
+                    <label>Model Parameters</label>
+                    <div class="slider-container">
+                        <input type="range" id="paramsSlider" min="1" max="70" value="7" step="0.5">
+                        <span class="value-display" id="paramsValue">7.0 B</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Training Dataset Size</label>
+                    <div class="slider-container">
+                        <input type="range" id="datasetSlider" min="100" max="10000000" value="50000" step="1000">
+                        <span class="value-display" id="datasetValue">50K samples</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Training Epochs</label>
+                    <div class="slider-container">
+                        <input type="range" id="epochsSlider" min="1" max="200" value="10" step="1">
+                        <span class="value-display" id="epochsValue">10 epochs</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h2 style="color: #00d4aa; margin-bottom: 20px; font-size: 1.2rem;">Recommendations</h2>
+
+                <div class="rec-card">
+                    <div class="rec-title">L2 Regularization (Weight Decay)</div>
+                    <div class="rec-value" id="l2Value">1e-4</div>
+                    <div class="rec-desc" id="l2Desc">Penalizes large weights. Start with 1e-4 and adjust based on validation loss.</div>
+                </div>
+
+                <div class="rec-card">
+                    <div class="rec-title">Dropout Rate</div>
+                    <div class="rec-value" id="dropoutValue">0.3</div>
+                    <div class="rec-desc" id="dropoutDesc">Apply 30% dropout before final layers. Reduces co-adaptation of neurons.</div>
+                </div>
+
+                <div class="rec-card">
+                    <div class="rec-title">Label Smoothing</div>
+                    <div class="rec-value" id="smoothingValue">0.1</div>
+                    <div class="rec-desc" id="smoothingDesc">Use 0.1 label smoothing to prevent overconfident predictions.</div>
+                </div>
+
+                <div class="rec-card">
+                    <div class="rec-title">L1 Regularization</div>
+                    <div class="rec-value" id="l1Value">0.0</div>
+                    <div class="rec-desc" id="l1Desc">Optional for sparse models. Usually 0 unless feature selection needed.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="details-grid">
+            <div class="detail-section">
+                <h3>Bias-Variance Analysis</h3>
+
+                <div class="metric-box">
+                    <div class="metric-label">Estimated Bias</div>
+                    <div class="metric-value" id="biasValue">Medium</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Estimated Variance</div>
+                    <div class="metric-value" id="varianceValue">High</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Total Error Estimate</div>
+                    <div class="metric-value" id="totalErrorValue">10-12%</div>
+                </div>
+
+                <div class="bias-variance-chart">
+                    <div style="color: #8892b0; font-size: 0.8rem; margin-bottom: 10px;">Current Tradeoff</div>
+                    <div class="chart-bars">
+                        <div class="bar-container">
+                            <div class="bar" id="biasBar" style="height: 40%;"></div>
+                            <span class="bar-label">Bias</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar" id="varianceBar" style="height: 80%;"></div>
+                            <span class="bar-label">Variance</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar" id="errorBar" style="height: 70%;"></div>
+                            <span class="bar-label">Total Error</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>Regularization Strategy</h3>
+
+                <div class="metric-box">
+                    <div class="metric-label">Primary Issue</div>
+                    <div class="metric-value" id="primaryIssue">Overfitting</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Data Regime</div>
+                    <div class="metric-value" id="dataRegime">Medium Data</div>
+                </div>
+
+                <div class="metric-box">
+                    <div class="metric-label">Model Size</div>
+                    <div class="metric-value" id="modelSize">Large</div>
+                </div>
+
+                <div class="explanation" id="explanation">
+                    With a large model (7B params) and medium dataset (50K samples), you likely have a variance problem (overfitting).
+                    Increase regularization through L2, dropout, and data augmentation. Monitor validation loss closely.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 heytensor.com — ML Engineering Tools
+    </footer>
+<div style="margin:20px auto;max-width:728px;text-align:center">
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+    <script>
+        const paramsSlider = document.getElementById('paramsSlider');
+        const datasetSlider = document.getElementById('datasetSlider');
+        const epochsSlider = document.getElementById('epochsSlider');
+
+        const paramsValue = document.getElementById('paramsValue');
+        const datasetValue = document.getElementById('datasetValue');
+        const epochsValue = document.getElementById('epochsValue');
+
+        const l2Value = document.getElementById('l2Value');
+        const l2Desc = document.getElementById('l2Desc');
+        const dropoutValue = document.getElementById('dropoutValue');
+        const dropoutDesc = document.getElementById('dropoutDesc');
+        const smoothingValue = document.getElementById('smoothingValue');
+        const smoothingDesc = document.getElementById('smoothingDesc');
+        const l1Value = document.getElementById('l1Value');
+        const l1Desc = document.getElementById('l1Desc');
+
+        const biasValue = document.getElementById('biasValue');
+        const varianceValue = document.getElementById('varianceValue');
+        const totalErrorValue = document.getElementById('totalErrorValue');
+        const biasBar = document.getElementById('biasBar');
+        const varianceBar = document.getElementById('varianceBar');
+        const errorBar = document.getElementById('errorBar');
+
+        const primaryIssue = document.getElementById('primaryIssue');
+        const dataRegime = document.getElementById('dataRegime');
+        const modelSize = document.getElementById('modelSize');
+        const explanation = document.getElementById('explanation');
+
+        function formatNumber(num) {
+            if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+            if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(0) + 'K';
+            return num.toFixed(0);
+        }
+
+        function calculateRegularization() {
+            const params = parseFloat(paramsSlider.value) * 1e9;
+            const dataset = parseInt(datasetSlider.value);
+            const epochs = parseInt(epochsSlider.value);
+
+            paramsValue.textContent = formatNumber(params);
+            datasetValue.textContent = formatNumber(dataset) + ' samples';
+            epochsValue.textContent = epochs + ' epochs';
+
+            // Data-to-parameter ratio
+            const dataParamRatio = dataset / params;
+
+            // Determine data regime
+            let regime, regimeDescr;
+            if (dataParamRatio < 0.0001) {
+                regime = 'Tiny';
+                regimeDescr = 'Tiny Data';
+            } else if (dataParamRatio < 0.01) {
+                regime = 'Small';
+                regimeDescr = 'Small Data';
+            } else if (dataParamRatio < 1) {
+                regime = 'Medium';
+                regimeDescr = 'Medium Data';
+            } else {
+                regime = 'Large';
+                regimeDescr = 'Large Data';
+            }
+
+            dataRegime.textContent = regimeDescr;
+
+            // Determine model size category
+            let modelSizeCat;
+            if (params < 1e9) modelSizeCat = 'Small';
+            else if (params < 10e9) modelSizeCat = 'Large';
+            else if (params < 70e9) modelSizeCat = 'Very Large';
+            else modelSizeCat = 'Huge';
+            modelSize.textContent = modelSizeCat;
+
+            // Calculate regularization strengths
+            // L2 regularization: higher for small data/large model
+            let l2 = 1e-4;
+            if (regime === 'Tiny') l2 = 1e-3;
+            else if (regime === 'Small') l2 = 5e-4;
+            else if (regime === 'Medium') l2 = 1e-4;
+            else l2 = 1e-5;
+
+            // Adjust for model size
+            if (modelSizeCat === 'Very Large' || modelSizeCat === 'Huge') {
+                l2 *= 2;
+            } else if (modelSizeCat === 'Small') {
+                l2 *= 0.5;
+            }
+
+            // Dropout: higher for overfitting risk
+            let dropout = 0.1;
+            if (regime === 'Tiny' || regime === 'Small') {
+                dropout = 0.5;
+            } else if (regime === 'Medium') {
+                dropout = 0.3;
+            } else {
+                dropout = 0.1;
+            }
+
+            // Label smoothing: moderate amount
+            let smoothing = 0.1;
+            if (regime === 'Tiny' || regime === 'Small') {
+                smoothing = 0.2;
+            } else if (regime === 'Large') {
+                smoothing = 0.05;
+            }
+
+            // L1: rarely needed
+            let l1 = 0;
+            if (regime === 'Tiny') {
+                l1 = 1e-5;
+            }
+
+            // Update display
+            l2Value.textContent = l2.toExponential(1);
+            l2Desc.textContent = regime === 'Tiny'
+                ? 'Large dataset is tiny. Use strong L2 regularization (10x default).'
+                : regime === 'Small'
+                ? 'Small dataset relative to model. Use 5x stronger L2 than normal.'
+                : regime === 'Medium'
+                ? 'Moderate dataset. Standard L2 regularization recommended.'
+                : 'Large dataset. Use weak L2 regularization.';
+
+            dropoutValue.textContent = dropout.toFixed(2);
+            dropoutDesc.textContent = regime === 'Tiny'
+                ? 'Strong overfitting risk. Use 50% dropout before output layers.'
+                : regime === 'Small'
+                ? 'High dropout (30-50%) to combat overfitting.'
+                : regime === 'Medium'
+                ? `Use ${(dropout * 100).toFixed(0)}% dropout before final layers.`
+                : 'Low dropout (5-10%) since you have plenty of data.';
+
+            smoothingValue.textContent = smoothing.toFixed(2);
+            smoothingDesc.textContent = `Label smoothing at ${(smoothing * 100).toFixed(0)}% to prevent overconfident predictions.`;
+
+            l1Value.textContent = l1 === 0 ? '0.0' : l1.toExponential(1);
+            l1Desc.textContent = l1 === 0
+                ? 'L1 not needed unless you require feature sparsity.'
+                : 'Small L1 for mild regularization benefit.';
+
+            // Estimate bias and variance
+            // Variance = f(model_size, dataset_size, regularization)
+            // Bias = f(regularization)
+            let bias = 30; // base bias
+            let variance = 20; // base variance
+
+            // Adjust variance based on data/param ratio
+            if (dataParamRatio < 0.0001) variance = 80;
+            else if (dataParamRatio < 0.01) variance = 70;
+            else if (dataParamRatio < 1) variance = 50;
+            else variance = 20;
+
+            // Adjust bias based on regularization
+            bias = Math.max(10, 30 - dropout * 100 - l2 * 1e6);
+
+            // Regularization reduces variance but increases bias
+            let regMagnitude = (dropout * 0.5 + l2 * 1e6 * 0.3) / 2;
+            variance *= (1 - Math.min(0.5, regMagnitude));
+            bias = Math.min(60, bias + regMagnitude * 20);
+
+            // Total error approximately quadratic sum
+            const totalError = Math.sqrt(bias ** 2 + variance ** 2) / 10;
+
+            // Determine primary issue
+            if (variance > bias * 1.5) {
+                primaryIssue.textContent = 'Overfitting';
+            } else if (bias > variance * 1.5) {
+                primaryIssue.textContent = 'Underfitting';
+            } else {
+                primaryIssue.textContent = 'Balanced';
+            }
+
+            // Determine levels
+            const getBiasLevel = (b) => b < 15 ? 'Low' : b < 30 ? 'Medium' : 'High';
+            const getVarianceLevel = (v) => v < 25 ? 'Low' : v < 50 ? 'Medium' : 'High';
+
+            biasValue.textContent = getBiasLevel(bias);
+            varianceValue.textContent = getVarianceLevel(variance);
+            totalErrorValue.textContent = Math.round(totalError) + '-' + Math.round(totalError + 2) + '%';
+
+            // Update bars
+            biasBar.style.height = Math.min(bias, 100) + '%';
+            varianceBar.style.height = Math.min(variance, 100) + '%';
+            errorBar.style.height = Math.min(totalError * 10, 100) + '%';
+
+            // Generate explanation
+            let expl = `With a ${modelSizeCat.toLowerCase()} model (${formatNumber(params)} params) and ${regimeDescr.toLowerCase()} (${formatNumber(dataset)} samples), `;
+            expl += dataParamRatio < 0.01
+                ? `you have a severe variance problem (overfitting risk). Apply strong regularization: ${dropout.toFixed(2)} dropout, ${l2.toExponential(1)} L2, ${smoothing.toFixed(2)} label smoothing. `
+                : dataParamRatio < 1
+                ? `you likely have overfitting. Use recommended regularization and data augmentation. `
+                : `you have sufficient data. Use light regularization to avoid underfitting. `;
+
+            expl += `Focus on monitoring validation loss and adjust regularization if needed.`;
+
+            explanation.textContent = expl;
+        }
+
+        paramsSlider.addEventListener('input', calculateRegularization);
+        datasetSlider.addEventListener('input', calculateRegularization);
+        epochsSlider.addEventListener('input', calculateRegularization);
+
+        calculateRegularization();
+    </script>
+</body>
+</html>
