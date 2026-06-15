@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mixed Precision Speedup Estimator | HeyTensor</title>
+<meta name="description" content="Estimate training speedup from FP32 to FP16/BF16. GPU-specific performance modeling.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://heytensor.com/tools/mixed-precision-speedup-estimator/">
+<meta property="og:title" content="Mixed Precision Speedup Estimator — HeyTensor">
+<meta property="og:description" content="Estimate training speedup with mixed precision (FP16/BF16)">
+<meta property="og:url" content="https://heytensor.com/tools/mixed-precision-speedup-estimator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HeyTensor">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Mixed Precision Speedup Estimator",
+  "url": "https://heytensor.com/tools/mixed-precision-speedup-estimator/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "Estimate training speedup from mixed precision training"
+}
+</script>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0a0a0a;
+  color: #e8e8e8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-top: 20px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  color: #3b82f6;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 1.05rem;
+}
+
+.tool-section {
+  background: #1a1a1a;
+  border: 1px solid #333333;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+input[type="number"],
+select {
+  padding: 12px;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #e8e8e8;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.help-text {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.calculation-button {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.calculation-button:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.results-section {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+  display: none;
+}
+
+.results-section.show {
+  display: block;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.result-card {
+  background: #0a0a0a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.result-label {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.result-value {
+  color: #3b82f6;
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+.result-unit {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-left: 4px;
+}
+
+.breakdown-section {
+  background: #0a0a0a;
+  border-left: 3px solid #3b82f6;
+  padding: 16px;
+  margin-top: 20px;
+  border-radius: 4px;
+}
+
+.breakdown-title {
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: #cbd5e1;
+}
+
+.breakdown-item:last-child {
+  margin-bottom: 0;
+}
+
+.breakdown-label {
+  color: #94a3b8;
+}
+
+.breakdown-value {
+  color: #3b82f6;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+canvas {
+  width: 100%;
+  height: 300px;
+  background: #0f172a;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  margin-top: 20px;
+}
+
+.partner-section {
+  margin: 30px auto;
+  max-width: 728px;
+  text-align: center;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 10px;
+}
+
+.partner-label {
+  margin: 0 0 6px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.partner-link {
+  color: #38bdf8;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+
+.partner-link:hover {
+  text-decoration: underline;
+}
+
+.partner-desc {
+  margin: 6px 0 0;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.ad-section {
+  margin: 20px auto;
+  max-width: 728px;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #333333;
+}
+
+footer a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Mixed Precision Speedup Estimator</h1>
+    <p class="subtitle">Estimate training speedup with FP16/BF16 on your GPU</p>
+  </header>
+
+  <div class="tool-section">
+    <h2 style="color: #e8e8e8; margin-bottom: 24px;">Model & GPU Configuration</h2>
+
+    <div class="input-grid">
+      <div class="input-group">
+        <label for="gpuType">GPU Type</label>
+        <select id="gpuType" onchange="updateGPUSpecs()">
+          <option value="rtx3090">RTX 3090 Ti</option>
+          <option value="a100">A100 40GB</option>
+          <option value="h100">H100 (SXM)</option>
+          <option value="l40s">L40S</option>
+          <option value="rtx4090">RTX 4090</option>
+          <option value="a6000">RTX A6000</option>
+        </select>
+        <p class="help-text">Your GPU model</p>
+      </div>
+
+      <div class="input-group">
+        <label for="modelSize">Model Size (B)</label>
+        <input type="number" id="modelSize" placeholder="e.g., 7" min="0.1" value="7" step="0.1">
+        <p class="help-text">Billion parameters</p>
+      </div>
+
+      <div class="input-group">
+        <label for="batchSize">Batch Size</label>
+        <input type="number" id="batchSize" placeholder="e.g., 32" min="1" value="32">
+        <p class="help-text">Samples per batch</p>
+      </div>
+
+      <div class="input-group">
+        <label for="seqLength">Sequence Length</label>
+        <input type="number" id="seqLength" placeholder="e.g., 512" min="1" value="512">
+        <p class="help-text">Token sequence length</p>
+      </div>
+
+      <div class="input-group">
+        <label for="precision">Precision</label>
+        <select id="precision">
+          <option value="fp32">FP32 (baseline)</option>
+          <option value="fp16">FP16 (mixed)</option>
+          <option value="bf16">BF16 (mixed)</option>
+          <option value="int8">INT8 (quantized)</option>
+        </select>
+        <p class="help-text">Target precision</p>
+      </div>
+
+      <div class="input-group">
+        <label for="computeIntensity">Memory Bound %</label>
+        <input type="number" id="computeIntensity" placeholder="e.g., 50" min="0" max="100" value="50">
+        <p class="help-text">Estimated workload (0=compute, 100=memory)</p>
+      </div>
+    </div>
+
+    <button class="calculation-button" onclick="estimateSpeedup()">Estimate Speedup</button>
+  </div>
+
+  <div class="results-section" id="resultsSection">
+    <h2 style="color: #e8e8e8; margin-bottom: 20px;">Speedup Analysis</h2>
+
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">Training Speedup</div>
+        <div class="result-value" id="speedupFactor">1.5<span class="result-unit">x</span></div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Tokens/Second</div>
+        <div class="result-value" id="tokensPerSec">850</div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Memory Overhead</div>
+        <div class="result-value" id="memoryOverhead">-45%</div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-label">Training Time (100K steps)</div>
+        <div class="result-value" id="trainingTime" style="font-size: 1.2rem;">2.5h</div>
+      </div>
+    </div>
+
+    <div class="breakdown-section">
+      <div class="breakdown-title">Performance Breakdown</div>
+      <div class="breakdown-item">
+        <span class="breakdown-label">GPU Peak FP32:</span>
+        <span class="breakdown-value" id="peakFp32">82.1 TFLOPS</span>
+      </div>
+      <div class="breakdown-item">
+        <span class="breakdown-label">GPU Peak FP16:</span>
+        <span class="breakdown-value" id="peakFp16">164.2 TFLOPS</span>
+      </div>
+      <div class="breakdown-item">
+        <span class="breakdown-label">Achievable Utilization:</span>
+        <span class="breakdown-value" id="utilization">65%</span>
+      </div>
+      <div class="breakdown-item">
+        <span class="breakdown-label">Speedup from Precision:</span>
+        <span class="breakdown-value" id="precisionSpeedup">1.4x</span>
+      </div>
+      <div class="breakdown-item">
+        <span class="breakdown-label">Memory Bandwidth Gain:</span>
+        <span class="breakdown-value" id="bandwidthGain">2.0x</span>
+      </div>
+    </div>
+
+    <canvas id="speedupChart"></canvas>
+  </div>
+
+  <div class="partner-section">
+    <p class="partner-label">Recommended by our team</p>
+    <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
+    <p class="partner-desc">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+  </div>
+
+  <div class="ad-section">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 HeyTensor. All rights reserved. <a href="https://heytensor.com/tools/">Back to Tools</a></p>
+  </footer>
+</div>
+
+<script>
+const gpuSpecs = {
+  rtx3090: { name: 'RTX 3090 Ti', fp32TFLOPS: 82.1, fp16TFLOPS: 164.2, memoryGB: 24, bandwidthGBps: 936 },
+  a100: { name: 'A100 40GB', fp32TFLOPS: 312, fp16TFLOPS: 624, memoryGB: 40, bandwidthGBps: 2039 },
+  h100: { name: 'H100', fp32TFLOPS: 756, fp16TFLOPS: 1513, memoryGB: 80, bandwidthGBps: 3352 },
+  l40s: { name: 'L40S', fp32TFLOPS: 362, fp16TFLOPS: 725, memoryGB: 48, bandwidthGBps: 960 },
+  rtx4090: { name: 'RTX 4090', fp32TFLOPS: 165, fp16TFLOPS: 330, memoryGB: 24, bandwidthGBps: 1008 },
+  a6000: { name: 'RTX A6000', fp32TFLOPS: 91.1, fp16TFLOPS: 182.2, memoryGB: 48, bandwidthGBps: 576 }
+};
+
+function updateGPUSpecs() {
+  // Auto-update on selection
+}
+
+function estimateSpeedup() {
+  const gpuType = document.getElementById('gpuType').value;
+  const modelSize = parseFloat(document.getElementById('modelSize').value) || 0;
+  const batchSize = parseInt(document.getElementById('batchSize').value) || 1;
+  const seqLength = parseInt(document.getElementById('seqLength').value) || 512;
+  const precision = document.getElementById('precision').value;
+  const memoryBound = parseFloat(document.getElementById('computeIntensity').value) || 50;
+
+  const gpu = gpuSpecs[gpuType];
+
+  if (modelSize <= 0) {
+    alert('Please enter valid model size');
+    return;
+  }
+
+  // Baseline: FP32
+  let speedup = 1.0;
+  let fp32TFlops = gpu.fp32TFLOPS;
+  let fp16TFlops = gpu.fp16TFLOPS;
+
+  // Precision speedup factors
+  const precisionFactors = {
+    fp32: 1.0,
+    fp16: (memoryBound > 50) ? 1.8 : 1.5,
+    bf16: (memoryBound > 50) ? 1.7 : 1.45,
+    int8: (memoryBound > 50) ? 2.5 : 2.0
+  };
+
+  const baseSpeedup = precisionFactors[precision] || 1.0;
+
+  // Memory bandwidth overhead reduction
+  const precisionBytesReduction = {
+    fp32: 1.0,
+    fp16: 0.5,
+    bf16: 0.5,
+    int8: 0.25
+  };
+
+  const memoryReduction = (1 - precisionBytesReduction[precision]) * 100;
+
+  // Compute model FLOPs
+  const totalParams = modelSize * 1_000_000_000;
+  const flopsPerToken = totalParams * 2; // forward + backward
+  const flopsPerBatch = flopsPerToken * batchSize * seqLength;
+  const flopsPerSecondTarget = (precision === 'fp32') ? fp32TFlops * 1e12 : fp16TFlops * 1e12;
+
+  // Achievable throughput
+  let achievableSpeedup = 1.0;
+  if (memoryBound > 50) {
+    // Compute-bound: can leverage higher precision speedup
+    achievableSpeedup = baseSpeedup * 0.9; // 90% utilization
+  } else {
+    // Memory-bound: limited by bandwidth
+    const fpActual = (precision === 'fp32') ? fp32TFlops : fp16TFlops;
+    achievableSpeedup = (fpActual / gpu.fp32TFLOPS) * 0.85; // 85% utilization
+  }
+
+  // Compute tokens/sec
+  const baseTokensPerSec = 500; // baseline for reference GPU
+  const tokensPerSec = Math.round(baseTokensPerSec * achievableSpeedup);
+
+  // Training time estimate (100K steps)
+  const stepsPerSecond = tokensPerSec / seqLength;
+  const secondsFor100K = 100000 / stepsPerSecond;
+  const hoursFor100K = secondsFor100K / 3600;
+  const timeStr = hoursFor100K < 24
+    ? `${hoursFor100K.toFixed(1)}h`
+    : `${(hoursFor100K / 24).toFixed(1)}d`;
+
+  // Update UI
+  document.getElementById('speedupFactor').innerHTML = `${achievableSpeedup.toFixed(2)}<span class="result-unit">x</span>`;
+  document.getElementById('tokensPerSec').textContent = tokensPerSec;
+  document.getElementById('memoryOverhead').textContent = memoryReduction > 0 ? `-${memoryReduction.toFixed(0)}%` : `+${Math.abs(memoryReduction).toFixed(0)}%`;
+  document.getElementById('trainingTime').textContent = timeStr;
+
+  // Breakdown
+  document.getElementById('peakFp32').textContent = fp32TFlops.toFixed(1) + ' TFLOPS';
+  document.getElementById('peakFp16').textContent = fp16TFlops.toFixed(1) + ' TFLOPS';
+  document.getElementById('utilization').textContent = (memoryBound > 50 ? 90 : 85) + '%';
+  document.getElementById('precisionSpeedup').textContent = baseSpeedup.toFixed(2) + 'x';
+  document.getElementById('bandwidthGain').textContent = (1 / precisionBytesReduction[precision]).toFixed(1) + 'x';
+
+  // Draw chart
+  drawSpeedupChart(achievableSpeedup, baseSpeedup);
+
+  document.getElementById('resultsSection').classList.add('show');
+
+  if (typeof window.adsbygoogle !== 'undefined') {
+    window.adsbygoogle.push({});
+  }
+}
+
+function drawSpeedupChart(achievable, precision) {
+  const canvas = document.getElementById('speedupChart');
+  const ctx = canvas.getContext('2d');
+  const width = canvas.offsetWidth * window.devicePixelRatio;
+  const height = canvas.offsetHeight * window.devicePixelRatio;
+
+  canvas.width = width;
+  canvas.height = height;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  const chartWidth = canvas.offsetWidth;
+  const chartHeight = canvas.offsetHeight;
+
+  // Clear
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, chartWidth, chartHeight);
+
+  // Grid
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = (i / 4) * chartHeight;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(chartWidth, y);
+    ctx.stroke();
+  }
+
+  // Y-axis labels
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const y = chartHeight - (i / 4) * chartHeight;
+    ctx.fillText((i * 0.5).toFixed(1) + 'x', -10, y + 4);
+  }
+
+  // Bars
+  const barWidth = chartWidth / 3;
+  const scenarios = [
+    { name: 'FP32 (baseline)', value: 1.0, color: '#64748b' },
+    { name: 'Precision gain', value: precision, color: '#f97316' },
+    { name: 'Actual speedup', value: achievable, color: '#3b82f6' }
+  ];
+
+  scenarios.forEach((s, i) => {
+    const x = i * barWidth + barWidth * 0.2;
+    const barHeight = (s.value / 2) * chartHeight;
+    const y = chartHeight - barHeight;
+
+    ctx.fillStyle = s.color;
+    ctx.fillRect(x, y, barWidth * 0.6, barHeight);
+
+    ctx.fillStyle = '#e8e8e8';
+    ctx.textAlign = 'center';
+    ctx.fillText(s.value.toFixed(2) + 'x', x + barWidth * 0.3, chartHeight + 20);
+  });
+}
+
+document.getElementById('gpuType').addEventListener('change', updateGPUSpecs);
+</script>
+</body>
+</html>

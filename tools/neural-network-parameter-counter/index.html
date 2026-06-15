@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neural Network Parameter Counter | HeyTensor</title>
+<meta name="description" content="Count network parameters: conv, linear, attention, RNN. Memory calculator for any architecture.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://heytensor.com/tools/neural-network-parameter-counter/">
+<meta property="og:title" content="Neural Network Parameter Counter — HeyTensor">
+<meta property="og:description" content="Count total parameters and memory for any neural network architecture">
+<meta property="og:url" content="https://heytensor.com/tools/neural-network-parameter-counter/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HeyTensor">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Neural Network Parameter Counter",
+  "url": "https://heytensor.com/tools/neural-network-parameter-counter/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "Count total parameters and memory usage for neural network architectures"
+}
+</script>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0a0a0a;
+  color: #e8e8e8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-top: 20px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  color: #3b82f6;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 1.05rem;
+}
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .tool-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tool-section {
+  background: #1a1a1a;
+  border: 1px solid #333333;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+h2 {
+  color: #e8e8e8;
+  margin-bottom: 20px;
+  font-size: 1.15rem;
+}
+
+.layer-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.layer-btn {
+  padding: 10px;
+  background: #334155;
+  color: #e8e8e8;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.layer-btn:hover {
+  background: #475569;
+  border-color: #64748b;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+label {
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+}
+
+input[type="number"],
+select {
+  padding: 10px;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #e8e8e8;
+  font-size: 0.9rem;
+  transition: border-color 0.2s;
+}
+
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.help-text {
+  color: #64748b;
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.add-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  width: 100%;
+}
+
+.add-button:hover {
+  background: #2563eb;
+}
+
+.layer-item {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.layer-info {
+  flex: 1;
+}
+
+.layer-name {
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.layer-params {
+  color: #3b82f6;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.layer-desc {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.delete-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+}
+
+.results-section {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-box {
+  background: #0a0a0a;
+  border: 1px solid #334155;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.stat-label {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  color: #3b82f6;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+.breakdown {
+  background: #0a0a0a;
+  border-left: 3px solid #3b82f6;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.breakdown-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  color: #cbd5e1;
+}
+
+.breakdown-item:last-child {
+  margin-bottom: 0;
+}
+
+.breakdown-label {
+  color: #94a3b8;
+}
+
+.breakdown-value {
+  color: #3b82f6;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.partner-section {
+  margin: 30px auto;
+  max-width: 728px;
+  text-align: center;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 10px;
+}
+
+.partner-label {
+  margin: 0 0 6px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.partner-link {
+  color: #38bdf8;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+
+.partner-link:hover {
+  text-decoration: underline;
+}
+
+.partner-desc {
+  margin: 6px 0 0;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.ad-section {
+  margin: 20px auto;
+  max-width: 728px;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #333333;
+}
+
+footer a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.current-layer {
+  background: #0f172a;
+  border: 2px solid #3b82f6;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Neural Network Parameter Counter</h1>
+    <p class="subtitle">Count parameters and memory for any architecture</p>
+  </header>
+
+  <div class="tool-grid">
+    <div class="tool-section">
+      <h2>Add Layers</h2>
+
+      <div class="layer-selector">
+        <button class="layer-btn" onclick="prepareLayer('linear')">Linear</button>
+        <button class="layer-btn" onclick="prepareLayer('conv2d')">Conv2D</button>
+        <button class="layer-btn" onclick="prepareLayer('conv1d')">Conv1D</button>
+        <button class="layer-btn" onclick="prepareLayer('attention')">Attention</button>
+        <button class="layer-btn" onclick="prepareLayer('embedding')">Embedding</button>
+        <button class="layer-btn" onclick="prepareLayer('lstm')">LSTM</button>
+        <button class="layer-btn" onclick="prepareLayer('gru')">GRU</button>
+        <button class="layer-btn" onclick="prepareLayer('batchnorm')">BatchNorm</button>
+      </div>
+
+      <div id="layerInputs" class="current-layer" style="padding: 16px; border-radius: 8px; margin-bottom: 16px; display: none;"></div>
+
+      <div id="layersList"></div>
+    </div>
+
+    <div class="tool-section">
+      <h2>Summary</h2>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-label">Total Parameters</div>
+          <div class="stat-value" id="totalParams">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">FP32 Memory</div>
+          <div class="stat-value" id="memoryFp32" style="font-size: 1.2rem;">0 MB</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">FP16 Memory</div>
+          <div class="stat-value" id="memoryFp16" style="font-size: 1.2rem;">0 MB</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Layer Count</div>
+          <div class="stat-value" id="layerCount">0</div>
+        </div>
+      </div>
+
+      <div class="breakdown" id="breakdownDiv" style="display: none; margin-top: 20px;">
+        <div style="color: #cbd5e1; font-weight: 600; margin-bottom: 12px;">By Layer Type</div>
+        <div id="breakdownContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="partner-section">
+    <p class="partner-label">Recommended by our team</p>
+    <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
+    <p class="partner-desc">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+  </div>
+
+  <div class="ad-section">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 HeyTensor. All rights reserved. <a href="https://heytensor.com/tools/">Back to Tools</a></p>
+  </footer>
+</div>
+
+<script>
+let layers = [];
+let currentLayerType = null;
+
+const layerConfigs = {
+  linear: {
+    label: 'Linear (Fully Connected)',
+    params: [
+      { name: 'inputSize', label: 'Input Size', value: 768 },
+      { name: 'outputSize', label: 'Output Size', value: 768 },
+      { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
+    ],
+    calculate: (p) => {
+      const weights = p.inputSize * p.outputSize;
+      const bias = p.bias ? p.outputSize : 0;
+      return weights + bias;
+    },
+    describe: (p) => `${p.inputSize} → ${p.outputSize}${p.bias ? ' + bias' : ''}`
+  },
+
+  conv2d: {
+    label: 'Conv2D',
+    params: [
+      { name: 'inChannels', label: 'In Channels', value: 3 },
+      { name: 'outChannels', label: 'Out Channels', value: 64 },
+      { name: 'kernelSize', label: 'Kernel Size (3 or 5)', value: 3 },
+      { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
+    ],
+    calculate: (p) => {
+      const weights = p.inChannels * p.outChannels * p.kernelSize * p.kernelSize;
+      const bias = p.bias ? p.outChannels : 0;
+      return weights + bias;
+    },
+    describe: (p) => `${p.inChannels}→${p.outChannels}, K${p.kernelSize}×${p.kernelSize}`
+  },
+
+  conv1d: {
+    label: 'Conv1D',
+    params: [
+      { name: 'inChannels', label: 'In Channels', value: 512 },
+      { name: 'outChannels', label: 'Out Channels', value: 512 },
+      { name: 'kernelSize', label: 'Kernel Size', value: 5 },
+      { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
+    ],
+    calculate: (p) => {
+      const weights = p.inChannels * p.outChannels * p.kernelSize;
+      const bias = p.bias ? p.outChannels : 0;
+      return weights + bias;
+    },
+    describe: (p) => `${p.inChannels}→${p.outChannels}, K${p.kernelSize}`
+  },
+
+  attention: {
+    label: 'Multi-Head Attention',
+    params: [
+      { name: 'dim', label: 'Dimension (d_model)', value: 768 },
+      { name: 'heads', label: 'Number of Heads', value: 12 },
+      { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
+    ],
+    calculate: (p) => {
+      // Q, K, V projections + output projection
+      const projParams = 4 * p.dim * p.dim; // 4 linear layers
+      const bias = p.bias ? 4 * p.dim : 0;
+      return projParams + bias;
+    },
+    describe: (p) => `${p.dim}D, ${p.heads} heads`
+  },
+
+  embedding: {
+    label: 'Embedding',
+    params: [
+      { name: 'vocabSize', label: 'Vocabulary Size', value: 50000 },
+      { name: 'embedDim', label: 'Embedding Dimension', value: 768 }
+    ],
+    calculate: (p) => p.vocabSize * p.embedDim,
+    describe: (p) => `${p.vocabSize.toLocaleString()} × ${p.embedDim}`
+  },
+
+  lstm: {
+    label: 'LSTM Cell',
+    params: [
+      { name: 'inputSize', label: 'Input Size', value: 512 },
+      { name: 'hiddenSize', label: 'Hidden Size', value: 512 }
+    ],
+    calculate: (p) => {
+      // 4 gates (i, f, g, o) each with W and U weights
+      const weights = 4 * (p.inputSize * p.hiddenSize + p.hiddenSize * p.hiddenSize + p.hiddenSize);
+      return weights;
+    },
+    describe: (p) => `${p.inputSize}→${p.hiddenSize}`
+  },
+
+  gru: {
+    label: 'GRU Cell',
+    params: [
+      { name: 'inputSize', label: 'Input Size', value: 512 },
+      { name: 'hiddenSize', label: 'Hidden Size', value: 512 }
+    ],
+    calculate: (p) => {
+      // 3 gates (r, z, h) each with W and U weights
+      const weights = 3 * (p.inputSize * p.hiddenSize + p.hiddenSize * p.hiddenSize + p.hiddenSize);
+      return weights;
+    },
+    describe: (p) => `${p.inputSize}→${p.hiddenSize}`
+  },
+
+  batchnorm: {
+    label: 'Batch Normalization',
+    params: [
+      { name: 'numFeatures', label: 'Number of Features', value: 512 }
+    ],
+    calculate: (p) => p.numFeatures * 2, // scale + shift
+    describe: (p) => `${p.numFeatures} features`
+  }
+};
+
+function prepareLayer(type) {
+  currentLayerType = type;
+  const config = layerConfigs[type];
+  const inputsDiv = document.getElementById('layerInputs');
+  inputsDiv.style.display = 'block';
+  inputsDiv.innerHTML = `<div style="color: #e8e8e8; font-weight: 600; margin-bottom: 12px;">${config.label}</div>`;
+
+  config.params.forEach(p => {
+    if (p.type === 'checkbox') {
+      inputsDiv.innerHTML += `
+        <div class="input-group">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="${p.name}" ${p.value ? 'checked' : ''} style="cursor: pointer; width: auto;">
+            <span>${p.label}</span>
+          </label>
+        </div>
+      `;
+    } else {
+      inputsDiv.innerHTML += `
+        <div class="input-group">
+          <label for="${p.name}">${p.label}</label>
+          <input type="number" id="${p.name}" value="${p.value}" min="1">
+        </div>
+      `;
+    }
+  });
+
+  inputsDiv.innerHTML += `<button class="add-button" onclick="addLayer()">Add Layer</button>`;
+}
+
+function addLayer() {
+  if (!currentLayerType) return;
+
+  const config = layerConfigs[currentLayerType];
+  const params = {};
+
+  config.params.forEach(p => {
+    const input = document.getElementById(p.name);
+    if (p.type === 'checkbox') {
+      params[p.name] = input.checked;
+    } else {
+      params[p.name] = parseInt(input.value) || p.value;
+    }
+  });
+
+  const paramCount = config.calculate(params);
+  const description = config.describe(params);
+
+  layers.push({
+    type: currentLayerType,
+    name: config.label,
+    params: paramCount,
+    description: description,
+    id: Date.now()
+  });
+
+  updateLayersList();
+  document.getElementById('layerInputs').style.display = 'none';
+}
+
+function deleteLayer(id) {
+  layers = layers.filter(l => l.id !== id);
+  updateLayersList();
+}
+
+function updateLayersList() {
+  const list = document.getElementById('layersList');
+  list.innerHTML = '';
+
+  layers.forEach((layer, idx) => {
+    list.innerHTML += `
+      <div class="layer-item">
+        <div class="layer-info">
+          <div class="layer-name">${idx + 1}. ${layer.name}</div>
+          <div class="layer-desc">${layer.description}</div>
+          <div class="layer-params">${layer.params.toLocaleString()} parameters</div>
+        </div>
+        <button class="delete-btn" onclick="deleteLayer(${layer.id})">Delete</button>
+      </div>
+    `;
+  });
+
+  updateTotals();
+}
+
+function updateTotals() {
+  const totalParams = layers.reduce((sum, l) => sum + l.params, 0);
+  const fp32Memory = (totalParams * 4) / (1024 * 1024); // 4 bytes per FP32
+  const fp16Memory = (totalParams * 2) / (1024 * 1024); // 2 bytes per FP16
+
+  document.getElementById('totalParams').textContent = totalParams.toLocaleString();
+  document.getElementById('memoryFp32').textContent = fp32Memory.toFixed(2) + ' MB';
+  document.getElementById('memoryFp16').textContent = fp16Memory.toFixed(2) + ' MB';
+  document.getElementById('layerCount').textContent = layers.length;
+
+  // Breakdown by type
+  if (layers.length > 0) {
+    const typeBreakdown = {};
+    layers.forEach(layer => {
+      if (!typeBreakdown[layer.type]) typeBreakdown[layer.type] = 0;
+      typeBreakdown[layer.type] += layer.params;
+    });
+
+    let breakdownHTML = '';
+    Object.entries(typeBreakdown).forEach(([type, params]) => {
+      const percent = ((params / totalParams) * 100).toFixed(1);
+      breakdownHTML += `
+        <div class="breakdown-item">
+          <span class="breakdown-label">${layerConfigs[type].label}</span>
+          <span class="breakdown-value">${params.toLocaleString()} (${percent}%)</span>
+        </div>
+      `;
+    });
+
+    document.getElementById('breakdownContent').innerHTML = breakdownHTML;
+    document.getElementById('breakdownDiv').style.display = 'block';
+  } else {
+    document.getElementById('breakdownDiv').style.display = 'none';
+  }
+
+  if (typeof window.adsbygoogle !== 'undefined') {
+    window.adsbygoogle.push({});
+  }
+}
+
+// Initialize
+updateLayersList();
+</script>
+</body>
+</html>

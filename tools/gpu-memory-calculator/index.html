@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPU Memory Calculator — Free Tool | HeyTensor</title>
+<meta name="description" content="Calculate GPU VRAM needed for training/inference. Model parameters, batch size, precision, optimizer states.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://heytensor.com/tools/gpu-memory-calculator/">
+<meta property="og:title" content="GPU Memory Calculator — HeyTensor">
+<meta property="og:description" content="Calculate GPU VRAM needed for model training and inference">
+<meta property="og:url" content="https://heytensor.com/tools/gpu-memory-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HeyTensor">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "GPU Memory Calculator",
+  "url": "https://heytensor.com/tools/gpu-memory-calculator/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "Calculate GPU VRAM requirements for model training and inference"
+}
+</script>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0a0a0a;
+  color: #e8e8e8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-top: 20px;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  color: #3b82f6;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 1.05rem;
+}
+
+.tool-section {
+  background: #1a1a1a;
+  border: 1px solid #333333;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+input[type="number"],
+select {
+  padding: 12px;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #e8e8e8;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+input[type="number"]:focus,
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+input[type="number"]::placeholder {
+  color: #64748b;
+}
+
+.help-text {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.calculation-button {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.calculation-button:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.results-section {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+  display: none;
+}
+
+.results-section.show {
+  display: block;
+}
+
+.result-item {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #334155;
+}
+
+.result-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.result-label {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.result-value {
+  color: #3b82f6;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.result-unit {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-left: 4px;
+}
+
+.breakdown {
+  background: #0a0a0a;
+  border-left: 3px solid #3b82f6;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+.breakdown-item {
+  margin-bottom: 6px;
+}
+
+.breakdown-item:last-child {
+  margin-bottom: 0;
+}
+
+.partner-section {
+  margin: 30px auto;
+  max-width: 728px;
+  text-align: center;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 1px solid #334155;
+  border-radius: 10px;
+}
+
+.partner-label {
+  margin: 0 0 6px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.partner-link {
+  color: #38bdf8;
+  font-weight: 600;
+  font-size: 1.05rem;
+  text-decoration: none;
+}
+
+.partner-link:hover {
+  text-decoration: underline;
+}
+
+.partner-desc {
+  margin: 6px 0 0;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.ad-section {
+  margin: 20px auto;
+  max-width: 728px;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #333333;
+}
+
+footer a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>GPU Memory Calculator</h1>
+    <p class="subtitle">Calculate VRAM requirements for model training & inference</p>
+  </header>
+
+  <div class="tool-section">
+    <h2 style="color: #e8e8e8; margin-bottom: 24px;">Model Configuration</h2>
+
+    <div class="input-grid">
+      <div class="input-group">
+        <label for="modelParams">Model Parameters (M)</label>
+        <input type="number" id="modelParams" placeholder="e.g., 7000 for 7B params" min="1" value="7000">
+        <p class="help-text">Total parameters in millions (M)</p>
+      </div>
+
+      <div class="input-group">
+        <label for="precision">Data Precision</label>
+        <select id="precision">
+          <option value="32">FP32 (32-bit)</option>
+          <option value="16">FP16 (16-bit)</option>
+          <option value="8">INT8 (8-bit)</option>
+          <option value="4">INT4 (4-bit)</option>
+        </select>
+        <p class="help-text">Floating point precision</p>
+      </div>
+
+      <div class="input-group">
+        <label for="batchSize">Batch Size</label>
+        <input type="number" id="batchSize" placeholder="e.g., 32" min="1" value="32">
+        <p class="help-text">Samples per batch</p>
+      </div>
+
+      <div class="input-group">
+        <label for="seqLength">Sequence Length</label>
+        <input type="number" id="seqLength" placeholder="e.g., 512" min="1" value="512">
+        <p class="help-text">Input sequence length (tokens)</p>
+      </div>
+
+      <div class="input-group">
+        <label for="mode">Mode</label>
+        <select id="mode">
+          <option value="training">Training (with gradients)</option>
+          <option value="inference">Inference (forward only)</option>
+        </select>
+        <p class="help-text">Training or inference</p>
+      </div>
+
+      <div class="input-group">
+        <label for="optimizer">Optimizer</label>
+        <select id="optimizer">
+          <option value="adam">Adam (2 momentum states)</option>
+          <option value="adamw">AdamW (2 momentum states)</option>
+          <option value="sgd">SGD (no states)</option>
+          <option value="none">None (no optimizer)</option>
+        </select>
+        <p class="help-text">Optimization algorithm</p>
+      </div>
+    </div>
+
+    <button class="calculation-button" onclick="calculateMemory()">Calculate Memory</button>
+  </div>
+
+  <div class="results-section" id="resultsSection">
+    <h2 style="color: #e8e8e8; margin-bottom: 24px;">Memory Breakdown</h2>
+
+    <div class="result-item">
+      <div class="result-label">Total GPU Memory Required</div>
+      <div>
+        <span class="result-value" id="totalMemory">0</span>
+        <span class="result-unit">GB</span>
+      </div>
+      <div class="breakdown">
+        <div class="breakdown-item"><strong>Model weights:</strong> <span id="weightsMemory">0</span> GB</div>
+        <div class="breakdown-item"><strong>Activations:</strong> <span id="activationsMemory">0</span> GB</div>
+        <div class="breakdown-item"><strong>Gradients:</strong> <span id="gradientsMemory">0</span> GB</div>
+        <div class="breakdown-item"><strong>Optimizer states:</strong> <span id="optimizerMemory">0</span> GB</div>
+        <div class="breakdown-item"><strong>Batch data:</strong> <span id="batchMemory">0</span> GB</div>
+      </div>
+    </div>
+
+    <div class="result-item">
+      <div class="result-label">Recommended GPU</div>
+      <div id="recommendedGPU" style="color: #3b82f6; font-size: 1.2rem; font-weight: 600; margin-top: 8px;">L40S / H100</div>
+    </div>
+
+    <div class="result-item">
+      <div class="result-label">Training Time Estimate</div>
+      <div style="color: #cbd5e1; font-size: 0.95rem; margin-top: 8px;">100 steps: <span id="timeEstimate">~5 min</span></div>
+      <p class="help-text" style="margin-top: 12px;">Assumes 100 tokens/sec throughput on modern GPU</p>
+    </div>
+  </div>
+
+  <div class="partner-section">
+    <p class="partner-label">Recommended by our team</p>
+    <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
+    <p class="partner-desc">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+  </div>
+
+  <div class="ad-section">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 HeyTensor. All rights reserved. <a href="https://heytensor.com/tools/">Back to Tools</a></p>
+  </footer>
+</div>
+
+<script>
+function calculateMemory() {
+  const modelParams = parseFloat(document.getElementById('modelParams').value) || 0;
+  const precision = parseFloat(document.getElementById('precision').value);
+  const batchSize = parseFloat(document.getElementById('batchSize').value) || 1;
+  const seqLength = parseFloat(document.getElementById('seqLength').value) || 512;
+  const mode = document.getElementById('mode').value;
+  const optimizer = document.getElementById('optimizer').value;
+
+  if (modelParams <= 0) {
+    alert('Please enter valid model parameters');
+    return;
+  }
+
+  // Convert model params from millions to actual count
+  const paramCount = modelParams * 1_000_000;
+
+  // Bytes per parameter based on precision
+  const bytesPerParam = precision / 8;
+
+  // Model weights (always required)
+  const weightsBytes = paramCount * bytesPerParam;
+  const weightsGB = weightsBytes / (1024 ** 3);
+
+  // Activations (rule of thumb: ~12 * seqLength * batchSize * hidden_dim)
+  // Estimate hidden_dim from param count
+  const estimatedHiddenDim = Math.sqrt(paramCount / 12); // rough approximation
+  const activationsBytes = 12 * seqLength * batchSize * estimatedHiddenDim * 4; // fp32 for activations
+  const activationsGB = activationsBytes / (1024 ** 3);
+
+  // Gradients (same size as weights if training)
+  let gradientsGB = 0;
+  if (mode === 'training') {
+    gradientsGB = weightsGB;
+  }
+
+  // Optimizer states
+  let optimizerGB = 0;
+  if (mode === 'training') {
+    if (optimizer === 'adam' || optimizer === 'adamw') {
+      optimizerGB = weightsGB * 2; // momentum + velocity
+    } else if (optimizer === 'sgd') {
+      optimizerGB = weightsGB * 0.5; // just momentum
+    }
+  }
+
+  // Batch data (embeddings: seqLength * batchSize * embedding_dim * 4)
+  const batchBytes = seqLength * batchSize * Math.min(estimatedHiddenDim, 4096) * 4;
+  const batchGB = batchBytes / (1024 ** 3);
+
+  // Total
+  const totalGB = weightsGB + activationsGB + gradientsGB + optimizerGB + batchGB;
+
+  // Recommend GPU
+  let recommendedGPU = 'H100';
+  if (totalGB <= 16) {
+    recommendedGPU = 'RTX 3090 Ti (24GB) / A100 40GB';
+  } else if (totalGB <= 40) {
+    recommendedGPU = 'A100 40GB / L40S 48GB';
+  } else if (totalGB <= 48) {
+    recommendedGPU = 'L40S 48GB / A100 80GB';
+  } else if (totalGB <= 80) {
+    recommendedGPU = 'A100 80GB / H100';
+  } else {
+    recommendedGPU = 'Multi-GPU (H100 x' + Math.ceil(totalGB / 80) + ') or TPU Pod';
+  }
+
+  // Estimate training time
+  const tokensPerSecond = 100; // conservative estimate
+  const totalTokens = seqLength * batchSize * 100; // 100 steps
+  const timeSeconds = totalTokens / tokensPerSecond;
+  const timeMinutes = Math.round(timeSeconds / 60);
+  const timeEstimate = timeMinutes < 60 ? `~${timeMinutes} min` : `~${(timeMinutes / 60).toFixed(1)} hours`;
+
+  // Update UI
+  document.getElementById('totalMemory').textContent = totalGB.toFixed(2);
+  document.getElementById('weightsMemory').textContent = weightsGB.toFixed(3);
+  document.getElementById('activationsMemory').textContent = activationsGB.toFixed(3);
+  document.getElementById('gradientsMemory').textContent = gradientsGB.toFixed(3);
+  document.getElementById('optimizerMemory').textContent = optimizerGB.toFixed(3);
+  document.getElementById('batchMemory').textContent = batchGB.toFixed(3);
+  document.getElementById('recommendedGPU').textContent = recommendedGPU;
+  document.getElementById('timeEstimate').textContent = timeEstimate;
+
+  document.getElementById('resultsSection').classList.add('show');
+
+  // Push AdSense ad if available
+  if (typeof window.adsbygoogle !== 'undefined') {
+    window.adsbygoogle.push({});
+  }
+}
+
+// Allow Enter key to calculate
+document.getElementById('modelParams').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') calculateMemory();
+});
+</script>
+</body>
+</html>
