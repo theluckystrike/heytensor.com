@@ -19,7 +19,7 @@
       name: 'ReLU',
       formula: 'f(x) = max(0, x)',
       fn: function (x) { return Math.max(0, x); },
-      color: '#3B82F6',
+      color: '#F59E0B',
       useCase: 'Default for CNNs and hidden layers',
       pros: 'Fast, sparse activation, no vanishing gradient for positive inputs',
       cons: 'Dying ReLU problem (neurons stuck at 0)'
@@ -192,7 +192,7 @@
 
     // Axis labels
     ctx.fillStyle = textColor;
-    ctx.font = '10px "IBM Plex Sans", sans-serif';
+    ctx.font = '10px "DM Sans", system-ui, sans-serif';
     ctx.textAlign = 'center';
     for (var lx = Math.ceil(xMin); lx <= xMax; lx++) {
       if (lx === 0) continue;
@@ -223,7 +223,7 @@
 
     // Function name label
     ctx.fillStyle = color;
-    ctx.font = 'bold 12px "Space Mono", monospace';
+    ctx.font = 'bold 12px "JetBrains Mono", monospace';
     ctx.textAlign = 'left';
     ctx.fillText(name, 8, 16);
   }
