@@ -969,3 +969,86 @@ main,
     gap: 12px;
   }
 }
+
+/* ================================================
+   RESPONSIVE + SEO LAYER (claude-design-responsive-seo3 spec)
+   ================================================ */
+
+/* 1.7 Touch targets — 48px+ on coarse-pointer devices */
+@media (pointer: coarse) {
+  .btn { min-height: 48px; padding: 12px 22px; }
+  .btn-sm { min-height: 44px; }
+  input[type="number"], input[type="text"], select { min-height: 48px; }
+  .tab-btn { min-height: 48px; }
+  .faq-section details summary { min-height: 56px; }
+  .faq-q { min-height: 56px; }
+  nav a { padding: 6px 0; }
+}
+
+/* 1.7 Hover effects only where a hover pointer exists (no sticky-hover on touch) */
+@media (hover: hover) {
+  .preset-card:hover { border-color: var(--accent); background: var(--bg-hover); }
+  .tool-card:hover,
+  .related-card:hover { border-color: var(--accent); background: var(--bg-hover); }
+}
+/* Neutralize default always-on hovers on touch by re-asserting base under coarse */
+@media (pointer: coarse) {
+  .preset-card:hover,
+  .tool-card:hover,
+  .related-card:hover { background: var(--bg-card); border-color: var(--border); }
+}
+
+/* 1.9 CLS — pre-size the result slot so populating it doesn't shift layout */
+#single-result:empty,
+#single-viz:empty { min-height: 0; }
+#single-result { min-height: 0; }
+
+/* 1.8 Safe-area insets for notches / gesture bars */
+@supports (padding: env(safe-area-inset-left)) {
+  .container { padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
+}
+
+/* 3-second test — compress hero on mobile so the tool is in the first viewport */
+@media (max-width: 767px) {
+  .hero { padding: 28px 0 18px; }
+  .hero p { font-size: 0.95rem; }
+  .tool-hero { padding: 20px 0 18px; }
+}
+
+/* Sticky mini-result bar (responsive spec 1.5) */
+.sticky-result {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 98;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 20px;
+  background: rgba(11, 13, 16, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(-130%);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+.sticky-result.show { transform: translateY(0); }
+.sticky-result .sr-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-dim);
+}
+.sticky-result .sr-shape {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sticky-result.is-error .sr-shape { color: var(--red); }
