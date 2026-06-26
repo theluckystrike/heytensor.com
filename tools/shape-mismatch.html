@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"PyTorch Shape Mismatch Error Debugger"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/shape-mismatch.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,20 +137,22 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>What causes shape mismatch errors in PyTorch?</summary>
-        <p>Shape mismatches occur when two tensors in an operation have incompatible dimensions. Common causes: wrong in_features in Linear layers, missing Flatten before FC layers, incorrect reshape/view dimensions, or tensors from different batch sizes.</p>
+        <p class="qas">Shape mismatches occur when two tensors in an operation have incompatible dimensions. Common causes: wrong in_features in Linear layers, missing Flatten before FC layers, incorrect reshape/view dimensions, or tensors from different batch sizes.</p>
       </details>
 
       <details>
         <summary>How do I debug shape errors in PyTorch?</summary>
-        <p>1) Add print(tensor.shape) before the failing line. 2) Use HeyTensor&#39;s Chain Mode to trace shapes through your network. 3) Check that in_features matches the actual output of the previous layer. 4) Verify reshape/view dimensions multiply to the correct total.</p>
+        <p class="qas">1) Add print(tensor.shape) before the failing line. 2) Use HeyTensor&#39;s Chain Mode to trace shapes through your network. 3) Check that in_features matches the actual output of the previous layer. 4) Verify reshape/view dimensions multiply to the correct total.</p>
       </details>
 
       <details>
         <summary>What does &#39;expected input batch_size X to match target batch_size Y&#39; mean?</summary>
-        <p>Your model output and labels have different batch sizes. This often happens when you accidentally reshape a tensor and change the batch dimension. Check that your data loader returns matching batches and no layer modifies dimension 0.</p>
+        <p class="qas">Your model output and labels have different batch sizes. This often happens when you accidentally reshape a tensor and change the batch dimension. Check that your data loader returns matching batches and no layer modifies dimension 0.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

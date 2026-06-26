@@ -89,6 +89,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"GRU Output Shape Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/gru-shape-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -130,21 +132,22 @@
       <h2>Frequently Asked Questions</h2>
       <details>
         <summary>What is the output shape of a PyTorch GRU?</summary>
-        <p>A PyTorch GRU returns two tensors: output of shape (seq_len, batch, num_directions*hidden_size) and h_n of shape (num_layers*num_directions, batch, hidden_size). With batch_first=True, output becomes (batch, seq_len, num_directions*hidden_size).</p>
+        <p class="qas">A PyTorch GRU returns two tensors: output of shape (seq_len, batch, num_directions*hidden_size) and h_n of shape (num_layers*num_directions, batch, hidden_size). With batch_first=True, output becomes (batch, seq_len, num_directions*hidden_size).</p>
       </details>
       <details>
         <summary>What is the difference between GRU and LSTM?</summary>
-        <p>GRU has 2 gates (reset and update) while LSTM has 3 gates (input, forget, output) plus a cell state. GRU merges the cell state and hidden state into one, making it simpler with fewer parameters. GRU trains faster but LSTM can capture longer dependencies.</p>
+        <p class="qas">GRU has 2 gates (reset and update) while LSTM has 3 gates (input, forget, output) plus a cell state. GRU merges the cell state and hidden state into one, making it simpler with fewer parameters. GRU trains faster but LSTM can capture longer dependencies.</p>
       </details>
       <details>
         <summary>How does bidirectional affect GRU output shape?</summary>
-        <p>With bidirectional=True, num_directions=2. The output last dimension doubles to 2*hidden_size. The h_n first dimension doubles to num_layers*2. For example, a 2-layer bidirectional GRU with hidden_size=256 produces output [..., 512] and h_n of shape [4, batch, 256].</p>
+        <p class="qas">With bidirectional=True, num_directions=2. The output last dimension doubles to 2*hidden_size. The h_n first dimension doubles to num_layers*2. For example, a 2-layer bidirectional GRU with hidden_size=256 produces output [..., 512] and h_n of shape [4, batch, 256].</p>
       </details>
       <details>
         <summary>How do I initialize GRU hidden state?</summary>
-        <p>The initial hidden state h_0 should have shape (num_layers*num_directions, batch_size, hidden_size). If not provided, PyTorch initializes it to zeros. For bidirectional GRUs, the first dimension is num_layers*2.</p>
+        <p class="qas">The initial hidden state h_0 should have shape (num_layers*num_directions, batch_size, hidden_size). If not provided, PyTorch initializes it to zeros. For bidirectional GRUs, the first dimension is num_layers*2.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
     </section>
 
     <section class="related-tools">

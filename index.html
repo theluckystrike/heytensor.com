@@ -98,6 +98,8 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"WebSite","name":"HeyTensor","url":"https://heytensor.com/","sameAs":"https://github.com/theluckystrike/heytensor.com","author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"}}
   </script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -147,32 +149,32 @@
 
       <details>
         <summary>How do I calculate Conv2d output shape?</summary>
-        <p>The Conv2d output shape formula is: <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
+        <p class="qas">The Conv2d output shape formula is: <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
       </details>
 
       <details>
         <summary>Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?</summary>
-        <p>This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. Fix: set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
+        <p class="qas">This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. Fix: set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
       </details>
 
       <details>
         <summary>What is the output shape of a Linear layer?</summary>
-        <p>A PyTorch <code>nn.Linear(in_features, out_features)</code> layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes to out_features.</p>
+        <p class="qas">A PyTorch <code>nn.Linear(in_features, out_features)</code> layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes to out_features.</p>
       </details>
 
       <details>
         <summary>How do I fix tensor size mismatch in PyTorch?</summary>
-        <p>Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
+        <p class="qas">Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
       </details>
 
       <details>
         <summary>What does RuntimeError: Expected input batch_size mean?</summary>
-        <p>This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
+        <p class="qas">This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
       </details>
 
       <details>
         <summary>Does HeyTensor support TensorFlow layers?</summary>
-        <p>Yes. While the layer naming follows PyTorch conventions, the shape formulas are identical across frameworks. Conv2D, Dense (Linear), LSTM, and pooling layers use the same mathematical formulas in both PyTorch and TensorFlow. Enter your TensorFlow layer parameters and the output shapes will be correct.</p>
+        <p class="qas">Yes. While the layer naming follows PyTorch conventions, the shape formulas are identical across frameworks. Conv2D, Dense (Linear), LSTM, and pooling layers use the same mathematical formulas in both PyTorch and TensorFlow. Enter your TensorFlow layer parameters and the output shapes will be correct.</p>
       </details>
     </section>
 
@@ -180,7 +182,7 @@
     <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
       <h2>How HeyTensor Works</h2>
 
-      <p>HeyTensor is a free, browser-based tensor shape calculator built for deep learning practitioners who need to quickly determine output dimensions for neural network layers. Instead of manually applying formulas or inserting print statements into your code, you enter the input shape and layer parameters, and HeyTensor computes the exact output shape instantly. The calculator supports 14 layer types across both PyTorch and TensorFlow: Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, and Concatenate.</p>
+      <p class="qas">HeyTensor is a free, browser-based tensor shape calculator built for deep learning practitioners who need to quickly determine output dimensions for neural network layers. Instead of manually applying formulas or inserting print statements into your code, you enter the input shape and layer parameters, and HeyTensor computes the exact output shape instantly. The calculator supports 14 layer types across both PyTorch and TensorFlow: Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, and Concatenate.</p>
 
       <p>The most powerful feature is Chain Mode, which lets you stack layers sequentially and see the output shape at every step of your network. If shapes become incompatible between layers — the most common source of PyTorch RuntimeErrors — the mismatch is highlighted immediately. This lets you fix architecture issues before writing any code, saving the frustrating cycle of running a training script, hitting a shape error, guessing the fix, and running again. The Paste Error mode goes further: paste a PyTorch error message like "mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)" and HeyTensor extracts the dimensions and suggests which parameter to change.</p>
 

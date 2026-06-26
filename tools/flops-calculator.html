@@ -32,6 +32,8 @@
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are FLOPs?","acceptedAnswer":{"@type":"Answer","text":"FLOPs (Floating Point Operations) measure the computational cost of a neural network layer or model. One multiply-add counts as 2 FLOPs (1 multiplication + 1 addition). A Linear(512, 256) layer with batch size 1 performs 512×256 multiply-adds = 262,144 FLOPs."}},{"@type":"Question","name":"What is the difference between FLOPs and FLOPS?","acceptedAnswer":{"@type":"Answer","text":"FLOPs (lowercase s) = total number of floating point operations (a count). FLOPS (uppercase S) = floating point operations per second (a rate). A model has X FLOPs of computation. A GPU can perform Y FLOPS. Inference time ≈ FLOPs / FLOPS."}},{"@type":"Question","name":"How do I calculate Conv2d FLOPs?","acceptedAnswer":{"@type":"Answer","text":"Conv2d FLOPs = 2 × out_channels × out_height × out_width × in_channels × kernel_h × kernel_w. The factor of 2 accounts for multiply-add. For a Conv2d(3, 64, 3) on 224×224 input: 2 × 64 × 224 × 224 × 3 × 3 × 3 ≈ 173M FLOPs."}},{"@type":"Question","name":"FLOPs vs parameters — which matters more?","acceptedAnswer":{"@type":"Answer","text":"Parameters determine model size (memory). FLOPs determine computation time. They don't always correlate: depthwise separable convolutions have fewer FLOPs but similar parameters. Attention layers have quadratic FLOPs in sequence length but linear parameters. For mobile deployment, FLOPs matter more. For memory-constrained inference, parameters matter more."}},{"@type":"Question","name":"Is this tool free?","acceptedAnswer":{"@type":"Answer","text":"Yes. All HeyTensor tools are free, run in your browser, and require no signup."}}]}
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"FLOPs Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/flops-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header><div class="container header-inner"><a href="/" class="logo">Hey<span>Tensor</span></a><button class="mobile-toggle" aria-label="Menu">&#9776;</button><nav><a href="/">Calculator</a><a href="/tools/" class="active">Tools</a><a href="/about.html">About</a><a href="/blog/">Blog</a><div class="nav-right"><a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a><a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a></div></nav></div></header>
@@ -49,11 +51,16 @@
 
     <section class="faq-section">
       <h2>Frequently Asked Questions</h2>
-      <details><summary>What are FLOPs?</summary><p>FLOPs (Floating Point Operations) measure computational cost. One multiply-add counts as 2 FLOPs. A Linear(512, 256) layer performs 512×256 multiply-adds = 262,144 FLOPs.</p></details>
-      <details><summary>FLOPs vs FLOPS?</summary><p>FLOPs (lowercase s) = total operations (a count). FLOPS (uppercase S) = operations per second (a rate). Inference time ≈ FLOPs / FLOPS.</p></details>
-      <details><summary>How to calculate Conv2d FLOPs?</summary><p>Conv2d FLOPs = 2 × out_channels × out_h × out_w × in_channels × kernel_h × kernel_w. For Conv2d(3, 64, 3) on 224×224: ≈ 173M FLOPs.</p></details>
-      <details><summary>FLOPs vs parameters?</summary><p>Parameters = model size (memory). FLOPs = computation time. They don't always correlate. For mobile: FLOPs matter more. For memory-constrained: parameters matter more.</p></details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>What are FLOPs?</summary>
+        <p class="qas">FLOPs (Floating Point Operations) measure computational cost. One multiply-add counts as 2 FLOPs. A Linear(512, 256) layer performs 512×256 multiply-adds = 262,144 FLOPs.</p></details>
+      <details><summary>FLOPs vs FLOPS?</summary>
+        <p class="qas">FLOPs (lowercase s) = total operations (a count). FLOPS (uppercase S) = operations per second (a rate). Inference time ≈ FLOPs / FLOPS.</p></details>
+      <details><summary>How to calculate Conv2d FLOPs?</summary>
+        <p class="qas">Conv2d FLOPs = 2 × out_channels × out_h × out_w × in_channels × kernel_h × kernel_w. For Conv2d(3, 64, 3) on 224×224: ≈ 173M FLOPs.</p></details>
+      <details><summary>FLOPs vs parameters?</summary>
+        <p class="qas">Parameters = model size (memory). FLOPs = computation time. They don't always correlate. For mobile: FLOPs matter more. For memory-constrained: parameters matter more.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
     </section>
 
     <section class="related-tools">

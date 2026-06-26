@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Flatten Output Shape Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/flatten-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,20 +137,22 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>What does nn.Flatten do to the shape?</summary>
-        <p>nn.Flatten() collapses all dimensions except the batch dimension into one. For input [batch, C, H, W], output is [batch, C*H*W]. For example, [32, 64, 7, 7] becomes [32, 3136].</p>
+        <p class="qas">nn.Flatten() collapses all dimensions except the batch dimension into one. For input [batch, C, H, W], output is [batch, C*H*W]. For example, [32, 64, 7, 7] becomes [32, 3136].</p>
       </details>
 
       <details>
         <summary>When do I need to use Flatten?</summary>
-        <p>Use Flatten when transitioning from convolutional layers (which output 4D tensors) to fully-connected Linear layers (which expect 2D tensors). It is the bridge between the feature extraction and classification parts of a CNN.</p>
+        <p class="qas">Use Flatten when transitioning from convolutional layers (which output 4D tensors) to fully-connected Linear layers (which expect 2D tensors). It is the bridge between the feature extraction and classification parts of a CNN.</p>
       </details>
 
       <details>
         <summary>What is the start_dim parameter?</summary>
-        <p>nn.Flatten(start_dim=1) flattens from dimension 1 onward (default). You can change start_dim to flatten only certain dimensions. For example, Flatten(start_dim=2) on [B, C, H, W] gives [B, C, H*W].</p>
+        <p class="qas">nn.Flatten(start_dim=1) flattens from dimension 1 onward (default). You can change start_dim to flatten only certain dimensions. For example, Flatten(start_dim=2) on [B, C, H, W] gives [B, C, H*W].</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

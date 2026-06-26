@@ -1052,3 +1052,6 @@ main,
   text-overflow: ellipsis;
 }
 .sticky-result.is-error .sr-shape { color: var(--red); }
+
+/* QAS — quotable authority sentence (GEO speakable target; no visual restyle) */
+.qas { }

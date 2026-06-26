@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"GPU Memory Calculator for Training"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/memory-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,24 +137,25 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>How much GPU memory does training require?</summary>
-        <p>Training memory ≈ model_params * bytes_per_param * multiplier + activation_memory. With float32 and Adam: multiplier is 4 (1x params + 1x grads + 2x Adam states). With mixed precision: roughly 60-70% of float32. Activations scale linearly with batch size.</p>
+        <p class="qas">Training memory ≈ model_params * bytes_per_param * multiplier + activation_memory. With float32 and Adam: multiplier is 4 (1x params + 1x grads + 2x Adam states). With mixed precision: roughly 60-70% of float32. Activations scale linearly with batch size.</p>
       </details>
 
       <details>
         <summary>How do I estimate activation memory?</summary>
-        <p>Activation memory stores intermediate outputs for backpropagation. For CNNs: sum of (batch * channels * H * W * 4 bytes) across all layers. For transformers: dominated by attention maps (batch * num_heads * seq_len^2 * 4 bytes per layer). This tool provides estimates based on your architecture.</p>
+        <p class="qas">Activation memory stores intermediate outputs for backpropagation. For CNNs: sum of (batch * channels * H * W * 4 bytes) across all layers. For transformers: dominated by attention maps (batch * num_heads * seq_len^2 * 4 bytes per layer). This tool provides estimates based on your architecture.</p>
       </details>
 
       <details>
         <summary>What GPU do I need for my model?</summary>
-        <p>Quick guide: &lt;10M params → any GPU (4GB+). 10M-100M params → 8-16GB (RTX 3070/4080). 100M-1B params → 24-48GB (RTX 3090/A6000). 1B+ params → multiple GPUs or 80GB (A100/H100). Mixed precision roughly halves these requirements.</p>
+        <p class="qas">Quick guide: &lt;10M params → any GPU (4GB+). 10M-100M params → 8-16GB (RTX 3070/4080). 100M-1B params → 24-48GB (RTX 3090/A6000). 1B+ params → multiple GPUs or 80GB (A100/H100). Mixed precision roughly halves these requirements.</p>
       </details>
 
       <details>
         <summary>How does mixed precision affect memory?</summary>
-        <p>Mixed precision (torch.cuda.amp) stores model weights in float16 (2 bytes) but keeps a float32 master copy. Net effect: about 60% of full float32 memory for parameters/optimizer states. Activations are stored in float16, roughly halving activation memory.</p>
+        <p class="qas">Mixed precision (torch.cuda.amp) stores model weights in float16 (2 bytes) but keeps a float32 master copy. Net effect: about 60% of full float32 memory for parameters/optimizer states. Activations are stored in float16, roughly halving activation memory.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
     </section>
 
     <section class="related-tools">

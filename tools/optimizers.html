@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Optimizers Comparison"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/optimizers.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,20 +137,22 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>Which optimizer should I use?</summary>
-        <p>AdamW for transformers and NLP. SGD with momentum for CNNs (often better final accuracy). Adam for quick experiments and most general use. RAdam or Adafactor for stability without learning rate warmup.</p>
+        <p class="qas">AdamW for transformers and NLP. SGD with momentum for CNNs (often better final accuracy). Adam for quick experiments and most general use. RAdam or Adafactor for stability without learning rate warmup.</p>
       </details>
 
       <details>
         <summary>What is the difference between Adam and AdamW?</summary>
-        <p>Adam applies weight decay to the gradient before computing adaptive learning rates, which couples regularization with adaptation. AdamW decouples weight decay from the gradient update, applying it directly to the parameters. AdamW produces better generalization, especially with learning rate schedules.</p>
+        <p class="qas">Adam applies weight decay to the gradient before computing adaptive learning rates, which couples regularization with adaptation. AdamW decouples weight decay from the gradient update, applying it directly to the parameters. AdamW produces better generalization, especially with learning rate schedules.</p>
       </details>
 
       <details>
         <summary>How much memory do optimizers use?</summary>
-        <p>SGD with momentum: 1x parameters (momentum buffer). Adam/AdamW: 2x parameters (first and second moment estimates). So Adam uses 2x more optimizer memory than SGD. For a 1B parameter model in float32, that&#39;s 4GB (SGD) vs 8GB (Adam) of optimizer states.</p>
+        <p class="qas">SGD with momentum: 1x parameters (momentum buffer). Adam/AdamW: 2x parameters (first and second moment estimates). So Adam uses 2x more optimizer memory than SGD. For a 1B parameter model in float32, that&#39;s 4GB (SGD) vs 8GB (Adam) of optimizer states.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

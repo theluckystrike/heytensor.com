@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"ConvTranspose2d Output Size Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/convtranspose2d-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,20 +137,22 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>What is the ConvTranspose2d output size formula?</summary>
-        <p>The formula is: H_out = (H_in - 1) * stride - 2*padding + dilation*(kernel_size-1) + output_padding + 1. This is the inverse of Conv2d and is used in decoder networks and GANs to upsample feature maps.</p>
+        <p class="qas">The formula is: H_out = (H_in - 1) * stride - 2*padding + dilation*(kernel_size-1) + output_padding + 1. This is the inverse of Conv2d and is used in decoder networks and GANs to upsample feature maps.</p>
       </details>
 
       <details>
         <summary>What is output_padding in ConvTranspose2d?</summary>
-        <p>output_padding adds extra pixels to one side of the output. It resolves the ambiguity where multiple input sizes can map to the same Conv2d output. It must be less than stride. Common value is 0 or 1.</p>
+        <p class="qas">output_padding adds extra pixels to one side of the output. It resolves the ambiguity where multiple input sizes can map to the same Conv2d output. It must be less than stride. Common value is 0 or 1.</p>
       </details>
 
       <details>
         <summary>When should I use ConvTranspose2d vs Upsample + Conv2d?</summary>
-        <p>ConvTranspose2d can produce checkerboard artifacts. An alternative is nn.Upsample followed by nn.Conv2d, which often gives smoother results. However, ConvTranspose2d is more parameter-efficient and widely used in U-Net and GAN architectures.</p>
+        <p class="qas">ConvTranspose2d can produce checkerboard artifacts. An alternative is nn.Upsample followed by nn.Conv2d, which often gives smoother results. However, ConvTranspose2d is more parameter-efficient and widely used in U-Net and GAN architectures.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

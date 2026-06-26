@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Loss Functions Guide"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/loss-functions.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,20 +137,22 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>Which loss function should I use?</summary>
-        <p>Multi-class classification: CrossEntropyLoss (no Softmax needed — it&#39;s built in). Binary classification: BCEWithLogitsLoss. Regression: MSELoss (L2) or L1Loss (more robust to outliers). Regression with outliers: HuberLoss.</p>
+        <p class="qas">Multi-class classification: CrossEntropyLoss (no Softmax needed — it&#39;s built in). Binary classification: BCEWithLogitsLoss. Regression: MSELoss (L2) or L1Loss (more robust to outliers). Regression with outliers: HuberLoss.</p>
       </details>
 
       <details>
         <summary>Why does CrossEntropyLoss include Softmax?</summary>
-        <p>PyTorch&#39;s CrossEntropyLoss combines LogSoftmax + NLLLoss for numerical stability. Do NOT apply Softmax before CrossEntropyLoss — you&#39;ll get wrong gradients. Your model&#39;s final layer should output raw logits.</p>
+        <p class="qas">PyTorch&#39;s CrossEntropyLoss combines LogSoftmax + NLLLoss for numerical stability. Do NOT apply Softmax before CrossEntropyLoss — you&#39;ll get wrong gradients. Your model&#39;s final layer should output raw logits.</p>
       </details>
 
       <details>
         <summary>What is the difference between BCE and CrossEntropy?</summary>
-        <p>BCELoss is for binary classification (one output per sample, 0 or 1). CrossEntropyLoss is for multi-class classification (one-of-N classes). For multi-label classification (multiple labels per sample), use BCEWithLogitsLoss.</p>
+        <p class="qas">BCELoss is for binary classification (one output per sample, 0 or 1). CrossEntropyLoss is for multi-class classification (one-of-N classes). For multi-label classification (multiple labels per sample), use BCEWithLogitsLoss.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

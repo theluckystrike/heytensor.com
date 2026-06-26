@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"CUDA Out of Memory — Solutions"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/cuda-out-of-memory.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,24 +137,25 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>Why am I getting CUDA out of memory?</summary>
-        <p>Your model, optimizer states, gradients, and intermediate activations exceed GPU VRAM. Training requires roughly 4x the model size (1x params + 1x gradients + 2x Adam states) plus activation memory which scales with batch size.</p>
+        <p class="qas">Your model, optimizer states, gradients, and intermediate activations exceed GPU VRAM. Training requires roughly 4x the model size (1x params + 1x gradients + 2x Adam states) plus activation memory which scales with batch size.</p>
       </details>
 
       <details>
         <summary>How do I reduce GPU memory usage?</summary>
-        <p>1) Reduce batch size. 2) Use mixed precision (torch.cuda.amp). 3) Use gradient checkpointing (model.gradient_checkpointing_enable()). 4) Use gradient accumulation. 5) Clear cache with torch.cuda.empty_cache(). 6) Use a smaller model.</p>
+        <p class="qas">1) Reduce batch size. 2) Use mixed precision (torch.cuda.amp). 3) Use gradient checkpointing (model.gradient_checkpointing_enable()). 4) Use gradient accumulation. 5) Clear cache with torch.cuda.empty_cache(). 6) Use a smaller model.</p>
       </details>
 
       <details>
         <summary>How much GPU memory does my model need?</summary>
-        <p>For training with Adam: memory ≈ (num_params * 4 bytes * 4) + activation_memory. The 4x comes from: parameters (4B), gradients (4B), Adam m state (4B), Adam v state (4B). Activations depend on batch size and model architecture. Use HeyTensor&#39;s Memory Calculator for an estimate.</p>
+        <p class="qas">For training with Adam: memory ≈ (num_params * 4 bytes * 4) + activation_memory. The 4x comes from: parameters (4B), gradients (4B), Adam m state (4B), Adam v state (4B). Activations depend on batch size and model architecture. Use HeyTensor&#39;s Memory Calculator for an estimate.</p>
       </details>
 
       <details>
         <summary>What does &#39;Tried to allocate X MiB&#39; mean?</summary>
-        <p>PyTorch is telling you how much memory the current operation needs. The error also shows total GPU memory and current allocation. If allocated + requested &gt; total, you&#39;re out of memory. The solution is to reduce the requested amount (smaller batch) or free existing allocations.</p>
+        <p class="qas">PyTorch is telling you how much memory the current operation needs. The error also shows total GPU memory and current allocation. If allocated + requested &gt; total, you&#39;re out of memory. The solution is to reduce the requested amount (smaller batch) or free existing allocations.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
     </section>
 
     <section class="related-tools">

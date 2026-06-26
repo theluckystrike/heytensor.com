@@ -89,6 +89,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"LayerNorm Shape Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/layernorm-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -130,21 +132,22 @@
       <h2>Frequently Asked Questions</h2>
       <details>
         <summary>Does LayerNorm change the output shape?</summary>
-        <p>No. LayerNorm always outputs the same shape as the input. It normalizes across the dimensions specified by normalized_shape but does not change any dimensions.</p>
+        <p class="qas">No. LayerNorm always outputs the same shape as the input. It normalizes across the dimensions specified by normalized_shape but does not change any dimensions.</p>
       </details>
       <details>
         <summary>What is the difference between LayerNorm and BatchNorm?</summary>
-        <p>BatchNorm normalizes across the batch dimension (each feature independently across samples). LayerNorm normalizes across feature dimensions (each sample independently). LayerNorm works with any batch size and is the standard in Transformers. BatchNorm is standard in CNNs.</p>
+        <p class="qas">BatchNorm normalizes across the batch dimension (each feature independently across samples). LayerNorm normalizes across feature dimensions (each sample independently). LayerNorm works with any batch size and is the standard in Transformers. BatchNorm is standard in CNNs.</p>
       </details>
       <details>
         <summary>What should normalized_shape be?</summary>
-        <p>normalized_shape should match the last N dimensions of your input tensor. For a Transformer with input [batch, seq_len, d_model], set normalized_shape=[d_model]. For normalizing over both seq and features, use [seq_len, d_model].</p>
+        <p class="qas">normalized_shape should match the last N dimensions of your input tensor. For a Transformer with input [batch, seq_len, d_model], set normalized_shape=[d_model]. For normalizing over both seq and features, use [seq_len, d_model].</p>
       </details>
       <details>
         <summary>How many parameters does LayerNorm have?</summary>
-        <p>With elementwise_affine=True (default), LayerNorm has 2 × product(normalized_shape) trainable parameters. For normalized_shape=[512], that is 1,024 parameters. With elementwise_affine=False, it has zero.</p>
+        <p class="qas">With elementwise_affine=True (default), LayerNorm has 2 × product(normalized_shape) trainable parameters. For normalized_shape=[512], that is 1,024 parameters. With elementwise_affine=False, it has zero.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
     </section>
 
     <section class="related-tools">

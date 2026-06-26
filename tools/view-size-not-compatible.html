@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"view size not compatible with input tensor — Fix"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/view-size-not-compatible.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,20 +137,22 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>What does &#39;view size is not compatible&#39; mean?</summary>
-        <p>tensor.view() requires the tensor to be contiguous in memory. After operations like transpose, permute, or narrow, the tensor may no longer be contiguous. The fix is to call .contiguous() before .view(), or use .reshape() which handles non-contiguous tensors automatically.</p>
+        <p class="qas">tensor.view() requires the tensor to be contiguous in memory. After operations like transpose, permute, or narrow, the tensor may no longer be contiguous. The fix is to call .contiguous() before .view(), or use .reshape() which handles non-contiguous tensors automatically.</p>
       </details>
 
       <details>
         <summary>What is the difference between view and reshape?</summary>
-        <p>view() requires contiguous memory and never copies data. reshape() works on any tensor — it returns a view if possible, or copies the data if needed. reshape() is safer but view() makes memory guarantees explicit.</p>
+        <p class="qas">view() requires contiguous memory and never copies data. reshape() works on any tensor — it returns a view if possible, or copies the data if needed. reshape() is safer but view() makes memory guarantees explicit.</p>
       </details>
 
       <details>
         <summary>When does a tensor become non-contiguous?</summary>
-        <p>After transpose(), permute(), expand(), narrow(), or indexing operations. These create a new view with different strides without copying data. Check with tensor.is_contiguous(). Call tensor.contiguous() to create a contiguous copy.</p>
+        <p class="qas">After transpose(), permute(), expand(), narrow(), or indexing operations. These create a new view with different strides without copying data. Check with tensor.is_contiguous(). Call tensor.contiguous() to create a contiguous copy.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

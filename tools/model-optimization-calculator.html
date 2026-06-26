@@ -240,6 +240,8 @@
     details { border-bottom: 1px solid var(--border); padding-bottom: 0.25rem; margin-bottom: 0.25rem; }
     details p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.7; padding: 0.25rem 0 0.75rem 0; }
   </style>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/model-optimization-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -408,23 +410,23 @@
       <h2>Frequently Asked Questions</h2>
       <details>
         <summary>What is the difference between FP16 and BF16?</summary>
-        <p>Both use 16 bits but differ in bit allocation. FP16 (IEEE 754 half-precision) has 5 exponent bits and 10 mantissa bits — better precision for values near 1.0. BF16 (Brain Float16) has 8 exponent bits and 7 mantissa bits — same dynamic range as FP32, far fewer overflows. For training, prefer BF16 on Ampere+ (A100, RTX 30xx). For inference, both give ~2x memory reduction with minimal accuracy loss.</p>
+        <p class="qas">Both use 16 bits but differ in bit allocation. FP16 (IEEE 754 half-precision) has 5 exponent bits and 10 mantissa bits — better precision for values near 1.0. BF16 (Brain Float16) has 8 exponent bits and 7 mantissa bits — same dynamic range as FP32, far fewer overflows. For training, prefer BF16 on Ampere+ (A100, RTX 30xx). For inference, both give ~2x memory reduction with minimal accuracy loss.</p>
       </details>
       <details>
         <summary>When should I use INT8 vs INT4 quantization?</summary>
-        <p>INT8 (8-bit integer) is the safest choice: 4x size reduction vs FP32, 2-4x speedup on supported hardware, and accuracy loss typically under 0.5% on most tasks. Use torch.ao.quantization or bitsandbytes. INT4 (4-bit, e.g. GPTQ, AWQ, GGUF) gives 8x compression vs FP32 but with 1-3% accuracy drop. Best for inference-only deployment of large language models where memory is the bottleneck.</p>
+        <p class="qas">INT8 (8-bit integer) is the safest choice: 4x size reduction vs FP32, 2-4x speedup on supported hardware, and accuracy loss typically under 0.5% on most tasks. Use torch.ao.quantization or bitsandbytes. INT4 (4-bit, e.g. GPTQ, AWQ, GGUF) gives 8x compression vs FP32 but with 1-3% accuracy drop. Best for inference-only deployment of large language models where memory is the bottleneck.</p>
       </details>
       <details>
         <summary>Does pruning actually reduce model file size?</summary>
-        <p>It depends on the pruning type. Unstructured pruning (zeroing individual weights) does not reduce file size unless sparse storage formats are used — but can reduce compute if hardware supports sparse matmul. Structured pruning (removing entire channels, heads, or layers) directly reduces parameter count and gives actual size/speedup gains. For real deployment savings, use structured pruning or combine unstructured pruning with sparse inference engines (NVIDIA Ampere sparse cores).</p>
+        <p class="qas">It depends on the pruning type. Unstructured pruning (zeroing individual weights) does not reduce file size unless sparse storage formats are used — but can reduce compute if hardware supports sparse matmul. Structured pruning (removing entire channels, heads, or layers) directly reduces parameter count and gives actual size/speedup gains. For real deployment savings, use structured pruning or combine unstructured pruning with sparse inference engines (NVIDIA Ampere sparse cores).</p>
       </details>
       <details>
         <summary>What GPU is needed for INT4 inference?</summary>
-        <p>INT4 quantization support: NVIDIA Turing+ (RTX 20xx, T4) for basic INT4, Ampere+ (A100, RTX 30xx) for fused INT4 GEMM kernels. For consumer GPUs, bitsandbytes 4-bit works on any CUDA GPU with compute capability 7.5+. Apple Silicon (MPS) supports 4-bit via llama.cpp Metal backend. CPU inference (GGUF INT4) works on any modern CPU but is ~5-20x slower than GPU.</p>
+        <p class="qas">INT4 quantization support: NVIDIA Turing+ (RTX 20xx, T4) for basic INT4, Ampere+ (A100, RTX 30xx) for fused INT4 GEMM kernels. For consumer GPUs, bitsandbytes 4-bit works on any CUDA GPU with compute capability 7.5+. Apple Silicon (MPS) supports 4-bit via llama.cpp Metal backend. CPU inference (GGUF INT4) works on any modern CPU but is ~5-20x slower than GPU.</p>
       </details>
       <details>
         <summary>Is this tool free?</summary>
-        <p>Yes. All HeyTensor tools are free, run entirely in your browser, and require no signup or account.</p>
+        <p class="qas">Yes. All HeyTensor tools are free, run entirely in your browser, and require no signup or account.</p>
       </details>
     </div>
 

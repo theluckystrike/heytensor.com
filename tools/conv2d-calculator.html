@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Conv2d Output Size Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/conv2d-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -162,24 +164,25 @@ print(sum(p.numel() for p in conv.parameters()))  # 1792</code></pre>
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>What is the Conv2d output size formula?</summary>
-        <p>The formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to the width dimension. The batch size and number of output channels (out_channels parameter) determine the remaining dimensions.</p>
+        <p class="qas">The formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to the width dimension. The batch size and number of output channels (out_channels parameter) determine the remaining dimensions.</p>
       </details>
 
       <details>
         <summary>How does dilation affect Conv2d output size?</summary>
-        <p>Dilation spreads the kernel elements apart, effectively increasing the receptive field without adding parameters. A dilation of 2 means there is one gap between each kernel element. The effective kernel size becomes dilation*(kernel_size-1)+1, which reduces the output spatial dimensions.</p>
+        <p class="qas">Dilation spreads the kernel elements apart, effectively increasing the receptive field without adding parameters. A dilation of 2 means there is one gap between each kernel element. The effective kernel size becomes dilation*(kernel_size-1)+1, which reduces the output spatial dimensions.</p>
       </details>
 
       <details>
         <summary>What padding should I use to keep the same spatial size?</summary>
-        <p>For &#39;same&#39; padding with stride=1 and dilation=1, use padding = (kernel_size - 1) / 2. For a 3x3 kernel, that&#39;s padding=1. For a 5x5 kernel, padding=2. This only works with odd kernel sizes.</p>
+        <p class="qas">For &#39;same&#39; padding with stride=1 and dilation=1, use padding = (kernel_size - 1) / 2. For a 3x3 kernel, that&#39;s padding=1. For a 5x5 kernel, padding=2. This only works with odd kernel sizes.</p>
       </details>
 
       <details>
         <summary>What happens if Conv2d output size is zero or negative?</summary>
-        <p>If the formula produces zero or a negative number, PyTorch will raise a RuntimeError. This means your kernel is larger than the input spatial dimensions (after padding). Fix it by increasing padding, decreasing kernel size, or decreasing dilation.</p>
+        <p class="qas">If the formula produces zero or a negative number, PyTorch will raise a RuntimeError. This means your kernel is larger than the input spatial dimensions (after padding). Fix it by increasing padding, decreasing kernel size, or decreasing dilation.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
     </section>
 
     <section class="related-tools">

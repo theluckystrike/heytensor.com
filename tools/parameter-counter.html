@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Neural Network Parameter Counter"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/parameter-counter.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,20 +137,22 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>How do I count parameters in PyTorch?</summary>
-        <p>In code: sum(p.numel() for p in model.parameters()). Or use this tool to add layers and get a breakdown. Each layer type has a different formula: Linear = in*out + out, Conv2d = out_ch * in_ch * k * k + out_ch, LSTM = 4 * ((in + hid) * hid + hid) per layer.</p>
+        <p class="qas">In code: sum(p.numel() for p in model.parameters()). Or use this tool to add layers and get a breakdown. Each layer type has a different formula: Linear = in*out + out, Conv2d = out_ch * in_ch * k * k + out_ch, LSTM = 4 * ((in + hid) * hid + hid) per layer.</p>
       </details>
 
       <details>
         <summary>Why does parameter count matter?</summary>
-        <p>Parameter count affects: 1) Model file size (params * 4 bytes for float32). 2) GPU memory during training (params * 16 bytes with Adam). 3) Inference speed. 4) Risk of overfitting (more params = more capacity = needs more data).</p>
+        <p class="qas">Parameter count affects: 1) Model file size (params * 4 bytes for float32). 2) GPU memory during training (params * 16 bytes with Adam). 3) Inference speed. 4) Risk of overfitting (more params = more capacity = needs more data).</p>
       </details>
 
       <details>
         <summary>Which layers have the most parameters?</summary>
-        <p>Fully connected (Linear) layers typically dominate. A single Linear(4096, 4096) has 16.8M parameters. Embedding layers in NLP models are also large. Conv2d layers are relatively parameter-efficient due to weight sharing across spatial positions.</p>
+        <p class="qas">Fully connected (Linear) layers typically dominate. A single Linear(4096, 4096) has 16.8M parameters. Embedding layers in NLP models are also large. Conv2d layers are relatively parameter-efficient due to weight sharing across spatial positions.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

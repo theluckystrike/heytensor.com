@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Linear Layer Shape Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/linear-layer-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -159,20 +161,22 @@ model = nn.Sequential(
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>What is the output shape of nn.Linear?</summary>
-        <p>nn.Linear(in_features, out_features) transforms only the last dimension. For input [batch, in_features], output is [batch, out_features]. For input [batch, seq, in_features], output is [batch, seq, out_features].</p>
+        <p class="qas">nn.Linear(in_features, out_features) transforms only the last dimension. For input [batch, in_features], output is [batch, out_features]. For input [batch, seq, in_features], output is [batch, seq, out_features].</p>
       </details>
 
       <details>
         <summary>How many parameters does a Linear layer have?</summary>
-        <p>A Linear layer has in_features * out_features weights plus out_features biases (if bias=True). Total: in_features * out_features + out_features. For Linear(512, 10), that&#39;s 512*10 + 10 = 5,130 parameters.</p>
+        <p class="qas">A Linear layer has in_features * out_features weights plus out_features biases (if bias=True). Total: in_features * out_features + out_features. For Linear(512, 10), that&#39;s 512*10 + 10 = 5,130 parameters.</p>
       </details>
 
       <details>
         <summary>Why do I get a shape error with Linear after Conv2d?</summary>
-        <p>Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W.</p>
+        <p class="qas">Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

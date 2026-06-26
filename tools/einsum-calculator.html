@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Einsum Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/einsum-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -135,20 +137,22 @@
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>What is einsum notation?</summary>
-        <p>Einstein summation notation is a compact way to express tensor operations. &#39;ij,jk-&gt;ik&#39; means matrix multiplication. Each letter represents a dimension; repeated letters are summed over (contracted). It can express dot products, outer products, transposes, traces, and more.</p>
+        <p class="qas">Einstein summation notation is a compact way to express tensor operations. &#39;ij,jk-&gt;ik&#39; means matrix multiplication. Each letter represents a dimension; repeated letters are summed over (contracted). It can express dot products, outer products, transposes, traces, and more.</p>
       </details>
 
       <details>
         <summary>How do I read einsum expressions?</summary>
-        <p>Left side of &#39;-&gt;&#39; lists input dimensions (comma-separated for multiple inputs). Right side lists output dimensions. Any letter on the left but not on the right is summed over. &#39;ij,jk-&gt;ik&#39;: i,j from first input; j,k from second; j is summed out; output is i,k.</p>
+        <p class="qas">Left side of &#39;-&gt;&#39; lists input dimensions (comma-separated for multiple inputs). Right side lists output dimensions. Any letter on the left but not on the right is summed over. &#39;ij,jk-&gt;ik&#39;: i,j from first input; j,k from second; j is summed out; output is i,k.</p>
       </details>
 
       <details>
         <summary>Is einsum slower than dedicated operations?</summary>
-        <p>Modern frameworks optimize einsum to call the same underlying BLAS routines. For common operations (matmul, dot), there&#39;s no speed difference. For complex multi-operand expressions, einsum may be slightly slower but much more readable.</p>
+        <p class="qas">Modern frameworks optimize einsum to call the same underlying BLAS routines. For common operations (matmul, dot), there&#39;s no speed difference. For complex multi-operand expressions, einsum may be slightly slower but much more readable.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

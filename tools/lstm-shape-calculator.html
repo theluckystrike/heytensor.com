@@ -94,6 +94,8 @@
   }
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"LSTM Output Shape Calculator"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/lstm-shape-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header>
@@ -167,20 +169,22 @@ print(sum(p.numel() for p in lstm.parameters()))  # 1,839,104</code></pre>
       <h2>Frequently Asked Questions</h2>
             <details>
         <summary>What is the LSTM output shape in PyTorch?</summary>
-        <p>For input [batch, seq_len, input_size], the LSTM output shape is [batch, seq_len, hidden_size * num_directions] where num_directions is 2 if bidirectional=True, else 1. The hidden state h_n has shape [num_layers * num_directions, batch, hidden_size].</p>
+        <p class="qas">For input [batch, seq_len, input_size], the LSTM output shape is [batch, seq_len, hidden_size * num_directions] where num_directions is 2 if bidirectional=True, else 1. The hidden state h_n has shape [num_layers * num_directions, batch, hidden_size].</p>
       </details>
 
       <details>
         <summary>How does bidirectional affect LSTM output?</summary>
-        <p>Setting bidirectional=True doubles the last dimension of the output. A bidirectional LSTM with hidden_size=256 outputs features of size 512 (256*2). The hidden state also doubles in the first dimension.</p>
+        <p class="qas">Setting bidirectional=True doubles the last dimension of the output. A bidirectional LSTM with hidden_size=256 outputs features of size 512 (256*2). The hidden state also doubles in the first dimension.</p>
       </details>
 
       <details>
         <summary>How many parameters does an LSTM have?</summary>
-        <p>An LSTM layer has 4 * ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size * 2) parameters per layer. For additional layers, input_size becomes hidden_size * num_directions. Multiply by num_layers and num_directions.</p>
+        <p class="qas">An LSTM layer has 4 * ((input_size * hidden_size) + (hidden_size * hidden_size) + hidden_size * 2) parameters per layer. For additional layers, input_size becomes hidden_size * num_directions. Multiply by num_layers and num_directions.</p>
       </details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary><p>Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>Does this work offline?</summary>
+        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
     </section>
 
     <section class="related-tools">

@@ -32,6 +32,8 @@
   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does Expected 4-dimensional input mean?","acceptedAnswer":{"@type":"Answer","text":"Conv2d and BatchNorm2d expect 4D input: (batch, channels, height, width). If you pass a 3D tensor (e.g., a single image without batch dimension), you get this error. Fix: add a batch dimension with tensor.unsqueeze(0)."}},{"@type":"Question","name":"What does Expected input batch_size to match target batch_size mean?","acceptedAnswer":{"@type":"Answer","text":"Your model's output and your labels have different batch sizes. For example, model output has 32 samples but labels have 16. This usually happens when data is incorrectly split or when a reshape accidentally changes the batch dimension."}},{"@type":"Question","name":"Why does my model expect a different number of channels?","acceptedAnswer":{"@type":"Answer","text":"Conv2d's in_channels must match the channel dimension of your input. Grayscale images have 1 channel, RGB has 3, RGBA has 4. If you load grayscale images as RGB (3 channels) but your model expects 1, use transforms.Grayscale() or change Conv2d's in_channels."}},{"@type":"Question","name":"How do I debug input size errors systematically?","acceptedAnswer":{"@type":"Answer","text":"(1) Print input.shape before the failing layer. (2) Check the layer's expected input: Conv2d wants 4D, Linear wants 2D+, LSTM wants 3D. (3) Compare in_channels/in_features with your actual input dimensions. (4) Use HeyTensor's Chain Mode to trace shapes through your network."}},{"@type":"Question","name":"Is this tool free?","acceptedAnswer":{"@type":"Answer","text":"Yes. All HeyTensor tools are free, run in your browser, and require no signup."}}]}
   </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Expected Input Size Debugger"}]}</script>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/expected-input-size.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
   <header><div class="container header-inner"><a href="/" class="logo">Hey<span>Tensor</span></a><button class="mobile-toggle" aria-label="Menu">&#9776;</button><nav><a href="/">Calculator</a><a href="/tools/" class="active">Tools</a><a href="/about.html">About</a><a href="/blog/">Blog</a><div class="nav-right"><a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a><a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a></div></nav></div></header>
@@ -49,11 +51,16 @@
 
     <section class="faq-section">
       <h2>Frequently Asked Questions</h2>
-      <details><summary>What does Expected 4-dimensional input mean?</summary><p>Conv2d and BatchNorm2d expect 4D input: (batch, channels, height, width). If you pass a 3D tensor (single image without batch), you get this error. Fix: <code>tensor.unsqueeze(0)</code>.</p></details>
-      <details><summary>What does Expected input batch_size to match target mean?</summary><p>Model output and labels have different batch sizes. Usually happens when data is incorrectly split or reshape changes the batch dimension.</p></details>
-      <details><summary>Why does my model expect different channels?</summary><p>Conv2d's in_channels must match input channels. Grayscale=1, RGB=3, RGBA=4. If loading grayscale as RGB, use <code>transforms.Grayscale()</code> or change in_channels.</p></details>
-      <details><summary>How to debug systematically?</summary><p>(1) Print <code>input.shape</code> before failing layer. (2) Check expected dimensionality: Conv2d→4D, Linear→2D+, LSTM→3D. (3) Compare in_channels/in_features with actual input. (4) Use Chain Mode to trace shapes.</p></details>
-      <details><summary>Is this tool free?</summary><p>Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+      <details><summary>What does Expected 4-dimensional input mean?</summary>
+        <p class="qas">Conv2d and BatchNorm2d expect 4D input: (batch, channels, height, width). If you pass a 3D tensor (single image without batch), you get this error. Fix: <code>tensor.unsqueeze(0)</code>.</p></details>
+      <details><summary>What does Expected input batch_size to match target mean?</summary>
+        <p class="qas">Model output and labels have different batch sizes. Usually happens when data is incorrectly split or reshape changes the batch dimension.</p></details>
+      <details><summary>Why does my model expect different channels?</summary>
+        <p class="qas">Conv2d's in_channels must match input channels. Grayscale=1, RGB=3, RGBA=4. If loading grayscale as RGB, use <code>transforms.Grayscale()</code> or change in_channels.</p></details>
+      <details><summary>How to debug systematically?</summary>
+        <p class="qas">(1) Print <code>input.shape</code> before failing layer. (2) Check expected dimensionality: Conv2d→4D, Linear→2D+, LSTM→3D. (3) Compare in_channels/in_features with actual input. (4) Use Chain Mode to trace shapes.</p></details>
+      <details><summary>Is this tool free?</summary>
+        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
     </section>
 
     <section class="related-tools">
