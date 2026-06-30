@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gradient Accumulation Steps Calculator</title>
+<meta name="description" content="Compute effective batch size and accumulation steps from micro-batch, GPU count, and target batch. Tune PyTorch training without OOM.">
+<link rel="canonical" href="https://heytensor.com/tools/gradient-accumulation-calculator">
+<meta property="og:title" content="Gradient Accumulation Steps Calculator">
+<meta property="og:description" content="Compute effective batch size and accumulation steps from micro-batch, GPU count, and target batch. Tune PyTorch training without OOM.">
+<meta property="og:url" content="https://heytensor.com/tools/gradient-accumulation-calculator">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Gradient Accumulation Steps Calculator",
+      "url": "https://heytensor.com/tools/gradient-accumulation-calculator",
+      "description": "Compute effective batch size and gradient accumulation steps from micro-batch size, GPU count, and target batch size for PyTorch training.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Michael Lip",
+        "url": "https://zovo.one"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools/" },
+        { "@type": "ListItem", "position": 3, "name": "Gradient Accumulation Steps Calculator", "item": "https://heytensor.com/tools/gradient-accumulation-calculator" }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+:root{
+  --bg:#0d1117;--panel:#161b22;--panel2:#1c2430;--border:#2d3748;
+  --accent:#f5a623;--accent2:#ffce6e;--text:#e6edf3;--muted:#9aa6b2;
+  --good:#3fb950;--bad:#f85149;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  line-height:1.6;
+}
+nav{
+  display:flex;gap:1.2rem;padding:1rem 1.4rem;border-bottom:1px solid var(--border);
+  background:var(--panel);flex-wrap:wrap;align-items:center;
+}
+nav a{color:var(--accent);text-decoration:none;font-weight:600;font-size:.95rem}
+nav a:hover{text-decoration:underline}
+main{max-width:880px;margin:0 auto;padding:1.6rem 1.2rem 3rem}
+h1{font-size:1.85rem;line-height:1.2;margin:.6rem 0 .4rem}
+h2{font-size:1.3rem;margin:2rem 0 .6rem;border-left:3px solid var(--accent);padding-left:.6rem}
+.intro{color:var(--muted);font-size:1.05rem;margin-bottom:1.4rem}
+section#tool{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;
+  padding:1.4rem;margin:1rem 0 1.6rem;
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.field{display:flex;flex-direction:column;gap:.35rem}
+label{font-size:.85rem;color:var(--muted);font-weight:600}
+input[type=number],select{
+  background:var(--panel2);border:1px solid var(--border);color:var(--text);
+  border-radius:8px;padding:.6rem .7rem;font-size:1rem;width:100%;
+}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+.checkrow{display:flex;align-items:center;gap:.5rem;margin-top:.8rem}
+.checkrow input{width:18px;height:18px;accent-color:var(--accent)}
+.checkrow label{color:var(--text)}
+.out{margin-top:1.4rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.9rem}
+.card{
+  background:var(--panel2);border:1px solid var(--border);border-radius:10px;
+  padding:.9rem 1rem;text-align:center;
+}
+.card .v{font-size:1.7rem;font-weight:700;color:var(--accent2)}
+.card .l{font-size:.78rem;color:var(--muted);margin-top:.2rem}
+.note{margin-top:1rem;padding:.8rem 1rem;border-radius:8px;font-size:.92rem}
+.note.ok{background:rgba(63,185,80,.12);border:1px solid var(--good);color:#9be5a8}
+.note.warn{background:rgba(248,81,73,.12);border:1px solid var(--bad);color:#ffb3ad}
+.formula{
+  background:var(--panel2);border:1px solid var(--border);border-radius:8px;
+  padding:.8rem 1rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.9rem;overflow-x:auto;color:var(--accent2);margin:.8rem 0;
+}
+p{margin:.7rem 0}
+.related a{
+  display:inline-block;background:var(--panel);border:1px solid var(--border);
+  color:var(--accent);text-decoration:none;padding:.5rem .9rem;border-radius:8px;
+  margin:.3rem .4rem .3rem 0;font-weight:600;font-size:.92rem;
+}
+.related a:hover{border-color:var(--accent)}
+footer{
+  border-top:1px solid var(--border);padding:1.4rem;text-align:center;
+  color:var(--muted);font-size:.9rem;
+}
+footer a{color:var(--accent);text-decoration:none;margin:0 .5rem}
+@media(max-width:480px){h1{font-size:1.5rem}.card .v{font-size:1.4rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/">heytensor.com</a>
+  <a href="/tools/">All Tools</a>
+</nav>
+<main>
+<h1>Gradient Accumulation Calculator for PyTorch Training</h1>
+<p class="intro">Match a target (effective) batch size on limited GPU memory. Enter your micro-batch, GPU count, and the batch size you want to simulate — the tool returns the accumulation steps and the real effective batch live.</p>
+
+<section id="tool">
+  <div class="grid">
+    <div class="field">
+      <label for="micro">Micro-batch per GPU (samples per forward pass)</label>
+      <input type="number" id="micro" value="8" min="1" step="1">
+    </div>
+    <div class="field">
+      <label for="gpus">Number of GPUs (data-parallel)</label>
+      <input type="number" id="gpus" value="4" min="1" step="1">
+    </div>
+    <div class="field">
+      <label for="target">Target effective batch size</label>
+      <input type="number" id="target" value="512" min="1" step="1">
+    </div>
+    <div class="field">
+      <label for="seq">Sequence length (tokens, optional)</label>
+      <input type="number" id="seq" value="2048" min="1" step="1">
+    </div>
+    <div class="field">
+      <label for="round">Rounding mode for accumulation steps</label>
+      <select id="round">
+        <option value="ceil">Ceil — never undershoot target</option>
+        <option value="round">Round — closest match</option>
+        <option value="floor">Floor — never exceed target</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="out" id="out"></div>
+  <div id="msg"></div>
+</section>
+
+<h2>How the gradient accumulation formula works</h2>
+<p>Gradient accumulation lets you train at a large effective batch size that would otherwise overflow GPU memory. Instead of one big backward pass, you run several smaller micro-batches, sum their gradients, and only call <code>optimizer.step()</code> once after the group. The math the calculator uses is straightforward:</p>
+<div class="formula">device_batch = micro_batch × num_gpus<br>accum_steps  = round( target_batch / device_batch )<br>effective_batch = micro_batch × num_gpus × accum_steps<br>tokens_per_step = effective_batch × sequence_length</div>
+<p>Because <code>accum_steps</code> must be a whole number, the achievable effective batch is usually a little above or below your exact target. The rounding selector controls that trade-off: <strong>ceil</strong> guarantees you reach at least the target (slightly larger batch), <strong>floor</strong> keeps you under your memory-derived ceiling, and <strong>round</strong> minimizes the gap. The tool reports both the chosen steps and the resulting batch so you can see the drift before you launch a run.</p>
+<p>One detail people miss: when you accumulate, you must scale the loss by <code>1 / accum_steps</code> before each <code>backward()</code>, otherwise summed gradients are <code>accum_steps</code>× too large and your effective learning rate explodes. Also, in distributed data-parallel training only the final micro-batch of each group should trigger gradient synchronization — wrap the earlier ones in <code>model.no_sync()</code> to avoid wasted all-reduce traffic. The <code>tokens_per_step</code> figure is handy for LLM work: it tells you how many tokens contribute to each optimizer update, which is the quantity learning-rate schedules and Chinchilla-style compute budgets are actually defined against. A higher effective batch generally needs a proportionally higher peak learning rate (linear scaling rule) and a longer warmup.</p>
+
+<section class="related">
+  <h2>Related Tools</h2>
+  <a href="/tools/batch-size-optimizer">Batch Size Optimizer</a>
+  <a href="/tools/gpu-memory-calculator">GPU Memory Calculator</a>
+  <a href="/tools/batchnorm-calculator">BatchNorm Calculator</a>
+</section>
+</main>
+
+<footer>
+  <div>
+    <a href="/">heytensor.com</a>
+    <a href="/tools/">All Tools</a>
+  </div>
+  <p>© 2026 heytensor.com — PyTorch tensor &amp; training calculators</p>
+</footer>
+
+<script>
+(function(){
+  var ids=['micro','gpus','target','seq','round'];
+  var el={};
+  ids.forEach(function(id){el[id]=document.getElementById(id);});
+  var out=document.getElementById('out');
+  var msg=document.getElementById('msg');
+
+  function num(id){var v=parseFloat(el[id].value);return isFinite(v)?v:0;}
+
+  function fmt(n){
+    if(!isFinite(n))return '—';
+    return n.toLocaleString('en-US');
+  }
+
+  function compute(){
+    var micro=Math.max(0,Math.floor(num('micro')));
+    var gpus=Math.max(0,Math.floor(num('gpus')));
+    var target=Math.max(0,Math.floor(num('target')));
+    var seq=Math.max(0,Math.floor(num('seq')));
+    var mode=el.round.value;
+
+    if(micro<1||gpus<1||target<1){
+      out.innerHTML='';
+      msg.innerHTML='<div class="note warn">Enter values of 1 or greater for micro-batch, GPUs, and target batch.</div>';
+      return;
+    }
+
+    var deviceBatch=micro*gpus;
+    var raw=target/deviceBatch;
+    var steps;
+    if(mode==='ceil')steps=Math.ceil(raw);
+    else if(mode==='floor')steps=Math.floor(raw);
+    else steps=Math.round(raw);
+    if(steps<1)steps=1;
+
+    var effective=deviceBatch*steps;
+    var tokens=effective*seq;
+    var drift=effective-target;
+    var driftPct=(drift/target)*100;
+    var lossScale=1/steps;
+
+    out.innerHTML=
+      card(fmt(steps),'Accumulation steps')+
+      card(fmt(effective),'Effective batch')+
+      card(fmt(deviceBatch),'Per-step device batch')+
+      card(seq>0?fmt(tokens):'—','Tokens / optimizer step')+
+      card(lossScale.toFixed(4),'Loss scale (1/steps)')+
+      card((driftPct>=0?'+':'')+driftPct.toFixed(1)+'%','Drift vs target');
+
+    var m='';
+    if(steps===1){
+      m='<div class="note ok">Your device batch already meets the target — no accumulation needed (steps = 1).</div>';
+    } else if(drift===0){
+      m='<div class="note ok">Exact match: '+fmt(steps)+' steps hit the target batch of '+fmt(target)+' precisely.</div>';
+    } else if(drift>0){
+      m='<div class="note ok">Effective batch is '+fmt(drift)+' samples ('+driftPct.toFixed(1)+'%) above target. Remember to scale loss by '+lossScale.toFixed(4)+' before backward().</div>';
+    } else {
+      m='<div class="note warn">Effective batch is '+fmt(-drift)+' samples ('+driftPct.toFixed(1)+'%) below target. Switch rounding to Ceil to reach or exceed it.</div>';
+    }
+    msg.innerHTML=m;
+  }
+
+  function card(v,l){
+    return '<div class="card"><div class="v">'+v+'</div><div class="l">'+l+'</div></div>';
+  }
+
+  ids.forEach(function(id){
+    el[id].addEventListener('input',compute);
+    el[id].addEventListener('change',compute);
+  });
+  compute();
+})();
+</script>
+</body>
+</html>

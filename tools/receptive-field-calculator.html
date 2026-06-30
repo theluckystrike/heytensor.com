@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CNN Receptive Field Calculator for PyTorch</title>
+<meta name="description" content="Compute the receptive field, jump, and start offset across stacked Conv and Pool layers. Enter kernel, stride, and padding per layer.">
+<link rel="canonical" href="https://heytensor.com/tools/receptive-field-calculator">
+<meta property="og:title" content="CNN Receptive Field Calculator for PyTorch">
+<meta property="og:description" content="Compute the receptive field, jump, and start offset across stacked Conv and Pool layers. Enter kernel, stride, and padding per layer.">
+<meta property="og:url" content="https://heytensor.com/tools/receptive-field-calculator">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "CNN Receptive Field Calculator for PyTorch",
+      "url": "https://heytensor.com/tools/receptive-field-calculator",
+      "description": "Compute the receptive field, jump, and start offset across stacked Conv and Pool layers in a CNN.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools/" },
+        { "@type": "ListItem", "position": 3, "name": "CNN Receptive Field Calculator for PyTorch", "item": "https://heytensor.com/tools/receptive-field-calculator" }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel2: #1c2230;
+    --border: #2d3748;
+    --text: #e6edf3;
+    --muted: #9aa7b5;
+    --accent: #58c4dc;
+    --accent2: #7ee787;
+    --warn: #f0a868;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  nav {
+    display: flex;
+    gap: 1.2rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel);
+  }
+  nav a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: .95rem; }
+  nav a:hover { text-decoration: underline; }
+  main { max-width: 920px; margin: 0 auto; padding: 1.5rem; }
+  h1 { font-size: 1.7rem; line-height: 1.25; margin: .6rem 0 .4rem; }
+  h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: .35rem; }
+  .intro { color: var(--muted); font-size: 1.02rem; }
+  section#tool {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1rem; }
+  .field { display: flex; flex-direction: column; gap: .3rem; }
+  .field label { font-size: .8rem; color: var(--muted); font-weight: 600; }
+  input, select {
+    background: var(--panel2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .5rem .6rem;
+    font-size: .95rem;
+    font-family: inherit;
+  }
+  input[type=number] { width: 90px; }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  button {
+    background: var(--accent);
+    color: #06222a;
+    border: none;
+    border-radius: 8px;
+    padding: .55rem .9rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .9rem;
+  }
+  button.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
+  button:hover { filter: brightness(1.08); }
+  table { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: .9rem; }
+  th, td { text-align: center; padding: .5rem .4rem; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; }
+  td input { width: 64px; }
+  .remove { background: transparent; color: var(--warn); border: none; cursor: pointer; font-size: 1.1rem; padding: 0 .4rem; }
+  .summary { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1rem; }
+  .stat {
+    flex: 1 1 130px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .8rem;
+    text-align: center;
+  }
+  .stat .v { font-size: 1.7rem; font-weight: 700; color: var(--accent2); }
+  .stat .l { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .formula {
+    background: var(--panel2);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: .7rem .9rem;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: .88rem;
+    overflow-x: auto;
+    color: #cfe8ee;
+  }
+  p, li { color: #d4dce4; }
+  .relgrid { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .6rem; }
+  .relgrid a {
+    flex: 1 1 200px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .8rem 1rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .relgrid a:hover { border-color: var(--accent); }
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: .9rem;
+  }
+  footer a { color: var(--accent); text-decoration: none; margin: 0 .6rem; }
+  @media (max-width: 520px) {
+    h1 { font-size: 1.4rem; }
+    td input { width: 52px; }
+    th, td { padding: .4rem .2rem; font-size: .82rem; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <a href="/">heytensor.com</a>
+  <a href="/tools/">All Tools</a>
+</nav>
+<main>
+  <h1>Receptive Field Calculator for Stacked CNN Layers</h1>
+  <p class="intro">Add your Conv2d and MaxPool2d layers below to compute the effective receptive field, feature jump, and start offset at every stage of a PyTorch convolutional network. Output updates live as you edit.</p>
+
+  <section id="tool">
+    <div class="controls">
+      <div class="field">
+        <label for="addType">Layer type to add</label>
+        <select id="addType">
+          <option value="conv">Conv2d</option>
+          <option value="pool">MaxPool2d / AvgPool2d</option>
+        </select>
+      </div>
+      <button id="addBtn" type="button">+ Add layer</button>
+      <button id="resetBtn" class="secondary" type="button">Reset to demo</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Type</th><th>Kernel</th><th>Stride</th><th>Padding</th><th>Dilation</th>
+          <th>RF</th><th>Jump</th><th>Start</th><th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+
+    <div class="summary">
+      <div class="stat"><div class="v" id="sRF">—</div><div class="l">Receptive field (px)</div></div>
+      <div class="stat"><div class="v" id="sJump">—</div><div class="l">Jump / stride product</div></div>
+      <div class="stat"><div class="v" id="sStart">—</div><div class="l">Start offset (px)</div></div>
+      <div class="stat"><div class="v" id="sLayers">—</div><div class="l">Layers</div></div>
+    </div>
+  </section>
+
+  <h2>How the receptive field is computed</h2>
+  <p>The <strong>receptive field</strong> (RF) of a unit in a convolutional feature map is the size of the region in the original input image that influences that unit's value. Stacking convolutions and pooling layers compounds the RF non-linearly, which is why a 50-layer ResNet can "see" hundreds of pixels even though each kernel is only 3&times;3. This tool walks the network layer by layer and tracks three quantities introduced in Dang-Ha's RF analysis: the receptive field size <code>r</code>, the <em>jump</em> <code>j</code> (the pixel distance between two adjacent features in the current map, equal to the cumulative product of strides), and the <em>start</em> <code>s</code> (the center coordinate of the first feature relative to the input).</p>
+  <p>For each layer with kernel <code>k</code>, stride <code>S</code>, padding <code>P</code> and dilation <code>d</code>, the effective kernel becomes <code>k_eff = d·(k−1)+1</code>, and the recurrence applied to the previous layer's values is:</p>
+  <div class="formula">j_out  = j_in &times; S
+r_out  = r_in + (k_eff &minus; 1) &times; j_in
+s_out  = s_in + ((k_eff &minus; 1)/2 &minus; P) &times; j_in</div>
+  <p>Initialization is <code>j = 1</code>, <code>r = 1</code>, <code>s = 0.5</code> at the input. The key insight that competitor "output-size" calculators miss is that the RF growth is driven by the <em>incoming</em> jump <code>j_in</code>, not the layer's own stride. A 3&times;3 conv placed after two stride-2 pools adds <code>(3−1)&times;4 = 8</code> pixels of RF per layer, while the same conv at the input adds only 2. The start offset <code>s</code> tells you whether your feature map is spatially aligned with the input or shifted — a negative or fractional <code>s</code> often signals an off-by-one padding choice that will quietly misregister your detections.</p>
+  <p>Dilation widens the effective kernel without adding parameters, so a dilated stack grows the RF aggressively while keeping the jump fixed — the standard trick behind dense-prediction backbones. Use the per-layer columns to find exactly which layer first covers your object scale, then prune or dilate accordingly.</p>
+
+  <h2>Related Tools</h2>
+  <div class="relgrid">
+    <a href="/tools/conv2d-calculator">Conv2d Output Shape Calculator</a>
+    <a href="/tools/maxpool2d-calculator">MaxPool2d Output Calculator</a>
+    <a href="/tools/activation-functions">Activation Functions Explorer</a>
+  </div>
+</main>
+
+<footer>
+  <div>
+    <a href="/">Home</a> ·
+    <a href="/tools/">All Tools</a> ·
+    <a href="/tools/conv2d-calculator">Conv2d Calculator</a>
+  </div>
+  <p>© 2026 heytensor.com — PyTorch tensor and CNN math tools.</p>
+</footer>
+
+<script>
+(function () {
+  var rowsEl = document.getElementById('rows');
+  var demo = [
+    { type: 'conv', k: 3, s: 1, p: 1, d: 1 },
+    { type: 'pool', k: 2, s: 2, p: 0, d: 1 },
+    { type: 'conv', k: 3, s: 1, p: 1, d: 1 },
+    { type: 'pool', k: 2, s: 2, p: 0, d: 1 },
+    { type: 'conv', k: 3, s: 1, p: 1, d: 1 }
+  ];
+  var layers = demo.map(function (x) { return Object.assign({}, x); });
+
+  function makeCell(layer, key, idx) {
+    var inp = document.createElement('input');
+    inp.type = 'number';
+    inp.step = '1';
+    inp.min = (key === 'p') ? '0' : '1';
+    inp.value = layer[key];
+    inp.addEventListener('input', function () {
+      var v = parseInt(inp.value, 10);
+      if (isNaN(v)) v = 0;
+      layers[idx][key] = v;
+      compute();
+    });
+    var td = document.createElement('td');
+    td.appendChild(inp);
+    return td;
+  }
+
+  function render() {
+    rowsEl.innerHTML = '';
+    layers.forEach(function (layer, idx) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + (idx + 1) + '</td><td>' +
+        (layer.type === 'pool' ? 'Pool' : 'Conv') + '</td>';
+      tr.appendChild(makeCell(layer, 'k', idx));
+      tr.appendChild(makeCell(layer, 's', idx));
+      tr.appendChild(makeCell(layer, 'p', idx));
+      tr.appendChild(makeCell(layer, 'd', idx));
+      var rf = document.createElement('td'); rf.className = 'rfcell';
+      var jp = document.createElement('td'); jp.className = 'jcell';
+      var st = document.createElement('td'); st.className = 'scell';
+      tr.appendChild(rf); tr.appendChild(jp); tr.appendChild(st);
+      var rm = document.createElement('td');
+      var btn = document.createElement('button');
+      btn.className = 'remove'; btn.type = 'button'; btn.textContent = '×';
+      btn.title = 'Remove layer';
+      btn.addEventListener('click', function () {
+        layers.splice(idx, 1);
+        render(); compute();
+      });
+      rm.appendChild(btn); tr.appendChild(rm);
+      rowsEl.appendChild(tr);
+    });
+  }
+
+  function compute() {
+    var j = 1, r = 1, s = 0.5;
+    var rfCells = rowsEl.querySelectorAll('.rfcell');
+    var jCells = rowsEl.querySelectorAll('.jcell');
+    var sCells = rowsEl.querySelectorAll('.scell');
+    layers.forEach(function (layer, idx) {
+      var k = Math.max(1, layer.k || 1);
+      var S = Math.max(1, layer.s || 1);
+      var P = Math.max(0, layer.p || 0);
+      var d = Math.max(1, layer.d || 1);
+      var kEff = d * (k - 1) + 1;
+      r = r + (kEff - 1) * j;
+      s = s + ((kEff - 1) / 2 - P) * j;
+      j = j * S;
+      if (rfCells[idx]) rfCells[idx].textContent = r;
+      if (jCells[idx]) jCells[idx].textContent = j;
+      if (sCells[idx]) sCells[idx].textContent = (Math.round(s * 100) / 100);
+    });
+    document.getElementById('sRF').textContent = layers.length ? r : '—';
+    document.getElementById('sJump').textContent = layers.length ? j : '—';
+    document.getElementById('sStart').textContent = layers.length ? (Math.round(s * 100) / 100) : '—';
+    document.getElementById('sLayers').textContent = layers.length;
+  }
+
+  document.getElementById('addBtn').addEventListener('click', function () {
+    var type = document.getElementById('addType').value;
+    if (type === 'pool') layers.push({ type: 'pool', k: 2, s: 2, p: 0, d: 1 });
+    else layers.push({ type: 'conv', k: 3, s: 1, p: 1, d: 1 });
+    render(); compute();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    layers = demo.map(function (x) { return Object.assign({}, x); });
+    render(); compute();
+  });
+
+  render();
+  compute();
+})();
+</script>
+</body>
+</html>

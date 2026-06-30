@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM KV Cache Memory Calculator</title>
+<meta name="description" content="Estimate transformer KV cache VRAM from layers, heads, head dim, sequence length, batch, and dtype. Plan inference GPU memory fast.">
+<link rel="canonical" href="https://heytensor.com/tools/kv-cache-calculator">
+<meta property="og:title" content="LLM KV Cache Memory Calculator">
+<meta property="og:description" content="Estimate transformer KV cache VRAM from layers, heads, head dim, sequence length, batch, and dtype. Plan inference GPU memory fast.">
+<meta property="og:url" content="https://heytensor.com/tools/kv-cache-calculator">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "LLM KV Cache Memory Calculator",
+      "description": "Estimate transformer KV cache VRAM from layers, heads, head dim, sequence length, batch, and dtype.",
+      "url": "https://heytensor.com/tools/kv-cache-calculator",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools/" },
+        { "@type": "ListItem", "position": 3, "name": "LLM KV Cache Memory Calculator", "item": "https://heytensor.com/tools/kv-cache-calculator" }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0c1018;color:#e6edf3;line-height:1.6;padding:0 0 60px}
+nav{display:flex;gap:20px;padding:16px 22px;background:#11161f;border-bottom:1px solid #1f2937;flex-wrap:wrap}
+nav a{color:#7dd3fc;text-decoration:none;font-weight:600;font-size:14px}
+nav a:hover{text-decoration:underline}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+h1{font-size:1.7rem;margin:30px 0 12px;line-height:1.25}
+h2{font-size:1.25rem;margin:34px 0 12px;color:#bae6fd}
+p{margin:10px 0;color:#c4cdd8}
+.intro{font-size:1.05rem;color:#d6dee8}
+#tool{background:#11161f;border:1px solid #1f2937;border-radius:14px;padding:22px;margin:24px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:600;color:#9fb0c3}
+input,select{background:#0c1018;border:1px solid #2a3647;color:#e6edf3;border-radius:8px;padding:9px 11px;font-size:15px;width:100%}
+input:focus,select:focus{outline:none;border-color:#38bdf8}
+.out{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.card{background:#0c1018;border:1px solid #243043;border-radius:10px;padding:16px}
+.card .k{font-size:12px;color:#8595a8;text-transform:uppercase;letter-spacing:.04em}
+.card .v{font-size:1.5rem;font-weight:700;color:#5eead4;margin-top:4px;word-break:break-word}
+.hint{font-size:12px;color:#7a8aa0;margin-top:4px}
+.formula{background:#0c1018;border:1px solid #243043;border-radius:8px;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:#9fe;overflow-x:auto}
+.related a{color:#7dd3fc;text-decoration:none;display:inline-block;margin:6px 14px 6px 0;font-weight:600}
+.related a:hover{text-decoration:underline}
+footer{border-top:1px solid #1f2937;margin-top:40px;padding:24px 18px;text-align:center;color:#8595a8;font-size:14px}
+footer a{color:#7dd3fc;text-decoration:none;margin:0 10px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{border:1px solid #243043;padding:8px 10px;text-align:left}
+th{background:#0c1018;color:#bae6fd}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/">heytensor.com</a>
+  <a href="/tools/">All Tools</a>
+</nav>
+
+<div class="wrap">
+<h1>Transformer KV Cache VRAM Estimator</h1>
+<p class="intro">Calculate the GPU memory a transformer's key-value cache consumes during autoregressive inference. Enter your model dimensions, context length, batch size, and precision to size deployments before you load a single weight.</p>
+
+<section id="tool">
+  <div class="grid">
+    <div class="field">
+      <label for="layers">Number of layers (L)</label>
+      <input id="layers" type="number" min="1" value="32">
+    </div>
+    <div class="field">
+      <label for="kvheads">KV heads (n_kv)</label>
+      <input id="kvheads" type="number" min="1" value="32">
+      <div class="hint">Use grouped-query value (e.g. 8) for GQA models.</div>
+    </div>
+    <div class="field">
+      <label for="headdim">Head dimension (d_head)</label>
+      <input id="headdim" type="number" min="1" value="128">
+    </div>
+    <div class="field">
+      <label for="seq">Sequence length (tokens)</label>
+      <input id="seq" type="number" min="1" value="4096">
+    </div>
+    <div class="field">
+      <label for="batch">Batch size (B)</label>
+      <input id="batch" type="number" min="1" value="1">
+    </div>
+    <div class="field">
+      <label for="dtype">Cache dtype</label>
+      <select id="dtype">
+        <option value="2" selected>FP16 / BF16 (2 bytes)</option>
+        <option value="1">FP8 / INT8 (1 byte)</option>
+        <option value="4">FP32 (4 bytes)</option>
+        <option value="0.5">INT4 (0.5 bytes)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="out">
+    <div class="card"><div class="k">Bytes per token</div><div class="v" id="perTok">–</div></div>
+    <div class="card"><div class="k">Total KV cache</div><div class="v" id="total">–</div></div>
+    <div class="card"><div class="k">Per-layer cache</div><div class="v" id="perLayer">–</div></div>
+    <div class="card"><div class="k">Cached elements</div><div class="v" id="elems">–</div></div>
+  </div>
+  <p class="hint" id="note"></p>
+</section>
+
+<h2>How the KV cache size is computed</h2>
+<p>During generation a transformer stores one key vector and one value vector for every past token, at every layer, so it never recomputes attention over the prefix. That stored tensor is the KV cache, and it grows linearly with context length. The calculator uses the exact element count below:</p>
+<div class="formula">bytes = 2 &times; L &times; n_kv &times; d_head &times; seq_len &times; batch &times; bytes_per_element</div>
+<p>The leading <strong>2</strong> accounts for both the key and the value tensors. <strong>L</strong> is the layer count, <strong>n_kv</strong> the number of key/value heads, and <strong>d_head</strong> the per-head width — their product <code>n_kv &times; d_head</code> equals the KV hidden size, which is smaller than the model hidden size whenever grouped-query or multi-query attention is used. Multiply by sequence length and batch to get total cached vectors, then by the dtype width (2 bytes for FP16/BF16, 1 for FP8/INT8) to reach bytes.</p>
+<p>This is where the calculator adds information most overview pages omit: KV cache scales with <em>n_kv</em>, not the full attention-head count. A 32-head model retrofitted to 8 KV heads via GQA cuts cache memory by 4&times; with no change to layers or head dim, which is precisely why long-context models adopt it. The output also reports <strong>bytes per token</strong> (the cache cost of every additional generated token) — multiply it by your target max context to forecast the worst-case footprint, and compare against free VRAM after weights and activations to find your true concurrency ceiling.</p>
+<p>Quantizing the cache to FP8 halves the footprint versus FP16 and INT4 quarters it, at some accuracy cost on long sequences. Because the formula is linear, doubling batch size or doubling context exactly doubles the cache, making capacity planning a single multiplication once you know bytes per token.</p>
+
+<table>
+<tr><th>Lever</th><th>Effect on KV cache</th></tr>
+<tr><td>Halve KV heads (GQA)</td><td>Halves cache</td></tr>
+<tr><td>Double context length</td><td>Doubles cache</td></tr>
+<tr><td>FP16 → FP8</td><td>Halves cache</td></tr>
+<tr><td>Double batch</td><td>Doubles cache</td></tr>
+</table>
+
+<section class="related">
+<h2>Related Tools</h2>
+<a href="/tools/gpu-memory-calculator">GPU Memory Calculator</a>
+<a href="/tools/multihead-attention-calculator">Multi-Head Attention Calculator</a>
+<a href="/tools/pytorch-memory-calculator">PyTorch Memory Calculator</a>
+</section>
+</div>
+
+<footer>
+  <div><a href="/">heytensor.com</a> · <a href="/tools/">All Tools</a></div>
+  <p>© 2026 heytensor.com</p>
+</footer>
+
+<script>
+(function(){
+  var ids=['layers','kvheads','headdim','seq','batch','dtype'];
+  var el={};
+  ids.forEach(function(id){el[id]=document.getElementById(id);});
+  var perTok=document.getElementById('perTok');
+  var total=document.getElementById('total');
+  var perLayer=document.getElementById('perLayer');
+  var elems=document.getElementById('elems');
+  var note=document.getElementById('note');
+
+  function fmtBytes(b){
+    if(!isFinite(b)||b<0) return '–';
+    var u=['B','KB','MB','GB','TB'];
+    var i=0;
+    while(b>=1024 && i<u.length-1){b/=1024;i++;}
+    return b.toFixed(b<10&&i>0?2:b<100&&i>0?1:0)+' '+u[i];
+  }
+  function fmtNum(n){
+    if(!isFinite(n)) return '–';
+    if(n>=1e9) return (n/1e9).toFixed(2)+'B';
+    if(n>=1e6) return (n/1e6).toFixed(2)+'M';
+    if(n>=1e3) return (n/1e3).toFixed(2)+'K';
+    return String(n);
+  }
+  function val(id){var v=parseFloat(el[id].value);return (isFinite(v)&&v>0)?v:0;}
+
+  function compute(){
+    var L=val('layers');
+    var nkv=val('kvheads');
+    var dh=val('headdim');
+    var seq=val('seq');
+    var B=val('batch');
+    var bpe=parseFloat(el.dtype.value);
+
+    // elements per token = 2 (K and V) * L * n_kv * d_head
+    var elemPerTok=2*L*nkv*dh;
+    var bytesPerTok=elemPerTok*bpe;            // for batch=1, one token
+    var totalElems=elemPerTok*seq*B;
+    var totalBytes=totalElems*bpe;
+    var layerBytes=L>0?totalBytes/L:0;
+
+    perTok.textContent=fmtBytes(bytesPerTok)+'/tok';
+    total.textContent=fmtBytes(totalBytes);
+    perLayer.textContent=fmtBytes(layerBytes);
+    elems.textContent=fmtNum(totalElems);
+
+    var hidden=nkv*dh;
+    note.textContent='KV hidden size = '+fmtNum(hidden)+' dims · '+
+      fmtBytes(bytesPerTok)+' added per generated token (batch 1) · '+
+      'projected at '+fmtNum(seq)+' tokens × batch '+fmtNum(B)+'.';
+  }
+
+  ids.forEach(function(id){
+    el[id].addEventListener('input',compute);
+    el[id].addEventListener('change',compute);
+  });
+  compute();
+})();
+</script>
+</body>
+</html>

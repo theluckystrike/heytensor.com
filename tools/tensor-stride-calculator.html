@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PyTorch Tensor Stride Calculator</title>
+<meta name="description" content="Compute contiguous tensor strides and element offsets from any shape. See how PyTorch memory layout maps multi-dim indices to storage.">
+<link rel="canonical" href="https://heytensor.com/tools/tensor-stride-calculator">
+<meta property="og:title" content="PyTorch Tensor Stride Calculator">
+<meta property="og:description" content="Compute contiguous tensor strides and element offsets from any shape. See how PyTorch memory layout maps multi-dim indices to storage.">
+<meta property="og:url" content="https://heytensor.com/tools/tensor-stride-calculator">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "PyTorch Tensor Stride Calculator",
+      "description": "Compute contiguous tensor strides and element offsets from any tensor shape, mirroring PyTorch row-major memory layout.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "url": "https://heytensor.com/tools/tensor-stride-calculator",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools/" },
+        { "@type": "ListItem", "position": 3, "name": "PyTorch Tensor Stride Calculator", "item": "https://heytensor.com/tools/tensor-stride-calculator" }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#0c1018; --panel:#141a26; --panel2:#1b2333; --line:#26304a;
+    --txt:#e7ecf6; --muted:#94a3c0; --accent:#5eead4; --accent2:#818cf8; --warn:#f87171;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    line-height:1.6; font-size:16px;
+  }
+  nav,footer{display:flex;gap:18px;flex-wrap:wrap;align-items:center;padding:16px 22px;background:var(--panel);border-bottom:1px solid var(--line)}
+  footer{border-bottom:none;border-top:1px solid var(--line);margin-top:48px;color:var(--muted)}
+  nav a,footer a{color:var(--accent);text-decoration:none;font-weight:600}
+  nav a:hover,footer a:hover{text-decoration:underline}
+  main{max-width:880px;margin:0 auto;padding:28px 22px}
+  h1{font-size:1.9rem;line-height:1.2;margin:.2em 0 .3em}
+  h2{font-size:1.3rem;margin:1.6em 0 .5em;color:#fff}
+  .intro{color:var(--muted);font-size:1.05rem}
+  section#tool{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;margin:22px 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:560px){.grid{grid-template-columns:1fr}}
+  label{display:block;font-weight:600;margin:0 0 6px;font-size:.92rem}
+  .hint{font-weight:400;color:var(--muted);font-size:.82rem}
+  input[type=text],input[type=number]{
+    width:100%;padding:11px 12px;background:var(--panel2);color:var(--txt);
+    border:1px solid var(--line);border-radius:9px;font-size:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(94,234,212,.15)}
+  .out{margin-top:18px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:16px}
+  .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line);font-family:ui-monospace,Menlo,monospace}
+  .row:last-child{border-bottom:none}
+  .row b{color:var(--accent)}
+  .big{font-size:1.15rem}
+  code{background:var(--panel2);padding:2px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-family:ui-monospace,Menlo,monospace;font-size:.9rem}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600}
+  .err{color:var(--warn);font-weight:600}
+  .pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:2px 9px;margin:2px 4px 2px 0;font-family:ui-monospace,Menlo,monospace}
+  .relbox a{display:inline-block;margin:6px 10px 6px 0;color:var(--accent2);font-weight:600;text-decoration:none;border:1px solid var(--line);padding:8px 13px;border-radius:9px}
+  .relbox a:hover{border-color:var(--accent2)}
+  p{margin:.7em 0}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/">heytensor.com</a>
+  <a href="/tools/">All Tools</a>
+</nav>
+<main>
+  <h1>Calculate Tensor Strides and Storage Offsets</h1>
+  <p class="intro">Enter a tensor shape and an index to see the contiguous strides PyTorch assigns and the exact flat position the element occupies in linear memory.</p>
+
+  <section id="tool">
+    <div class="grid">
+      <div>
+        <label for="shape">Tensor shape <span class="hint">(comma-separated dims)</span></label>
+        <input type="text" id="shape" value="2, 3, 4" inputmode="numeric" autocomplete="off">
+      </div>
+      <div>
+        <label for="index">Index to look up <span class="hint">(one per dim, optional)</span></label>
+        <input type="text" id="index" value="1, 2, 3" inputmode="numeric" autocomplete="off">
+      </div>
+    </div>
+    <div class="out" id="out" aria-live="polite"></div>
+  </section>
+
+  <h2>How PyTorch strides work</h2>
+  <p>A PyTorch tensor stores its values in one flat, one-dimensional block of memory. The <strong>stride</strong> tells the engine how many elements to jump in that flat block to advance one step along each dimension. For a default <em>contiguous</em>, row-major (C-order) tensor, the stride of a dimension equals the product of the sizes of all dimensions to its right.</p>
+  <p>Formally, for a shape <code>(d&#8320;, d&#8321;, &hellip;, d&#8345;&#8331;&#8321;)</code>, this calculator computes each stride as:</p>
+  <p><code>stride[k] = d[k+1] &times; d[k+2] &times; &hellip; &times; d[n-1]</code>, with the last dimension always having <code>stride = 1</code>.</p>
+  <p>It builds these by scanning the shape right-to-left, keeping a running product that starts at 1: assign the running product as the current stride, then multiply it by the current dimension size before moving left. That single pass is exactly what <code>tensor.contiguous().stride()</code> returns.</p>
+  <p>The <strong>flat storage offset</strong> of a multi-dimensional index <code>(i&#8320;, i&#8321;, &hellip;)</code> is the dot product of the index with the stride vector:</p>
+  <p><code>offset = &Sigma; i[k] &times; stride[k]</code></p>
+  <p>This is why a <code>view()</code> or <code>reshape()</code> on a contiguous tensor is free: the data never moves, only the shape and stride metadata change. By contrast, a <code>transpose()</code> or <code>permute()</code> swaps strides without touching memory, producing a <em>non-contiguous</em> tensor where strides are no longer a clean descending product, which is what later forces a copy. The total element count is <code>&prod; d[k]</code>, and a contiguous tensor's storage spans exactly that many elements with no gaps, so the largest valid offset is <code>total - 1</code>. Understanding this map between indices and offsets is essential when debugging custom CUDA kernels, autograd memory-layout warnings, or unexpected copies during training.</p>
+
+  <section class="relbox">
+    <h2>Related Tools</h2>
+    <a href="/tools/reshape-calculator">Reshape Calculator</a>
+    <a href="/tools/flatten-calculator">Flatten Calculator</a>
+    <a href="/tools/activation-functions">Activation Functions</a>
+  </section>
+</main>
+
+<footer>
+  <a href="/">heytensor.com</a>
+  <a href="/tools/">All Tools</a>
+  <span>© 2026 heytensor.com</span>
+</footer>
+
+<script>
+(function(){
+  var shapeEl = document.getElementById('shape');
+  var indexEl = document.getElementById('index');
+  var out = document.getElementById('out');
+
+  function parseList(s){
+    if(!s.trim()) return [];
+    return s.split(',').map(function(x){ return x.trim(); })
+            .filter(function(x){ return x.length>0; })
+            .map(function(x){ return Number(x); });
+  }
+
+  function strides(shape){
+    var n = shape.length, st = new Array(n), run = 1;
+    for(var k = n-1; k>=0; k--){
+      st[k] = run;
+      run = run * shape[k];
+    }
+    return st;
+  }
+
+  function esc(s){ return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+
+  function render(){
+    var shape = parseList(shapeEl.value);
+    var idx = parseList(indexEl.value);
+
+    if(shape.length === 0){
+      out.innerHTML = '<div class="err">Enter at least one dimension, e.g. 2, 3, 4.</div>';
+      return;
+    }
+    for(var i=0;i<shape.length;i++){
+      if(!Number.isInteger(shape[i]) || shape[i] < 1){
+        out.innerHTML = '<div class="err">Dimension '+(i)+' is invalid &mdash; sizes must be positive integers.</div>';
+        return;
+      }
+    }
+
+    var st = strides(shape);
+    var total = shape.reduce(function(a,b){ return a*b; }, 1);
+
+    var html = '';
+    html += '<div class="row big"><span>Strides (elements)</span><b>(' + st.join(', ') + ')</b></div>';
+    html += '<div class="row"><span>Total elements</span><b>' + total + '</b></div>';
+    html += '<div class="row"><span>Max valid offset</span><b>' + (total-1) + '</b></div>';
+    html += '<div class="row"><span>Memory (float32)</span><b>' + (total*4) + ' bytes</b></div>';
+
+    html += '<table><thead><tr><th>dim</th><th>size</th><th>stride</th></tr></thead><tbody>';
+    for(var d=0; d<shape.length; d++){
+      html += '<tr><td>'+d+'</td><td>'+shape[d]+'</td><td>'+st[d]+'</td></tr>';
+    }
+    html += '</tbody></table>';
+
+    // offset lookup
+    if(idx.length > 0){
+      var ok = idx.length === shape.length;
+      var msg = '', offset = 0, bad = false;
+      if(!ok){
+        bad = true;
+        msg = 'Index needs ' + shape.length + ' values (one per dimension); got ' + idx.length + '.';
+      } else {
+        var parts = [];
+        for(var j=0;j<idx.length;j++){
+          if(!Number.isInteger(idx[j]) || idx[j] < 0 || idx[j] >= shape[j]){
+            bad = true;
+            msg = 'Index '+idx[j]+' is out of range for dim '+j+' (valid 0 to '+(shape[j]-1)+').';
+            break;
+          }
+          offset += idx[j]*st[j];
+          parts.push(idx[j]+'&times;'+st[j]);
+        }
+        if(!bad){
+          msg = parts.join(' + ') + ' = <b>' + offset + '</b>';
+        }
+      }
+      html += '<div class="row" style="margin-top:8px"><span>Offset of ['+esc(idx.join(','))+']</span>'
+            + (bad ? '<span class="err">'+msg+'</span>' : '<span>'+msg+'</span>') + '</div>';
+    }
+
+    out.innerHTML = html;
+  }
+
+  shapeEl.addEventListener('input', render);
+  indexEl.addEventListener('input', render);
+  render();
+})();
+</script>
+</body>
+</html>
