@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix: RuntimeError: expected scalar type Float but found Long — PyTorch</title>
-  <meta name="description" content="One-line fix: tensor = tensor.float() or tensor.to(torch.float32). This happens when passing integer labels to MSELoss or mixing int/float tensors. Code examples inside.">
+  <title>expected scalar type Float but found Long: PyTorch Fix</title>
+  <meta name="description" content="Fix it in one line: call tensor.float() or tensor.to(torch.float32) to cast Long to Float. Common with BCEWithLogitsLoss/MSELoss integer labels. Code inside.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/expected-float-got-long.html">
   <meta property="og:type" content="article">
@@ -63,6 +63,7 @@
 
     <article>
       <h1>How to Fix "expected dtype Float but got dtype Long" in PyTorch</h1>
+      <p class="qas" data-keyword="expected scalar type Float but found Long">In PyTorch, fix "expected scalar type Float but found Long" by casting the integer tensor with .float() or .to(torch.float32) before the loss.</p>
 
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
         <p style="margin:0;line-height:1.7;"><strong>The error <code>expected dtype Float but got dtype Long</code> means pyTorch operations like loss functions, matrix multiplications, and neural network layers expect float tensors. When you pass integer (Long) tensors, PyTorch raises this error because it does not auto-cast between these types.</strong></p>

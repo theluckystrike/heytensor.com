@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How to Fix "input and target batch size don't match" in PyTorch | HeyTensor</title>
-  <meta name="description" content="Fix PyTorch "input and target batch size don't match" by ensuring model output and labels have the same batch dimension. Common with CrossEntropyLoss and reshape errors.">
+  <title>input and target batch size don't match: PyTorch Fix</title>
+  <meta name="description" content="Fix &quot;input and target batch size don&#x27;t match&quot; by using x.view(x.size(0), -1) and avoiding bare .squeeze() so your model output keeps its batch dimension.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/input-target-batch-size-mismatch.html">
   <meta property="og:type" content="article">
@@ -63,6 +63,7 @@
 
     <article>
       <h1>How to Fix "input and target batch size don't match" in PyTorch</h1>
+      <p class="qas" data-keyword="input and target batch size don&#x27;t match">Fix the PyTorch "input and target batch size don't match" error by reshaping with x.view(x.size(0), -1) and never calling bare .squeeze() on a batch-size-1 output.</p>
 
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
         <p style="margin:0;line-height:1.7;"><strong>The error <code>input and target batch size don\'t match</code> means loss functions compare model predictions with targets element-by-element (or batch-element-by-batch-element). When the batch dimensions do not match, PyTorch cannot compute the loss. This typically happens due to incorrect squeezing, reshaping, or when the DataLoader returns mismatched batches.</strong></p>

@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix: RuntimeError: expected scalar type Float but found Half | Byte | Double — PyTorch</title>
-  <meta name="description" content="One-line fix: x = x.float() or x = x.to(torch.float32). This RuntimeError means your tensor dtype doesn't match the model. Common with uint8 images, NumPy float64, or mixed precision.">
+  <title>Fix: expected dtype float32 for weight, got float64 (PyTorch)</title>
+  <meta name="description" content="Fix it with x = x.float(): convert your float64 input to float32 so it matches the model&#x27;s weights. NumPy arrays default to float64 and trigger this PyTorch error.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/runtime-error-expected-scalar-type-float.html">
   <meta property="og:type" content="article">
@@ -63,6 +63,7 @@
 
     <article>
       <h1>How to Fix "Expected Scalar Type Float" in PyTorch</h1>
+      <p class="qas" data-keyword="expected dtype torch.float32 for the &#x27;weight&#x27; argument but got dtype torch.float64">In PyTorch, this error means your input is float64 while the model weights are float32; fix it by calling x = x.float() before the forward pass.</p>
 
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
         <p style="margin:0;line-height:1.7;"><strong>Your tensor is the wrong dtype.</strong> Fix: <code>x = x.float()</code> or <code>x = x.to(torch.float32)</code> before passing to the model.</p>

@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix: Sizes of tensors must match except in dimension — PyTorch torch.cat</title>
-  <meta name="description" content="All tensors passed to torch.cat() must have the same shape except in the concat dimension. Fix: pad shorter tensors, slice longer ones, or reshape to match. Code examples inside.">
+  <title>Sizes of tensors must match except in dimension (PyTorch)</title>
+  <meta name="description" content="Resize tensors so all non-concat dimensions match: F.interpolate to upsample, adaptive pooling to downsample, or pad_sequence for sequences. torch.cat fix inside.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/sizes-of-tensors-must-match.html">
   <meta property="og:type" content="article">
@@ -63,6 +63,7 @@
 
     <article>
       <h1>How to Fix "Sizes of tensors must match except in dimension" in PyTorch</h1>
+      <p class="qas" data-keyword="Sizes of tensors must match except in dimension">In PyTorch, torch.cat and torch.stack require every non-concatenation dimension to match exactly; fix mismatches with F.interpolate, adaptive pooling, or pad_sequence.</p>
 
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
         <p style="margin:0;line-height:1.7;"><strong>The error <code>Sizes of tensors must match except in dimension</code> means when concatenating tensors with torch.cat() or torch.stack(), all non-concatenation dimensions must match exactly. For example, torch.cat([tensor_a, tensor_b], dim=0) requires both tensors to have the same shape in dimensions 1, 2, etc.</strong></p>

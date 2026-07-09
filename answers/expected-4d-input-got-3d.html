@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix: Expected 4-dimensional input for 4-dimensional weight — PyTorch Conv2d</title>
-  <meta name="description" content="Conv2d needs (batch, channels, H, W) but got (channels, H, W). One-line fix: x = x.unsqueeze(0) to add the batch dimension. Also check your DataLoader returns batched tensors.">
+  <title>Expected 4-dimensional Input Got 3-dimensional: PyTorch Fix</title>
+  <meta name="description" content="Fix it in one line: add x = x.unsqueeze(0) so Conv2d gets (batch, channels, H, W). Your 3D tensor is just missing the batch dimension—here&#x27;s why and how.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/expected-4d-input-got-3d.html">
   <meta property="og:type" content="article">
@@ -63,6 +63,7 @@
 
     <article>
       <h1>How to Fix "Expected 4D Input, Got 3D" in PyTorch</h1>
+      <p class="qas" data-keyword="expected 4-dimensional input for 4-dimensional weight">In PyTorch, add x = x.unsqueeze(0) to give Conv2d the batch dimension it needs, turning your (C, H, W) tensor into (1, C, H, W).</p>
 
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
         <p style="margin:0;line-height:1.7;"><strong>Conv2d expects (batch, channels, H, W) &mdash; 4 dimensions. Your input is missing the batch dimension.</strong> Fix: add <code>x = x.unsqueeze(0)</code> or check your DataLoader.</p>

@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix: RuntimeError: weight is on CPU but input is on CUDA — PyTorch</title>
-  <meta name="description" content="Add model.to('cuda') or model.cuda() before inference. Model weights and input tensors must be on the same device. One-line fix with full explanation.">
+  <title>PyTorch Model on GPU but Input on CPU: Error Fix</title>
+  <meta name="description" content="Move both model and data to the same device with .to(device) to fix the PyTorch model-on-GPU input-on-CPU RuntimeError. Copy-paste fix plus 3 real-world scenarios.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html">
   <meta property="og:type" content="article">
@@ -63,6 +63,7 @@
 
     <article>
       <h1>How to Fix "weight is on CPU but input is on CUDA" in PyTorch</h1>
+      <p class="qas" data-keyword="pytorch model moved to gpu but input is on cpu error fix">Fix the PyTorch device mismatch by calling .to(device) on both the model and every input tensor so weights and data share the same GPU or CPU.</p>
 
       <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
         <p style="margin:0;line-height:1.7;"><strong>The error <code>weight is on CPU but input is on CUDA</code> means pyTorch requires all tensors in an operation to be on the same device. If you move your input data to GPU with .cuda() but forget to move the model, the model weights remain on CPU while the input is on CUDA. This device mismatch causes the error.</strong></p>
