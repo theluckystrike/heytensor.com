@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Attention Head Dimension Calculator | heytensor.com</title>
-  <meta name="description" content="Compute d_k, d_v, projection parameters, KV cache size for MHA, MQA, GQA. Compare attention variants with interactive table. Dark theme, mobile-friendly.">
-  <meta name="keywords" content="attention head, d_model, kv cache, grouped query attention, multi-head attention, transformer calculator">
-  <link rel="canonical" href="https://heytensor.com/tools/attention-head-dimension-calculator">
-  <script type="application/ld+json">
-    [{
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Attention Head Dimension Calculator",
-      "url": "https://heytensor.com/tools/attention-head-dimension-calculator",
-      "description": "Compute d_k, d_v, projection parameters, KV cache size for MHA, MQA, GQA variants.",
-      "applicationCategory": "MachineLearning",
-      "operatingSystem": "All"
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {"@type": "Question", "name": "What is d_k and why 64 or 128?", "acceptedAnswer": {"@type": "Answer", "text": "d_k = d_model / num_heads. Common choices are 64 or 128 for stable training and efficient attention."}},
-        {"@type": "Question", "name": "How does GQA reduce KV cache?", "acceptedAnswer": {"@type": "Answer", "text": "GQA uses fewer key/value heads (num_kv_heads) than query heads. KV cache scales by num_kv_heads/num_heads compared to MHA."}},
-        {"@type": "Question", "name": "What is the difference between MHA, MQA, GQA?", "acceptedAnswer": {"@type": "Answer", "text": "MHA: full KV heads. MQA: single KV head. GQA: intermediate number of KV heads, balancing quality and cache efficiency."}}
-      ]
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com"},
-        {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools"},
-        {"@type": "ListItem", "position": 3, "name": "Attention Head Dimension Calculator", "item": "https://heytensor.com/tools/attention-head-dimension-calculator"}
-      ]
-    }]
-  </script>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+ <title>Attention Head Dimension Calculator | heytensor.com</title>
+ <meta name="description" content="Compute d_k, d_v, projection parameters, KV cache size for MHA, MQA, GQA. Compare attention variants with interactive table. Dark theme, mobile-friendly.">
+ <meta name="keywords" content="attention head, d_model, kv cache, grouped query attention, multi-head attention, transformer calculator">
+ <link rel="canonical" href="https://heytensor.com/tools/attention-head-dimension-calculator">
+ <script type="application/ld+json">
+  [{
+   "@context": "https://schema.org",
+   "@type": "WebApplication",
+   "name": "Attention Head Dimension Calculator",
+   "url": "https://heytensor.com/tools/attention-head-dimension-calculator",
+   "description": "Compute d_k, d_v, projection parameters, KV cache size for MHA, MQA, GQA variants.",
+   "applicationCategory": "MachineLearning",
+   "operatingSystem": "All"
+  },
+  {
+   "@context": "https://schema.org",
+   "@type": "FAQPage",
+   "mainEntity": [
+    {"@type": "Question", "name": "What is d_k and why 64 or 128?", "acceptedAnswer": {"@type": "Answer", "text": "d_k = d_model / num_heads. Common choices are 64 or 128 for stable training and efficient attention."}},
+    {"@type": "Question", "name": "How does GQA reduce KV cache?", "acceptedAnswer": {"@type": "Answer", "text": "GQA uses fewer key/value heads (num_kv_heads) than query heads. KV cache scales by num_kv_heads/num_heads compared to MHA."}},
+    {"@type": "Question", "name": "What is the difference between MHA, MQA, GQA?", "acceptedAnswer": {"@type": "Answer", "text": "MHA: full KV heads. MQA: single KV head. GQA: intermediate number of KV heads, balancing quality and cache efficiency."}}
+   ]
+  },
+  {
+   "@context": "https://schema.org",
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com"},
+    {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools"},
+    {"@type": "ListItem", "position": 3, "name": "Attention Head Dimension Calculator", "item": "https://heytensor.com/tools/attention-head-dimension-calculator"}
+   ]
+  }]
+ </script>
 
 <meta property="og:title" content="Attention Head Dimension Calculator | heytensor.com">
 <meta property="og:description" content="Compute d_k, d_v, projection parameters, KV cache size for MHA, MQA, GQA. Compare attention variants with interactive table. Dark theme, mobile-friendly.">
@@ -51,131 +51,131 @@
 </head>
 <body>
 <div class="container">
-<h1>⚡ <span>Attention Head</span> Dimension Calculator</h1>
-    <div class="subhead">heytensor.com — d_k, d_v, projections, KV cache for MHA / MQA / GQA</div>
+<h1> <span>Attention Head</span> Dimension Calculator</h1>
+ <div class="subhead">heytensor.com, d_k, d_v, projections, KV cache for MHA / MQA / GQA</div>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="card">
-    <div class="grid-2">
-      <div class="input-group">
-        <label>d_model (hidden dim)</label>
-        <input type="number" id="dModel" value="4096" min="64" step="1">
-      </div>
-      <div class="input-group">
-        <label>Number of attention heads</label>
-        <input type="number" id="numHeads" value="32" min="1" step="1">
-      </div>
-      <div class="input-group">
-        <label>Number of layers (for KV cache)</label>
-        <input type="number" id="numLayers" value="32" min="1" step="1">
-      </div>
-      <div class="input-group">
-        <label>Sequence length</label>
-        <input type="number" id="seqLen" value="2048" min="1" step="1">
-      </div>
-      <div class="input-group">
-        <label>Batch size</label>
-        <input type="number" id="batchSize" value="1" min="1" step="1">
-      </div>
-      <div class="input-group">
-        <label>Precision (bytes per element)</label>
-        <select id="precision">
-          <option value="2">fp16 / bf16 (2 bytes)</option>
-          <option value="4">fp32 (4 bytes)</option>
-        </select>
-      </div>
-    </div>
-    <div class="grid-2" style="margin-top: 1rem;">
-      <div class="input-group">
-        <label>Num KV heads for GQA (user-defined)</label>
-        <input type="number" id="numKvHeads" value="4" min="1" step="1">
-      </div>
-      <div class="input-group" style="justify-content: flex-end; align-self: flex-end;">
-        <span class="badge" id="dkRecommend">d_k = 128 ✓ recommended</span>
-      </div>
-    </div>
-  </div>
+ <div class="card">
+ <div class="grid-2">
+ <div class="input-group">
+ <label>d_model (hidden dim)</label>
+ <input type="number" id="dModel" value="4096" min="64" step="1">
+ </div>
+ <div class="input-group">
+ <label>Number of attention heads</label>
+ <input type="number" id="numHeads" value="32" min="1" step="1">
+ </div>
+ <div class="input-group">
+ <label>Number of layers (for KV cache)</label>
+ <input type="number" id="numLayers" value="32" min="1" step="1">
+ </div>
+ <div class="input-group">
+ <label>Sequence length</label>
+ <input type="number" id="seqLen" value="2048" min="1" step="1">
+ </div>
+ <div class="input-group">
+ <label>Batch size</label>
+ <input type="number" id="batchSize" value="1" min="1" step="1">
+ </div>
+ <div class="input-group">
+ <label>Precision (bytes per element)</label>
+ <select id="precision">
+ <option value="2">fp16 / bf16 (2 bytes)</option>
+ <option value="4">fp32 (4 bytes)</option>
+ </select>
+ </div>
+ </div>
+ <div class="grid-2" style="margin-top: 1rem;">
+ <div class="input-group">
+ <label>Num KV heads for GQA (user-defined)</label>
+ <input type="number" id="numKvHeads" value="4" min="1" step="1">
+ </div>
+ <div class="input-group" style="justify-content: flex-end; align-self: flex-end;">
+ <span class="badge" id="dkRecommend">d_k = 128 recommended</span>
+ </div>
+ </div>
+ </div>
 
-  <!-- computed stats -->
-  <div class="card">
-    <div class="flex-between">
-      <h2 style="font-size: 1.2rem; font-weight: 500;">📐 Core dimensions &amp; parameters</h2>
-      <span class="badge">per layer</span>
-    </div>
-    <div class="stat-grid" id="coreStats">
-      <div class="stat-item"><span class="stat-label">d_k / d_v</span><span class="stat-value" id="dkVal">—</span></div>
-      <div class="stat-item"><span class="stat-label">Q param</span><span class="stat-value" id="qParam">—</span></div>
-      <div class="stat-item"><span class="stat-label">K param</span><span class="stat-value" id="kParam">—</span></div>
-      <div class="stat-item"><span class="stat-label">V param</span><span class="stat-value" id="vParam">—</span></div>
-      <div class="stat-item"><span class="stat-label">Output proj</span><span class="stat-value" id="outParam">—</span></div>
-      <div class="stat-item"><span class="stat-label">Total attn params</span><span class="stat-value accent" id="totalAttnParams">—</span></div>
-    </div>
-    <div class="stat-grid" style="margin-top: 0.5rem;">
-      <div class="stat-item"><span class="stat-label">KV cache size (MHA)</span><span class="stat-value" id="kvMha">—</span></div>
-      <div class="stat-item"><span class="stat-label">KV cache (MQA)</span><span class="stat-value" id="kvMqa">—</span></div>
-      <div class="stat-item"><span class="stat-label">KV cache (GQA-<span id="gqaLabel">4</span>)</span><span class="stat-value" id="kvGqa">—</span></div>
-    </div>
-  </div>
+ 
+ <div class="card">
+ <div class="flex-between">
+ <h2 style="font-size: 1.2rem; font-weight: 500;"> Core dimensions &amp; parameters</h2>
+ <span class="badge">per layer</span>
+ </div>
+ <div class="stat-grid" id="coreStats">
+ <div class="stat-item"><span class="stat-label">d_k / d_v</span><span class="stat-value" id="dkVal">, </span></div>
+ <div class="stat-item"><span class="stat-label">Q param</span><span class="stat-value" id="qParam">, </span></div>
+ <div class="stat-item"><span class="stat-label">K param</span><span class="stat-value" id="kParam">, </span></div>
+ <div class="stat-item"><span class="stat-label">V param</span><span class="stat-value" id="vParam">, </span></div>
+ <div class="stat-item"><span class="stat-label">Output proj</span><span class="stat-value" id="outParam">, </span></div>
+ <div class="stat-item"><span class="stat-label">Total attn params</span><span class="stat-value accent" id="totalAttnParams">, </span></div>
+ </div>
+ <div class="stat-grid" style="margin-top: 0.5rem;">
+ <div class="stat-item"><span class="stat-label">KV cache size (MHA)</span><span class="stat-value" id="kvMha">, </span></div>
+ <div class="stat-item"><span class="stat-label">KV cache (MQA)</span><span class="stat-value" id="kvMqa">, </span></div>
+ <div class="stat-item"><span class="stat-label">KV cache (GQA-<span id="gqaLabel">4</span>)</span><span class="stat-value" id="kvGqa">, </span></div>
+ </div>
+ </div>
 
-  <!-- comparison table -->
-  <div class="card">
-    <h2 style="font-size: 1.2rem; font-weight: 500; margin-bottom: 0.5rem;">📊 KV cache comparison: MHA / MQA / GQA</h2>
-    <div style="overflow-x: auto;">
-      <div class="table-scroll"><table id="comparisonTable">
-        <thead>
-          <tr><th>Variant</th><th>KV heads</th><th>KV cache size (MB)</th><th>Relative vs MHA</th></tr>
-        </thead>
-        <tbody id="tableBody">
-          <tr><td>MHA (full)</td><td><span id="mhaHeads">32</span></td><td id="mhaSize">—</td><td>1.0x</td></tr>
-          <tr><td>MQA</td><td>1</td><td id="mqaSize">—</td><td id="mqaRatio">—</td></tr>
-          <tr><td>GQA-2</td><td>2</td><td id="gqa2Size">—</td><td id="gqa2Ratio">—</td></tr>
-          <tr><td>GQA-4</td><td>4</td><td id="gqa4Size">—</td><td id="gqa4Ratio">—</td></tr>
-          <tr><td>GQA-8</td><td>8</td><td id="gqa8Size">—</td><td id="gqa8Ratio">—</td></tr>
-        </tbody>
-      </table></div>
-    </div>
-    <div class="footnote">KV cache = 2 × layers × num_kv_heads × d_k × bytes_per_element × seq_len × batch_size. GQA-<em>k</em> uses k KV heads.</div>
-  </div>
+ 
+ <div class="card">
+ <h2 style="font-size: 1.2rem; font-weight: 500; margin-bottom: 0.5rem;"> KV cache comparison, MHA / MQA / GQA</h2>
+ <div style="overflow-x: auto;">
+ <div class="table-scroll"><table id="comparisonTable">
+ <thead>
+ <tr><th>Variant</th><th>KV heads</th><th>KV cache size (MB)</th><th>Relative vs MHA</th></tr>
+ </thead>
+ <tbody id="tableBody">
+ <tr><td>MHA (full)</td><td><span id="mhaHeads">32</span></td><td id="mhaSize">, </td><td>1.0x</td></tr>
+ <tr><td>MQA</td><td>1</td><td id="mqaSize">, </td><td id="mqaRatio">, </td></tr>
+ <tr><td>GQA-2</td><td>2</td><td id="gqa2Size">, </td><td id="gqa2Ratio">, </td></tr>
+ <tr><td>GQA-4</td><td>4</td><td id="gqa4Size">, </td><td id="gqa4Ratio">, </td></tr>
+ <tr><td>GQA-8</td><td>8</td><td id="gqa8Size">, </td><td id="gqa8Ratio">, </td></tr>
+ </tbody>
+ </table></div>
+ </div>
+ <div class="footnote">KV cache = 2 × layers × num_kv_heads × d_k × bytes_per_element × seq_len × batch_size. GQA-<em>k</em> uses k KV heads.</div>
+ </div>
 
-  <!-- FAQ / info -->
-  <div class="card" style="background: #131e31;">
-    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between;">
-      <div style="flex: 1; min-width: 180px;">
-        <div style="font-weight: 500; color: #38bdf8;">💡 d_k = d_model / num_heads</div>
-        <div style="font-size: 0.9rem; color: #b0c4de;">Recommended: 64 or 128. Current: <span id="dkRecStatus">128</span></div>
-      </div>
-      <div style="flex: 2; min-width: 200px; font-size: 0.9rem; color: #b0c4de;">
-        <span>Q/K/V projection: d_model × d_model each. Output projection: d_model × d_model.</span>
-      </div>
-    </div>
-  </div>
+ 
+ <div class="card" style="background: #131e31;">
+ <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between;">
+ <div style="flex: 1; min-width: 180px;">
+ <div style="font-weight: 500; color: #38bdf8;"> d_k = d_model / num_heads</div>
+ <div style="font-size: 0.9rem; color: #b0c4de;">Recommended: 64 or 128. Current: <span id="dkRecStatus">128</span></div>
+ </div>
+ <div style="flex: 2; min-width: 200px; font-size: 0.9rem; color: #b0c4de;">
+ <span>Q/K/V projection: d_model × d_model each. Output projection: d_model × d_model.</span>
+ </div>
+ </div>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -183,146 +183,146 @@
 </div>
 
 <script>
-  (function() {
-    const dModel = document.getElementById('dModel');
-    const numHeads = document.getElementById('numHeads');
-    const numLayers = document.getElementById('numLayers');
-    const seqLen = document.getElementById('seqLen');
-    const batchSize = document.getElementById('batchSize');
-    const precision = document.getElementById('precision');
-    const numKvHeads = document.getElementById('numKvHeads');
+ (function() {
+  const dModel = document.getElementById('dModel');
+  const numHeads = document.getElementById('numHeads');
+  const numLayers = document.getElementById('numLayers');
+  const seqLen = document.getElementById('seqLen');
+  const batchSize = document.getElementById('batchSize');
+  const precision = document.getElementById('precision');
+  const numKvHeads = document.getElementById('numKvHeads');
 
-    // output fields
-    const dkVal = document.getElementById('dkVal');
-    const qParam = document.getElementById('qParam');
-    const kParam = document.getElementById('kParam');
-    const vParam = document.getElementById('vParam');
-    const outParam = document.getElementById('outParam');
-    const totalAttnParams = document.getElementById('totalAttnParams');
-    const kvMha = document.getElementById('kvMha');
-    const kvMqa = document.getElementById('kvMqa');
-    const kvGqa = document.getElementById('kvGqa');
-    const gqaLabel = document.getElementById('gqaLabel');
-    const dkRecommend = document.getElementById('dkRecommend');
-    const dkRecStatus = document.getElementById('dkRecStatus');
+  // output fields
+  const dkVal = document.getElementById('dkVal');
+  const qParam = document.getElementById('qParam');
+  const kParam = document.getElementById('kParam');
+  const vParam = document.getElementById('vParam');
+  const outParam = document.getElementById('outParam');
+  const totalAttnParams = document.getElementById('totalAttnParams');
+  const kvMha = document.getElementById('kvMha');
+  const kvMqa = document.getElementById('kvMqa');
+  const kvGqa = document.getElementById('kvGqa');
+  const gqaLabel = document.getElementById('gqaLabel');
+  const dkRecommend = document.getElementById('dkRecommend');
+  const dkRecStatus = document.getElementById('dkRecStatus');
 
-    // table cells
-    const mhaHeads = document.getElementById('mhaHeads');
-    const mhaSize = document.getElementById('mhaSize');
-    const mqaSize = document.getElementById('mqaSize');
-    const mqaRatio = document.getElementById('mqaRatio');
-    const gqa2Size = document.getElementById('gqa2Size');
-    const gqa2Ratio = document.getElementById('gqa2Ratio');
-    const gqa4Size = document.getElementById('gqa4Size');
-    const gqa4Ratio = document.getElementById('gqa4Ratio');
-    const gqa8Size = document.getElementById('gqa8Size');
-    const gqa8Ratio = document.getElementById('gqa8Ratio');
+  // table cells
+  const mhaHeads = document.getElementById('mhaHeads');
+  const mhaSize = document.getElementById('mhaSize');
+  const mqaSize = document.getElementById('mqaSize');
+  const mqaRatio = document.getElementById('mqaRatio');
+  const gqa2Size = document.getElementById('gqa2Size');
+  const gqa2Ratio = document.getElementById('gqa2Ratio');
+  const gqa4Size = document.getElementById('gqa4Size');
+  const gqa4Ratio = document.getElementById('gqa4Ratio');
+  const gqa8Size = document.getElementById('gqa8Size');
+  const gqa8Ratio = document.getElementById('gqa8Ratio');
 
-    function formatSizeMB(bytes) {
-      if (bytes === 0) return '0 MB';
-      const mb = bytes / (1024 * 1024);
-      if (mb < 0.01) return '<0.01 MB';
-      if (mb < 1) return mb.toFixed(3) + ' MB';
-      if (mb < 1000) return mb.toFixed(2) + ' MB';
-      return (mb / 1024).toFixed(3) + ' GB';
+  function formatSizeMB(bytes) {
+   if (bytes === 0) return '0 MB';
+   const mb = bytes / (1024 * 1024);
+   if (mb < 0.01) return '<0.01 MB';
+   if (mb < 1) return mb.toFixed(3) + ' MB';
+   if (mb < 1000) return mb.toFixed(2) + ' MB';
+   return (mb / 1024).toFixed(3) + ' GB';
+  }
+
+  function formatParams(num) {
+   if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+   if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+   if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+   return num.toString();
+  }
+
+  function compute() {
+   const d = parseInt(dModel.value) || 1024;
+   const h = parseInt(numHeads.value) || 8;
+   const L = parseInt(numLayers.value) || 1;
+   const seq = parseInt(seqLen.value) || 128;
+   const bs = parseInt(batchSize.value) || 1;
+   const bytes = parseFloat(precision.value) || 2;
+   let kvHeads = parseInt(numKvHeads.value) || 4;
+   if (kvHeads < 1) kvHeads = 1;
+   if (kvHeads > h) kvHeads = h;
+
+   const dk = d / h;
+   const dkInt = Math.floor(dk);
+   const dkDisplay = (dk === Math.floor(dk)) ? dk : dk.toFixed(4);
+
+   // projections
+   const qkvParam = d * d; // each
+   const outProj = d * d;
+   const totalPerLayer = 4 * d * d; // Q+K+V+out
+
+   // KV cache helpers
+   function kvCacheSize(numKvHeads) {
+    return 2 * L * numKvHeads * dk * bytes * seq * bs;
+   }
+
+   const kvMhaBytes = kvCacheSize(h);
+   const kvMqaBytes = kvCacheSize(1);
+   const kvGqaBytes = kvCacheSize(kvHeads);
+
+   // update DOM
+   dkVal.textContent = dkDisplay;
+   qParam.textContent = formatParams(qkvParam);
+   kParam.textContent = formatParams(qkvParam);
+   vParam.textContent = formatParams(qkvParam);
+   outParam.textContent = formatParams(outProj);
+   totalAttnParams.textContent = formatParams(totalPerLayer);
+
+   kvMha.textContent = formatSizeMB(kvMhaBytes);
+   kvMqa.textContent = formatSizeMB(kvMqaBytes);
+   kvGqa.textContent = formatSizeMB(kvGqaBytes);
+   gqaLabel.textContent = kvHeads;
+
+   // recommendation
+   let recText = '';
+   if (dk === 64 || dk === 128) {
+    recText = `d_k = ${dk} ✓ recommended`;
+    dkRecommend.style.color = '#38bdf8';
+   } else {
+    recText = `d_k = ${dkDisplay} (consider 64 or 128)`;
+    dkRecommend.style.color = '#facc15';
+   }
+   dkRecommend.textContent = recText;
+   dkRecStatus.textContent = dkDisplay;
+
+   // table
+   mhaHeads.textContent = h;
+   mhaSize.textContent = formatSizeMB(kvMhaBytes);
+   const mhaVal = kvMhaBytes;
+
+   function setRow(sizeEl, ratioEl, kvHeadsVal) {
+    const bytesVal = kvCacheSize(kvHeadsVal);
+    sizeEl.textContent = formatSizeMB(bytesVal);
+    if (mhaVal === 0) {
+     ratioEl.textContent = '—';
+    } else {
+     const ratio = bytesVal / mhaVal;
+     ratioEl.textContent = ratio.toFixed(3) + 'x';
     }
+   }
 
-    function formatParams(num) {
-      if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
-      if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
-      if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
-      return num.toString();
-    }
+   setRow(mqaSize, mqaRatio, 1);
+   setRow(gqa2Size, gqa2Ratio, 2);
+   setRow(gqa4Size, gqa4Ratio, 4);
+   setRow(gqa8Size, gqa8Ratio, 8);
+  }
 
-    function compute() {
-      const d = parseInt(dModel.value) || 1024;
-      const h = parseInt(numHeads.value) || 8;
-      const L = parseInt(numLayers.value) || 1;
-      const seq = parseInt(seqLen.value) || 128;
-      const bs = parseInt(batchSize.value) || 1;
-      const bytes = parseFloat(precision.value) || 2;
-      let kvHeads = parseInt(numKvHeads.value) || 4;
-      if (kvHeads < 1) kvHeads = 1;
-      if (kvHeads > h) kvHeads = h;
+  // attach listeners
+  const inputs = [dModel, numHeads, numLayers, seqLen, batchSize, precision, numKvHeads];
+  inputs.forEach(inp => inp.addEventListener('input', compute));
+  inputs.forEach(inp => inp.addEventListener('change', compute));
 
-      const dk = d / h;
-      const dkInt = Math.floor(dk);
-      const dkDisplay = (dk === Math.floor(dk)) ? dk : dk.toFixed(4);
-
-      // projections
-      const qkvParam = d * d;  // each
-      const outProj = d * d;
-      const totalPerLayer = 4 * d * d;  // Q+K+V+out
-
-      // KV cache helpers
-      function kvCacheSize(numKvHeads) {
-        return 2 * L * numKvHeads * dk * bytes * seq * bs;
-      }
-
-      const kvMhaBytes = kvCacheSize(h);
-      const kvMqaBytes = kvCacheSize(1);
-      const kvGqaBytes = kvCacheSize(kvHeads);
-
-      // update DOM
-      dkVal.textContent = dkDisplay;
-      qParam.textContent = formatParams(qkvParam);
-      kParam.textContent = formatParams(qkvParam);
-      vParam.textContent = formatParams(qkvParam);
-      outParam.textContent = formatParams(outProj);
-      totalAttnParams.textContent = formatParams(totalPerLayer);
-
-      kvMha.textContent = formatSizeMB(kvMhaBytes);
-      kvMqa.textContent = formatSizeMB(kvMqaBytes);
-      kvGqa.textContent = formatSizeMB(kvGqaBytes);
-      gqaLabel.textContent = kvHeads;
-
-      // recommendation
-      let recText = '';
-      if (dk === 64 || dk === 128) {
-        recText = `d_k = ${dk} ✓ recommended`;
-        dkRecommend.style.color = '#38bdf8';
-      } else {
-        recText = `d_k = ${dkDisplay} (consider 64 or 128)`;
-        dkRecommend.style.color = '#facc15';
-      }
-      dkRecommend.textContent = recText;
-      dkRecStatus.textContent = dkDisplay;
-
-      // table
-      mhaHeads.textContent = h;
-      mhaSize.textContent = formatSizeMB(kvMhaBytes);
-      const mhaVal = kvMhaBytes;
-
-      function setRow(sizeEl, ratioEl, kvHeadsVal) {
-        const bytesVal = kvCacheSize(kvHeadsVal);
-        sizeEl.textContent = formatSizeMB(bytesVal);
-        if (mhaVal === 0) {
-          ratioEl.textContent = '—';
-        } else {
-          const ratio = bytesVal / mhaVal;
-          ratioEl.textContent = ratio.toFixed(3) + 'x';
-        }
-      }
-
-      setRow(mqaSize, mqaRatio, 1);
-      setRow(gqa2Size, gqa2Ratio, 2);
-      setRow(gqa4Size, gqa4Ratio, 4);
-      setRow(gqa8Size, gqa8Ratio, 8);
-    }
-
-    // attach listeners
-    const inputs = [dModel, numHeads, numLayers, seqLen, batchSize, precision, numKvHeads];
-    inputs.forEach(inp => inp.addEventListener('input', compute));
-    inputs.forEach(inp => inp.addEventListener('change', compute));
-
-    // initial
-    compute();
-  })();
+  // initial
+  compute();
+ })();
 </script>
 <div style="margin:30px auto;max-width:728px;text-align:center;padding:18px 24px;background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:10px">
 <p style="margin:0 0 6px;color:#94a3b8;font-size:0.85rem">Recommended by our team</p>
 <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:600;font-size:1.05rem;text-decoration:none">BeLikeNative.com</a>
-<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
 </div>
 </body>
 </html>

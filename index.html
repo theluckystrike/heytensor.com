@@ -1,356 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+ <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PyTorch Shape Calculator — Fix Tensor Errors Fast</title>
-  <meta name="description" content="Fix PyTorch RuntimeErrors fast. Calculate tensor shapes for Conv2d, Linear, LSTM, and 14+ layers. Paste any shape error to get the fix. Free, runs in your browser.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/">
-  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
-  <link rel="alternate" hreflang="en" href="https://heytensor.com/">
-  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>PyTorch Shape Calculator, Fix Tensor Errors Fast</title>
+ <meta name="description" content="Fix PyTorch RuntimeErrors fast. Calculate tensor shapes for Conv2d, Linear, LSTM, and 14+ layers. Paste any shape error to get the fix. Free, runs in your browser.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/">
+ <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/">
 <link rel="alternate" type="application/atom+xml" title="PyTorch Tensor Shape Calculator &amp; Error Debugger Blog Feed" href="/blog/feed.xml">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="PyTorch Tensor Shape Calculator & Error Debugger — Fix Shape Errors Instantly">
-  <meta property="og:description" content="Fix PyTorch RuntimeErrors fast. Calculate tensor shapes for Conv2d, Linear, LSTM, and 14+ layers. Paste any shape error to get the fix.">
-  <meta property="og:url" content="https://heytensor.com/">
-  <meta property="og:site_name" content="Zovo Tools">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PyTorch Tensor Shape Calculator & Error Debugger — Fix Shape Errors Instantly">
-  <meta name="twitter:description" content="Fix PyTorch RuntimeErrors fast. Calculate tensor shapes for Conv2d, Linear, LSTM, and 14+ layers. Paste any shape error to get the fix.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PyTorch Tensor Shape Calculator & Error Debugger",
-    "url": "https://heytensor.com",
-    "description": "PyTorch tensor shape calculator with chain mode, error debugger, and architecture presets. Supports Conv2d, Linear, LSTM, MultiheadAttention, and 10+ layer types.",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "browserRequirements": "Requires JavaScript",
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    },
-    "datePublished": "2026-04-05",
-    "dateModified": "2026-05-27",
-    "featureList": ["Single Layer Shape Calculator for 14 layer types", "Chain Mode for sequential layer stacking", "Paste Error mode for PyTorch RuntimeError debugging", "Architecture Presets (LeNet-5, ResNet Block, Transformer)", "Supports Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, Concatenate"]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I calculate Conv2d output shape?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The Conv2d output shape formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use HeyTensor's calculator to compute this instantly for any configuration."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's in_features doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll get 'mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)'. Fix: set in_features to match your actual flattened size."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the output shape of a Linear layer?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A PyTorch Linear(in_features, out_features) layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I fix tensor size mismatch in PyTorch?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with tensor.shape at each layer. 2) Use HeyTensor's Chain Mode to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What does RuntimeError: Expected input batch_size mean?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension."
-        }
-      }
-    ]
-  }
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"WebSite","name":"HeyTensor","url":"https://heytensor.com/","sameAs":"https://github.com/theluckystrike/heytensor.com","author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"}}
-  </script>
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="PyTorch Tensor Shape Calculator & Error Debugger, Fix Shape Errors Instantly">
+ <meta property="og:description" content="Fix PyTorch RuntimeErrors fast. Calculate tensor shapes for Conv2d, Linear, LSTM, and 14+ layers. Paste any shape error to get the fix.">
+ <meta property="og:url" content="https://heytensor.com/">
+ <meta property="og:site_name" content="Zovo Tools">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="PyTorch Tensor Shape Calculator & Error Debugger, Fix Shape Errors Instantly">
+ <meta name="twitter:description" content="Fix PyTorch RuntimeErrors fast. Calculate tensor shapes for Conv2d, Linear, LSTM, and 14+ layers. Paste any shape error to get the fix.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PyTorch Tensor Shape Calculator & Error Debugger",
+  "url": "https://heytensor.com",
+  "description": "PyTorch tensor shape calculator with chain mode, error debugger, and architecture presets. Supports Conv2d, Linear, LSTM, MultiheadAttention, and 10+ layer types.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "browserRequirements": "Requires JavaScript",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-05",
+  "dateModified": "2026-05-27",
+  "featureList": ["Single Layer Shape Calculator for 14 layer types", "Chain Mode for sequential layer stacking", "Paste Error mode for PyTorch RuntimeError debugging", "Architecture Presets (LeNet-5, ResNet Block, Transformer)", "Supports Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, Concatenate"]
+ }
+ </script>
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
+    "@type": "Question",
+    "name": "How do I calculate Conv2d output shape?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "The Conv2d output shape formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use HeyTensor's calculator to compute this instantly for any configuration."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's in_features doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll get 'mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)'. Fix: set in_features to match your actual flattened size."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "What is the output shape of a Linear layer?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "A PyTorch Linear(in_features, out_features) layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "How do I fix tensor size mismatch in PyTorch?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with tensor.shape at each layer. 2) Use HeyTensor's Chain Mode to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "What does RuntimeError: Expected input batch_size mean?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension."
+    }
+   }
+  ]
+ }
+ </script>
+ <script type="application/ld+json">
+ {"@context":"https://schema.org","@type":"WebSite","name":"HeyTensor","url":"https://heytensor.com/","sameAs":"https://github.com/theluckystrike/heytensor.com","author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"}}
+ </script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/" class="active">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/" class="active">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container">
-    <section class="hero">
-      <h1>PyTorch <span>Tensor Shape</span> Calculator</h1>
-      <p>Calculate output shapes for 14 layer types. Chain layers together, debug shape errors, and explore architecture presets. Works with PyTorch and TensorFlow.</p>
-    </section>
+ <main class="container">
+ <section class="hero">
+ <h1>PyTorch <span>Tensor Shape</span> Calculator</h1>
+ <p>Calculate output shapes for 14 layer types. Chain layers together, debug shape errors, and explore architecture presets. Works with PyTorch and TensorFlow.</p>
+ </section>
 
-    <div id="tool-container">
-    <div class="tab-bar">
-      <button class="tab-btn active" data-tab="single">Single Layer</button>
-      <button class="tab-btn" data-tab="chain">Chain Mode</button>
-      <button class="tab-btn" data-tab="error">Paste Error</button>
-      <button class="tab-btn" data-tab="presets">Presets</button>
-    </div>
+ <div id="tool-container">
+ <div class="tab-bar">
+ <button class="tab-btn active" data-tab="single">Single Layer</button>
+ <button class="tab-btn" data-tab="chain">Chain Mode</button>
+ <button class="tab-btn" data-tab="error">Paste Error</button>
+ <button class="tab-btn" data-tab="presets">Presets</button>
+ </div>
 
-    <div id="single-content" class="tab-pane active"></div>
-    <div id="chain-content" class="tab-pane"></div>
-    <div id="error-content" class="tab-pane"></div>
-    <div id="presets-content" class="tab-pane"></div>
-    </div>
+ <div id="single-content" class="tab-pane active"></div>
+ <div id="chain-content" class="tab-pane"></div>
+ <div id="error-content" class="tab-pane"></div>
+ <div id="presets-content" class="tab-pane"></div>
+ </div>
 
-    <div class="last-updated"><time datetime="2026-05-27">Last updated: May 27, 2026</time></div>
+ <div class="last-updated"><time datetime="2026-05-27">Last updated: May 27, 2026</time></div>
 
-    <section class="faq-section">
-      <h2>Frequently Asked Questions</h2>
+ <section class="faq-section">
+ <h2>Frequently Asked Questions</h2>
 
-      <details>
-        <summary>How do I calculate Conv2d output shape?</summary>
-        <p class="qas">The Conv2d output shape formula is: <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
-      </details>
+ <details>
+ <summary>How do I calculate Conv2d output shape?</summary>
+ <p class="qas">The Conv2d output shape formula is: <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
+ </details>
 
-      <details>
-        <summary>Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?</summary>
-        <p class="qas">This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. Fix: set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
-      </details>
+ <details>
+ <summary>Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?</summary>
+ <p class="qas">This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. Fix: set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
+ </details>
 
-      <details>
-        <summary>What is the output shape of a Linear layer?</summary>
-        <p class="qas">A PyTorch <code>nn.Linear(in_features, out_features)</code> layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes to out_features.</p>
-      </details>
+ <details>
+ <summary>What is the output shape of a Linear layer?</summary>
+ <p class="qas">A PyTorch <code>nn.Linear(in_features, out_features)</code> layer transforms the last dimension of the input tensor. If input is [batch, features], output is [batch, out_features]. If input is [batch, seq, features], output is [batch, seq, out_features]. Only the last dimension changes to out_features.</p>
+ </details>
 
-      <details>
-        <summary>How do I fix tensor size mismatch in PyTorch?</summary>
-        <p class="qas">Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
-      </details>
+ <details>
+ <summary>How do I fix tensor size mismatch in PyTorch?</summary>
+ <p class="qas">Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
+ </details>
 
-      <details>
-        <summary>What does RuntimeError: Expected input batch_size mean?</summary>
-        <p class="qas">This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
-      </details>
+ <details>
+ <summary>What does RuntimeError: Expected input batch_size mean?</summary>
+ <p class="qas">This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
+ </details>
 
-      <details>
-        <summary>Does HeyTensor support TensorFlow layers?</summary>
-        <p class="qas">Yes. While the layer naming follows PyTorch conventions, the shape formulas are identical across frameworks. Conv2D, Dense (Linear), LSTM, and pooling layers use the same mathematical formulas in both PyTorch and TensorFlow. Enter your TensorFlow layer parameters and the output shapes will be correct.</p>
-      </details>
-    </section>
+ <details>
+ <summary>Does HeyTensor support TensorFlow layers?</summary>
+ <p class="qas">Yes. While the layer naming follows PyTorch conventions, the shape formulas are identical across frameworks. Conv2D, Dense (Linear), LSTM, and pooling layers use the same mathematical formulas in both PyTorch and TensorFlow. Enter your TensorFlow layer parameters and the output shapes will be correct.</p>
+ </details>
+ </section>
 
-    <!-- How It Works Explainer Section -->
-    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
-      <h2>How HeyTensor Works</h2>
+ 
+ <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+ <h2>How HeyTensor Works</h2>
 
-      <p class="qas">HeyTensor is a free, browser-based tensor shape calculator built for deep learning practitioners who need to quickly determine output dimensions for neural network layers. Instead of manually applying formulas or inserting print statements into your code, you enter the input shape and layer parameters, and HeyTensor computes the exact output shape instantly. The calculator supports 14 layer types across both PyTorch and TensorFlow: Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, and Concatenate.</p>
+ <p class="qas">HeyTensor is a free, browser-based tensor shape calculator built for deep learning practitioners who need to quickly determine output dimensions for neural network layers. Instead of manually applying formulas or inserting print statements into your code, you enter the input shape and layer parameters, and HeyTensor computes the exact output shape instantly. The calculator supports 14 layer types across both PyTorch and TensorFlow: Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, and Concatenate.</p>
 
-      <p>The most powerful feature is Chain Mode, which lets you stack layers sequentially and see the output shape at every step of your network. If shapes become incompatible between layers — the most common source of PyTorch RuntimeErrors — the mismatch is highlighted immediately. This lets you fix architecture issues before writing any code, saving the frustrating cycle of running a training script, hitting a shape error, guessing the fix, and running again. The Paste Error mode goes further: paste a PyTorch error message like "mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)" and HeyTensor extracts the dimensions and suggests which parameter to change.</p>
+ <p>The most powerful feature is Chain Mode, which lets you stack layers sequentially and see the output shape at every step of your network. If shapes become incompatible between layers, the most common source of PyTorch RuntimeErrors, the mismatch is highlighted immediately. This lets you fix architecture issues before writing any code, saving the frustrating cycle of running a training script, hitting a shape error, guessing the fix, and running again. The Paste Error mode goes further: paste a PyTorch error message like "mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)" and HeyTensor extracts the dimensions and suggests which parameter to change.</p>
 
-      <p>Architecture Presets let you load complete network configurations with one click. Available presets include LeNet-5, a simple CNN classifier, a ResNet residual block, a Transformer encoder layer, and an LSTM classifier. Each preset shows shape propagation through every layer, serving as both a learning tool and a starting point for your own designs.</p>
+ <p>Architecture Presets let you load complete network configurations with one click. Available presets include LeNet-5, a simple CNN classifier, a ResNet residual block, a Transformer encoder layer, and an LSTM classifier. Each preset shows shape propagation through every layer, serving as both a learning tool and a starting point for your own designs.</p>
 
-      <h3>Features</h3>
-      <p>HeyTensor provides a single-layer calculator for instant shape computation, a chain mode for tracing shapes through multi-layer architectures, a paste-error debugger that parses PyTorch RuntimeErrors and suggests fixes, architecture presets for common network designs, support for 14 PyTorch and TensorFlow layer types, and detailed formula display showing exactly how each output dimension is calculated. All computations run entirely in your browser with no server communication.</p>
+ <h3>Features</h3>
+ <p>HeyTensor provides a single-layer calculator for instant shape computation, a chain mode for tracing shapes through multi-layer architectures, a paste-error debugger that parses PyTorch RuntimeErrors and suggests fixes, architecture presets for common network designs, support for 14 PyTorch and TensorFlow layer types, and detailed formula display showing exactly how each output dimension is calculated. All computations run entirely in your browser with no server communication.</p>
 
-      <h3>Who Uses This</h3>
-      <p>HeyTensor is designed for ML engineers debugging shape mismatches during model development, students learning deep learning architecture design, researchers prototyping new layer configurations, and anyone working with PyTorch or TensorFlow who wants to verify tensor dimensions before running code. If you work with the underlying matrix math behind neural networks, <a href="https://ml3x.com">ML3X</a> provides a visual matrix calculator with step-by-step solutions. For developers needing general-purpose encoding tools, <a href="https://kappakit.com">KappaKit</a> offers Base64, JWT, hash, and UUID utilities in a similar single-page format. Model security analysis and input validation tools are available at <a href="https://lockml.com">LockML</a>.</p>
+ <h3>Who Uses This</h3>
+ <p>HeyTensor is designed for ML engineers debugging shape mismatches during model development, students learning deep learning architecture design, researchers prototyping new layer configurations, and anyone working with PyTorch or TensorFlow who wants to verify tensor dimensions before running code. If you work with the underlying matrix math behind neural networks, <a href="https://ml3x.com">ML3X</a> provides a visual matrix calculator with step-by-step solutions. For developers needing general-purpose encoding tools, <a href="https://kappakit.com">KappaKit</a> offers Base64, JWT, hash, and UUID utilities in a similar single-page format. Model security analysis and input validation tools are available at <a href="https://lockml.com">LockML</a>.</p>
 
-      <h3>Privacy</h3>
-      <p>All tensor shape calculations run locally in your browser. No model architectures, error messages, or layer parameters are sent to any server. The source code is fully open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>. There are no cookies, no analytics, and no tracking.</p>
+ <h3>Privacy</h3>
+ <p>All tensor shape calculations run locally in your browser. No model architectures, error messages, or layer parameters are sent to any server. The source code is fully open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>. There are no cookies, no analytics, and no tracking.</p>
 
-      <h3>Contact</h3>
-      <p>Michael Lip builds ML tools (heytensor.com), <a href="https://www.belikenative.com/" rel="nofollow">BeLikeNative</a> (Chrome writing assistant), and 20+ tools under <a href="https://zovo.one">Zovo</a>. For questions or feedback, email <a href="mailto:support@zovo.one">support@zovo.one</a> or visit the project on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
-    </section>
+ <h3>Contact</h3>
+ <p>Michael Lip builds ML tools (heytensor.com), <a href="https://www.belikenative.com/" rel="nofollow">BeLikeNative</a> (Chrome writing assistant), and 20+ tools under <a href="https://zovo.one">Zovo</a>. For questions or feedback, email <a href="mailto:support@zovo.one">support@zovo.one</a> or visit the project on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+ </section>
 
-    <!-- Internal Content Discovery -->
-    <section class="content-discovery" style="max-width:960px;margin:3rem auto;padding:0 1rem;">
-      <style>
-        .content-discovery h2 { text-align:center; margin-bottom:2rem; }
-        .content-discovery .disc-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2rem; margin-bottom:2.5rem; }
-        .content-discovery .disc-group h3 { font-size:1.1rem; margin-bottom:0.75rem; color:var(--accent, #14B8A6); border-bottom:1px solid var(--border, #333); padding-bottom:0.5rem; }
-        .content-discovery .disc-group ul { list-style:none; padding:0; margin:0; }
-        .content-discovery .disc-group li { margin-bottom:0.4rem; }
-        .content-discovery .disc-group a { color:var(--text, #e0e0e0); text-decoration:none; font-size:0.9rem; }
-        .content-discovery .disc-group a:hover { color:var(--accent, #14B8A6); text-decoration:underline; }
-        .content-discovery .disc-more { text-align:center; margin-top:0.5rem; }
-        .content-discovery .disc-more a { color:var(--accent, #14B8A6); font-size:0.85rem; text-decoration:none; }
-        .content-discovery .disc-more a:hover { text-decoration:underline; }
-      </style>
-      <h2>Explore HeyTensor</h2>
-      <div class="disc-grid">
-        <div class="disc-group">
-          <h3>Shape Calculators</h3>
-          <ul>
-            <li><a href="/tools/conv2d-calculator.html">Conv2d Shape Calculator</a></li>
-            <li><a href="/tools/conv1d-calculator.html">Conv1d Shape Calculator</a></li>
-            <li><a href="/tools/linear-layer-calculator.html">Linear Layer Calculator</a></li>
-            <li><a href="/tools/lstm-shape-calculator.html">LSTM Shape Calculator</a></li>
-            <li><a href="/tools/maxpool2d-calculator.html">MaxPool2d Calculator</a></li>
-            <li><a href="/tools/flatten-calculator.html">Flatten Calculator</a></li>
-            <li><a href="/tools/einsum-calculator.html">Einsum Calculator</a></li>
-            <li><a href="/tools/parameter-counter.html">Parameter Counter</a></li>
-            <li><a href="/tools/memory-calculator.html">Memory Calculator</a></li>
-            <li><a href="/tools/flops-calculator.html">FLOPs Calculator</a></li>
-          </ul>
-          <div class="disc-more"><a href="/tools/">View all tools &rarr;</a></div>
-        </div>
-        <div class="disc-group">
-          <h3>Error Debuggers</h3>
-          <ul>
-            <li><a href="/tools/mat1-mat2-shapes.html">mat1 and mat2 Shapes Error</a></li>
-            <li><a href="/tools/shape-mismatch.html">Shape Mismatch Error</a></li>
-            <li><a href="/tools/cuda-out-of-memory.html">CUDA Out of Memory</a></li>
-            <li><a href="/tools/view-size-not-compatible.html">View Size Not Compatible</a></li>
-            <li><a href="/tools/broadcast-error.html">Broadcast Error</a></li>
-            <li><a href="/tools/dimension-out-of-range.html">Dimension Out of Range</a></li>
-            <li><a href="/tools/expected-input-size.html">Expected Input Size Error</a></li>
-            <li><a href="/tools/activation-functions.html">Activation Functions Reference</a></li>
-            <li><a href="/tools/loss-functions.html">Loss Functions Reference</a></li>
-            <li><a href="/tools/optimizers.html">Optimizers Reference</a></li>
-          </ul>
-        </div>
-        <div class="disc-group">
-          <h3>Latest Answers</h3>
-          <ul>
-            <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">mat1 and mat2 Shapes Cannot Be Multiplied</a></li>
-            <li><a href="/answers/cuda-out-of-memory-fix.html">CUDA Out of Memory Fix</a></li>
-            <li><a href="/answers/flatten-after-conv2d.html">Flatten After Conv2d</a></li>
-            <li><a href="/answers/resnet50-layer-shapes.html">ResNet50 Layer Shapes</a></li>
-            <li><a href="/answers/how-many-parameters-resnet50.html">How Many Parameters in ResNet50?</a></li>
-            <li><a href="/answers/how-many-parameters-bert-base.html">How Many Parameters in BERT-Base?</a></li>
-            <li><a href="/answers/pytorch-vs-tensorflow-2026.html">PyTorch vs TensorFlow 2026</a></li>
-            <li><a href="/answers/what-is-stride-in-conv2d.html">What Is Stride in Conv2d?</a></li>
-            <li><a href="/answers/difference-between-relu-and-gelu.html">Difference Between ReLU and GELU</a></li>
-            <li><a href="/answers/transformer-encoder-input-shape.html">Transformer Encoder Input Shape</a></li>
-          </ul>
-          <div class="disc-more"><a href="/answers/">View all answers &rarr;</a></div>
-        </div>
-      </div>
-      <div class="disc-grid" style="margin-top:0;">
-        <div class="disc-group">
-          <h3>Research</h3>
-          <ul>
-            <li><a href="/research/pytorch-error-database.html">PyTorch Error Database</a></li>
-            <li><a href="/research/most-common-pytorch-errors.html">Most Common PyTorch Errors</a></li>
-            <li><a href="/research/pytorch-error-stats.html">PyTorch Error Statistics</a></li>
-            <li><a href="/research/pytorch-gpu-memory-guide.html">PyTorch GPU Memory Guide</a></li>
-            <li><a href="/research/ml-framework-comparison-2026.html">ML Framework Comparison 2026</a></li>
-            <li><a href="/research/pytorch-layer-performance.html">PyTorch Layer Performance</a></li>
-            <li><a href="/research/pytorch-model-zoo-stats.html">PyTorch Model Zoo Stats</a></li>
-          </ul>
-        </div>
-        <div class="disc-group">
-          <h3>Guides</h3>
-          <ul>
-            <li><a href="/guides/fix-mat1-mat2-shapes-error.html">Fix mat1 and mat2 Shapes Error</a></li>
-          </ul>
-          <div class="disc-more"><a href="/guides/">View all guides &rarr;</a></div>
-        </div>
-        <div class="disc-group">
-          <h3>From the Blog</h3>
-          <ul>
-            <li><a href="/blog/pytorch-shape-errors-explained.html">PyTorch Shape Errors Explained</a></li>
-            <li><a href="/blog/tensor-shape-cheat-sheet.html">Tensor Shape Cheat Sheet</a></li>
-          </ul>
-          <div class="disc-more"><a href="/blog/">View all posts &rarr;</a></div>
-        </div>
-      </div>
-    </section>
-  </main>
+ 
+ <section class="content-discovery" style="max-width:960px;margin:3rem auto;padding:0 1rem;">
+ <style>
+    .content-discovery h2 { text-align:center; margin-bottom:2rem; }
+    .content-discovery .disc-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2rem; margin-bottom:2.5rem; }
+    .content-discovery .disc-group h3 { font-size:1.1rem; margin-bottom:0.75rem; color:var(--accent, #14B8A6); border-bottom:1px solid var(--border, #333); padding-bottom:0.5rem; }
+    .content-discovery .disc-group ul { list-style:none; padding:0; margin:0; }
+    .content-discovery .disc-group li { margin-bottom:0.4rem; }
+    .content-discovery .disc-group a { color:var(--text, #e0e0e0); text-decoration:none; font-size:0.9rem; }
+    .content-discovery .disc-group a:hover { color:var(--accent, #14B8A6); text-decoration:underline; }
+    .content-discovery .disc-more { text-align:center; margin-top:0.5rem; }
+    .content-discovery .disc-more a { color:var(--accent, #14B8A6); font-size:0.85rem; text-decoration:none; }
+    .content-discovery .disc-more a:hover { text-decoration:underline; }
+   </style>
+ <h2>Explore HeyTensor</h2>
+ <div class="disc-grid">
+ <div class="disc-group">
+ <h3>Shape Calculators</h3>
+ <ul>
+ <li><a href="/tools/conv2d-calculator.html">Conv2d Shape Calculator</a></li>
+ <li><a href="/tools/conv1d-calculator.html">Conv1d Shape Calculator</a></li>
+ <li><a href="/tools/linear-layer-calculator.html">Linear Layer Calculator</a></li>
+ <li><a href="/tools/lstm-shape-calculator.html">LSTM Shape Calculator</a></li>
+ <li><a href="/tools/maxpool2d-calculator.html">MaxPool2d Calculator</a></li>
+ <li><a href="/tools/flatten-calculator.html">Flatten Calculator</a></li>
+ <li><a href="/tools/einsum-calculator.html">Einsum Calculator</a></li>
+ <li><a href="/tools/parameter-counter.html">Parameter Counter</a></li>
+ <li><a href="/tools/memory-calculator.html">Memory Calculator</a></li>
+ <li><a href="/tools/flops-calculator.html">FLOPs Calculator</a></li>
+ </ul>
+ <div class="disc-more"><a href="/tools/">View all tools &rarr;</a></div>
+ </div>
+ <div class="disc-group">
+ <h3>Error Debuggers</h3>
+ <ul>
+ <li><a href="/tools/mat1-mat2-shapes.html">mat1 and mat2 Shapes Error</a></li>
+ <li><a href="/tools/shape-mismatch.html">Shape Mismatch Error</a></li>
+ <li><a href="/tools/cuda-out-of-memory.html">CUDA Out of Memory</a></li>
+ <li><a href="/tools/view-size-not-compatible.html">View Size Not Compatible</a></li>
+ <li><a href="/tools/broadcast-error.html">Broadcast Error</a></li>
+ <li><a href="/tools/dimension-out-of-range.html">Dimension Out of Range</a></li>
+ <li><a href="/tools/expected-input-size.html">Expected Input Size Error</a></li>
+ <li><a href="/tools/activation-functions.html">Activation Functions Reference</a></li>
+ <li><a href="/tools/loss-functions.html">Loss Functions Reference</a></li>
+ <li><a href="/tools/optimizers.html">Optimizers Reference</a></li>
+ </ul>
+ </div>
+ <div class="disc-group">
+ <h3>Latest Answers</h3>
+ <ul>
+ <li><a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html">mat1 and mat2 Shapes Cannot Be Multiplied</a></li>
+ <li><a href="/answers/cuda-out-of-memory-fix.html">CUDA Out of Memory Fix</a></li>
+ <li><a href="/answers/flatten-after-conv2d.html">Flatten After Conv2d</a></li>
+ <li><a href="/answers/resnet50-layer-shapes.html">ResNet50 Layer Shapes</a></li>
+ <li><a href="/answers/how-many-parameters-resnet50.html">How Many Parameters in ResNet50?</a></li>
+ <li><a href="/answers/how-many-parameters-bert-base.html">How Many Parameters in BERT-Base?</a></li>
+ <li><a href="/answers/pytorch-vs-tensorflow-2026.html">PyTorch vs TensorFlow 2026</a></li>
+ <li><a href="/answers/what-is-stride-in-conv2d.html">What Is Stride in Conv2d?</a></li>
+ <li><a href="/answers/difference-between-relu-and-gelu.html">Difference Between ReLU and GELU</a></li>
+ <li><a href="/answers/transformer-encoder-input-shape.html">Transformer Encoder Input Shape</a></li>
+ </ul>
+ <div class="disc-more"><a href="/answers/">View all answers &rarr;</a></div>
+ </div>
+ </div>
+ <div class="disc-grid" style="margin-top:0;">
+ <div class="disc-group">
+ <h3>Research</h3>
+ <ul>
+ <li><a href="/research/pytorch-error-database.html">PyTorch Error Database</a></li>
+ <li><a href="/research/most-common-pytorch-errors.html">Most Common PyTorch Errors</a></li>
+ <li><a href="/research/pytorch-error-stats.html">PyTorch Error Statistics</a></li>
+ <li><a href="/research/pytorch-gpu-memory-guide.html">PyTorch GPU Memory Guide</a></li>
+ <li><a href="/research/ml-framework-comparison-2026.html">ML Framework Comparison 2026</a></li>
+ <li><a href="/research/pytorch-layer-performance.html">PyTorch Layer Performance</a></li>
+ <li><a href="/research/pytorch-model-zoo-stats.html">PyTorch Model Zoo Stats</a></li>
+ </ul>
+ </div>
+ <div class="disc-group">
+ <h3>Guides</h3>
+ <ul>
+ <li><a href="/guides/fix-mat1-mat2-shapes-error.html">Fix mat1 and mat2 Shapes Error</a></li>
+ </ul>
+ <div class="disc-more"><a href="/guides/">View all guides &rarr;</a></div>
+ </div>
+ <div class="disc-group">
+ <h3>From the Blog</h3>
+ <ul>
+ <li><a href="/blog/pytorch-shape-errors-explained.html">PyTorch Shape Errors Explained</a></li>
+ <li><a href="/blog/tensor-shape-cheat-sheet.html">Tensor Shape Cheat Sheet</a></li>
+ </ul>
+ <div class="disc-more"><a href="/blog/">View all posts &rarr;</a></div>
+ </div>
+ </div>
+ </section>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-        <div class="footer-brand">Zovo Tools</div>
-        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
-        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
-    </div>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever →</a>
+ <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+ </div>
 </footer>
 
 <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 
-  <script src="/assets/app.js"></script>
-  <script src="/assets/js/sticky-result.js"></script>
+ <script src="/assets/app.js"></script>
+ <script src="/assets/js/sticky-result.js"></script>
 
-  <script src="/assets/js/share.js"></script>
+ <script src="/assets/js/share.js"></script>
 </body>
 </html>

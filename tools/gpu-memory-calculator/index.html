@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GPU Memory Calculator — Free Tool | HeyTensor</title>
+<title>GPU Memory Calculator, Free Tool | HeyTensor</title>
 <meta name="description" content="Calculate GPU VRAM needed for training/inference. Model parameters, batch size, precision, optimizer states.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://heytensor.com/tools/gpu-memory-calculator/">
-<meta property="og:title" content="GPU Memory Calculator — HeyTensor">
+<meta property="og:title" content="GPU Memory Calculator, HeyTensor">
 <meta property="og:description" content="Calculate GPU VRAM needed for model training and inference">
 <meta property="og:url" content="https://heytensor.com/tools/gpu-memory-calculator/">
 <meta property="og:type" content="website">
@@ -15,13 +15,13 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "GPU Memory Calculator",
-  "url": "https://heytensor.com/tools/gpu-memory-calculator/",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "description": "Calculate GPU VRAM requirements for model training and inference"
+ "@context": "https://schema.org",
+ "@type": "WebApplication",
+ "name": "GPU Memory Calculator",
+ "url": "https://heytensor.com/tools/gpu-memory-calculator/",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "description": "Calculate GPU VRAM requirements for model training and inference"
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,229 +35,229 @@
 
 <div class="container">
 <h1>GPU Memory Calculator</h1>
-    <p class="subtitle">Calculate VRAM requirements for model training & inference</p>
+ <p class="subtitle">Calculate VRAM requirements for model training & inference</p>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="tool-section">
-    <h2 style="color: #e8e8e8; margin-bottom: 24px;">Model Configuration</h2>
+ <div class="tool-section">
+ <h2 style="color: #e8e8e8; margin-bottom: 24px;">Model Configuration</h2>
 
-    <div class="input-grid">
-      <div class="input-group">
-        <label for="modelParams">Model Parameters (M)</label>
-        <input type="number" id="modelParams" placeholder="e.g., 7000 for 7B params" min="1" value="7000">
-        <p class="help-text">Total parameters in millions (M)</p>
-      </div>
+ <div class="input-grid">
+ <div class="input-group">
+ <label for="modelParams">Model Parameters (M)</label>
+ <input type="number" id="modelParams" placeholder="e.g., 7000 for 7B params" min="1" value="7000">
+ <p class="help-text">Total parameters in millions (M)</p>
+ </div>
 
-      <div class="input-group">
-        <label for="precision">Data Precision</label>
-        <select id="precision">
-          <option value="32">FP32 (32-bit)</option>
-          <option value="16">FP16 (16-bit)</option>
-          <option value="8">INT8 (8-bit)</option>
-          <option value="4">INT4 (4-bit)</option>
-        </select>
-        <p class="help-text">Floating point precision</p>
-      </div>
+ <div class="input-group">
+ <label for="precision">Data Precision</label>
+ <select id="precision">
+ <option value="32">FP32 (32-bit)</option>
+ <option value="16">FP16 (16-bit)</option>
+ <option value="8">INT8 (8-bit)</option>
+ <option value="4">INT4 (4-bit)</option>
+ </select>
+ <p class="help-text">Floating point precision</p>
+ </div>
 
-      <div class="input-group">
-        <label for="batchSize">Batch Size</label>
-        <input type="number" id="batchSize" placeholder="e.g., 32" min="1" value="32">
-        <p class="help-text">Samples per batch</p>
-      </div>
+ <div class="input-group">
+ <label for="batchSize">Batch Size</label>
+ <input type="number" id="batchSize" placeholder="e.g., 32" min="1" value="32">
+ <p class="help-text">Samples per batch</p>
+ </div>
 
-      <div class="input-group">
-        <label for="seqLength">Sequence Length</label>
-        <input type="number" id="seqLength" placeholder="e.g., 512" min="1" value="512">
-        <p class="help-text">Input sequence length (tokens)</p>
-      </div>
+ <div class="input-group">
+ <label for="seqLength">Sequence Length</label>
+ <input type="number" id="seqLength" placeholder="e.g., 512" min="1" value="512">
+ <p class="help-text">Input sequence length (tokens)</p>
+ </div>
 
-      <div class="input-group">
-        <label for="mode">Mode</label>
-        <select id="mode">
-          <option value="training">Training (with gradients)</option>
-          <option value="inference">Inference (forward only)</option>
-        </select>
-        <p class="help-text">Training or inference</p>
-      </div>
+ <div class="input-group">
+ <label for="mode">Mode</label>
+ <select id="mode">
+ <option value="training">Training (with gradients)</option>
+ <option value="inference">Inference (forward only)</option>
+ </select>
+ <p class="help-text">Training or inference</p>
+ </div>
 
-      <div class="input-group">
-        <label for="optimizer">Optimizer</label>
-        <select id="optimizer">
-          <option value="adam">Adam (2 momentum states)</option>
-          <option value="adamw">AdamW (2 momentum states)</option>
-          <option value="sgd">SGD (no states)</option>
-          <option value="none">None (no optimizer)</option>
-        </select>
-        <p class="help-text">Optimization algorithm</p>
-      </div>
-    </div>
+ <div class="input-group">
+ <label for="optimizer">Optimizer</label>
+ <select id="optimizer">
+ <option value="adam">Adam (2 momentum states)</option>
+ <option value="adamw">AdamW (2 momentum states)</option>
+ <option value="sgd">SGD (no states)</option>
+ <option value="none">None (no optimizer)</option>
+ </select>
+ <p class="help-text">Optimization algorithm</p>
+ </div>
+ </div>
 
-    <button class="calculation-button" onclick="calculateMemory()">Calculate Memory</button>
-  </div>
+ <button class="calculation-button" onclick="calculateMemory()">Calculate Memory</button>
+ </div>
 
-  <div class="results-section" id="resultsSection">
-    <h2 style="color: #e8e8e8; margin-bottom: 24px;">Memory Breakdown</h2>
+ <div class="results-section" id="resultsSection">
+ <h2 style="color: #e8e8e8; margin-bottom: 24px;">Memory Breakdown</h2>
 
-    <div class="result-item">
-      <div class="result-label">Total GPU Memory Required</div>
-      <div>
-        <span class="result-value" id="totalMemory">0</span>
-        <span class="result-unit">GB</span>
-      </div>
-      <div class="breakdown">
-        <div class="breakdown-item"><strong>Model weights:</strong> <span id="weightsMemory">0</span> GB</div>
-        <div class="breakdown-item"><strong>Activations:</strong> <span id="activationsMemory">0</span> GB</div>
-        <div class="breakdown-item"><strong>Gradients:</strong> <span id="gradientsMemory">0</span> GB</div>
-        <div class="breakdown-item"><strong>Optimizer states:</strong> <span id="optimizerMemory">0</span> GB</div>
-        <div class="breakdown-item"><strong>Batch data:</strong> <span id="batchMemory">0</span> GB</div>
-      </div>
-    </div>
+ <div class="result-item">
+ <div class="result-label">Total GPU Memory Required</div>
+ <div>
+ <span class="result-value" id="totalMemory">0</span>
+ <span class="result-unit">GB</span>
+ </div>
+ <div class="breakdown">
+ <div class="breakdown-item">Model weights. <span id="weightsMemory">0</span> GB</div>
+ <div class="breakdown-item">Activations. <span id="activationsMemory">0</span> GB</div>
+ <div class="breakdown-item">Gradients. <span id="gradientsMemory">0</span> GB</div>
+ <div class="breakdown-item">Optimizer states. <span id="optimizerMemory">0</span> GB</div>
+ <div class="breakdown-item">Batch data. <span id="batchMemory">0</span> GB</div>
+ </div>
+ </div>
 
-    <div class="result-item">
-      <div class="result-label">Recommended GPU</div>
-      <div id="recommendedGPU" style="color: #3b82f6; font-size: 1.2rem; font-weight: 600; margin-top: 8px;">L40S / H100</div>
-    </div>
+ <div class="result-item">
+ <div class="result-label">Recommended GPU</div>
+ <div id="recommendedGPU" style="color: #3b82f6; font-size: 1.2rem; font-weight: 600; margin-top: 8px;">L40S / H100</div>
+ </div>
 
-    <div class="result-item">
-      <div class="result-label">Training Time Estimate</div>
-      <div style="color: #cbd5e1; font-size: 0.95rem; margin-top: 8px;">100 steps: <span id="timeEstimate">~5 min</span></div>
-      <p class="help-text" style="margin-top: 12px;">Assumes 100 tokens/sec throughput on modern GPU</p>
-    </div>
-  </div>
+ <div class="result-item">
+ <div class="result-label">Training Time Estimate</div>
+ <div style="color: #cbd5e1; font-size: 0.95rem; margin-top: 8px;">100 steps: <span id="timeEstimate">~5 min</span></div>
+ <p class="help-text" style="margin-top: 12px;">Assumes 100 tokens/sec throughput on modern GPU</p>
+ </div>
+ </div>
 
-  <div class="partner-section">
-    <p class="partner-label">Recommended by our team</p>
-    <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
-    <p class="partner-desc">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
-  </div>
+ <div class="partner-section">
+ <p class="partner-label">Recommended by our team</p>
+ <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
+ <p class="partner-desc">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
+ </div>
 
-  <div class="ad-section">
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-  </div>
+ <div class="ad-section">
+ <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 </div>
 
 <script>
 function calculateMemory() {
-  const modelParams = parseFloat(document.getElementById('modelParams').value) || 0;
-  const precision = parseFloat(document.getElementById('precision').value);
-  const batchSize = parseFloat(document.getElementById('batchSize').value) || 1;
-  const seqLength = parseFloat(document.getElementById('seqLength').value) || 512;
-  const mode = document.getElementById('mode').value;
-  const optimizer = document.getElementById('optimizer').value;
+ const modelParams = parseFloat(document.getElementById('modelParams').value) || 0;
+ const precision = parseFloat(document.getElementById('precision').value);
+ const batchSize = parseFloat(document.getElementById('batchSize').value) || 1;
+ const seqLength = parseFloat(document.getElementById('seqLength').value) || 512;
+ const mode = document.getElementById('mode').value;
+ const optimizer = document.getElementById('optimizer').value;
 
-  if (modelParams <= 0) {
-    alert('Please enter valid model parameters');
-    return;
+ if (modelParams <= 0) {
+  alert('Please enter valid model parameters');
+  return;
+ }
+
+ // Convert model params from millions to actual count
+ const paramCount = modelParams * 1_000_000;
+
+ // Bytes per parameter based on precision
+ const bytesPerParam = precision / 8;
+
+ // Model weights (always required)
+ const weightsBytes = paramCount * bytesPerParam;
+ const weightsGB = weightsBytes / (1024 ** 3);
+
+ // Activations (rule of thumb: ~12 * seqLength * batchSize * hidden_dim)
+ // Estimate hidden_dim from param count
+ const estimatedHiddenDim = Math.sqrt(paramCount / 12); // rough approximation
+ const activationsBytes = 12 * seqLength * batchSize * estimatedHiddenDim * 4; // fp32 for activations
+ const activationsGB = activationsBytes / (1024 ** 3);
+
+ // Gradients (same size as weights if training)
+ let gradientsGB = 0;
+ if (mode === 'training') {
+  gradientsGB = weightsGB;
+ }
+
+ // Optimizer states
+ let optimizerGB = 0;
+ if (mode === 'training') {
+  if (optimizer === 'adam' || optimizer === 'adamw') {
+   optimizerGB = weightsGB * 2; // momentum + velocity
+  } else if (optimizer === 'sgd') {
+   optimizerGB = weightsGB * 0.5; // just momentum
   }
+ }
 
-  // Convert model params from millions to actual count
-  const paramCount = modelParams * 1_000_000;
+ // Batch data (embeddings: seqLength * batchSize * embedding_dim * 4)
+ const batchBytes = seqLength * batchSize * Math.min(estimatedHiddenDim, 4096) * 4;
+ const batchGB = batchBytes / (1024 ** 3);
 
-  // Bytes per parameter based on precision
-  const bytesPerParam = precision / 8;
+ // Total
+ const totalGB = weightsGB + activationsGB + gradientsGB + optimizerGB + batchGB;
 
-  // Model weights (always required)
-  const weightsBytes = paramCount * bytesPerParam;
-  const weightsGB = weightsBytes / (1024 ** 3);
+ // Recommend GPU
+ let recommendedGPU = 'H100';
+ if (totalGB <= 16) {
+  recommendedGPU = 'RTX 3090 Ti (24GB) / A100 40GB';
+ } else if (totalGB <= 40) {
+  recommendedGPU = 'A100 40GB / L40S 48GB';
+ } else if (totalGB <= 48) {
+  recommendedGPU = 'L40S 48GB / A100 80GB';
+ } else if (totalGB <= 80) {
+  recommendedGPU = 'A100 80GB / H100';
+ } else {
+  recommendedGPU = 'Multi-GPU (H100 x' + Math.ceil(totalGB / 80) + ') or TPU Pod';
+ }
 
-  // Activations (rule of thumb: ~12 * seqLength * batchSize * hidden_dim)
-  // Estimate hidden_dim from param count
-  const estimatedHiddenDim = Math.sqrt(paramCount / 12); // rough approximation
-  const activationsBytes = 12 * seqLength * batchSize * estimatedHiddenDim * 4; // fp32 for activations
-  const activationsGB = activationsBytes / (1024 ** 3);
+ // Estimate training time
+ const tokensPerSecond = 100; // conservative estimate
+ const totalTokens = seqLength * batchSize * 100; // 100 steps
+ const timeSeconds = totalTokens / tokensPerSecond;
+ const timeMinutes = Math.round(timeSeconds / 60);
+ const timeEstimate = timeMinutes < 60 ? `~${timeMinutes} min` : `~${(timeMinutes / 60).toFixed(1)} hours`;
 
-  // Gradients (same size as weights if training)
-  let gradientsGB = 0;
-  if (mode === 'training') {
-    gradientsGB = weightsGB;
-  }
+ // Update UI
+ document.getElementById('totalMemory').textContent = totalGB.toFixed(2);
+ document.getElementById('weightsMemory').textContent = weightsGB.toFixed(3);
+ document.getElementById('activationsMemory').textContent = activationsGB.toFixed(3);
+ document.getElementById('gradientsMemory').textContent = gradientsGB.toFixed(3);
+ document.getElementById('optimizerMemory').textContent = optimizerGB.toFixed(3);
+ document.getElementById('batchMemory').textContent = batchGB.toFixed(3);
+ document.getElementById('recommendedGPU').textContent = recommendedGPU;
+ document.getElementById('timeEstimate').textContent = timeEstimate;
 
-  // Optimizer states
-  let optimizerGB = 0;
-  if (mode === 'training') {
-    if (optimizer === 'adam' || optimizer === 'adamw') {
-      optimizerGB = weightsGB * 2; // momentum + velocity
-    } else if (optimizer === 'sgd') {
-      optimizerGB = weightsGB * 0.5; // just momentum
-    }
-  }
+ document.getElementById('resultsSection').classList.add('show');
 
-  // Batch data (embeddings: seqLength * batchSize * embedding_dim * 4)
-  const batchBytes = seqLength * batchSize * Math.min(estimatedHiddenDim, 4096) * 4;
-  const batchGB = batchBytes / (1024 ** 3);
-
-  // Total
-  const totalGB = weightsGB + activationsGB + gradientsGB + optimizerGB + batchGB;
-
-  // Recommend GPU
-  let recommendedGPU = 'H100';
-  if (totalGB <= 16) {
-    recommendedGPU = 'RTX 3090 Ti (24GB) / A100 40GB';
-  } else if (totalGB <= 40) {
-    recommendedGPU = 'A100 40GB / L40S 48GB';
-  } else if (totalGB <= 48) {
-    recommendedGPU = 'L40S 48GB / A100 80GB';
-  } else if (totalGB <= 80) {
-    recommendedGPU = 'A100 80GB / H100';
-  } else {
-    recommendedGPU = 'Multi-GPU (H100 x' + Math.ceil(totalGB / 80) + ') or TPU Pod';
-  }
-
-  // Estimate training time
-  const tokensPerSecond = 100; // conservative estimate
-  const totalTokens = seqLength * batchSize * 100; // 100 steps
-  const timeSeconds = totalTokens / tokensPerSecond;
-  const timeMinutes = Math.round(timeSeconds / 60);
-  const timeEstimate = timeMinutes < 60 ? `~${timeMinutes} min` : `~${(timeMinutes / 60).toFixed(1)} hours`;
-
-  // Update UI
-  document.getElementById('totalMemory').textContent = totalGB.toFixed(2);
-  document.getElementById('weightsMemory').textContent = weightsGB.toFixed(3);
-  document.getElementById('activationsMemory').textContent = activationsGB.toFixed(3);
-  document.getElementById('gradientsMemory').textContent = gradientsGB.toFixed(3);
-  document.getElementById('optimizerMemory').textContent = optimizerGB.toFixed(3);
-  document.getElementById('batchMemory').textContent = batchGB.toFixed(3);
-  document.getElementById('recommendedGPU').textContent = recommendedGPU;
-  document.getElementById('timeEstimate').textContent = timeEstimate;
-
-  document.getElementById('resultsSection').classList.add('show');
-
-  // Push AdSense ad if available
-  if (typeof window.adsbygoogle !== 'undefined') {
-    window.adsbygoogle.push({});
-  }
+ // Push AdSense ad if available
+ if (typeof window.adsbygoogle !== 'undefined') {
+  window.adsbygoogle.push({});
+ }
 }
 
 // Allow Enter key to calculate
 document.getElementById('modelParams').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') calculateMemory();
+ if (e.key === 'Enter') calculateMemory();
 });
 </script>
 </body>

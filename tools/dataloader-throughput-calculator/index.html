@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Data Loader Throughput Calculator — Optimize PyTorch</title>
-  <meta name="description" content="Interactive calculator for PyTorch DataLoader throughput, epoch time, GPU idle estimate, and optimal num_workers. Tune batch size, workers, pin_memory...">
-  <meta name="keywords" content="PyTorch, DataLoader, throughput, optimizer, num_workers, batch size, GPU idle, epoch time, deep learning">
-  <link rel="canonical" href="https://heytensor.com/tools/dataloader-throughput-calculator">
-  <!-- JSON-LD FAQ schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How to compute DataLoader throughput?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Throughput (samples/sec) = (batch_size * num_workers) / (avg_sample_load_time_ms / 1000)  (simplified). This calculator uses: total_samples / (total_load_time + batch_processing_overhead)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the recommended num_workers?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A common heuristic is 2× number of CPU cores. The calculator shows this recommendation based on your input (or default 8 cores)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does pin_memory affect throughput?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "pin_memory=True speeds up host-to-GPU transfer by using pinned memory, reducing copy time. It can improve effective throughput, especially with large data."
-        }
-      }
-    ]
-  }
-  </script>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+ <title>Data Loader Throughput Calculator, Optimize PyTorch</title>
+ <meta name="description" content="Interactive calculator for PyTorch DataLoader throughput, epoch time, GPU idle estimate, and optimal num_workers. Tune batch size, workers, pin_memory...">
+ <meta name="keywords" content="PyTorch, DataLoader, throughput, optimizer, num_workers, batch size, GPU idle, epoch time, deep learning">
+ <link rel="canonical" href="https://heytensor.com/tools/dataloader-throughput-calculator">
+ 
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
+    "@type": "Question",
+    "name": "How to compute DataLoader throughput?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Throughput (samples/sec) = (batch_size * num_workers) / (avg_sample_load_time_ms / 1000) (simplified). This calculator uses: total_samples / (total_load_time + batch_processing_overhead)."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "What is the recommended num_workers?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "A common heuristic is 2× number of CPU cores. The calculator shows this recommendation based on your input (or default 8 cores)."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "How does pin_memory affect throughput?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "pin_memory=True speeds up host-to-GPU transfer by using pinned memory, reducing copy time. It can improve effective throughput, especially with large data."
+    }
+   }
+  ]
+ }
+ </script>
 
-    <meta property="og:title" content="Data Loader Throughput Calculator — Optimize PyTorch">
-    <meta property="og:description" content="Interactive calculator for PyTorch DataLoader throughput, epoch time, GPU idle estimate, and optimal num_workers. Tune batch size, workers, pin_memory...">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://heytensor.com/tools/dataloader-throughput-calculator">
+ <meta property="og:title" content="Data Loader Throughput Calculator, Optimize PyTorch">
+ <meta property="og:description" content="Interactive calculator for PyTorch DataLoader throughput, epoch time, GPU idle estimate, and optimal num_workers. Tune batch size, workers, pin_memory...">
+ <meta property="og:type" content="website">
+ <meta property="og:url" content="https://heytensor.com/tools/dataloader-throughput-calculator">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,103 +55,103 @@
 </head>
 <body>
 <div class="container">
-<h1>⚡ DataLoader Throughput Calculator</h1>
-    <div class="subhead">Optimize PyTorch DataLoader · real compute · no placeholders</div>
+<h1> DataLoader Throughput Calculator</h1>
+ <div class="subhead">Optimize PyTorch DataLoader · real compute · no placeholders</div>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="card">
-    <div class="grid-2">
-      <div class="input-group">
-        <label>📦 Dataset size (samples)</label>
-        <input type="number" id="datasetSize" value="50000" min="1" step="100">
-      </div>
-      <div class="input-group">
-        <label>📏 Batch size</label>
-        <input type="number" id="batchSize" value="64" min="1" step="1">
-      </div>
-      <div class="input-group">
-        <label>⚙️ num_workers</label>
-        <input type="number" id="numWorkers" value="4" min="0" step="1">
-      </div>
-      <div class="input-group">
-        <label>⏱️ Avg sample load time <span class="unit">(ms)</span></label>
-        <input type="number" id="loadTimeMs" value="2.5" min="0.01" step="0.1">
-      </div>
-    </div>
+ <div class="card">
+ <div class="grid-2">
+ <div class="input-group">
+ <label> Dataset size (samples)</label>
+ <input type="number" id="datasetSize" value="50000" min="1" step="100">
+ </div>
+ <div class="input-group">
+ <label> Batch size</label>
+ <input type="number" id="batchSize" value="64" min="1" step="1">
+ </div>
+ <div class="input-group">
+ <label> num_workers</label>
+ <input type="number" id="numWorkers" value="4" min="0" step="1">
+ </div>
+ <div class="input-group">
+ <label> Avg sample load time <span class="unit">(ms)</span></label>
+ <input type="number" id="loadTimeMs" value="2.5" min="0.01" step="0.1">
+ </div>
+ </div>
 
-    <div class="toggle-row">
-      <div class="toggle-item">
-        <span class="switch">
-          <input type="checkbox" id="pinMemory" checked>
-          <span class="slider"></span>
-        </span>
-        <label for="pinMemory">pin_memory</label>
-      </div>
-      <div class="toggle-item">
-        <span class="switch">
-          <input type="checkbox" id="persistentWorkers" checked>
-          <span class="slider"></span>
-        </span>
-        <label for="persistentWorkers">persistent_workers</label>
-      </div>
-      <div class="info-badge">🖥️ CPU cores: <span id="cpuCoreDisplay">8</span> (auto)</div>
-    </div>
+ <div class="toggle-row">
+ <div class="toggle-item">
+ <span class="switch">
+ <input type="checkbox" id="pinMemory" checked>
+ <span class="slider"></span>
+ </span>
+ <label for="pinMemory">pin_memory</label>
+ </div>
+ <div class="toggle-item">
+ <span class="switch">
+ <input type="checkbox" id="persistentWorkers" checked>
+ <span class="slider"></span>
+ </span>
+ <label for="persistentWorkers">persistent_workers</label>
+ </div>
+ <div class="info-badge"> CPU cores: <span id="cpuCoreDisplay">8</span> (auto)</div>
+ </div>
 
-    <!-- Results -->
-    <div class="results" id="resultsPanel">
-      <div class="results-grid">
-        <div class="stat"><span class="value" id="totalBatches">781</span><span class="label">Total batches</span></div>
-        <div class="stat"><span class="value" id="throughput">25,600</span><span class="label">Throughput (samples/s)</span></div>
-        <div class="stat"><span class="value" id="epochTime">1.95</span><span class="label">Epoch time (s)</span></div>
-        <div class="stat"><span class="value" id="gpuIdle">0.32</span><span class="label">GPU idle est. (ms/batch)</span></div>
-        <div class="stat" style="grid-column: span 1;"><span class="value" id="recommendedWorkers">16</span><span class="label">Recommended num_workers (2×CPU)</span></div>
-      </div>
-    </div>
+ 
+ <div class="results" id="resultsPanel">
+ <div class="results-grid">
+ <div class="stat"><span class="value" id="totalBatches">781</span><span class="label">Total batches</span></div>
+ <div class="stat"><span class="value" id="throughput">25,600</span><span class="label">Throughput (samples/s)</span></div>
+ <div class="stat"><span class="value" id="epochTime">1.95</span><span class="label">Epoch time (s)</span></div>
+ <div class="stat"><span class="value" id="gpuIdle">0.32</span><span class="label">GPU idle est. (ms/batch)</span></div>
+ <div class="stat" style="grid-column: span 1;"><span class="value" id="recommendedWorkers">16</span><span class="label">Recommended num_workers (2×CPU)</span></div>
+ </div>
+ </div>
 
-    <!-- Code snippet -->
-    <div class="code-snippet">
-      <pre id="codeBlock"><span class="comment"># Optimal PyTorch DataLoader config</span>
+ 
+ <div class="code-snippet">
+ <pre id="codeBlock"><span class="comment"># Optimal PyTorch DataLoader config</span>
 <span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader, TensorDataset
 
 dataloader = DataLoader(
-    dataset,
-    batch_size=<span class="number" id="codeBatch">64</span>,
-    shuffle=True,
-    num_workers=<span class="number" id="codeWorkers">4</span>,
-    pin_memory=<span class="keyword" id="codePin">True</span>,
-    persistent_workers=<span class="keyword" id="codePersist">True</span>,
-    prefetch_factor=2
+  dataset,
+  batch_size=<span class="number" id="codeBatch">64</span>,
+  shuffle=True,
+  num_workers=<span class="number" id="codeWorkers">4</span>,
+  pin_memory=<span class="keyword" id="codePin">True</span>,
+  persistent_workers=<span class="keyword" id="codePersist">True</span>,
+  prefetch_factor=2
 )</pre>
-    </div>
-    <div class="footnote">⚡ Throughput = samples / (total load + transfer overhead). GPU idle estimated from load time & workers.</div>
-  </div>
+ </div>
+ <div class="footnote"> Throughput = samples / (total load + transfer overhead). GPU idle estimated from load time & workers.</div>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -159,168 +159,168 @@ dataloader = DataLoader(
 </div>
 
 <script>
-  (function() {
-    // DOM refs
-    const datasetSize = document.getElementById('datasetSize');
-    const batchSize = document.getElementById('batchSize');
-    const numWorkers = document.getElementById('numWorkers');
-    const loadTimeMs = document.getElementById('loadTimeMs');
-    const pinMemory = document.getElementById('pinMemory');
-    const persistentWorkers = document.getElementById('persistentWorkers');
-    const cpuCoreDisplay = document.getElementById('cpuCoreDisplay');
+ (function() {
+  // DOM refs
+  const datasetSize = document.getElementById('datasetSize');
+  const batchSize = document.getElementById('batchSize');
+  const numWorkers = document.getElementById('numWorkers');
+  const loadTimeMs = document.getElementById('loadTimeMs');
+  const pinMemory = document.getElementById('pinMemory');
+  const persistentWorkers = document.getElementById('persistentWorkers');
+  const cpuCoreDisplay = document.getElementById('cpuCoreDisplay');
 
-    // result fields
-    const totalBatchesEl = document.getElementById('totalBatches');
-    const throughputEl = document.getElementById('throughput');
-    const epochTimeEl = document.getElementById('epochTime');
-    const gpuIdleEl = document.getElementById('gpuIdle');
-    const recommendedWorkersEl = document.getElementById('recommendedWorkers');
+  // result fields
+  const totalBatchesEl = document.getElementById('totalBatches');
+  const throughputEl = document.getElementById('throughput');
+  const epochTimeEl = document.getElementById('epochTime');
+  const gpuIdleEl = document.getElementById('gpuIdle');
+  const recommendedWorkersEl = document.getElementById('recommendedWorkers');
 
-    // code snippet fields
-    const codeBatch = document.getElementById('codeBatch');
-    const codeWorkers = document.getElementById('codeWorkers');
-    const codePin = document.getElementById('codePin');
-    const codePersist = document.getElementById('codePersist');
+  // code snippet fields
+  const codeBatch = document.getElementById('codeBatch');
+  const codeWorkers = document.getElementById('codeWorkers');
+  const codePin = document.getElementById('codePin');
+  const codePersist = document.getElementById('codePersist');
 
-    // Heuristic CPU cores (default 8, but we can attempt to detect)
-    let cpuCores = 8;
-    if (navigator.hardwareConcurrency && navigator.hardwareConcurrency > 0) {
-      cpuCores = navigator.hardwareConcurrency;
-    }
-    cpuCoreDisplay.textContent = cpuCores;
+  // Heuristic CPU cores (default 8, but we can attempt to detect)
+  let cpuCores = 8;
+  if (navigator.hardwareConcurrency && navigator.hardwareConcurrency > 0) {
+   cpuCores = navigator.hardwareConcurrency;
+  }
+  cpuCoreDisplay.textContent = cpuCores;
 
-    function computeAndRender() {
-      // parse values (with fallback)
-      const N = parseFloat(datasetSize.value) || 50000;
-      const B = parseInt(batchSize.value, 10) || 64;
-      let W = parseInt(numWorkers.value, 10);
-      if (isNaN(W) || W < 0) W = 4;
-      const loadMs = parseFloat(loadTimeMs.value) || 2.5;
-      const pin = pinMemory.checked;
-      const persist = persistentWorkers.checked;
+  function computeAndRender() {
+   // parse values (with fallback)
+   const N = parseFloat(datasetSize.value) || 50000;
+   const B = parseInt(batchSize.value, 10) || 64;
+   let W = parseInt(numWorkers.value, 10);
+   if (isNaN(W) || W < 0) W = 4;
+   const loadMs = parseFloat(loadTimeMs.value) || 2.5;
+   const pin = pinMemory.checked;
+   const persist = persistentWorkers.checked;
 
-      // Clamp workers for display but not for compute (0 allowed)
-      const workers = Math.max(0, W);
+   // Clamp workers for display but not for compute (0 allowed)
+   const workers = Math.max(0, W);
 
-      // 1. total batches
-      const totalBatches = Math.ceil(N / B);
+   // 1. total batches
+   const totalBatches = Math.ceil(N / B);
 
-      // 2. theoretical throughput (samples/sec)
-      // model: each worker loads one sample in loadMs (sequential per worker)
-      // effective load time per batch = (B * loadMs) / (workers > 0 ? workers : 1)   (parallel workers)
-      // then add small constant overhead (0.2 ms per batch for transfer etc)
-      const overheadPerBatchMs = 0.2;  // tiny fixed overhead
-      let loadTimePerBatchMs;
-      if (workers === 0) {
-        // no workers: sequential loading in main process
-        loadTimePerBatchMs = B * loadMs + overheadPerBatchMs;
-      } else {
-        // workers load in parallel: each worker loads B/workers samples (approx)
-        // but realistically each worker processes a chunk; we model as (B * loadMs) / workers + overhead
-        loadTimePerBatchMs = (B * loadMs) / workers + overheadPerBatchMs;
-      }
+   // 2. theoretical throughput (samples/sec)
+   // model: each worker loads one sample in loadMs (sequential per worker)
+   // effective load time per batch = (B * loadMs) / (workers > 0 ? workers : 1)  (parallel workers)
+   // then add small constant overhead (0.2 ms per batch for transfer etc)
+   const overheadPerBatchMs = 0.2; // tiny fixed overhead
+   let loadTimePerBatchMs;
+   if (workers === 0) {
+    // no workers: sequential loading in main process
+    loadTimePerBatchMs = B * loadMs + overheadPerBatchMs;
+   } else {
+    // workers load in parallel: each worker loads B/workers samples (approx)
+    // but realistically each worker processes a chunk; we model as (B * loadMs) / workers + overhead
+    loadTimePerBatchMs = (B * loadMs) / workers + overheadPerBatchMs;
+   }
 
-      // pin_memory reduces transfer time: if pin_memory, reduce overhead by 30%
-      let transferFactor = 1.0;
-      if (pin) transferFactor = 0.7;  // 30% faster transfer
+   // pin_memory reduces transfer time: if pin_memory, reduce overhead by 30%
+   let transferFactor = 1.0;
+   if (pin) transferFactor = 0.7; // 30% faster transfer
 
-      // persistent_workers reduces worker spawn overhead (affects first batch only, ignore for steady state)
-      // we incorporate a small benefit: reduce overhead further
-      let persistFactor = 1.0;
-      if (persist) persistFactor = 0.9; // 10% less overhead
+   // persistent_workers reduces worker spawn overhead (affects first batch only, ignore for steady state)
+   // we incorporate a small benefit: reduce overhead further
+   let persistFactor = 1.0;
+   if (persist) persistFactor = 0.9; // 10% less overhead
 
-      const effectiveOverhead = overheadPerBatchMs * transferFactor * persistFactor;
-      let totalBatchTimeMs;
-      if (workers === 0) {
-        totalBatchTimeMs = B * loadMs + effectiveOverhead;
-      } else {
-        totalBatchTimeMs = (B * loadMs) / workers + effectiveOverhead;
-      }
-      // avoid division by zero
-      if (totalBatchTimeMs <= 0) totalBatchTimeMs = 0.1;
+   const effectiveOverhead = overheadPerBatchMs * transferFactor * persistFactor;
+   let totalBatchTimeMs;
+   if (workers === 0) {
+    totalBatchTimeMs = B * loadMs + effectiveOverhead;
+   } else {
+    totalBatchTimeMs = (B * loadMs) / workers + effectiveOverhead;
+   }
+   // avoid division by zero
+   if (totalBatchTimeMs <= 0) totalBatchTimeMs = 0.1;
 
-      // throughput (samples per second) = batch_size / (totalBatchTimeMs / 1000)
-      const throughput = B / (totalBatchTimeMs / 1000);
+   // throughput (samples per second) = batch_size / (totalBatchTimeMs / 1000)
+   const throughput = B / (totalBatchTimeMs / 1000);
 
-      // epoch time (seconds) = total batches * totalBatchTimeMs / 1000
-      const epochTimeSec = totalBatches * totalBatchTimeMs / 1000;
+   // epoch time (seconds) = total batches * totalBatchTimeMs / 1000
+   const epochTimeSec = totalBatches * totalBatchTimeMs / 1000;
 
-      // GPU idle estimate: time per batch where GPU waits for data (simplified)
-      // idle = load component (without overlap) – we approximate as (B * loadMs) / (workers>0?workers:1) * 0.3 (some overlap)
-      let idleMsPerBatch;
-      if (workers === 0) {
-        idleMsPerBatch = (B * loadMs) * 0.5; // significant idle
-      } else {
-        idleMsPerBatch = (B * loadMs) / workers * 0.4; // workers reduce idle
-      }
-      if (pin) idleMsPerBatch *= 0.8; // pin memory reduces transfer idle
-      if (idleMsPerBatch < 0) idleMsPerBatch = 0;
+   // GPU idle estimate: time per batch where GPU waits for data (simplified)
+   // idle = load component (without overlap) – we approximate as (B * loadMs) / (workers>0?workers:1) * 0.3 (some overlap)
+   let idleMsPerBatch;
+   if (workers === 0) {
+    idleMsPerBatch = (B * loadMs) * 0.5; // significant idle
+   } else {
+    idleMsPerBatch = (B * loadMs) / workers * 0.4; // workers reduce idle
+   }
+   if (pin) idleMsPerBatch *= 0.8; // pin memory reduces transfer idle
+   if (idleMsPerBatch < 0) idleMsPerBatch = 0;
 
-      // recommended workers: 2 * CPU cores
-      const recommended = 2 * cpuCores;
+   // recommended workers: 2 * CPU cores
+   const recommended = 2 * cpuCores;
 
-      // Update DOM
-      totalBatchesEl.textContent = totalBatches.toLocaleString();
+   // Update DOM
+   totalBatchesEl.textContent = totalBatches.toLocaleString();
 
-      // throughput: round to integer
-      throughputEl.textContent = Math.round(throughput).toLocaleString();
+   // throughput: round to integer
+   throughputEl.textContent = Math.round(throughput).toLocaleString();
 
-      // epoch time: show 2 decimals
-      epochTimeEl.textContent = epochTimeSec.toFixed(2);
+   // epoch time: show 2 decimals
+   epochTimeEl.textContent = epochTimeSec.toFixed(2);
 
-      // GPU idle: show ms with 2 decimals
-      gpuIdleEl.textContent = idleMsPerBatch.toFixed(2) + ' ms';
+   // GPU idle: show ms with 2 decimals
+   gpuIdleEl.textContent = idleMsPerBatch.toFixed(2) + ' ms';
 
-      recommendedWorkersEl.textContent = recommended;
+   recommendedWorkersEl.textContent = recommended;
 
-      // update code snippet
-      codeBatch.textContent = B;
-      codeWorkers.textContent = workers;
-      codePin.textContent = pin ? 'True' : 'False';
-      codePersist.textContent = persist ? 'True' : 'False';
+   // update code snippet
+   codeBatch.textContent = B;
+   codeWorkers.textContent = workers;
+   codePin.textContent = pin ? 'True' : 'False';
+   codePersist.textContent = persist ? 'True' : 'False';
 
-      // also update CPU core display (in case navigator changed? no)
-    }
+   // also update CPU core display (in case navigator changed? no)
+  }
 
-    // attach event listeners
-    const inputs = [datasetSize, batchSize, numWorkers, loadTimeMs, pinMemory, persistentWorkers];
-    inputs.forEach(el => el.addEventListener('input', computeAndRender));
-    // also on change for checkboxes (already covered by input)
-    pinMemory.addEventListener('change', computeAndRender);
-    persistentWorkers.addEventListener('change', computeAndRender);
+  // attach event listeners
+  const inputs = [datasetSize, batchSize, numWorkers, loadTimeMs, pinMemory, persistentWorkers];
+  inputs.forEach(el => el.addEventListener('input', computeAndRender));
+  // also on change for checkboxes (already covered by input)
+  pinMemory.addEventListener('change', computeAndRender);
+  persistentWorkers.addEventListener('change', computeAndRender);
 
-    // initial compute
-    computeAndRender();
+  // initial compute
+  computeAndRender();
 
-    // extra: ensure numWorkers doesn't go negative
-    numWorkers.addEventListener('blur', function() {
-      let val = parseInt(this.value, 10);
-      if (isNaN(val) || val < 0) this.value = 0;
-      computeAndRender();
-    });
+  // extra: ensure numWorkers doesn't go negative
+  numWorkers.addEventListener('blur', function() {
+   let val = parseInt(this.value, 10);
+   if (isNaN(val) || val < 0) this.value = 0;
+   computeAndRender();
+  });
 
-    // dataset size min 1
-    datasetSize.addEventListener('blur', function() {
-      if (parseInt(this.value) < 1) this.value = 1;
-      computeAndRender();
-    });
+  // dataset size min 1
+  datasetSize.addEventListener('blur', function() {
+   if (parseInt(this.value) < 1) this.value = 1;
+   computeAndRender();
+  });
 
-    batchSize.addEventListener('blur', function() {
-      if (parseInt(this.value) < 1) this.value = 1;
-      computeAndRender();
-    });
+  batchSize.addEventListener('blur', function() {
+   if (parseInt(this.value) < 1) this.value = 1;
+   computeAndRender();
+  });
 
-    loadTimeMs.addEventListener('blur', function() {
-      if (parseFloat(this.value) <= 0) this.value = 0.1;
-      computeAndRender();
-    });
+  loadTimeMs.addEventListener('blur', function() {
+   if (parseFloat(this.value) <= 0) this.value = 0.1;
+   computeAndRender();
+  });
 
-  })();
+ })();
 </script>
 <div style="margin:30px auto;max-width:728px;text-align:center;padding:18px 24px;background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:10px">
 <p style="margin:0 0 6px;color:#94a3b8;font-size:0.85rem">Recommended by our team</p>
 <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:600;font-size:1.05rem;text-decoration:none">BeLikeNative.com</a>
-<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
 </div>
 </body>
 </html>

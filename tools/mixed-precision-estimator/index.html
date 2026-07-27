@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Mixed Precision Training Estimator — FP16/BF16 Memory &</title>
-  <meta name="description" content="Interactive tool to estimate VRAM, memory savings, and speedup for FP16, BF16, TF32 mixed precision vs FP32 baseline. Includes optimizer states...">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/tools/mixed-precision-estimator">
-  <!-- JSON-LD FAQ schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How is total VRAM calculated?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Model parameters (FP32) + gradients (same as params) + optimizer states (depends on optimizer: 2x params for SGD, 4x for Adam/AdamW) + activation memory (based on batch size, sequence length, hidden dim). Mixed precision reduces parameter and activation storage by half (FP16) or keeps FP32 for master weights."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What speedup can I expect?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "FP16/BF16 mixed precision typically yields 1.5–3x speedup on modern GPUs with tensor cores. TF32 offers ~1.2–1.5x. Actual speedup depends on hardware, batch size, and model architecture."
-        }
-      }
-    ]
-  }
-  </script>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+ <title>Mixed Precision Training Estimator, FP16/BF16 Memory &</title>
+ <meta name="description" content="Interactive tool to estimate VRAM, memory savings, and speedup for FP16, BF16, TF32 mixed precision vs FP32 baseline. Includes optimizer states...">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/mixed-precision-estimator">
+ 
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
+    "@type": "Question",
+    "name": "How is total VRAM calculated?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Model parameters (FP32) + gradients (same as params) + optimizer states (depends on optimizer: 2x params for SGD, 4x for Adam/AdamW) + activation memory (based on batch size, sequence length, hidden dim). Mixed precision reduces parameter and activation storage by half (FP16) or keeps FP32 for master weights."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "What speedup can I expect?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "FP16/BF16 mixed precision typically yields 1.5-3x speedup on modern GPUs with tensor cores. TF32 offers ~1.2-1.5x. Actual speedup depends on hardware, batch size, and model architecture."
+    }
+   }
+  ]
+ }
+ </script>
 
-    <meta property="og:title" content="Mixed Precision Training Estimator — FP16/BF16 Memory &">
-    <meta property="og:description" content="Interactive tool to estimate VRAM, memory savings, and speedup for FP16, BF16, TF32 mixed precision vs FP32 baseline. Includes optimizer states...">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://heytensor.com/tools/mixed-precision-estimator">
+ <meta property="og:title" content="Mixed Precision Training Estimator, FP16/BF16 Memory &">
+ <meta property="og:description" content="Interactive tool to estimate VRAM, memory savings, and speedup for FP16, BF16, TF32 mixed precision vs FP32 baseline. Includes optimizer states...">
+ <meta property="og:type" content="website">
+ <meta property="og:url" content="https://heytensor.com/tools/mixed-precision-estimator">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,303 +47,303 @@
 </head>
 <body>
 <div class="container">
-<h1>⚡ Mixed Precision Estimator</h1>
-    <p>FP16 / BF16 / TF32 — memory & speed vs FP32 baseline</p>
+<h1> Mixed Precision Estimator</h1>
+ <p>FP16 / BF16 / TF32, memory & speed vs FP32 baseline</p>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="card">
-    <div class="grid-2">
-      <!-- left: inputs -->
-      <div>
-        <div class="input-group">
-          <label for="params">Model parameters (millions)</label>
-          <input type="number" id="params" value="350" step="10" min="1" max="100000">
-          <div class="hint">e.g., 350M = 350</div>
-        </div>
-        <div class="input-group">
-          <label for="batch">Batch size (per GPU)</label>
-          <input type="number" id="batch" value="8" step="1" min="1" max="1024">
-        </div>
-        <div class="input-group">
-          <label for="seqlen">Sequence length (for transformers)</label>
-          <input type="number" id="seqlen" value="1024" step="128" min="64" max="8192">
-        </div>
-        <div class="input-group">
-          <label for="precision">Precision mode</label>
-          <select id="precision">
-            <option value="fp16">FP16 mixed</option>
-            <option value="bf16">BF16 mixed</option>
-            <option value="tf32">TF32 (matrix)</option>
-            <option value="fp32">FP32 baseline</option>
-          </select>
-        </div>
-        <div class="input-group">
-          <label for="optimizer">Optimizer</label>
-          <select id="optimizer">
-            <option value="adamw">AdamW</option>
-            <option value="adam">Adam</option>
-            <option value="sgd">SGD</option>
-          </select>
-        </div>
-        <div style="margin-top: 0.8rem; font-size: 0.85rem; color: #94a3b8;">
-          <span>🧠 hidden dim estimated: <span id="hiddenDimDisplay">4096</span></span>
-        </div>
-      </div>
+ <div class="card">
+ <div class="grid-2">
+ 
+ <div>
+ <div class="input-group">
+ <label for="params">Model parameters (millions)</label>
+ <input type="number" id="params" value="350" step="10" min="1" max="100000">
+ <div class="hint">e.g., 350M = 350</div>
+ </div>
+ <div class="input-group">
+ <label for="batch">Batch size (per GPU)</label>
+ <input type="number" id="batch" value="8" step="1" min="1" max="1024">
+ </div>
+ <div class="input-group">
+ <label for="seqlen">Sequence length (for transformers)</label>
+ <input type="number" id="seqlen" value="1024" step="128" min="64" max="8192">
+ </div>
+ <div class="input-group">
+ <label for="precision">Precision mode</label>
+ <select id="precision">
+ <option value="fp16">FP16 mixed</option>
+ <option value="bf16">BF16 mixed</option>
+ <option value="tf32">TF32 (matrix)</option>
+ <option value="fp32">FP32 baseline</option>
+ </select>
+ </div>
+ <div class="input-group">
+ <label for="optimizer">Optimizer</label>
+ <select id="optimizer">
+ <option value="adamw">AdamW</option>
+ <option value="adam">Adam</option>
+ <option value="sgd">SGD</option>
+ </select>
+ </div>
+ <div style="margin-top: 0.8rem; font-size: 0.85rem; color: #94a3b8;">
+ <span> hidden dim estimated: <span id="hiddenDimDisplay">4096</span></span>
+ </div>
+ </div>
 
-      <!-- right: results -->
-      <div class="results-panel" id="resultsPanel">
-        <div class="stat-row"><span class="stat-label">📦 Model memory</span><span class="stat-value" id="modelMem">—</span></div>
-        <div class="stat-row"><span class="stat-label">🎯 Optimizer states</span><span class="stat-value" id="optMem">—</span></div>
-        <div class="stat-row"><span class="stat-label">🔁 Activations (est.)</span><span class="stat-value" id="actMem">—</span></div>
-        <div class="stat-row"><span class="stat-label">📐 Gradients</span><span class="stat-value" id="gradMem">—</span></div>
-        <div class="divider"></div>
-        <div class="stat-row"><span class="stat-label">💾 Total VRAM</span><span class="stat-value accent" id="totalVram">—</span></div>
-        <div class="stat-row"><span class="stat-label">⚡ Speedup vs FP32</span><span class="stat-value speed" id="speedup">—</span></div>
-        <div class="stat-row"><span class="stat-label">📉 Memory savings</span><span class="stat-value saving" id="savings">—</span></div>
-      </div>
-    </div>
+ 
+ <div class="results-panel" id="resultsPanel">
+ <div class="stat-row"><span class="stat-label"> Model memory</span><span class="stat-value" id="modelMem">, </span></div>
+ <div class="stat-row"><span class="stat-label"> Optimizer states</span><span class="stat-value" id="optMem">, </span></div>
+ <div class="stat-row"><span class="stat-label"> Activations (est.)</span><span class="stat-value" id="actMem">, </span></div>
+ <div class="stat-row"><span class="stat-label"> Gradients</span><span class="stat-value" id="gradMem">, </span></div>
+ <div class="divider"></div>
+ <div class="stat-row"><span class="stat-label"> Total VRAM</span><span class="stat-value accent" id="totalVram">, </span></div>
+ <div class="stat-row"><span class="stat-label"> Speedup vs FP32</span><span class="stat-value speed" id="speedup">, </span></div>
+ <div class="stat-row"><span class="stat-label"> Memory savings</span><span class="stat-value saving" id="savings">, </span></div>
+ </div>
+ </div>
 
-    <!-- comparison table across all modes -->
-    <div class="table-wrap">
-      <div class="table-scroll"><table id="comparisonTable">
-        <thead>
-          <tr><th>Mode</th><th>Model</th><th>Optimizer</th><th>Activations</th><th>Total VRAM</th><th>Speedup</th><th>Savings</th></tr>
-        </thead>
-        <tbody id="tableBody">
-          <!-- filled by JS -->
-        </tbody>
-      </table></div>
-    </div>
+ 
+ <div class="table-wrap">
+ <div class="table-scroll"><table id="comparisonTable">
+ <thead>
+ <tr><th>Mode</th><th>Model</th><th>Optimizer</th><th>Activations</th><th>Total VRAM</th><th>Speedup</th><th>Savings</th></tr>
+ </thead>
+ <tbody id="tableBody">
+ 
+ </tbody>
+ </table></div>
+ </div>
 
-    <!-- code snippet -->
-    <div class="code-block">
-      <span class="comment"># PyTorch AMP / autocast example (FP16 mixed)</span><br>
-      <span class="keyword">import</span> torch<br>
-      <span class="keyword">from</span> torch.cuda.amp <span class="keyword">import</span> autocast, GradScaler<br><br>
-      scaler = GradScaler()<br>
-      <span class="keyword">for</span> data, target <span class="keyword">in</span> dataloader:<br>
-      &nbsp;&nbsp;<span class="keyword">with</span> autocast(dtype=torch.float16):<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;output = model(data)<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;loss = loss_fn(output, target)<br>
-      &nbsp;&nbsp;scaler.scale(loss).backward()<br>
-      &nbsp;&nbsp;scaler.step(optimizer)<br>
-      &nbsp;&nbsp;scaler.update()
-    </div>
-  </div>
+ 
+ <div class="code-block">
+ <span class="comment"># PyTorch AMP / autocast example (FP16 mixed)</span><br>
+ <span class="keyword">import</span> torch<br>
+ <span class="keyword">from</span> torch.cuda.amp <span class="keyword">import</span> autocast, GradScaler<br><br>
+ scaler = GradScaler()<br>
+ <span class="keyword">for</span> data, target <span class="keyword">in</span> dataloader:<br>
+ &nbsp;&nbsp;<span class="keyword">with</span> autocast(dtype=torch.float16):<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;output = model(data)<br>
+ &nbsp;&nbsp;&nbsp;&nbsp;loss = loss_fn(output, target)<br>
+ &nbsp;&nbsp;scaler.scale(loss).backward()<br>
+ &nbsp;&nbsp;scaler.step(optimizer)<br>
+ &nbsp;&nbsp;scaler.update()
+ </div>
+ </div>
 
-  <div class="footer">© 2025 heytensor.com</div>
+ <div class="footer">© 2025 heytensor.com</div>
 </div>
 
 <script>
-  (function() {
-    // DOM refs
-    const paramsInput = document.getElementById('params');
-    const batchInput = document.getElementById('batch');
-    const seqlenInput = document.getElementById('seqlen');
-    const precisionSelect = document.getElementById('precision');
-    const optimizerSelect = document.getElementById('optimizer');
-    const hiddenSpan = document.getElementById('hiddenDimDisplay');
+ (function() {
+  // DOM refs
+  const paramsInput = document.getElementById('params');
+  const batchInput = document.getElementById('batch');
+  const seqlenInput = document.getElementById('seqlen');
+  const precisionSelect = document.getElementById('precision');
+  const optimizerSelect = document.getElementById('optimizer');
+  const hiddenSpan = document.getElementById('hiddenDimDisplay');
 
-    // result fields
-    const modelMemEl = document.getElementById('modelMem');
-    const optMemEl = document.getElementById('optMem');
-    const actMemEl = document.getElementById('actMem');
-    const gradMemEl = document.getElementById('gradMem');
-    const totalVramEl = document.getElementById('totalVram');
-    const speedupEl = document.getElementById('speedup');
-    const savingsEl = document.getElementById('savings');
-    const tableBody = document.getElementById('tableBody');
+  // result fields
+  const modelMemEl = document.getElementById('modelMem');
+  const optMemEl = document.getElementById('optMem');
+  const actMemEl = document.getElementById('actMem');
+  const gradMemEl = document.getElementById('gradMem');
+  const totalVramEl = document.getElementById('totalVram');
+  const speedupEl = document.getElementById('speedup');
+  const savingsEl = document.getElementById('savings');
+  const tableBody = document.getElementById('tableBody');
 
-    // helpers
-    function formatGB(bytes) {
-      return (bytes / (1024**3)).toFixed(2) + ' GB';
-    }
+  // helpers
+  function formatGB(bytes) {
+   return (bytes / (1024**3)).toFixed(2) + ' GB';
+  }
 
-    function formatPct(value) {
-      return value.toFixed(1) + '%';
-    }
+  function formatPct(value) {
+   return value.toFixed(1) + '%';
+  }
 
-    function formatSpeedup(x) {
-      return x.toFixed(2) + 'x';
-    }
+  function formatSpeedup(x) {
+   return x.toFixed(2) + 'x';
+  }
 
-    // estimate hidden dim from params (heuristic: typical transformer)
-    function estimateHiddenDim(paramsM) {
-      const params = paramsM * 1e6;
-      // assume L=12, d_model ~ sqrt(params / (12*4))? rough: param ~ 12*L*d_model^2
-      // for 350M -> d_model ~ 4096; 1.3B -> 7680? we'll clamp
-      let d = Math.round(Math.sqrt(params / 48));  // 12 layers * 4 attn+ffn
-      d = Math.min(16384, Math.max(512, d));
-      // round to nearest 64
-      return Math.round(d / 64) * 64;
-    }
+  // estimate hidden dim from params (heuristic: typical transformer)
+  function estimateHiddenDim(paramsM) {
+   const params = paramsM * 1e6;
+   // assume L=12, d_model ~ sqrt(params / (12*4))? rough: param ~ 12*L*d_model^2
+   // for 350M -> d_model ~ 4096; 1.3B -> 7680? we'll clamp
+   let d = Math.round(Math.sqrt(params / 48)); // 12 layers * 4 attn+ffn
+   d = Math.min(16384, Math.max(512, d));
+   // round to nearest 64
+   return Math.round(d / 64) * 64;
+  }
 
-    function compute() {
-      const paramsM = parseFloat(paramsInput.value) || 350;
-      const batch = parseInt(batchInput.value, 10) || 8;
-      const seqlen = parseInt(seqlenInput.value, 10) || 1024;
-      const precision = precisionSelect.value;
-      const optimizer = optimizerSelect.value;
+  function compute() {
+   const paramsM = parseFloat(paramsInput.value) || 350;
+   const batch = parseInt(batchInput.value, 10) || 8;
+   const seqlen = parseInt(seqlenInput.value, 10) || 1024;
+   const precision = precisionSelect.value;
+   const optimizer = optimizerSelect.value;
 
-      const hidden = estimateHiddenDim(paramsM);
-      hiddenSpan.textContent = hidden;
+   const hidden = estimateHiddenDim(paramsM);
+   hiddenSpan.textContent = hidden;
 
-      // base numbers
-      const paramCount = paramsM * 1e6;
-      const bytesPerParam = 4; // FP32
-      const modelMemFP32 = paramCount * 4; // bytes
+   // base numbers
+   const paramCount = paramsM * 1e6;
+   const bytesPerParam = 4; // FP32
+   const modelMemFP32 = paramCount * 4; // bytes
 
-      // activation memory: rough: batch * seqlen * hidden * 2 * 4 (for transformer) * layers (12)
-      const layers = 12; // typical
-      const actBytesPerElement = 4; // FP32
-      let activationMem = batch * seqlen * hidden * 2 * layers * actBytesPerElement; // forward + backward? rough
-      activationMem = Math.max(activationMem, 1); // avoid zero
+   // activation memory: rough: batch * seqlen * hidden * 2 * 4 (for transformer) * layers (12)
+   const layers = 12; // typical
+   const actBytesPerElement = 4; // FP32
+   let activationMem = batch * seqlen * hidden * 2 * layers * actBytesPerElement; // forward + backward? rough
+   activationMem = Math.max(activationMem, 1); // avoid zero
 
-      // precision factors
-      let paramStorageFactor = 1.0; // for model memory (weights in memory)
-      let actFactor = 1.0;
-      let speedupFactor = 1.0;
-      let isMixed = false;
+   // precision factors
+   let paramStorageFactor = 1.0; // for model memory (weights in memory)
+   let actFactor = 1.0;
+   let speedupFactor = 1.0;
+   let isMixed = false;
 
-      switch(precision) {
-        case 'fp16':
-          paramStorageFactor = 0.5; // FP16 weights stored
-          actFactor = 0.5;
-          speedupFactor = 2.2; // typical
-          isMixed = true;
-          break;
-        case 'bf16':
-          paramStorageFactor = 0.5;
-          actFactor = 0.5;
-          speedupFactor = 2.0;
-          isMixed = true;
-          break;
-        case 'tf32':
-          paramStorageFactor = 1.0; // weights still FP32, but matmul TF32
-          actFactor = 1.0;
-          speedupFactor = 1.5;
-          break;
-        default: // fp32
-          paramStorageFactor = 1.0;
-          actFactor = 1.0;
-          speedupFactor = 1.0;
-      }
+   switch(precision) {
+    case 'fp16':
+     paramStorageFactor = 0.5; // FP16 weights stored
+     actFactor = 0.5;
+     speedupFactor = 2.2; // typical
+     isMixed = true;
+     break;
+    case 'bf16':
+     paramStorageFactor = 0.5;
+     actFactor = 0.5;
+     speedupFactor = 2.0;
+     isMixed = true;
+     break;
+    case 'tf32':
+     paramStorageFactor = 1.0; // weights still FP32, but matmul TF32
+     actFactor = 1.0;
+     speedupFactor = 1.5;
+     break;
+    default: // fp32
+     paramStorageFactor = 1.0;
+     actFactor = 1.0;
+     speedupFactor = 1.0;
+   }
 
-      // model memory (weights in active precision)
-      let modelMem = modelMemFP32 * paramStorageFactor;
-      // gradients always stored in FP32 (or FP16 in some cases, but we assume FP32 for safety)
-      let gradMem = paramCount * 4; // 4 bytes per gradient (FP32)
-      // optimizer states
-      let optMem = 0;
-      if (optimizer === 'sgd') {
-        optMem = paramCount * 4 * 2; // momentum + velocity? SGD with momentum: 2 states
-      } else if (optimizer === 'adam' || optimizer === 'adamw') {
-        optMem = paramCount * 4 * 4; // adam: exp_avg, exp_avg_sq, max_exp_avg_sq? (AdamW same)
-      }
-      // activation memory after precision factor
-      let actMem = activationMem * actFactor;
+   // model memory (weights in active precision)
+   let modelMem = modelMemFP32 * paramStorageFactor;
+   // gradients always stored in FP32 (or FP16 in some cases, but we assume FP32 for safety)
+   let gradMem = paramCount * 4; // 4 bytes per gradient (FP32)
+   // optimizer states
+   let optMem = 0;
+   if (optimizer === 'sgd') {
+    optMem = paramCount * 4 * 2; // momentum + velocity? SGD with momentum: 2 states
+   } else if (optimizer === 'adam' || optimizer === 'adamw') {
+    optMem = paramCount * 4 * 4; // adam: exp_avg, exp_avg_sq, max_exp_avg_sq? (AdamW same)
+   }
+   // activation memory after precision factor
+   let actMem = activationMem * actFactor;
 
-      // total VRAM
-      let total = modelMem + gradMem + optMem + actMem;
+   // total VRAM
+   let total = modelMem + gradMem + optMem + actMem;
 
-      // baseline FP32 total (for savings)
-      const baseModel = modelMemFP32;
-      const baseGrad = paramCount * 4;
-      const baseOpt = (optimizer==='sgd'? paramCount*4*2 : paramCount*4*4);
-      const baseAct = activationMem; // FP32
-      const baseTotal = baseModel + baseGrad + baseOpt + baseAct;
+   // baseline FP32 total (for savings)
+   const baseModel = modelMemFP32;
+   const baseGrad = paramCount * 4;
+   const baseOpt = (optimizer==='sgd'? paramCount*4*2 : paramCount*4*4);
+   const baseAct = activationMem; // FP32
+   const baseTotal = baseModel + baseGrad + baseOpt + baseAct;
 
-      const savings = baseTotal > 0 ? (1 - total / baseTotal) * 100 : 0;
-      const speedup = speedupFactor;
+   const savings = baseTotal > 0 ? (1 - total / baseTotal) * 100 : 0;
+   const speedup = speedupFactor;
 
-      // update UI
-      modelMemEl.textContent = formatGB(modelMem);
-      optMemEl.textContent = formatGB(optMem);
-      actMemEl.textContent = formatGB(actMem);
-      gradMemEl.textContent = formatGB(gradMem);
-      totalVramEl.textContent = formatGB(total);
-      speedupEl.textContent = formatSpeedup(speedup);
-      savingsEl.textContent = formatPct(savings);
+   // update UI
+   modelMemEl.textContent = formatGB(modelMem);
+   optMemEl.textContent = formatGB(optMem);
+   actMemEl.textContent = formatGB(actMem);
+   gradMemEl.textContent = formatGB(gradMem);
+   totalVramEl.textContent = formatGB(total);
+   speedupEl.textContent = formatSpeedup(speedup);
+   savingsEl.textContent = formatPct(savings);
 
-      // build comparison table (all modes)
-      const modes = ['fp32', 'fp16', 'bf16', 'tf32'];
-      const rows = [];
-      for (const mode of modes) {
-        let pFactor = 1.0, aFactor = 1.0, spFactor = 1.0;
-        if (mode === 'fp16') { pFactor=0.5; aFactor=0.5; spFactor=2.2; }
-        else if (mode === 'bf16') { pFactor=0.5; aFactor=0.5; spFactor=2.0; }
-        else if (mode === 'tf32') { pFactor=1.0; aFactor=1.0; spFactor=1.5; }
-        else { pFactor=1.0; aFactor=1.0; spFactor=1.0; }
+   // build comparison table (all modes)
+   const modes = ['fp32', 'fp16', 'bf16', 'tf32'];
+   const rows = [];
+   for (const mode of modes) {
+    let pFactor = 1.0, aFactor = 1.0, spFactor = 1.0;
+    if (mode === 'fp16') { pFactor=0.5; aFactor=0.5; spFactor=2.2; }
+    else if (mode === 'bf16') { pFactor=0.5; aFactor=0.5; spFactor=2.0; }
+    else if (mode === 'tf32') { pFactor=1.0; aFactor=1.0; spFactor=1.5; }
+    else { pFactor=1.0; aFactor=1.0; spFactor=1.0; }
 
-        const m = modelMemFP32 * pFactor;
-        const g = paramCount * 4; // grad always FP32
-        let o = 0;
-        if (optimizer === 'sgd') o = paramCount * 4 * 2;
-        else o = paramCount * 4 * 4;
-        const a = activationMem * aFactor;
-        const t = m + g + o + a;
-        const base = baseTotal;
-        const sav = base > 0 ? (1 - t / base) * 100 : 0;
-        const sp = spFactor;
+    const m = modelMemFP32 * pFactor;
+    const g = paramCount * 4; // grad always FP32
+    let o = 0;
+    if (optimizer === 'sgd') o = paramCount * 4 * 2;
+    else o = paramCount * 4 * 4;
+    const a = activationMem * aFactor;
+    const t = m + g + o + a;
+    const base = baseTotal;
+    const sav = base > 0 ? (1 - t / base) * 100 : 0;
+    const sp = spFactor;
 
-        const label = mode.toUpperCase();
-        rows.push({ label, model: m, opt: o, act: a, total: t, speedup: sp, savings: sav });
-      }
+    const label = mode.toUpperCase();
+    rows.push({ label, model: m, opt: o, act: a, total: t, speedup: sp, savings: sav });
+   }
 
-      // render table
-      tableBody.innerHTML = '';
-      for (const r of rows) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${r.label}</td>
-          <td>${formatGB(r.model)}</td>
-          <td>${formatGB(r.opt)}</td>
-          <td>${formatGB(r.act)}</td>
-          <td style="font-weight:600; color:#38bdf8">${formatGB(r.total)}</td>
-          <td>${formatSpeedup(r.speedup)}</td>
-          <td style="color:#2dd4bf">${formatPct(r.savings)}</td>
-        `;
-        tableBody.appendChild(tr);
-      }
-    }
+   // render table
+   tableBody.innerHTML = '';
+   for (const r of rows) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+     <td>${r.label}</td>
+     <td>${formatGB(r.model)}</td>
+     <td>${formatGB(r.opt)}</td>
+     <td>${formatGB(r.act)}</td>
+     <td style="font-weight:600; color:#38bdf8">${formatGB(r.total)}</td>
+     <td>${formatSpeedup(r.speedup)}</td>
+     <td style="color:#2dd4bf">${formatPct(r.savings)}</td>
+    `;
+    tableBody.appendChild(tr);
+   }
+  }
 
-    // event listeners
-    [paramsInput, batchInput, seqlenInput, precisionSelect, optimizerSelect].forEach(el => {
-      el.addEventListener('input', compute);
-      el.addEventListener('change', compute);
-    });
+  // event listeners
+  [paramsInput, batchInput, seqlenInput, precisionSelect, optimizerSelect].forEach(el => {
+   el.addEventListener('input', compute);
+   el.addEventListener('change', compute);
+  });
 
-    // initial compute
-    compute();
-  })();
+  // initial compute
+  compute();
+ })();
 </script>
 
-    <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -351,7 +351,7 @@
 <div style="margin:30px auto;max-width:728px;text-align:center;padding:18px 24px;background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:10px">
 <p style="margin:0 0 6px;color:#94a3b8;font-size:0.85rem">Recommended by our team</p>
 <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:600;font-size:1.05rem;text-decoration:none">BeLikeNative.com</a>
-<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
 </div>
 </body>
 </html>

@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Learning Rate Scheduler — Visualizer | HeyTensor</title>
+<title>Learning Rate Scheduler, Visualizer | HeyTensor</title>
 <meta name="description" content="Visualize learning rate schedules: cosine, step, exponential, warmup, one-cycle. Free interactive scheduler.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://heytensor.com/tools/learning-rate-scheduler/">
-<meta property="og:title" content="Learning Rate Scheduler — HeyTensor">
+<meta property="og:title" content="Learning Rate Scheduler, HeyTensor">
 <meta property="og:description" content="Interactive learning rate schedule visualizer for neural network training">
 <meta property="og:url" content="https://heytensor.com/tools/learning-rate-scheduler/">
 <meta property="og:type" content="website">
@@ -15,13 +15,13 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Learning Rate Scheduler Visualizer",
-  "url": "https://heytensor.com/tools/learning-rate-scheduler/",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "description": "Visualize and compare learning rate schedules for neural network training"
+ "@context": "https://schema.org",
+ "@type": "WebApplication",
+ "name": "Learning Rate Scheduler Visualizer",
+ "url": "https://heytensor.com/tools/learning-rate-scheduler/",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "description": "Visualize and compare learning rate schedules for neural network training"
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,117 +35,117 @@
 
 <div class="container">
 <h1>Learning Rate Scheduler</h1>
-    <p class="subtitle">Visualize and compare learning rate schedules</p>
+ <p class="subtitle">Visualize and compare learning rate schedules</p>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="tool-grid">
-    <div class="tool-section">
-      <h2>Schedule Configuration</h2>
+ <div class="tool-grid">
+ <div class="tool-section">
+ <h2>Schedule Configuration</h2>
 
-      <div class="input-group">
-        <label for="totalEpochs">Total Epochs</label>
-        <input type="number" id="totalEpochs" value="100" min="1" max="10000">
-        <p class="help-text">Training epochs</p>
-      </div>
+ <div class="input-group">
+ <label for="totalEpochs">Total Epochs</label>
+ <input type="number" id="totalEpochs" value="100" min="1" max="10000">
+ <p class="help-text">Training epochs</p>
+ </div>
 
-      <div class="input-group">
-        <label for="initialLR">Initial Learning Rate</label>
-        <input type="number" id="initialLR" value="0.001" step="0.0001" min="0.00001">
-        <p class="help-text">Starting learning rate</p>
-      </div>
+ <div class="input-group">
+ <label for="initialLR">Initial Learning Rate</label>
+ <input type="number" id="initialLR" value="0.001" step="0.0001" min="0.00001">
+ <p class="help-text">Starting learning rate</p>
+ </div>
 
-      <div class="input-group">
-        <label for="minLR">Minimum Learning Rate</label>
-        <input type="number" id="minLR" value="0.00001" step="0.00001" min="0.000001">
-        <p class="help-text">Minimum LR floor</p>
-      </div>
+ <div class="input-group">
+ <label for="minLR">Minimum Learning Rate</label>
+ <input type="number" id="minLR" value="0.00001" step="0.00001" min="0.000001">
+ <p class="help-text">Minimum LR floor</p>
+ </div>
 
-      <h2 style="margin-top: 24px;">Schedule Type</h2>
-      <div class="scheduler-buttons">
-        <button class="active" onclick="selectScheduler('cosine')">Cosine Annealing</button>
-        <button onclick="selectScheduler('step')">Step Decay</button>
-        <button onclick="selectScheduler('exponential')">Exponential</button>
-        <button onclick="selectScheduler('warmup')">Linear Warmup</button>
-        <button onclick="selectScheduler('onecycle')">OneCycle</button>
-        <button onclick="selectScheduler('polynomial')">Polynomial</button>
-      </div>
+ <h2 style="margin-top: 24px;">Schedule Type</h2>
+ <div class="scheduler-buttons">
+ <button class="active" onclick="selectScheduler('cosine')">Cosine Annealing</button>
+ <button onclick="selectScheduler('step')">Step Decay</button>
+ <button onclick="selectScheduler('exponential')">Exponential</button>
+ <button onclick="selectScheduler('warmup')">Linear Warmup</button>
+ <button onclick="selectScheduler('onecycle')">OneCycle</button>
+ <button onclick="selectScheduler('polynomial')">Polynomial</button>
+ </div>
 
-      <div id="scheduleParams"></div>
+ <div id="scheduleParams"></div>
 
-      <button onclick="updateSchedule()" style="width: 100%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; padding: 14px; margin-top: 12px; font-size: 1rem;">Update Schedule</button>
-    </div>
+ <button onclick="updateSchedule()" style="width: 100%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; padding: 14px; margin-top: 12px; font-size: 1rem;">Update Schedule</button>
+ </div>
 
-    <div class="tool-section">
-      <h2>Schedule Details</h2>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-label">Max LR</div>
-          <div class="stat-value" id="statMaxLR">0.001</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Min LR</div>
-          <div class="stat-value" id="statMinLR">0.00001</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Decay Factor</div>
-          <div class="stat-value" id="statDecay">10.0x</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Avg LR</div>
-          <div class="stat-value" id="statAvgLR">0.0005</div>
-        </div>
-      </div>
+ <div class="tool-section">
+ <h2>Schedule Details</h2>
+ <div class="stats-grid">
+ <div class="stat-box">
+ <div class="stat-label">Max LR</div>
+ <div class="stat-value" id="statMaxLR">0.001</div>
+ </div>
+ <div class="stat-box">
+ <div class="stat-label">Min LR</div>
+ <div class="stat-value" id="statMinLR">0.00001</div>
+ </div>
+ <div class="stat-box">
+ <div class="stat-label">Decay Factor</div>
+ <div class="stat-value" id="statDecay">10.0x</div>
+ </div>
+ <div class="stat-box">
+ <div class="stat-label">Avg LR</div>
+ <div class="stat-value" id="statAvgLR">0.0005</div>
+ </div>
+ </div>
 
-      <div style="margin-top: 20px; padding: 12px; background: #0f172a; border-radius: 8px; border-left: 3px solid #3b82f6;">
-        <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 8px;">
-          <strong>Recommended for:</strong>
-        </p>
-        <p id="scheduleDesc" style="color: #94a3b8; font-size: 0.85rem;">Cosine annealing provides smooth decay with periodic resets. Best for vision and language models.</p>
-      </div>
-    </div>
-  </div>
+ <div style="margin-top: 20px; padding: 12px; background: #0f172a; border-radius: 8px; border-left: 3px solid #3b82f6;">
+ <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 8px;">
+ Recommended for:
+ </p>
+ <p id="scheduleDesc" style="color: #94a3b8; font-size: 0.85rem;">Cosine annealing provides smooth decay with periodic resets. Best for vision and language models.</p>
+ </div>
+ </div>
+ </div>
 
-  <div class="visualization-section">
-    <h2>Learning Rate Schedule</h2>
-    <canvas id="lrChart"></canvas>
-  </div>
+ <div class="visualization-section">
+ <h2>Learning Rate Schedule</h2>
+ <canvas id="lrChart"></canvas>
+ </div>
 
-  <div class="partner-section">
-    <p class="partner-label">Recommended by our team</p>
-    <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
-    <p class="partner-desc">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
-  </div>
+ <div class="partner-section">
+ <p class="partner-label">Recommended by our team</p>
+ <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
+ <p class="partner-desc">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
+ </div>
 
-  <div class="ad-section">
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-  </div>
+ <div class="ad-section">
+ <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 </div>
 
 <script>
@@ -155,192 +155,192 @@ const ctx = canvas.getContext('2d');
 
 // Set canvas size
 function resizeCanvas() {
-  canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-  canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+ canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+ canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+ ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 }
 
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 function selectScheduler(name) {
-  currentScheduler = name;
-  document.querySelectorAll('.scheduler-buttons button').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  event.target.classList.add('active');
-  updateParamInputs();
-  updateSchedule();
+ currentScheduler = name;
+ document.querySelectorAll('.scheduler-buttons button').forEach(btn => {
+  btn.classList.remove('active');
+ });
+ event.target.classList.add('active');
+ updateParamInputs();
+ updateSchedule();
 }
 
 function updateParamInputs() {
-  const paramsDiv = document.getElementById('scheduleParams');
-  paramsDiv.innerHTML = '';
+ const paramsDiv = document.getElementById('scheduleParams');
+ paramsDiv.innerHTML = '';
 
-  const createInput = (label, id, value, min = 0.0001, step = 0.001) => {
-    paramsDiv.innerHTML += `
-      <div class="input-group">
-        <label for="${id}">${label}</label>
-        <input type="number" id="${id}" value="${value}" min="${min}" step="${step}">
-      </div>
-    `;
-  };
+ const createInput = (label, id, value, min = 0.0001, step = 0.001) => {
+  paramsDiv.innerHTML += `
+   <div class="input-group">
+    <label for="${id}">${label}</label>
+    <input type="number" id="${id}" value="${value}" min="${min}" step="${step}">
+   </div>
+  `;
+ };
 
-  if (currentScheduler === 'step') {
-    createInput('Step Size (epochs)', 'stepSize', 30, 1, 1);
-    createInput('Gamma (decay factor)', 'gamma', 0.1, 0.01, 0.01);
-  } else if (currentScheduler === 'exponential') {
-    createInput('Decay Rate', 'decayRate', 0.95, 0.8, 0.01);
-  } else if (currentScheduler === 'warmup') {
-    createInput('Warmup Epochs', 'warmupEpochs', 10, 1, 1);
-  } else if (currentScheduler === 'onecycle') {
-    createInput('Peak Epoch', 'peakEpoch', 30, 1, 1);
-    createInput('Div Factor', 'divFactor', 25, 1, 1);
-  } else if (currentScheduler === 'polynomial') {
-    createInput('Power', 'power', 1.0, 0.1, 0.1);
-  }
+ if (currentScheduler === 'step') {
+  createInput('Step Size (epochs)', 'stepSize', 30, 1, 1);
+  createInput('Gamma (decay factor)', 'gamma', 0.1, 0.01, 0.01);
+ } else if (currentScheduler === 'exponential') {
+  createInput('Decay Rate', 'decayRate', 0.95, 0.8, 0.01);
+ } else if (currentScheduler === 'warmup') {
+  createInput('Warmup Epochs', 'warmupEpochs', 10, 1, 1);
+ } else if (currentScheduler === 'onecycle') {
+  createInput('Peak Epoch', 'peakEpoch', 30, 1, 1);
+  createInput('Div Factor', 'divFactor', 25, 1, 1);
+ } else if (currentScheduler === 'polynomial') {
+  createInput('Power', 'power', 1.0, 0.1, 0.1);
+ }
 }
 
 function calculateSchedule() {
-  const totalEpochs = parseInt(document.getElementById('totalEpochs').value) || 100;
-  const initialLR = parseFloat(document.getElementById('initialLR').value) || 0.001;
-  const minLR = parseFloat(document.getElementById('minLR').value) || 0.00001;
+ const totalEpochs = parseInt(document.getElementById('totalEpochs').value) || 100;
+ const initialLR = parseFloat(document.getElementById('initialLR').value) || 0.001;
+ const minLR = parseFloat(document.getElementById('minLR').value) || 0.00001;
 
-  const schedule = [];
+ const schedule = [];
 
-  for (let epoch = 0; epoch < totalEpochs; epoch++) {
-    let lr = initialLR;
+ for (let epoch = 0; epoch < totalEpochs; epoch++) {
+  let lr = initialLR;
 
-    if (currentScheduler === 'cosine') {
-      lr = minLR + 0.5 * (initialLR - minLR) * (1 + Math.cos(Math.PI * epoch / totalEpochs));
-    } else if (currentScheduler === 'step') {
-      const stepSize = parseInt(document.getElementById('stepSize').value) || 30;
-      const gamma = parseFloat(document.getElementById('gamma').value) || 0.1;
-      const stepNum = Math.floor(epoch / stepSize);
-      lr = initialLR * Math.pow(gamma, stepNum);
-    } else if (currentScheduler === 'exponential') {
-      const decayRate = parseFloat(document.getElementById('decayRate').value) || 0.95;
-      lr = initialLR * Math.pow(decayRate, epoch / (totalEpochs / 10));
-    } else if (currentScheduler === 'warmup') {
-      const warmupEpochs = parseInt(document.getElementById('warmupEpochs').value) || 10;
-      if (epoch < warmupEpochs) {
-        lr = initialLR * (epoch / warmupEpochs);
-      }
-    } else if (currentScheduler === 'onecycle') {
-      const peakEpoch = parseInt(document.getElementById('peakEpoch').value) || 30;
-      const divFactor = parseFloat(document.getElementById('divFactor').value) || 25;
-      const minLR2 = initialLR / divFactor;
+  if (currentScheduler === 'cosine') {
+   lr = minLR + 0.5 * (initialLR - minLR) * (1 + Math.cos(Math.PI * epoch / totalEpochs));
+  } else if (currentScheduler === 'step') {
+   const stepSize = parseInt(document.getElementById('stepSize').value) || 30;
+   const gamma = parseFloat(document.getElementById('gamma').value) || 0.1;
+   const stepNum = Math.floor(epoch / stepSize);
+   lr = initialLR * Math.pow(gamma, stepNum);
+  } else if (currentScheduler === 'exponential') {
+   const decayRate = parseFloat(document.getElementById('decayRate').value) || 0.95;
+   lr = initialLR * Math.pow(decayRate, epoch / (totalEpochs / 10));
+  } else if (currentScheduler === 'warmup') {
+   const warmupEpochs = parseInt(document.getElementById('warmupEpochs').value) || 10;
+   if (epoch < warmupEpochs) {
+    lr = initialLR * (epoch / warmupEpochs);
+   }
+  } else if (currentScheduler === 'onecycle') {
+   const peakEpoch = parseInt(document.getElementById('peakEpoch').value) || 30;
+   const divFactor = parseFloat(document.getElementById('divFactor').value) || 25;
+   const minLR2 = initialLR / divFactor;
 
-      if (epoch < peakEpoch) {
-        lr = minLR2 + (initialLR - minLR2) * (epoch / peakEpoch);
-      } else {
-        lr = initialLR - (initialLR - minLR2) * ((epoch - peakEpoch) / (totalEpochs - peakEpoch));
-      }
-    } else if (currentScheduler === 'polynomial') {
-      const power = parseFloat(document.getElementById('power').value) || 1.0;
-      lr = minLR + (initialLR - minLR) * Math.pow(1 - epoch / totalEpochs, power);
-    }
-
-    schedule.push(Math.max(minLR, Math.min(initialLR, lr)));
+   if (epoch < peakEpoch) {
+    lr = minLR2 + (initialLR - minLR2) * (epoch / peakEpoch);
+   } else {
+    lr = initialLR - (initialLR - minLR2) * ((epoch - peakEpoch) / (totalEpochs - peakEpoch));
+   }
+  } else if (currentScheduler === 'polynomial') {
+   const power = parseFloat(document.getElementById('power').value) || 1.0;
+   lr = minLR + (initialLR - minLR) * Math.pow(1 - epoch / totalEpochs, power);
   }
 
-  return schedule;
+  schedule.push(Math.max(minLR, Math.min(initialLR, lr)));
+ }
+
+ return schedule;
 }
 
 function updateSchedule() {
-  const schedule = calculateSchedule();
-  const totalEpochs = parseInt(document.getElementById('totalEpochs').value) || 100;
-  const initialLR = parseFloat(document.getElementById('initialLR').value) || 0.001;
-  const minLR = parseFloat(document.getElementById('minLR').value) || 0.00001;
+ const schedule = calculateSchedule();
+ const totalEpochs = parseInt(document.getElementById('totalEpochs').value) || 100;
+ const initialLR = parseFloat(document.getElementById('initialLR').value) || 0.001;
+ const minLR = parseFloat(document.getElementById('minLR').value) || 0.00001;
 
-  // Draw chart
-  drawChart(schedule);
+ // Draw chart
+ drawChart(schedule);
 
-  // Update stats
-  const maxLR = Math.max(...schedule);
-  const minLR2 = Math.min(...schedule);
-  const avgLR = schedule.reduce((a, b) => a + b) / schedule.length;
-  const decayFactor = maxLR / minLR2;
+ // Update stats
+ const maxLR = Math.max(...schedule);
+ const minLR2 = Math.min(...schedule);
+ const avgLR = schedule.reduce((a, b) => a + b) / schedule.length;
+ const decayFactor = maxLR / minLR2;
 
-  document.getElementById('statMaxLR').textContent = maxLR.toExponential(2);
-  document.getElementById('statMinLR').textContent = minLR2.toExponential(2);
-  document.getElementById('statDecay').textContent = decayFactor.toFixed(1) + 'x';
-  document.getElementById('statAvgLR').textContent = avgLR.toExponential(2);
+ document.getElementById('statMaxLR').textContent = maxLR.toExponential(2);
+ document.getElementById('statMinLR').textContent = minLR2.toExponential(2);
+ document.getElementById('statDecay').textContent = decayFactor.toFixed(1) + 'x';
+ document.getElementById('statAvgLR').textContent = avgLR.toExponential(2);
 
-  const descriptions = {
-    cosine: 'Smooth cosine decay with gradual reduction. Excellent for vision and language models.',
-    step: 'Discrete step reductions at fixed intervals. Good for curriculum learning.',
-    exponential: 'Smooth exponential decay. Simple and effective baseline.',
-    warmup: 'Linear increase then decay. Stabilizes training at start.',
-    onecycle: 'Rise to peak then fall. Reduces training time significantly.',
-    polynomial: 'Polynomial decay curve. Smooth continuous learning rate reduction.'
-  };
+ const descriptions = {
+  cosine: 'Smooth cosine decay with gradual reduction. Excellent for vision and language models.',
+  step: 'Discrete step reductions at fixed intervals. Good for curriculum learning.',
+  exponential: 'Smooth exponential decay. Simple and effective baseline.',
+  warmup: 'Linear increase then decay. Stabilizes training at start.',
+  onecycle: 'Rise to peak then fall. Reduces training time significantly.',
+  polynomial: 'Polynomial decay curve. Smooth continuous learning rate reduction.'
+ };
 
-  document.getElementById('scheduleDesc').textContent = descriptions[currentScheduler];
+ document.getElementById('scheduleDesc').textContent = descriptions[currentScheduler];
 
-  if (typeof window.adsbygoogle !== 'undefined') {
-    window.adsbygoogle.push({});
-  }
+ if (typeof window.adsbygoogle !== 'undefined') {
+  window.adsbygoogle.push({});
+ }
 }
 
 function drawChart(schedule) {
-  const width = canvas.offsetWidth;
-  const height = canvas.offsetHeight;
+ const width = canvas.offsetWidth;
+ const height = canvas.offsetHeight;
 
-  ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = '#0f172a';
-  ctx.fillRect(0, 0, width, height);
+ ctx.clearRect(0, 0, width, height);
+ ctx.fillStyle = '#0f172a';
+ ctx.fillRect(0, 0, width, height);
 
-  // Draw grid
-  ctx.strokeStyle = '#334155';
-  ctx.lineWidth = 1;
+ // Draw grid
+ ctx.strokeStyle = '#334155';
+ ctx.lineWidth = 1;
 
-  for (let i = 0; i <= 10; i++) {
-    const x = (i / 10) * width;
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-    ctx.stroke();
-
-    const y = (i / 10) * height;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(width, y);
-    ctx.stroke();
-  }
-
-  // Draw axes labels
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = '12px sans-serif';
-  ctx.textAlign = 'center';
-
-  for (let i = 0; i <= 10; i++) {
-    const x = (i / 10) * width;
-    const label = Math.round((i / 10) * schedule.length);
-    ctx.fillText(label, x, height + 20);
-  }
-
-  ctx.textAlign = 'right';
-  const maxLR = Math.max(...schedule);
-  for (let i = 0; i <= 5; i++) {
-    const y = height - (i / 5) * height;
-    const label = (i / 5 * maxLR).toExponential(1);
-    ctx.fillText(label, -5, y);
-  }
-
-  // Draw schedule line
-  ctx.strokeStyle = '#3b82f6';
-  ctx.lineWidth = 2;
+ for (let i = 0; i <= 10; i++) {
+  const x = (i / 10) * width;
   ctx.beginPath();
-
-  for (let i = 0; i < schedule.length; i++) {
-    const x = (i / schedule.length) * width;
-    const y = height - (schedule[i] / maxLR) * height;
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
-
+  ctx.moveTo(x, 0);
+  ctx.lineTo(x, height);
   ctx.stroke();
+
+  const y = (i / 10) * height;
+  ctx.beginPath();
+  ctx.moveTo(0, y);
+  ctx.lineTo(width, y);
+  ctx.stroke();
+ }
+
+ // Draw axes labels
+ ctx.fillStyle = '#94a3b8';
+ ctx.font = '12px sans-serif';
+ ctx.textAlign = 'center';
+
+ for (let i = 0; i <= 10; i++) {
+  const x = (i / 10) * width;
+  const label = Math.round((i / 10) * schedule.length);
+  ctx.fillText(label, x, height + 20);
+ }
+
+ ctx.textAlign = 'right';
+ const maxLR = Math.max(...schedule);
+ for (let i = 0; i <= 5; i++) {
+  const y = height - (i / 5) * height;
+  const label = (i / 5 * maxLR).toExponential(1);
+  ctx.fillText(label, -5, y);
+ }
+
+ // Draw schedule line
+ ctx.strokeStyle = '#3b82f6';
+ ctx.lineWidth = 2;
+ ctx.beginPath();
+
+ for (let i = 0; i < schedule.length; i++) {
+  const x = (i / schedule.length) * width;
+  const y = height - (schedule[i] / maxLR) * height;
+  if (i === 0) ctx.moveTo(x, y);
+  else ctx.lineTo(x, y);
+ }
+
+ ctx.stroke();
 }
 
 // Initialize

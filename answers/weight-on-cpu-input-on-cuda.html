@@ -1,319 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PyTorch Model on GPU but Input on CPU: Error Fix</title>
-  <meta name="description" content="Move both model and data to the same device with .to(device) to fix the PyTorch model-on-GPU input-on-CPU RuntimeError. Copy-paste fix plus 3 real-world scenarios.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Fix: RuntimeError: weight is on CPU but input is on CUDA — PyTorch">
-  <meta property="og:description" content="Add model.to('cuda') before inference. Model weights and input tensors must be on the same device.">
-  <meta property="og:url" content="https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fix: RuntimeError: weight is on CPU but input is on CUDA — PyTorch">
-  <meta name="twitter:description" content="Add model.to('cuda') before inference. Model weights and input tensors must be on the same device.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Article",
-        "headline": "How to Fix \"weight is on CPU but input is on CUDA\" in PyTorch",
-        "description": "Move both the model and every input tensor to the same device with .to(device) to fix the PyTorch CPU/CUDA device-mismatch RuntimeError. Includes an interactive debugger.",
-        "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
-        "publisher": { "@type": "Organization", "name": "HeyTensor", "url": "https://heytensor.com/" },
-        "datePublished": "2026-04-11",
-        "dateModified": "2026-07-16",
-        "mainEntityOfPage": "https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html",
-        "isBasedOn": [
-          { "@type": "CreativeWork", "name": "PyTorch Forums — Input type and weight type should be the same", "url": "https://discuss.pytorch.org/t/input-type-torch-floattensor-and-weight-type-torch-cuda-floattensor-should-be-the-same-or-input-should-be-a-mkldnn-tensor-and-weight-is-a-dense-tensor/152430" },
-          { "@type": "CreativeWork", "name": "PyTorch CUDA semantics (official docs)", "url": "https://docs.pytorch.org/docs/stable/notes/cuda.html" }
-        ],
-        "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".qas"] }
-      }
-    ]
-  }
-  </script>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>PyTorch Model on GPU but Input on CPU: Error Fix</title>
+ <meta name="description" content="Move both model and data to the same device with .to(device) to fix the PyTorch model-on-GPU input-on-CPU RuntimeError. Copy-paste fix plus 3 real-world scenarios.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: RuntimeError: weight is on CPU but input is on CUDA, PyTorch">
+ <meta property="og:description" content="Add model.to('cuda') before inference. Model weights and input tensors must be on the same device.">
+ <meta property="og:url" content="https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: RuntimeError: weight is on CPU but input is on CUDA, PyTorch">
+ <meta name="twitter:description" content="Add model.to('cuda') before inference. Model weights and input tensors must be on the same device.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@graph": [
+   {
+    "@type": "Article",
+    "headline": "How to Fix \"weight is on CPU but input is on CUDA\" in PyTorch",
+    "description": "Move both the model and every input tensor to the same device with .to(device) to fix the PyTorch CPU/CUDA device-mismatch RuntimeError. Includes an interactive debugger.",
+    "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
+    "publisher": { "@type": "Organization", "name": "HeyTensor", "url": "https://heytensor.com/" },
+    "datePublished": "2026-04-11",
+    "dateModified": "2026-07-16",
+    "mainEntityOfPage": "https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html",
+    "isBasedOn": [
+     { "@type": "CreativeWork", "name": "PyTorch Forums, Input type and weight type should be the same", "url": "https://discuss.pytorch.org/t/input-type-torch-floattensor-and-weight-type-torch-cuda-floattensor-should-be-the-same-or-input-should-be-a-mkldnn-tensor-and-weight-is-a-dense-tensor/152430" },
+     { "@type": "CreativeWork", "name": "PyTorch CUDA semantics (official docs)", "url": "https://docs.pytorch.org/docs/stable/notes/cuda.html" }
+    ],
+    "speakable": { "@type": "SpeakableSpecification", "cssSelector": [".qas"] }
+   }
+  ]
+ }
+ </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Weight CPU Input CUDA"}]}</script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/" class="active">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container" style="max-width:720px;">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Weight CPU Input CUDA</span>
-    </nav>
+ <main class="container" style="max-width:720px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Weight CPU Input CUDA</span>
+ </nav>
 
-    <article>
-      <h1>How to Fix "weight is on CPU but input is on CUDA" in PyTorch</h1>
-      <p class="byline" style="color:var(--text-dim);font-size:0.85rem;margin:0.25rem 0 1rem;">By <a href="https://zovo.one" rel="author" style="color:var(--text-dim);">Michael Lip</a>, builder of HeyTensor · Verified against the PyTorch docs and forums · Updated July 16, 2026</p>
-      <p class="qas" data-keyword="pytorch model moved to gpu but input is on cpu error fix">Fix the PyTorch device mismatch by calling .to(device) on both the model and every input tensor so weights and data share the same GPU or CPU.</p>
+ <article>
+ <h1>How to Fix "weight is on CPU but input is on CUDA" in PyTorch</h1>
+ <p class="byline" style="color:var(--text-dim);font-size:0.85rem;margin:0.25rem 0 1rem;">By <a href="https://zovo.one" rel="author" style="color:var(--text-dim);">Michael Lip</a>, builder of HeyTensor · Verified against the PyTorch docs and forums · Updated July 16, 2026</p>
+ <p class="qas" data-keyword="pytorch model moved to gpu but input is on cpu error fix">Fix the PyTorch device mismatch by calling .to(device) on both the model and every input tensor so weights and data share the same GPU or CPU.</p>
 
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
-        <p style="margin:0;line-height:1.7;"><strong>The error <code>weight is on CPU but input is on CUDA</code> means PyTorch requires all tensors in an operation to be on the same device. If you move your input data to GPU with .cuda() but forget to move the model, the model weights remain on CPU while the input is on CUDA. This device mismatch causes the error.</strong></p>
-      </div>
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">The error <code>weight is on CPU but input is on CUDA</code> means PyTorch requires all tensors in an operation to be on the same device. If you move your input data to GPU with .cuda() but forget to move the model, the model weights remain on CPU while the input is on CUDA. This device mismatch causes the error.</p>
+ </div>
 
-      <section id="device-debugger" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg,12px);padding:1.25rem 1.5rem;margin:1.5rem 0;">
-        <h2 style="margin-top:0;">Device Mismatch Debugger</h2>
-        <p style="color:var(--text-dim);font-size:0.9rem;margin-top:0;">Paste your PyTorch <code>RuntimeError</code> and get the exact one-line fix. Everything runs in your browser; nothing is sent to a server.</p>
-        <textarea id="dm-input" rows="3" placeholder="RuntimeError: Input type (torch.cuda.FloatTensor) and weight type (torch.FloatTensor) should be the same" style="width:100%;font-family:var(--font-display);font-size:14px;"></textarea>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-          <button class="btn btn-primary" id="dm-go" type="button">Diagnose and fix</button>
-          <button class="btn btn-secondary" id="dm-ex" type="button">Load example</button>
-        </div>
-        <div id="dm-out" style="margin-top:14px;"></div>
-      </section>
-      <script>
-      (function () {
-        'use strict';
-        var EXAMPLE = 'RuntimeError: Input type (torch.cuda.FloatTensor) and weight type (torch.FloatTensor) should be the same';
-        function esc(s) { var d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
-        function pattern() {
-          return [
-            'device = torch.device("cuda" if torch.cuda.is_available() else "cpu")',
-            'model = model.to(device)      # put the weights on the device',
-            'x = x.to(device)              # put every input tensor on it too',
-            '# in a training loop, move each batch:',
-            '#   xb, yb = xb.to(device), yb.to(device)'
-          ].join('\n');
-        }
-        function diagnose(err) {
-          var t = (err || '').toLowerCase();
-          var inputCuda = t.indexOf('input type (torch.cuda') >= 0 || t.indexOf('input is on cuda') >= 0;
-          var weightCuda = t.indexOf('weight type (torch.cuda') >= 0 || t.indexOf('weight is on cuda') >= 0;
-          var where, one;
-          if (inputCuda && !weightCuda) {
-            where = 'Your model (weights) is on the CPU while the input is on the GPU (CUDA).';
-            one = 'Move the MODEL to the device: model = model.to(device)';
-          } else if (weightCuda && !inputCuda) {
-            where = 'Your model is on the GPU (CUDA) while the input tensor is on the CPU.';
-            one = 'Move the INPUT to the device: x = x.to(device)';
-          } else if (t.indexOf('expected all tensors to be on the same device') >= 0) {
-            where = 'Two tensors in one operation are on different devices (for example cuda:0 and cpu).';
-            one = 'Move BOTH the model and every input tensor to the same device.';
-          } else if (t.trim() === '') {
-            where = 'No error pasted. The universal pattern below resolves every CPU/CUDA device mismatch.';
-            one = 'Put the model and all inputs on one device with .to(device).';
-          } else {
-            where = 'This reads as a device mismatch. Put the model and all input tensors on the same device.';
-            one = 'Put the model and all inputs on the same device with .to(device).';
-          }
-          return { where: where, one: one, code: pattern() };
-        }
-        function render(err) {
-          var out = document.getElementById('dm-out');
-          if (!out) return;
-          var r = diagnose(err);
-          var html = '<div class="result-box success">';
-          html += '<div style="font-weight:600;margin-bottom:6px;">Diagnosis</div>';
-          html += '<div style="color:var(--text-dim);margin-bottom:10px;">' + esc(r.where) + '</div>';
-          html += '<div style="font-weight:600;margin-bottom:6px;">One-line fix</div>';
-          html += '<div style="color:var(--green);font-family:var(--font-display);margin-bottom:10px;">' + esc(r.one) + '</div>';
-          html += '<div style="font-weight:600;margin-bottom:6px;">Copy-paste pattern</div>';
-          html += '<pre style="margin:0;"><code>' + esc(r.code) + '</code></pre>';
-          html += '</div>';
-          out.innerHTML = html;
-        }
-        function init() {
-          var go = document.getElementById('dm-go');
-          var ex = document.getElementById('dm-ex');
-          var inp = document.getElementById('dm-input');
-          if (!go || !inp) return;
-          go.addEventListener('click', function () { render(inp.value); });
-          if (ex) ex.addEventListener('click', function () { inp.value = EXAMPLE; render(EXAMPLE); });
-        }
-        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
-      })();
-      </script>
+ <section id="device-debugger" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg,12px);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <h2 style="margin-top:0;">Device Mismatch Debugger</h2>
+ <p style="color:var(--text-dim);font-size:0.9rem;margin-top:0;">Paste your PyTorch <code>RuntimeError</code> and get the exact one-line fix. Everything runs in your browser; nothing is sent to a server.</p>
+ <textarea id="dm-input" rows="3" placeholder="RuntimeError: Input type (torch.cuda.FloatTensor) and weight type (torch.FloatTensor) should be the same" style="width:100%;font-family:var(--font-display);font-size:14px;"></textarea>
+ <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+ <button class="btn btn-primary" id="dm-go" type="button">Diagnose and fix</button>
+ <button class="btn btn-secondary" id="dm-ex" type="button">Load example</button>
+ </div>
+ <div id="dm-out" style="margin-top:14px;"></div>
+ </section>
+ <script>
+   (function () {
+    'use strict';
+    var EXAMPLE = 'RuntimeError: Input type (torch.cuda.FloatTensor) and weight type (torch.FloatTensor) should be the same';
+    function esc(s) { var d = document.createElement('div'); d.textContent = String(s == null ? '' : s); return d.innerHTML; }
+    function pattern() {
+     return [
+      'device = torch.device("cuda" if torch.cuda.is_available() else "cpu")',
+      'model = model.to(device)   # put the weights on the device',
+      'x = x.to(device)       # put every input tensor on it too',
+      '# in a training loop, move each batch:',
+      '#  xb, yb = xb.to(device), yb.to(device)'
+     ].join('\n');
+    }
+    function diagnose(err) {
+     var t = (err || '').toLowerCase();
+     var inputCuda = t.indexOf('input type (torch.cuda') >= 0 || t.indexOf('input is on cuda') >= 0;
+     var weightCuda = t.indexOf('weight type (torch.cuda') >= 0 || t.indexOf('weight is on cuda') >= 0;
+     var where, one;
+     if (inputCuda && !weightCuda) {
+      where = 'Your model (weights) is on the CPU while the input is on the GPU (CUDA).';
+      one = 'Move the MODEL to the device: model = model.to(device)';
+     } else if (weightCuda && !inputCuda) {
+      where = 'Your model is on the GPU (CUDA) while the input tensor is on the CPU.';
+      one = 'Move the INPUT to the device: x = x.to(device)';
+     } else if (t.indexOf('expected all tensors to be on the same device') >= 0) {
+      where = 'Two tensors in one operation are on different devices (for example cuda:0 and cpu).';
+      one = 'Move BOTH the model and every input tensor to the same device.';
+     } else if (t.trim() === '') {
+      where = 'No error pasted. The universal pattern below resolves every CPU/CUDA device mismatch.';
+      one = 'Put the model and all inputs on one device with .to(device).';
+     } else {
+      where = 'This reads as a device mismatch. Put the model and all input tensors on the same device.';
+      one = 'Put the model and all inputs on the same device with .to(device).';
+     }
+     return { where: where, one: one, code: pattern() };
+    }
+    function render(err) {
+     var out = document.getElementById('dm-out');
+     if (!out) return;
+     var r = diagnose(err);
+     var html = '<div class="result-box success">';
+     html += '<div style="font-weight:600;margin-bottom:6px;">Diagnosis</div>';
+     html += '<div style="color:var(--text-dim);margin-bottom:10px;">' + esc(r.where) + '</div>';
+     html += '<div style="font-weight:600;margin-bottom:6px;">One-line fix</div>';
+     html += '<div style="color:var(--green);font-family:var(--font-display);margin-bottom:10px;">' + esc(r.one) + '</div>';
+     html += '<div style="font-weight:600;margin-bottom:6px;">Copy-paste pattern</div>';
+     html += '<pre style="margin:0;"><code>' + esc(r.code) + '</code></pre>';
+     html += '</div>';
+     out.innerHTML = html;
+    }
+    function init() {
+     var go = document.getElementById('dm-go');
+     var ex = document.getElementById('dm-ex');
+     var inp = document.getElementById('dm-input');
+     if (!go || !inp) return;
+     go.addEventListener('click', function () { render(inp.value); });
+     if (ex) ex.addEventListener('click', function () { inp.value = EXAMPLE; render(EXAMPLE); });
+    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+   })();
+   </script>
 
-      <h2>What Causes This Error</h2>
-      <p>PyTorch requires all tensors in an operation to be on the same device. If you move your input data to GPU with .cuda() but forget to move the model, the model weights remain on CPU while the input is on CUDA. This device mismatch causes the error.</p>
+ <h2>What Causes This Error</h2>
+ <p>PyTorch requires all tensors in an operation to be on the same device. If you move your input data to GPU with .cuda() but forget to move the model, the model weights remain on CPU while the input is on CUDA. This device mismatch causes the error.</p>
 
-      <h2>Forgetting to move the model to GPU</h2>
-      <p>Moving data to CUDA without moving the model first.</p>
-      <h3>The Error</h3>
-      <pre><code>model = MyModel()  # Model on CPU by default
-x = torch.randn(1, 3, 224, 224).cuda()  # Input on GPU
+ <h2>Forgetting to move the model to GPU</h2>
+ <p>Moving data to CUDA without moving the model first.</p>
+ <h3>The Error</h3>
+ <pre><code>model = MyModel() # Model on CPU by default
+x = torch.randn(1, 3, 224, 224).cuda() # Input on GPU
 output = model(x)
 # RuntimeError: Input type (torch.cuda.FloatTensor) and weight type
 # (torch.FloatTensor) should be the same</code></pre>
-      <h3>The Fix</h3>
-      <pre><code>device = torch.device(&quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;)
-model = MyModel().to(device)  # Move model to GPU
-x = torch.randn(1, 3, 224, 224).to(device)  # Move input to same device
-output = model(x)  # Works!
+ <h3>The Fix</h3>
+ <pre><code>device = torch.device(&quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;)
+model = MyModel().to(device) # Move model to GPU
+x = torch.randn(1, 3, 224, 224).to(device) # Move input to same device
+output = model(x) # Works!
 
 # Best practice: always use a device variable
 # This makes your code work on both CPU and GPU machines</code></pre>
-      <p>Always define a device variable and use .to(device) for both model and data. This pattern works on machines with or without a GPU.</p>
+ <p>Always define a device variable and use .to(device) for both model and data. This pattern works on machines with or without a GPU.</p>
 
-      <h2>Loading a checkpoint on the wrong device</h2>
-      <p>Loading a GPU-trained model on CPU or vice versa without map_location.</p>
-      <h3>The Error</h3>
-      <pre><code># Model was saved on GPU
+ <h2>Loading a checkpoint on the wrong device</h2>
+ <p>Loading a GPU-trained model on CPU or vice versa without map_location.</p>
+ <h3>The Error</h3>
+ <pre><code># Model was saved on GPU
 # torch.save(model.state_dict(), &quot;model.pth&quot;)
 
 # Loading on CPU machine without map_location
 model = MyModel()
-model.load_state_dict(torch.load(&quot;model.pth&quot;))  # Loads to GPU tensors!
-x = torch.randn(1, 3, 224, 224)  # CPU input
+model.load_state_dict(torch.load(&quot;model.pth&quot;)) # Loads to GPU tensors!
+x = torch.randn(1, 3, 224, 224) # CPU input
 output = model(x)
 # RuntimeError: weight is on CUDA but input is on CPU</code></pre>
-      <h3>The Fix</h3>
-      <pre><code># Always specify map_location when loading
+ <h3>The Fix</h3>
+ <pre><code># Always specify map_location when loading
 device = torch.device(&quot;cuda&quot; if torch.cuda.is_available() else &quot;cpu&quot;)
 model = MyModel()
 model.load_state_dict(torch.load(&quot;model.pth&quot;, map_location=device))
 model.to(device)
 
 x = torch.randn(1, 3, 224, 224).to(device)
-output = model(x)  # Works!
+output = model(x) # Works!
 
 # Or force CPU loading:
 # model.load_state_dict(torch.load(&quot;model.pth&quot;, map_location=&quot;cpu&quot;))</code></pre>
-      <p>torch.load with map_location ensures weights are loaded to the correct device regardless of where they were saved. Always use map_location=device for portable code.</p>
+ <p>torch.load with map_location ensures weights are loaded to the correct device regardless of where they were saved. Always use map_location=device for portable code.</p>
 
-      <h2>Mixed devices in the DataLoader loop</h2>
-      <p>Forgetting to move batch data to GPU inside the training loop.</p>
-      <h3>The Error</h3>
-      <pre><code>model = model.cuda()
+ <h2>Mixed devices in the DataLoader loop</h2>
+ <p>Forgetting to move batch data to GPU inside the training loop.</p>
+ <h3>The Error</h3>
+ <pre><code>model = model.cuda()
 for batch_x, batch_y in dataloader:
-    # batch_x and batch_y are on CPU (DataLoader default)
-    output = model(batch_x)  # Error! CPU input, CUDA model
-    loss = criterion(output, batch_y)</code></pre>
-      <h3>The Fix</h3>
-      <pre><code>device = torch.device(&quot;cuda&quot;)
+  # batch_x and batch_y are on CPU (DataLoader default)
+  output = model(batch_x) # Error! CPU input, CUDA model
+  loss = criterion(output, batch_y)</code></pre>
+ <h3>The Fix</h3>
+ <pre><code>device = torch.device(&quot;cuda&quot;)
 model = model.to(device)
 
 for batch_x, batch_y in dataloader:
-    batch_x = batch_x.to(device)  # Move to GPU
-    batch_y = batch_y.to(device)  # Move labels too!
-    output = model(batch_x)  # Works!
-    loss = criterion(output, batch_y)
+  batch_x = batch_x.to(device) # Move to GPU
+  batch_y = batch_y.to(device) # Move labels too!
+  output = model(batch_x) # Works!
+  loss = criterion(output, batch_y)
 
 # Pro tip: use non_blocking=True for async transfers
 # batch_x = batch_x.to(device, non_blocking=True)</code></pre>
-      <p>DataLoader returns CPU tensors by default. Move each batch to the model device at the start of each iteration. Use non_blocking=True with pinned memory for faster transfers.</p>
+ <p>DataLoader returns CPU tensors by default. Move each batch to the model device at the start of each iteration. Use non_blocking=True with pinned memory for faster transfers.</p>
 
-      <h2>Quick Debugging Checklist</h2>
-      <ul>
-        <li>Print tensor <code>.dtype</code> and <code>.device</code> before operations</li>
-        <li>Check for in-place operations: <code>+=</code>, <code>*=</code>, <code>.add_()</code>, <code>.mul_()</code></li>
-        <li>Verify shapes with <code>print(tensor.shape)</code> at each step</li>
-        <li>Use <code>torch.autograd.set_detect_anomaly(True)</code> to pinpoint the exact operation</li>
-      </ul>
-      <pre><code># Enable anomaly detection to find the exact line
+ <h2>Quick Debugging Checklist</h2>
+ <ul>
+ <li>Print tensor <code>.dtype</code> and <code>.device</code> before operations</li>
+ <li>Check for in-place operations: <code>+=</code>, <code>*=</code>, <code>.add_()</code>, <code>.mul_()</code></li>
+ <li>Verify shapes with <code>print(tensor.shape)</code> at each step</li>
+ <li>Use <code>torch.autograd.set_detect_anomaly(True)</code> to pinpoint the exact operation</li>
+ </ul>
+ <pre><code># Enable anomaly detection to find the exact line
 torch.autograd.set_detect_anomaly(True)
 
 # Check tensor properties
 print(f"dtype: {tensor.dtype}, device: {tensor.device}, shape: {tensor.shape}")
 print(f"requires_grad: {tensor.requires_grad}")</code></pre>
 
-      <section style="border:1px solid var(--border);border-radius:var(--radius,8px);padding:1rem 1.25rem;margin:2rem 0;font-size:0.9rem;color:var(--text-dim);">
-        <h2 style="font-size:1rem;margin-top:0;">How this fix was verified</h2>
-        <p style="margin-bottom:0.5rem;">Every code sample here was written and run against a current PyTorch install by the HeyTensor maintainer, and the error strings are quoted from real PyTorch reports. The rule is simple and documented: PyTorch operations require all tensors to share one device, so moving both the model and its inputs with <code>.to(device)</code> resolves the mismatch. Primary sources:</p>
-        <ul style="margin:0;">
-          <li><a href="https://discuss.pytorch.org/t/input-type-torch-floattensor-and-weight-type-torch-cuda-floattensor-should-be-the-same-or-input-should-be-a-mkldnn-tensor-and-weight-is-a-dense-tensor/152430" rel="nofollow">PyTorch Forums — "Input type and weight type should be the same"</a></li>
-          <li><a href="https://docs.pytorch.org/docs/stable/notes/cuda.html" rel="nofollow">PyTorch docs — CUDA semantics (<code>.to(device)</code> and cross-device rules)</a></li>
-        </ul>
-      </section>
+ <section style="border:1px solid var(--border);border-radius:var(--radius,8px);padding:1rem 1.25rem;margin:2rem 0;font-size:0.9rem;color:var(--text-dim);">
+ <h2 style="font-size:1rem;margin-top:0;">How this fix was verified</h2>
+ <p style="margin-bottom:0.5rem;">Every code sample here was written and run against a current PyTorch install by the HeyTensor maintainer, and the error strings are quoted from real PyTorch reports. The rule is simple and documented: PyTorch operations require all tensors to share one device, so moving both the model and its inputs with <code>.to(device)</code> resolves the mismatch. Primary sources:</p>
+ <ul style="margin:0;">
+ <li><a href="https://discuss.pytorch.org/t/input-type-torch-floattensor-and-weight-type-torch-cuda-floattensor-should-be-the-same-or-input-should-be-a-mkldnn-tensor-and-weight-is-a-dense-tensor/152430" rel="nofollow">PyTorch Forums, "Input type and weight type should be the same"</a></li>
+ <li><a href="https://docs.pytorch.org/docs/stable/notes/cuda.html" rel="nofollow">PyTorch docs, CUDA semantics (<code>.to(device)</code> and cross-device rules)</a></li>
+ </ul>
+ </section>
 
-      <section class="related-links">
-        <h2>Related Questions</h2>
-        <div class="related-grid">
-          <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">Fix CUDA out of memory</a>
-          <a href="/answers/runtime-error-expected-scalar-type-float.html" class="related-card">Fix "expected scalar type Float"</a>
-          <a href="/answers/no-module-named-torch.html" class="related-card">Fix "No module named torch"</a>
-          <a href="/answers/gradient-is-none-fix.html" class="related-card">Fix "gradient is None"</a>
-        
-        <a href="https://claudhq.com/errors/" class="related-card" title="Claude Code Error Reference">Troubleshoot AI Coding Errors — ClaudHQ Guide</a>
-      </div>
-      </section>
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">Fix CUDA out of memory</a>
+ <a href="/answers/runtime-error-expected-scalar-type-float.html" class="related-card">Fix "expected scalar type Float"</a>
+ <a href="/answers/no-module-named-torch.html" class="related-card">Fix "No module named torch"</a>
+ <a href="/answers/gradient-is-none-fix.html" class="related-card">Fix "gradient is None"</a>
+ 
+ <a href="https://claudhq.com/errors/" class="related-card" title="Claude Code Error Reference">Troubleshoot AI Coding Errors, ClaudHQ Guide</a>
+ </div>
+ </section>
 
-      <div style="text-align:center;margin:2rem 0;">
-        <a href="/tools/cuda-out-of-memory.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the CUDA OOM Solver</a>
-      </div>
-    </article>
-  </main>
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/cuda-out-of-memory.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the CUDA OOM Solver</a>
+ </div>
+ </article>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ </div>
+ </footer>
 
-  <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
-  <script src="/assets/js/share.js"></script>
+ <script src="/assets/js/share.js"></script>
 </body>
 </html>

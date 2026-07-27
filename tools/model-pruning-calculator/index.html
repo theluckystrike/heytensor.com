@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Model Pruning Calculator</title>
-    <meta name="description" content="Estimate model compression, accuracy loss, and inference speedup from pruning. Calculate compression ratio with magnitude, structured, or...">
-    <meta property="og:title" content="Model Pruning Calculator">
-    <meta property="og:description" content="Calculate model pruning compression ratio, accuracy impact, and inference speedup gains.">
-    <meta property="og:url" content="https://heytensor.com/tools/model-pruning-calculator">
-    <meta property="og:type" content="website">
-    <link rel="canonical" href="https://heytensor.com/tools/model-pruning-calculator">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "Model Pruning Calculator",
-      "description": "Calculate model compression from pruning",
-      "url": "https://heytensor.com/tools/model-pruning-calculator",
-      "applicationCategory": "UtilityApplication",
-      "author": {
-        "@type": "Organization",
-        "name": "heytensor.com"
-      }
-    }
-    </script>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Model Pruning Calculator</title>
+ <meta name="description" content="Estimate model compression, accuracy loss, and inference speedup from pruning. Calculate compression ratio with magnitude, structured, or...">
+ <meta property="og:title" content="Model Pruning Calculator">
+ <meta property="og:description" content="Calculate model pruning compression ratio, accuracy impact, and inference speedup gains.">
+ <meta property="og:url" content="https://heytensor.com/tools/model-pruning-calculator">
+ <meta property="og:type" content="website">
+ <link rel="canonical" href="https://heytensor.com/tools/model-pruning-calculator">
+ <script type="application/ld+json">
+  {
+   "@context": "https://schema.org",
+   "@type": "WebApplication",
+   "name": "Model Pruning Calculator",
+   "description": "Calculate model compression from pruning",
+   "url": "https://heytensor.com/tools/model-pruning-calculator",
+   "applicationCategory": "UtilityApplication",
+   "author": {
+    "@type": "Organization",
+    "name": "heytensor.com"
+   }
+  }
+  </script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,285 +34,285 @@
 </head>
 <body>
 <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
-    <div class="container">
-        <h1>Model Pruning Calculator</h1>
-        <p class="subtitle">Estimate compression ratio, accuracy loss, and inference speedup</p>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+ <div class="container">
+ <h1>Model Pruning Calculator</h1>
+ <p class="subtitle">Estimate compression ratio, accuracy loss, and inference speedup</p>
 
-        <div class="main-grid">
-            <div class="controls">
-                <div class="control-group">
-                    <label>Original Model Size (Params)</label>
-                    <div class="slider-container">
-                        <input type="range" id="paramsSlider" min="0" max="70" value="7" step="0.1">
-                        <span class="value-display" id="paramsValue">7.0 B</span>
-                    </div>
-                </div>
+ <div class="main-grid">
+ <div class="controls">
+ <div class="control-group">
+ <label>Original Model Size (Params)</label>
+ <div class="slider-container">
+ <input type="range" id="paramsSlider" min="0" max="70" value="7" step="0.1">
+ <span class="value-display" id="paramsValue">7.0 B</span>
+ </div>
+ </div>
 
-                <div class="control-group">
-                    <label>Target Sparsity (%)</label>
-                    <div class="slider-container">
-                        <input type="range" id="sparsitySlider" min="0" max="95" value="50" step="5">
-                        <span class="value-display" id="sparsityValue">50%</span>
-                    </div>
-                </div>
+ <div class="control-group">
+ <label>Target Sparsity (%)</label>
+ <div class="slider-container">
+ <input type="range" id="sparsitySlider" min="0" max="95" value="50" step="5">
+ <span class="value-display" id="sparsityValue">50%</span>
+ </div>
+ </div>
 
-                <div class="control-group">
-                    <label>Pruning Method</label>
-                    <select id="methodSelect">
-                        <option value="magnitude">Magnitude Pruning</option>
-                        <option value="structured">Structured Pruning</option>
-                        <option value="unstructured">Unstructured Pruning</option>
-                    </select>
-                </div>
+ <div class="control-group">
+ <label>Pruning Method</label>
+ <select id="methodSelect">
+ <option value="magnitude">Magnitude Pruning</option>
+ <option value="structured">Structured Pruning</option>
+ <option value="unstructured">Unstructured Pruning</option>
+ </select>
+ </div>
 
-                <div class="method-info">
-                    <h4 id="methodTitle">Magnitude Pruning</h4>
-                    <p id="methodDesc">Removes smallest weight values. Simple and widely used. Flexible sparsity patterns.</p>
-                </div>
-            </div>
+ <div class="method-info">
+ <h4 id="methodTitle">Magnitude Pruning</h4>
+ <p id="methodDesc">Removes smallest weight values. Simple and widely used. Flexible sparsity patterns.</p>
+ </div>
+ </div>
 
-            <div class="results">
-                <div class="result-card">
-                    <div class="result-label">Remaining Parameters</div>
-                    <div class="result-value" id="remainingParams">3.5 B</div>
-                    <div class="result-subtext" id="remainingParamsPercent">50% of original</div>
-                </div>
+ <div class="results">
+ <div class="result-card">
+ <div class="result-label">Remaining Parameters</div>
+ <div class="result-value" id="remainingParams">3.5 B</div>
+ <div class="result-subtext" id="remainingParamsPercent">50% of original</div>
+ </div>
 
-                <div class="result-card">
-                    <div class="result-label">Compression Ratio</div>
-                    <div class="result-value" id="compressionRatio">2.0x</div>
-                    <div class="result-subtext">Model size reduction</div>
-                </div>
+ <div class="result-card">
+ <div class="result-label">Compression Ratio</div>
+ <div class="result-value" id="compressionRatio">2.0x</div>
+ <div class="result-subtext">Model size reduction</div>
+ </div>
 
-                <div class="result-card">
-                    <div class="result-label">Estimated Accuracy Drop</div>
-                    <div class="result-value" id="accuracyDrop">1.2%</div>
-                    <div class="result-subtext" id="accuracyNote">Empirical estimate</div>
-                </div>
+ <div class="result-card">
+ <div class="result-label">Estimated Accuracy Drop</div>
+ <div class="result-value" id="accuracyDrop">1.2%</div>
+ <div class="result-subtext" id="accuracyNote">Empirical estimate</div>
+ </div>
 
-                <div class="result-card">
-                    <div class="result-label">Inference Speedup</div>
-                    <div class="result-value" id="speedup">1.5x</div>
-                    <div class="result-subtext">Actual speedup depends on hardware</div>
-                </div>
-            </div>
-        </div>
+ <div class="result-card">
+ <div class="result-label">Inference Speedup</div>
+ <div class="result-value" id="speedup">1.5x</div>
+ <div class="result-subtext">Actual speedup depends on hardware</div>
+ </div>
+ </div>
+ </div>
 
-        <div class="controls">
-            <h3 style="color: #00d4aa; margin-bottom: 15px;">Detailed Metrics</h3>
+ <div class="controls">
+ <h3 style="color: #00d4aa; margin-bottom: 15px;">Detailed Metrics</h3>
 
-            <div class="metric-bar">
-                <div class="bar-label">
-                    <span class="bar-label-left">Model Size Reduction</span>
-                    <span class="bar-label-right" id="sizeReductionLabel">50%</span>
-                </div>
-                <div class="bar-fill">
-                    <div class="bar-progress" id="sizeReductionBar"></div>
-                </div>
-            </div>
+ <div class="metric-bar">
+ <div class="bar-label">
+ <span class="bar-label-left">Model Size Reduction</span>
+ <span class="bar-label-right" id="sizeReductionLabel">50%</span>
+ </div>
+ <div class="bar-fill">
+ <div class="bar-progress" id="sizeReductionBar"></div>
+ </div>
+ </div>
 
-            <div class="metric-bar">
-                <div class="bar-label">
-                    <span class="bar-label-left">Inference Speedup Potential</span>
-                    <span class="bar-label-right" id="speedupLabel">1.5x</span>
-                </div>
-                <div class="bar-fill">
-                    <div class="bar-progress" id="speedupBar"></div>
-                </div>
-            </div>
+ <div class="metric-bar">
+ <div class="bar-label">
+ <span class="bar-label-left">Inference Speedup Potential</span>
+ <span class="bar-label-right" id="speedupLabel">1.5x</span>
+ </div>
+ <div class="bar-fill">
+ <div class="bar-progress" id="speedupBar"></div>
+ </div>
+ </div>
 
-            <div class="metric-bar">
-                <div class="bar-label">
-                    <span class="bar-label-left">Risk of Accuracy Drop</span>
-                    <span class="bar-label-right" id="riskLabel">Medium</span>
-                </div>
-                <div class="bar-fill">
-                    <div class="bar-progress" id="riskBar" style="background: linear-gradient(90deg, #fbbf24, #f97316);"></div>
-                </div>
-            </div>
+ <div class="metric-bar">
+ <div class="bar-label">
+ <span class="bar-label-left">Risk of Accuracy Drop</span>
+ <span class="bar-label-right" id="riskLabel">Medium</span>
+ </div>
+ <div class="bar-fill">
+ <div class="bar-progress" id="riskBar" style="background: linear-gradient(90deg, #fbbf24, #f97316);"></div>
+ </div>
+ </div>
 
-            <div style="background: rgba(0, 212, 170, 0.08); border-left: 3px solid #00d4aa; padding: 15px; border-radius: 6px; margin-top: 20px;">
-                <h4 style="color: #00d4aa; margin-bottom: 10px;">Recommendation</h4>
-                <p style="color: #d1d5db; font-size: 0.9rem;" id="recommendation">
-                    With 50% sparsity using magnitude pruning, you can expect a 2x compression ratio with minimal accuracy loss.
-                    Consider fine-tuning after pruning to recover any accuracy degradation.
-                </p>
-            </div>
-        </div>
-    </div>
+ <div style="background: rgba(0, 212, 170, 0.08); border-left: 3px solid #00d4aa; padding: 15px; border-radius: 6px; margin-top: 20px;">
+ <h4 style="color: #00d4aa; margin-bottom: 10px;">Recommendation</h4>
+ <p style="color: #d1d5db; font-size: 0.9rem;" id="recommendation">
+ With 50% sparsity using magnitude pruning, you can expect a 2x compression ratio with minimal accuracy loss.
+ Consider fine-tuning after pruning to recover any accuracy degradation.
+ </p>
+ </div>
+ </div>
+ </div>
 
-    <div class="footer">
-        © 2026 heytensor.com — ML Engineering Tools
-    </div>
+ <div class="footer">
+ © 2026 heytensor.com, ML Engineering Tools
+ </div>
 
-    <script>
-        const paramsSlider = document.getElementById('paramsSlider');
-        const sparsitySlider = document.getElementById('sparsitySlider');
-        const methodSelect = document.getElementById('methodSelect');
+ <script>
+    const paramsSlider = document.getElementById('paramsSlider');
+    const sparsitySlider = document.getElementById('sparsitySlider');
+    const methodSelect = document.getElementById('methodSelect');
 
-        const paramsValue = document.getElementById('paramsValue');
-        const sparsityValue = document.getElementById('sparsityValue');
-        const remainingParams = document.getElementById('remainingParams');
-        const remainingParamsPercent = document.getElementById('remainingParamsPercent');
-        const compressionRatio = document.getElementById('compressionRatio');
-        const accuracyDrop = document.getElementById('accuracyDrop');
-        const accuracyNote = document.getElementById('accuracyNote');
-        const speedup = document.getElementById('speedup');
-        const sizeReductionLabel = document.getElementById('sizeReductionLabel');
-        const speedupLabel = document.getElementById('speedupLabel');
-        const riskLabel = document.getElementById('riskLabel');
-        const recommendation = document.getElementById('recommendation');
-        const methodTitle = document.getElementById('methodTitle');
-        const methodDesc = document.getElementById('methodDesc');
+    const paramsValue = document.getElementById('paramsValue');
+    const sparsityValue = document.getElementById('sparsityValue');
+    const remainingParams = document.getElementById('remainingParams');
+    const remainingParamsPercent = document.getElementById('remainingParamsPercent');
+    const compressionRatio = document.getElementById('compressionRatio');
+    const accuracyDrop = document.getElementById('accuracyDrop');
+    const accuracyNote = document.getElementById('accuracyNote');
+    const speedup = document.getElementById('speedup');
+    const sizeReductionLabel = document.getElementById('sizeReductionLabel');
+    const speedupLabel = document.getElementById('speedupLabel');
+    const riskLabel = document.getElementById('riskLabel');
+    const recommendation = document.getElementById('recommendation');
+    const methodTitle = document.getElementById('methodTitle');
+    const methodDesc = document.getElementById('methodDesc');
 
-        const sizeReductionBar = document.getElementById('sizeReductionBar');
-        const speedupBar = document.getElementById('speedupBar');
-        const riskBar = document.getElementById('riskBar');
+    const sizeReductionBar = document.getElementById('sizeReductionBar');
+    const speedupBar = document.getElementById('speedupBar');
+    const riskBar = document.getElementById('riskBar');
 
-        const methodInfo = {
-            magnitude: {
-                title: 'Magnitude Pruning',
-                desc: 'Removes smallest weight values. Simple, widely used, flexible sparsity patterns. Requires careful fine-tuning.'
-            },
-            structured: {
-                title: 'Structured Pruning',
-                desc: 'Removes entire channels/filters. Better hardware utilization, faster inference, easier deployment. May have higher accuracy loss.'
-            },
-            unstructured: {
-                title: 'Unstructured Pruning',
-                desc: 'Removes individual weights. Most flexible, highest compression, but requires specialized hardware/libraries for speedup.'
-            }
-        };
+    const methodInfo = {
+      magnitude: {
+        title: 'Magnitude Pruning',
+        desc: 'Removes smallest weight values. Simple, widely used, flexible sparsity patterns. Requires careful fine-tuning.'
+      },
+      structured: {
+        title: 'Structured Pruning',
+        desc: 'Removes entire channels/filters. Better hardware utilization, faster inference, easier deployment. May have higher accuracy loss.'
+      },
+      unstructured: {
+        title: 'Unstructured Pruning',
+        desc: 'Removes individual weights. Most flexible, highest compression, but requires specialized hardware/libraries for speedup.'
+      }
+    };
 
-        function formatNumber(num) {
-            if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
-            if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
-            return num.toFixed(0);
-        }
+    function formatNumber(num) {
+      if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+      if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+      return num.toFixed(0);
+    }
 
-        function calculate() {
-            const params = parseFloat(paramsSlider.value) * 1e9;
-            const sparsity = parseFloat(sparsitySlider.value);
-            const method = methodSelect.value;
+    function calculate() {
+      const params = parseFloat(paramsSlider.value) * 1e9;
+      const sparsity = parseFloat(sparsitySlider.value);
+      const method = methodSelect.value;
 
-            paramsValue.textContent = formatNumber(params);
-            sparsityValue.textContent = sparsity.toFixed(0) + '%';
+      paramsValue.textContent = formatNumber(params);
+      sparsityValue.textContent = sparsity.toFixed(0) + '%';
 
-            // Calculate remaining parameters
-            const remaining = params * (1 - sparsity / 100);
-            const retainedPercent = 100 - sparsity;
+      // Calculate remaining parameters
+      const remaining = params * (1 - sparsity / 100);
+      const retainedPercent = 100 - sparsity;
 
-            remainingParams.textContent = formatNumber(remaining);
-            remainingParamsPercent.textContent = retainedPercent.toFixed(0) + '% of original';
+      remainingParams.textContent = formatNumber(remaining);
+      remainingParamsPercent.textContent = retainedPercent.toFixed(0) + '% of original';
 
-            // Compression ratio
-            const compRatio = params / remaining;
+      // Compression ratio
+      const compRatio = params / remaining;
 
-            compressionRatio.textContent = compRatio.toFixed(2) + 'x';
+      compressionRatio.textContent = compRatio.toFixed(2) + 'x';
 
-            // Accuracy drop estimation (empirical)
-            let accuracyDropEstimate = 0;
-            if (sparsity <= 30) {
-                accuracyDropEstimate = sparsity * 0.02;
-            } else if (sparsity <= 50) {
-                accuracyDropEstimate = 0.6 + (sparsity - 30) * 0.03;
-            } else if (sparsity <= 70) {
-                accuracyDropEstimate = 1.2 + (sparsity - 50) * 0.05;
-            } else if (sparsity <= 90) {
-                accuracyDropEstimate = 2.2 + (sparsity - 70) * 0.1;
-            } else {
-                accuracyDropEstimate = 4.2 + (sparsity - 90) * 0.3;
-            }
+      // Accuracy drop estimation (empirical)
+      let accuracyDropEstimate = 0;
+      if (sparsity <= 30) {
+        accuracyDropEstimate = sparsity * 0.02;
+      } else if (sparsity <= 50) {
+        accuracyDropEstimate = 0.6 + (sparsity - 30) * 0.03;
+      } else if (sparsity <= 70) {
+        accuracyDropEstimate = 1.2 + (sparsity - 50) * 0.05;
+      } else if (sparsity <= 90) {
+        accuracyDropEstimate = 2.2 + (sparsity - 70) * 0.1;
+      } else {
+        accuracyDropEstimate = 4.2 + (sparsity - 90) * 0.3;
+      }
 
-            // Method-specific adjustments
-            if (method === 'structured') {
-                accuracyDropEstimate *= 1.3;
-            } else if (method === 'unstructured') {
-                accuracyDropEstimate *= 0.8;
-            }
+      // Method-specific adjustments
+      if (method === 'structured') {
+        accuracyDropEstimate *= 1.3;
+      } else if (method === 'unstructured') {
+        accuracyDropEstimate *= 0.8;
+      }
 
-            accuracyDrop.textContent = accuracyDropEstimate.toFixed(1) + '%';
+      accuracyDrop.textContent = accuracyDropEstimate.toFixed(1) + '%';
 
-            const accuracyNotes = {
-                magnitude: 'Typical estimate for magnitude pruning + fine-tuning',
-                structured: 'Structured pruning may have higher initial drop',
-                unstructured: 'Unstructured typically recovers better with fine-tuning'
-            };
-            accuracyNote.textContent = accuracyNotes[method];
+      const accuracyNotes = {
+        magnitude: 'Typical estimate for magnitude pruning + fine-tuning',
+        structured: 'Structured pruning may have higher initial drop',
+        unstructured: 'Unstructured typically recovers better with fine-tuning'
+      };
+      accuracyNote.textContent = accuracyNotes[method];
 
-            // Inference speedup (method-dependent)
-            let speedupEstimate = 1;
-            if (method === 'magnitude') {
-                speedupEstimate = Math.sqrt(compRatio) * 0.8; // Magnitude has overhead
-            } else if (method === 'structured') {
-                speedupEstimate = compRatio * 0.7; // Structured is easier to optimize
-            } else {
-                speedupEstimate = compRatio * 0.5; // Unstructured hard to exploit
-            }
+      // Inference speedup (method-dependent)
+      let speedupEstimate = 1;
+      if (method === 'magnitude') {
+        speedupEstimate = Math.sqrt(compRatio) * 0.8; // Magnitude has overhead
+      } else if (method === 'structured') {
+        speedupEstimate = compRatio * 0.7; // Structured is easier to optimize
+      } else {
+        speedupEstimate = compRatio * 0.5; // Unstructured hard to exploit
+      }
 
-            speedup.textContent = speedupEstimate.toFixed(2) + 'x';
+      speedup.textContent = speedupEstimate.toFixed(2) + 'x';
 
-            // Update bars
-            sizeReductionLabel.textContent = sparsity.toFixed(0) + '%';
-            sizeReductionBar.style.width = sparsity + '%';
+      // Update bars
+      sizeReductionLabel.textContent = sparsity.toFixed(0) + '%';
+      sizeReductionBar.style.width = sparsity + '%';
 
-            const speedupPercent = Math.min((speedupEstimate - 1) / 2 * 100, 100);
-            speedupLabel.textContent = speedupEstimate.toFixed(2) + 'x';
-            speedupBar.style.width = speedupPercent + '%';
+      const speedupPercent = Math.min((speedupEstimate - 1) / 2 * 100, 100);
+      speedupLabel.textContent = speedupEstimate.toFixed(2) + 'x';
+      speedupBar.style.width = speedupPercent + '%';
 
-            let riskPercent = Math.min(accuracyDropEstimate / 5 * 100, 100);
-            riskBar.style.width = riskPercent + '%';
-            if (accuracyDropEstimate < 1) {
-                riskLabel.textContent = 'Low';
-            } else if (accuracyDropEstimate < 2.5) {
-                riskLabel.textContent = 'Medium';
-            } else {
-                riskLabel.textContent = 'High';
-            }
+      let riskPercent = Math.min(accuracyDropEstimate / 5 * 100, 100);
+      riskBar.style.width = riskPercent + '%';
+      if (accuracyDropEstimate < 1) {
+        riskLabel.textContent = 'Low';
+      } else if (accuracyDropEstimate < 2.5) {
+        riskLabel.textContent = 'Medium';
+      } else {
+        riskLabel.textContent = 'High';
+      }
 
-            // Update method info
-            methodTitle.textContent = methodInfo[method].title;
-            methodDesc.textContent = methodInfo[method].desc;
+      // Update method info
+      methodTitle.textContent = methodInfo[method].title;
+      methodDesc.textContent = methodInfo[method].desc;
 
-            // Recommendation
-            let rec = `With ${sparsity.toFixed(0)}% sparsity using ${methodInfo[method].title.split(' ')[0].toLowerCase()}, `;
-            rec += `you can expect a ${compRatio.toFixed(2)}x compression ratio with ~${accuracyDropEstimate.toFixed(1)}% accuracy loss. `;
+      // Recommendation
+      let rec = `With ${sparsity.toFixed(0)}% sparsity using ${methodInfo[method].title.split(' ')[0].toLowerCase()}, `;
+      rec += `you can expect a ${compRatio.toFixed(2)}x compression ratio with ~${accuracyDropEstimate.toFixed(1)}% accuracy loss. `;
 
-            if (method === 'structured') {
-                rec += 'Structured pruning offers best hardware efficiency. ';
-            } else if (method === 'unstructured') {
-                rec += 'Unstructured pruning maximizes compression but requires sparse tensor libraries. ';
-            }
+      if (method === 'structured') {
+        rec += 'Structured pruning offers best hardware efficiency. ';
+      } else if (method === 'unstructured') {
+        rec += 'Unstructured pruning maximizes compression but requires sparse tensor libraries. ';
+      }
 
-            rec += 'Always fine-tune after pruning to recover accuracy.';
+      rec += 'Always fine-tune after pruning to recover accuracy.';
 
-            recommendation.textContent = rec;
-        }
+      recommendation.textContent = rec;
+    }
 
-        paramsSlider.addEventListener('input', calculate);
-        sparsitySlider.addEventListener('input', calculate);
-        methodSelect.addEventListener('change', calculate);
+    paramsSlider.addEventListener('input', calculate);
+    sparsitySlider.addEventListener('input', calculate);
+    methodSelect.addEventListener('change', calculate);
 
-        calculate();
-    </script>
+    calculate();
+  </script>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -320,14 +320,14 @@
 <div style="margin:30px auto;max-width:728px;text-align:center;padding:18px 24px;background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:10px">
 <p style="margin:0 0 6px;color:#94a3b8;font-size:0.85rem">Recommended by our team</p>
 <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:600;font-size:1.05rem;text-decoration:none">BeLikeNative.com</a>
-<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
 </div>
 <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 </body>
 </html>

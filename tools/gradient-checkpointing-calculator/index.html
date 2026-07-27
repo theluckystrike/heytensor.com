@@ -7,7 +7,7 @@
 <meta name="description" content="Compare memory savings: standard vs gradient checkpointing vs gradient accumulation. Free calculator.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://heytensor.com/tools/gradient-checkpointing-calculator/">
-<meta property="og:title" content="Gradient Checkpointing Calculator — HeyTensor">
+<meta property="og:title" content="Gradient Checkpointing Calculator, HeyTensor">
 <meta property="og:description" content="Calculate memory savings with gradient checkpointing and accumulation">
 <meta property="og:url" content="https://heytensor.com/tools/gradient-checkpointing-calculator/">
 <meta property="og:type" content="website">
@@ -15,13 +15,13 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Gradient Checkpointing Calculator",
-  "url": "https://heytensor.com/tools/gradient-checkpointing-calculator/",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "description": "Compare memory savings from gradient checkpointing and gradient accumulation"
+ "@context": "https://schema.org",
+ "@type": "WebApplication",
+ "name": "Gradient Checkpointing Calculator",
+ "url": "https://heytensor.com/tools/gradient-checkpointing-calculator/",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "description": "Compare memory savings from gradient checkpointing and gradient accumulation"
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,247 +35,247 @@
 
 <div class="container">
 <h1>Gradient Checkpointing Calculator</h1>
-    <p class="subtitle">Compare memory & time tradeoffs for optimization strategies</p>
+ <p class="subtitle">Compare memory & time tradeoffs for optimization strategies</p>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="tool-section">
-    <h2 style="color: #e8e8e8; margin-bottom: 24px;">Model Configuration</h2>
+ <div class="tool-section">
+ <h2 style="color: #e8e8e8; margin-bottom: 24px;">Model Configuration</h2>
 
-    <div class="input-grid">
-      <div class="input-group">
-        <label for="modelParams">Model Parameters (M)</label>
-        <input type="number" id="modelParams" placeholder="e.g., 7000" min="1" value="7000">
-        <p class="help-text">Total in millions</p>
-      </div>
+ <div class="input-grid">
+ <div class="input-group">
+ <label for="modelParams">Model Parameters (M)</label>
+ <input type="number" id="modelParams" placeholder="e.g., 7000" min="1" value="7000">
+ <p class="help-text">Total in millions</p>
+ </div>
 
-      <div class="input-group">
-        <label for="batchSize">Batch Size</label>
-        <input type="number" id="batchSize" placeholder="e.g., 32" min="1" value="32">
-        <p class="help-text">Samples per batch</p>
-      </div>
+ <div class="input-group">
+ <label for="batchSize">Batch Size</label>
+ <input type="number" id="batchSize" placeholder="e.g., 32" min="1" value="32">
+ <p class="help-text">Samples per batch</p>
+ </div>
 
-      <div class="input-group">
-        <label for="seqLength">Sequence Length</label>
-        <input type="number" id="seqLength" placeholder="e.g., 512" min="1" value="512">
-        <p class="help-text">Input length (tokens)</p>
-      </div>
+ <div class="input-group">
+ <label for="seqLength">Sequence Length</label>
+ <input type="number" id="seqLength" placeholder="e.g., 512" min="1" value="512">
+ <p class="help-text">Input length (tokens)</p>
+ </div>
 
-      <div class="input-group">
-        <label for="numLayers">Number of Layers</label>
-        <input type="number" id="numLayers" placeholder="e.g., 32" min="1" value="32">
-        <p class="help-text">Transformer layers</p>
-      </div>
+ <div class="input-group">
+ <label for="numLayers">Number of Layers</label>
+ <input type="number" id="numLayers" placeholder="e.g., 32" min="1" value="32">
+ <p class="help-text">Transformer layers</p>
+ </div>
 
-      <div class="input-group">
-        <label for="accumSteps">Gradient Accumulation Steps</label>
-        <input type="number" id="accumSteps" placeholder="e.g., 1" min="1" value="1">
-        <p class="help-text">Accumulation steps (1 = no accumulation)</p>
-      </div>
+ <div class="input-group">
+ <label for="accumSteps">Gradient Accumulation Steps</label>
+ <input type="number" id="accumSteps" placeholder="e.g., 1" min="1" value="1">
+ <p class="help-text">Accumulation steps (1 = no accumulation)</p>
+ </div>
 
-      <div class="input-group">
-        <label for="checkpointSegments">Checkpoint Segments</label>
-        <input type="number" id="checkpointSegments" placeholder="e.g., 1" min="1" value="1">
-        <p class="help-text">Layers per checkpoint (1 = all layers)</p>
-      </div>
-    </div>
+ <div class="input-group">
+ <label for="checkpointSegments">Checkpoint Segments</label>
+ <input type="number" id="checkpointSegments" placeholder="e.g., 1" min="1" value="1">
+ <p class="help-text">Layers per checkpoint (1 = all layers)</p>
+ </div>
+ </div>
 
-    <button class="calculation-button" onclick="calculateMemory()">Calculate Memory Savings</button>
-  </div>
+ <button class="calculation-button" onclick="calculateMemory()">Calculate Memory Savings</button>
+ </div>
 
-  <div class="results-section" id="resultsSection">
-    <h2 style="color: #e8e8e8; margin-bottom: 20px;">Memory & Performance Comparison</h2>
+ <div class="results-section" id="resultsSection">
+ <h2 style="color: #e8e8e8; margin-bottom: 20px;">Memory & Performance Comparison</h2>
 
-    <div class="table-scroll"><table class="comparison-table" id="comparisonTable">
-      <thead>
-        <tr>
-          <th>Strategy</th>
-          <th>Memory (GB)</th>
-          <th>Savings</th>
-          <th>Speed (% vs standard)</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-      </tbody>
-    </table></div>
+ <div class="table-scroll"><table class="comparison-table" id="comparisonTable">
+ <thead>
+ <tr>
+ <th>Strategy</th>
+ <th>Memory (GB)</th>
+ <th>Savings</th>
+ <th>Speed (% vs standard)</th>
+ </tr>
+ </thead>
+ <tbody id="tableBody">
+ </tbody>
+ </table></div>
 
-    <div class="result-grid">
-      <div class="result-card">
-        <div class="result-label">Max Memory Reduction</div>
-        <div class="result-value" id="maxSavings">0%</div>
-      </div>
-      <div class="result-card">
-        <div class="result-label">Recommended Strategy</div>
-        <div class="result-value" id="recommendedStrategy" style="font-size: 1rem; color: #38bdf8;">Gradient Checkpointing</div>
-      </div>
-      <div class="result-card">
-        <div class="result-label">Time Overhead</div>
-        <div class="result-value" id="timeOverhead">15%</div>
-      </div>
-    </div>
+ <div class="result-grid">
+ <div class="result-card">
+ <div class="result-label">Max Memory Reduction</div>
+ <div class="result-value" id="maxSavings">0%</div>
+ </div>
+ <div class="result-card">
+ <div class="result-label">Recommended Strategy</div>
+ <div class="result-value" id="recommendedStrategy" style="font-size: 1rem; color: #38bdf8;">Gradient Checkpointing</div>
+ </div>
+ <div class="result-card">
+ <div class="result-label">Time Overhead</div>
+ <div class="result-value" id="timeOverhead">15%</div>
+ </div>
+ </div>
 
-    <div class="recommendation" id="recommendationText"></div>
-  </div>
+ <div class="recommendation" id="recommendationText"></div>
+ </div>
 
-  <div class="partner-section">
-    <p class="partner-label">Recommended by our team</p>
-    <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
-    <p class="partner-desc">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
-  </div>
+ <div class="partner-section">
+ <p class="partner-label">Recommended by our team</p>
+ <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
+ <p class="partner-desc">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
+ </div>
 
-  <div class="ad-section">
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-  </div>
+ <div class="ad-section">
+ <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 </div>
 
 <script>
 function calculateMemory() {
-  const modelParams = parseFloat(document.getElementById('modelParams').value) * 1_000_000 || 0;
-  const batchSize = parseInt(document.getElementById('batchSize').value) || 1;
-  const seqLength = parseInt(document.getElementById('seqLength').value) || 512;
-  const numLayers = parseInt(document.getElementById('numLayers').value) || 32;
-  const accumSteps = parseInt(document.getElementById('accumSteps').value) || 1;
-  const checkpointSegments = parseInt(document.getElementById('checkpointSegments').value) || 1;
+ const modelParams = parseFloat(document.getElementById('modelParams').value) * 1_000_000 || 0;
+ const batchSize = parseInt(document.getElementById('batchSize').value) || 1;
+ const seqLength = parseInt(document.getElementById('seqLength').value) || 512;
+ const numLayers = parseInt(document.getElementById('numLayers').value) || 32;
+ const accumSteps = parseInt(document.getElementById('accumSteps').value) || 1;
+ const checkpointSegments = parseInt(document.getElementById('checkpointSegments').value) || 1;
 
-  if (modelParams <= 0) {
-    alert('Please enter valid parameters');
-    return;
+ if (modelParams <= 0) {
+  alert('Please enter valid parameters');
+  return;
+ }
+
+ // Estimate activation memory per layer
+ const hiddenDim = Math.sqrt(modelParams / 12);
+ const activationMemPerLayer = (seqLength * batchSize * hiddenDim * 4) / (1024 ** 3);
+
+ // Total activations (all layers)
+ const totalActivations = activationMemPerLayer * numLayers;
+
+ // 1. Standard training (no optimizations)
+ const weightsMemory = (modelParams * 4) / (1024 ** 3);
+ const gradientsMemory = weightsMemory;
+ const optimizerMemory = weightsMemory * 2; // Adam optimizer states
+ const standardMemory = weightsMemory + totalActivations + gradientsMemory + optimizerMemory;
+
+ // 2. Gradient Accumulation only
+ // Doesn't need to store gradients for accumulated steps
+ const accumMemory = weightsMemory + (totalActivations / accumSteps) + gradientsMemory + optimizerMemory;
+
+ // 3. Gradient Checkpointing only
+ // Only store checkpoints instead of all activations
+ const checkpointedActivations = (totalActivations / checkpointSegments) * 2; // 2x for recomputation
+ const checkpointMemory = weightsMemory + checkpointedActivations + gradientsMemory + optimizerMemory;
+
+ // 4. Combined: Checkpointing + Accumulation
+ const combinedCheckpoints = (totalActivations / checkpointSegments) * 2;
+ const combinedMemory = weightsMemory + (combinedCheckpoints / accumSteps) + gradientsMemory + optimizerMemory;
+
+ // Calculate speedup/slowdown
+ const standardSpeed = 100;
+ const accumSpeed = 95; // slight overhead
+ const checkpointSpeed = 75; // significant recomputation cost
+ const combinedSpeed = 70; // combined overhead
+
+ // Build table
+ const rows = [
+  {
+   name: 'Standard Training',
+   memory: standardMemory,
+   savings: 0,
+   speed: standardSpeed
+  },
+  {
+   name: 'Gradient Accumulation',
+   memory: accumMemory,
+   savings: ((standardMemory - accumMemory) / standardMemory) * 100,
+   speed: accumSpeed
+  },
+  {
+   name: 'Gradient Checkpointing',
+   memory: checkpointMemory,
+   savings: ((standardMemory - checkpointMemory) / standardMemory) * 100,
+   speed: checkpointSpeed
+  },
+  {
+   name: 'Checkpointing + Accumulation',
+   memory: combinedMemory,
+   savings: ((standardMemory - combinedMemory) / standardMemory) * 100,
+   speed: combinedSpeed
   }
+ ];
 
-  // Estimate activation memory per layer
-  const hiddenDim = Math.sqrt(modelParams / 12);
-  const activationMemPerLayer = (seqLength * batchSize * hiddenDim * 4) / (1024 ** 3);
+ let tableHTML = '';
+ let maxSavings = 0;
+ let bestStrategy = 'Standard';
 
-  // Total activations (all layers)
-  const totalActivations = activationMemPerLayer * numLayers;
-
-  // 1. Standard training (no optimizations)
-  const weightsMemory = (modelParams * 4) / (1024 ** 3);
-  const gradientsMemory = weightsMemory;
-  const optimizerMemory = weightsMemory * 2; // Adam optimizer states
-  const standardMemory = weightsMemory + totalActivations + gradientsMemory + optimizerMemory;
-
-  // 2. Gradient Accumulation only
-  // Doesn't need to store gradients for accumulated steps
-  const accumMemory = weightsMemory + (totalActivations / accumSteps) + gradientsMemory + optimizerMemory;
-
-  // 3. Gradient Checkpointing only
-  // Only store checkpoints instead of all activations
-  const checkpointedActivations = (totalActivations / checkpointSegments) * 2; // 2x for recomputation
-  const checkpointMemory = weightsMemory + checkpointedActivations + gradientsMemory + optimizerMemory;
-
-  // 4. Combined: Checkpointing + Accumulation
-  const combinedCheckpoints = (totalActivations / checkpointSegments) * 2;
-  const combinedMemory = weightsMemory + (combinedCheckpoints / accumSteps) + gradientsMemory + optimizerMemory;
-
-  // Calculate speedup/slowdown
-  const standardSpeed = 100;
-  const accumSpeed = 95; // slight overhead
-  const checkpointSpeed = 75; // significant recomputation cost
-  const combinedSpeed = 70; // combined overhead
-
-  // Build table
-  const rows = [
-    {
-      name: 'Standard Training',
-      memory: standardMemory,
-      savings: 0,
-      speed: standardSpeed
-    },
-    {
-      name: 'Gradient Accumulation',
-      memory: accumMemory,
-      savings: ((standardMemory - accumMemory) / standardMemory) * 100,
-      speed: accumSpeed
-    },
-    {
-      name: 'Gradient Checkpointing',
-      memory: checkpointMemory,
-      savings: ((standardMemory - checkpointMemory) / standardMemory) * 100,
-      speed: checkpointSpeed
-    },
-    {
-      name: 'Checkpointing + Accumulation',
-      memory: combinedMemory,
-      savings: ((standardMemory - combinedMemory) / standardMemory) * 100,
-      speed: combinedSpeed
-    }
-  ];
-
-  let tableHTML = '';
-  let maxSavings = 0;
-  let bestStrategy = 'Standard';
-
-  rows.forEach(row => {
-    tableHTML += `
-      <tr>
-        <td>${row.name}</td>
-        <td><span class="value-number">${row.memory.toFixed(2)} GB</span></td>
-        <td><span class="value-savings">${row.savings.toFixed(1)}%</span></td>
-        <td><span class="${row.speed < 100 ? 'value-overhead' : ''}"> ${(row.speed - 100).toFixed(0)}%</span></td>
-      </tr>
-    `;
-
-    if (row.savings > maxSavings) {
-      maxSavings = row.savings;
-      bestStrategy = row.name;
-    }
-  });
-
-  document.getElementById('tableBody').innerHTML = tableHTML;
-  document.getElementById('comparisonTable').classList.add('show');
-  document.getElementById('maxSavings').textContent = maxSavings.toFixed(1) + '%';
-  document.getElementById('recommendedStrategy').textContent = bestStrategy;
-  document.getElementById('timeOverhead').textContent = (100 - checkpointSpeed).toFixed(0) + '%';
-
-  const recommendations = {
-    'Gradient Accumulation': 'Best for moderate memory constraints with minimal slowdown. Ideal when you can\'t reduce batch size.',
-    'Gradient Checkpointing': 'Excellent for large models. Trades ~25% speed for 50-60% memory savings. Recommended for 7B+ models.',
-    'Checkpointing + Accumulation': 'Maximum memory efficiency (up to 70% savings). Use when memory is critical, accepts ~30% slowdown.',
-    'Standard Training': 'Use only if memory is not constrained. Simplest, fastest approach.'
-  };
-
-  document.getElementById('recommendationText').innerHTML = `
-    <strong>Recommended: ${bestStrategy}</strong><br>
-    ${recommendations[bestStrategy]}
+ rows.forEach(row => {
+  tableHTML += `
+   <tr>
+    <td>${row.name}</td>
+    <td><span class="value-number">${row.memory.toFixed(2)} GB</span></td>
+    <td><span class="value-savings">${row.savings.toFixed(1)}%</span></td>
+    <td><span class="${row.speed < 100 ? 'value-overhead' : ''}"> ${(row.speed - 100).toFixed(0)}%</span></td>
+   </tr>
   `;
 
-  document.getElementById('resultsSection').classList.add('show');
-
-  if (typeof window.adsbygoogle !== 'undefined') {
-    window.adsbygoogle.push({});
+  if (row.savings > maxSavings) {
+   maxSavings = row.savings;
+   bestStrategy = row.name;
   }
+ });
+
+ document.getElementById('tableBody').innerHTML = tableHTML;
+ document.getElementById('comparisonTable').classList.add('show');
+ document.getElementById('maxSavings').textContent = maxSavings.toFixed(1) + '%';
+ document.getElementById('recommendedStrategy').textContent = bestStrategy;
+ document.getElementById('timeOverhead').textContent = (100 - checkpointSpeed).toFixed(0) + '%';
+
+ const recommendations = {
+  'Gradient Accumulation': 'Best for moderate memory constraints with minimal slowdown. Ideal when you can\'t reduce batch size.',
+  'Gradient Checkpointing': 'Excellent for large models. Trades ~25% speed for 50-60% memory savings. Recommended for 7B+ models.',
+  'Checkpointing + Accumulation': 'Maximum memory efficiency (up to 70% savings). Use when memory is critical, accepts ~30% slowdown.',
+  'Standard Training': 'Use only if memory is not constrained. Simplest, fastest approach.'
+ };
+
+ document.getElementById('recommendationText').innerHTML = `
+  <strong>Recommended: ${bestStrategy}</strong><br>
+  ${recommendations[bestStrategy]}
+ `;
+
+ document.getElementById('resultsSection').classList.add('show');
+
+ if (typeof window.adsbygoogle !== 'undefined') {
+  window.adsbygoogle.push({});
+ }
 }
 
 // Allow Enter key
 document.getElementById('modelParams').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') calculateMemory();
+ if (e.key === 'Enter') calculateMemory();
 });
 </script>
 </body>

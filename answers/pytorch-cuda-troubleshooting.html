@@ -1,206 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PyTorch CUDA Troubleshooting — 15 Errors Fixed</title>
-  <meta name="description" content="Fix 15 common PyTorch CUDA errors: OOM, device mismatch, NCCL timeout, cuDNN mismatch, illegal memory access. Searchable lookup with code fixes.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/answers/pytorch-cuda-troubleshooting.html">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="PyTorch CUDA Troubleshooting — 15 Errors Fixed">
-  <meta property="og:description" content="Searchable CUDA error lookup: instant code fixes for OOM, device mismatch, NCCL timeout, cuDNN mismatch, illegal memory access, and 10 more errors.">
-  <meta property="og:url" content="https://heytensor.com/answers/pytorch-cuda-troubleshooting.html">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PyTorch CUDA Troubleshooting — 15 Errors Fixed">
-  <meta name="twitter:description" content="Searchable CUDA error lookup. Type your error, get the fix instantly.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "PyTorch CUDA Troubleshooting — 15 Errors Fixed",
-    "description": "Fix 15 common PyTorch CUDA errors with searchable lookup tool. CUDA out of memory, device mismatch, NCCL timeout, cuDNN version mismatch, illegal memory access, and more.",
-    "datePublished": "2026-05-28",
-    "dateModified": "2026-05-28",
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "HeyTensor",
-      "url": "https://heytensor.com"
-    },
-    "mainEntityOfPage": "https://heytensor.com/answers/pytorch-cuda-troubleshooting.html",
-    "image": "https://heytensor.com/assets/og-image.png"
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>PyTorch CUDA Troubleshooting, 15 Errors Fixed</title>
+ <meta name="description" content="Fix 15 common PyTorch CUDA errors: OOM, device mismatch, NCCL timeout, cuDNN mismatch, illegal memory access. Searchable lookup with code fixes.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/pytorch-cuda-troubleshooting.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="PyTorch CUDA Troubleshooting, 15 Errors Fixed">
+ <meta property="og:description" content="Searchable CUDA error lookup: instant code fixes for OOM, device mismatch, NCCL timeout, cuDNN mismatch, illegal memory access, and 10 more errors.">
+ <meta property="og:url" content="https://heytensor.com/answers/pytorch-cuda-troubleshooting.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="PyTorch CUDA Troubleshooting, 15 Errors Fixed">
+ <meta name="twitter:description" content="Searchable CUDA error lookup. Type your error, get the fix instantly.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "PyTorch CUDA Troubleshooting, 15 Errors Fixed",
+  "description": "Fix 15 common PyTorch CUDA errors with searchable lookup tool. CUDA out of memory, device mismatch, NCCL timeout, cuDNN version mismatch, illegal memory access, and more.",
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "publisher": {
+   "@type": "Organization",
+   "name": "HeyTensor",
+   "url": "https://heytensor.com"
+  },
+  "mainEntityOfPage": "https://heytensor.com/answers/pytorch-cuda-troubleshooting.html",
+  "image": "https://heytensor.com/assets/og-image.png"
+ }
+ </script>
+ <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"PyTorch CUDA Troubleshooting"}]}</script>
+ <style>
+  .search-box {
+   width: 100%;
+   padding: 0.85rem 1.1rem;
+   background: var(--bg-card);
+   border: 1.5px solid var(--border);
+   border-radius: var(--radius);
+   color: var(--text);
+   font-family: var(--font-body);
+   font-size: 1rem;
+   outline: none;
+   transition: border-color 0.2s;
+   margin-bottom: 0.5rem;
   }
-  </script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"PyTorch CUDA Troubleshooting"}]}</script>
-  <style>
-    .search-box {
-      width: 100%;
-      padding: 0.85rem 1.1rem;
-      background: var(--bg-card);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-      margin-bottom: 0.5rem;
-    }
-    .search-box:focus { border-color: var(--accent); }
-    .search-box::placeholder { color: var(--text-dim); }
-    .error-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
-      transition: border-color 0.2s;
-    }
-    .error-card:hover { border-color: #3a3a3a; }
-    .error-card.hidden { display: none; }
-    .error-title {
-      font-family: var(--font-display);
-      font-size: 0.85rem;
-      color: #EF4444;
-      margin-bottom: 0.5rem;
-      word-break: break-all;
-    }
-    .error-heading {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      color: var(--text);
-      margin-bottom: 0.6rem;
-    }
-    .error-cause {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      margin-bottom: 0.75rem;
-      line-height: 1.6;
-    }
-    .fix-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #22C55E;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 0.4rem;
-    }
-    pre {
-      background: #0d0d0d;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1rem 1.1rem;
-      overflow-x: auto;
-      font-family: var(--font-display);
-      font-size: 0.78rem;
-      line-height: 1.65;
-      color: #d4d4d4;
-      margin: 0;
-    }
-    code { font-family: var(--font-display); font-size: 0.85em; color: #8be9fd; }
-    .search-stats {
-      font-size: 0.82rem;
-      color: var(--text-dim);
-      margin-bottom: 1rem;
-    }
-    .no-results {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-dim);
-      font-size: 0.95rem;
-      display: none;
-    }
-    .severity-tag {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 0.15rem 0.55rem;
-      border-radius: 20px;
-      margin-left: 0.5rem;
-      vertical-align: middle;
-    }
-    .sev-high { background: rgba(239,68,68,0.15); color: #EF4444; }
-    .sev-med { background: rgba(234,179,8,0.15); color: #EAB308; }
-    .sev-low { background: rgba(34,197,94,0.15); color: #22C55E; }
-  </style>
+  .search-box:focus { border-color: var(--accent); }
+  .search-box::placeholder { color: var(--text-dim); }
+  .error-card {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 1.25rem 1.5rem;
+   margin-bottom: 1rem;
+   transition: border-color 0.2s;
+  }
+  .error-card:hover { border-color: #3a3a3a; }
+  .error-card.hidden { display: none; }
+  .error-title {
+   font-family: var(--font-display);
+   font-size: 0.85rem;
+   color: #EF4444;
+   margin-bottom: 0.5rem;
+   word-break: break-all;
+  }
+  .error-heading {
+   font-family: var(--font-display);
+   font-size: 1rem;
+   color: var(--text);
+   margin-bottom: 0.6rem;
+  }
+  .error-cause {
+   font-size: 0.9rem;
+   color: var(--text-dim);
+   margin-bottom: 0.75rem;
+   line-height: 1.6;
+  }
+  .fix-label {
+   font-size: 0.78rem;
+   font-weight: 600;
+   color: #22C55E;
+   text-transform: uppercase;
+   letter-spacing: 0.06em;
+   margin-bottom: 0.4rem;
+  }
+  pre {
+   background: #0d0d0d;
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   padding: 1rem 1.1rem;
+   overflow-x: auto;
+   font-family: var(--font-display);
+   font-size: 0.78rem;
+   line-height: 1.65;
+   color: #d4d4d4;
+   margin: 0;
+  }
+  code { font-family: var(--font-display); font-size: 0.85em; color: #8be9fd; }
+  .search-stats {
+   font-size: 0.82rem;
+   color: var(--text-dim);
+   margin-bottom: 1rem;
+  }
+  .no-results {
+   text-align: center;
+   padding: 2rem;
+   color: var(--text-dim);
+   font-size: 0.95rem;
+   display: none;
+  }
+  .severity-tag {
+   display: inline-block;
+   font-size: 0.72rem;
+   font-weight: 600;
+   padding: 0.15rem 0.55rem;
+   border-radius: 20px;
+   margin-left: 0.5rem;
+   vertical-align: middle;
+  }
+  .sev-high { background: rgba(239,68,68,0.15); color: #EF4444; }
+  .sev-med { background: rgba(234,179,8,0.15); color: #EAB308; }
+  .sev-low { background: rgba(34,197,94,0.15); color: #22C55E; }
+ </style>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/" class="active">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container" style="max-width:760px;">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>PyTorch CUDA Troubleshooting</span>
-    </nav>
+ <main class="container" style="max-width:760px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>PyTorch CUDA Troubleshooting</span>
+ </nav>
 
-    <article>
-      <h1>PyTorch CUDA Troubleshooting<br><span style="color:var(--text-dim);font-size:0.7em;font-family:var(--font-body);font-weight:400;">15 Common Errors Fixed</span></h1>
+ <article>
+ <h1>PyTorch CUDA Troubleshooting<br><span style="color,var(--text-dim);font-size,0.7em;font-family,var(--font-body);font-weight,400;">15 Common Errors Fixed</span></h1>
 
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
-        <p style="margin:0;line-height:1.7;"><strong>Type any part of your CUDA error message below to instantly find the matching fix. Covers OOM errors, device mismatches, NCCL timeouts, cuDNN issues, illegal memory access, and more.</strong></p>
-      </div>
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">Type any part of your CUDA error message below to instantly find the matching fix. Covers OOM errors, device mismatches, NCCL timeouts, cuDNN issues, illegal memory access, and more.</p>
+ </div>
 
-      <div style="margin:1.75rem 0;">
-        <input
-          type="text"
-          class="search-box"
-          id="errorSearch"
-          placeholder="Type error message, e.g. &quot;out of memory&quot; or &quot;device mismatch&quot;..."
-          autocomplete="off"
-          spellcheck="false"
-        >
-        <div class="search-stats" id="searchStats">Showing all 15 errors — type to filter</div>
-      </div>
+ <div style="margin:1.75rem 0;">
+ <input
+     type="text"
+     class="search-box"
+     id="errorSearch"
+     placeholder="Type error message, e.g. &quot;out of memory&quot; or &quot;device mismatch&quot;..."
+     autocomplete="off"
+     spellcheck="false"
+    >
+ <div class="search-stats" id="searchStats">Showing all 15 errors, type to filter</div>
+ </div>
 
-      <div id="errorList">
+ <div id="errorList">
 
-        <div class="error-card" data-tags="cuda out of memory oom torch.cuda.OutOfMemoryError RuntimeError CUDA out of memory tried to allocate">
-          <div class="error-title">RuntimeError: CUDA out of memory. Tried to allocate X.XX GiB<span class="severity-tag sev-high">High Impact</span></div>
-          <div class="error-heading">Fix CUDA Out of Memory (OOM)</div>
-          <div class="error-cause">PyTorch exhausted available GPU VRAM. Typically caused by batch size too large, no gradient clearing, or large intermediate activations being retained.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># 1. Reduce batch size
-batch_size = 16  # Try halving your current size
+ <div class="error-card" data-tags="cuda out of memory oom torch.cuda.OutOfMemoryError RuntimeError CUDA out of memory tried to allocate">
+ <div class="error-title">RuntimeError: CUDA out of memory. Tried to allocate X.XX GiB<span class="severity-tag sev-high">High Impact</span></div>
+ <div class="error-heading">Fix CUDA Out of Memory (OOM)</div>
+ <div class="error-cause">PyTorch exhausted available GPU VRAM. Typically caused by batch size too large, no gradient clearing, or large intermediate activations being retained.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># 1. Reduce batch size
+batch_size = 16 # Try halving your current size
 
 # 2. Clear gradients every step (not just loss.backward)
-optimizer.zero_grad(set_to_none=True)  # Frees memory, not just zeros
+optimizer.zero_grad(set_to_none=True) # Frees memory, not just zeros
 
 # 3. Use mixed precision training
 from torch.cuda.amp import autocast, GradScaler
 scaler = GradScaler()
 with autocast():
-    output = model(input)
-    loss = criterion(output, target)
+  output = model(input)
+  loss = criterion(output, target)
 scaler.scale(loss).backward()
 scaler.step(optimizer)
 scaler.update()
@@ -211,44 +211,44 @@ model = torch.utils.checkpoint.checkpoint_sequential(model, segments=4, input=x)
 # 5. Empty cache between operations (debug only)
 torch.cuda.empty_cache()
 print(torch.cuda.memory_summary())</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="device mismatch weight cpu input cuda FloatTensor cuda.FloatTensor same device">
-          <div class="error-title">RuntimeError: Input type (torch.cuda.FloatTensor) and weight type (torch.FloatTensor) should be the same<span class="severity-tag sev-high">High Impact</span></div>
-          <div class="error-heading">Fix Device Mismatch (CPU vs CUDA)</div>
-          <div class="error-cause">Model weights are on CPU but input tensor is on GPU, or vice versa. Always move both model and data to the same device.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code>device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+ <div class="error-card" data-tags="device mismatch weight cpu input cuda FloatTensor cuda.FloatTensor same device">
+ <div class="error-title">RuntimeError: Input type (torch.cuda.FloatTensor) and weight type (torch.FloatTensor) should be the same<span class="severity-tag sev-high">High Impact</span></div>
+ <div class="error-heading">Fix Device Mismatch (CPU vs CUDA)</div>
+ <div class="error-cause">Model weights are on CPU but input tensor is on GPU, or vice versa. Always move both model and data to the same device.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code>device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Move model to device
 model = model.to(device)
 
 # Move each batch to device in your training loop
 for x, y in dataloader:
-    x = x.to(device)
-    y = y.to(device)
-    output = model(x)  # Now both on same device
+  x = x.to(device)
+  y = y.to(device)
+  output = model(x) # Now both on same device
 
 # Loading saved checkpoints correctly
 model.load_state_dict(torch.load("model.pth", map_location=device))
 model.to(device)</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="NCCL timeout error NCCL Watchdog NCCL DistributedDataParallel distributed timeout collective">
-          <div class="error-title">RuntimeError: NCCL error in: ../torch/lib/c10d/ProcessGroupNCCL.cpp ... Timeout<span class="severity-tag sev-high">High Impact</span></div>
-          <div class="error-heading">Fix NCCL Timeout in Distributed Training</div>
-          <div class="error-cause">A distributed training process stalled or hung, causing the NCCL watchdog to fire after the timeout threshold. One rank finished early, rank skew, or deadlock in data loading.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code>import torch.distributed as dist
+ <div class="error-card" data-tags="NCCL timeout error NCCL Watchdog NCCL DistributedDataParallel distributed timeout collective">
+ <div class="error-title">RuntimeError: NCCL error in: ../torch/lib/c10d/ProcessGroupNCCL.cpp ... Timeout<span class="severity-tag sev-high">High Impact</span></div>
+ <div class="error-heading">Fix NCCL Timeout in Distributed Training</div>
+ <div class="error-cause">A distributed training process stalled or hung, causing the NCCL watchdog to fire after the timeout threshold. One rank finished early, rank skew, or deadlock in data loading.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code>import torch.distributed as dist
 import os
 
 # Increase NCCL timeout (default is 30 minutes)
-os.environ["NCCL_TIMEOUT"] = "3600"  # 1 hour in seconds
+os.environ["NCCL_TIMEOUT"] = "3600" # 1 hour in seconds
 
 # Proper init with explicit timeout
 dist.init_process_group(
-    backend="nccl",
-    timeout=torch.distributed.timedelta(minutes=60)
+  backend="nccl",
+  timeout=torch.distributed.timedelta(minutes=60)
 )
 
 # Enable NCCL debug logging to find stalling rank
@@ -260,17 +260,17 @@ os.environ["NCCL_DEBUG_SUBSYS"] = "INIT,COLL"
 from torch.utils.data.distributed import DistributedSampler
 sampler = DistributedSampler(dataset, drop_last=True)
 dataloader = DataLoader(dataset, sampler=sampler, drop_last=True)</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="cuDNN version mismatch cudnn error cuDNN not supported cuDNN was compiled with cudnn version">
-          <div class="error-title">RuntimeError: cuDNN error: CUDNN_STATUS_NOT_SUPPORTED or version mismatch<span class="severity-tag sev-med">Medium</span></div>
-          <div class="error-heading">Fix cuDNN Version Mismatch</div>
-          <div class="error-cause">PyTorch was compiled against a specific cuDNN version that differs from the installed one. Also triggered by unsupported input sizes or data types with certain cuDNN kernels.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># Check versions
+ <div class="error-card" data-tags="cuDNN version mismatch cudnn error cuDNN not supported cuDNN was compiled with cudnn version">
+ <div class="error-title">RuntimeError: cuDNN error: CUDNN_STATUS_NOT_SUPPORTED or version mismatch<span class="severity-tag sev-med">Medium</span></div>
+ <div class="error-heading">Fix cuDNN Version Mismatch</div>
+ <div class="error-cause">PyTorch was compiled against a specific cuDNN version that differs from the installed one. Also triggered by unsupported input sizes or data types with certain cuDNN kernels.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># Check versions
 import torch
-print(torch.version.cuda)          # CUDA version PyTorch compiled with
-print(torch.backends.cudnn.version())  # cuDNN version
+print(torch.version.cuda)     # CUDA version PyTorch compiled with
+print(torch.backends.cudnn.version()) # cuDNN version
 
 # Option 1: Disable cuDNN benchmark and fall back to deterministic
 torch.backends.cudnn.enabled = False
@@ -284,14 +284,14 @@ torch.backends.cudnn.allow_tf32 = True
 # Option 3: Reinstall matching PyTorch + CUDA + cuDNN
 # Visit: https://pytorch.org/get-started/locally/
 # pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="illegal memory access CUDA error an illegal memory access was encountered RuntimeError device-side assert">
-          <div class="error-title">RuntimeError: CUDA error: an illegal memory access was encountered<span class="severity-tag sev-high">High Impact</span></div>
-          <div class="error-heading">Fix Illegal Memory Access</div>
-          <div class="error-cause">GPU tried to read/write outside allocated memory. Often caused by out-of-bounds tensor indices, negative values in embedding indices, or class indices exceeding num_classes in CrossEntropyLoss.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># 1. Enable device-side assertions to get the real error
+ <div class="error-card" data-tags="illegal memory access CUDA error an illegal memory access was encountered RuntimeError device-side assert">
+ <div class="error-title">RuntimeError: CUDA error: an illegal memory access was encountered<span class="severity-tag sev-high">High Impact</span></div>
+ <div class="error-heading">Fix Illegal Memory Access</div>
+ <div class="error-cause">GPU tried to read/write outside allocated memory. Often caused by out-of-bounds tensor indices, negative values in embedding indices, or class indices exceeding num_classes in CrossEntropyLoss.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># 1. Enable device-side assertions to get the real error
 import os
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 # Re-run your code — you'll get a more descriptive error
@@ -310,16 +310,16 @@ assert not torch.isnan(tensor).any(), "NaN detected in input"
 # 5. Verify contiguous memory before view operations
 tensor = tensor.contiguous()
 tensor = tensor.view(batch_size, -1)</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="no kernel image kernel image is not available for the current GPU architecture sm compute">
-          <div class="error-title">RuntimeError: CUDA error: no kernel image is available for execution on the device<span class="severity-tag sev-high">High Impact</span></div>
-          <div class="error-heading">Fix GPU Architecture Mismatch (sm_ mismatch)</div>
-          <div class="error-cause">PyTorch binary was compiled for a different CUDA compute capability than your GPU. Common when running a binary compiled for sm_80 (Ampere) on a sm_70 (Volta) GPU.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># Check your GPU compute capability
+ <div class="error-card" data-tags="no kernel image kernel image is not available for the current GPU architecture sm compute">
+ <div class="error-title">RuntimeError: CUDA error: no kernel image is available for execution on the device<span class="severity-tag sev-high">High Impact</span></div>
+ <div class="error-heading">Fix GPU Architecture Mismatch (sm_ mismatch)</div>
+ <div class="error-cause">PyTorch binary was compiled for a different CUDA compute capability than your GPU. Common when running a binary compiled for sm_80 (Ampere) on a sm_70 (Volta) GPU.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># Check your GPU compute capability
 import torch
-print(torch.cuda.get_device_capability())  # e.g., (8, 6) = sm_86
+print(torch.cuda.get_device_capability()) # e.g., (8, 6) = sm_86
 
 # Reinstall PyTorch matching your GPU generation:
 # RTX 30xx / A100 (Ampere, sm_80/86): cu121
@@ -333,14 +333,14 @@ print(torch.cuda.get_device_capability())  # e.g., (8, 6) = sm_86
 print(torch.__version__)
 print(torch.cuda.is_available())
 print(torch.cuda.get_device_name(0))</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="cuda initialization CUDAError initialization error driver version insufficient CUDA driver version is insufficient">
-          <div class="error-title">RuntimeError: CUDA driver version is insufficient for CUDA runtime version<span class="severity-tag sev-med">Medium</span></div>
-          <div class="error-heading">Fix CUDA Driver vs Runtime Version</div>
-          <div class="error-cause">The installed NVIDIA driver is too old for the CUDA toolkit version PyTorch requires. Each CUDA version has a minimum driver requirement.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code"># Check driver version
+ <div class="error-card" data-tags="cuda initialization CUDAError initialization error driver version insufficient CUDA driver version is insufficient">
+ <div class="error-title">RuntimeError: CUDA driver version is insufficient for CUDA runtime version<span class="severity-tag sev-med">Medium</span></div>
+ <div class="error-heading">Fix CUDA Driver vs Runtime Version</div>
+ <div class="error-cause">The installed NVIDIA driver is too old for the CUDA toolkit version PyTorch requires. Each CUDA version has a minimum driver requirement.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code"># Check driver version
 # Run in terminal: nvidia-smi
 # Check the "CUDA Version" in top right — this is the MAX supported CUDA
 
@@ -358,18 +358,18 @@ print(torch.cuda.get_device_name(0))</code></pre>
 import subprocess
 result = subprocess.run(["nvidia-smi"], capture_output=True, text=True)
 print(result.stdout)</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="invalid device ordinal device ordinal invalid device device 0 not found CUDA_VISIBLE_DEVICES">
-          <div class="error-title">RuntimeError: invalid device ordinal / device not found<span class="severity-tag sev-low">Easy Fix</span></div>
-          <div class="error-heading">Fix Invalid CUDA Device Index</div>
-          <div class="error-cause">Requesting a GPU index that does not exist on this machine. Hardcoded cuda:2 on a single-GPU system, or CUDA_VISIBLE_DEVICES restricting visible devices.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># Check available devices
+ <div class="error-card" data-tags="invalid device ordinal device ordinal invalid device device 0 not found CUDA_VISIBLE_DEVICES">
+ <div class="error-title">RuntimeError: invalid device ordinal / device not found<span class="severity-tag sev-low">Easy Fix</span></div>
+ <div class="error-heading">Fix Invalid CUDA Device Index</div>
+ <div class="error-cause">Requesting a GPU index that does not exist on this machine. Hardcoded cuda:2 on a single-GPU system, or CUDA_VISIBLE_DEVICES restricting visible devices.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># Check available devices
 import torch
 print(f"GPUs available: {torch.cuda.device_count()}")
 for i in range(torch.cuda.device_count()):
-    print(f"  GPU {i}: {torch.cuda.get_device_name(i)}")
+  print(f" GPU {i}: {torch.cuda.get_device_name(i)}")
 
 # Never hardcode device index — use dynamic selection
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -379,21 +379,21 @@ import os
 print("CUDA_VISIBLE_DEVICES:", os.environ.get("CUDA_VISIBLE_DEVICES", "all"))
 
 # If using SLURM or containers, explicitly set
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Only expose GPU 0</code></pre>
-        </div>
+os.environ["CUDA_VISIBLE_DEVICES"] = "0" # Only expose GPU 0</code></pre>
+ </div>
 
-        <div class="error-card" data-tags="expected all tensors on same device Expected all tensors to be on the same device found at least two devices">
-          <div class="error-title">RuntimeError: Expected all tensors to be on the same device, but found at least two devices<span class="severity-tag sev-med">Medium</span></div>
-          <div class="error-heading">Fix Mixed Device Tensors in Operations</div>
-          <div class="error-cause">An operation (addition, concatenation, matrix multiply) received tensors from different devices. Often a newly created tensor defaulting to CPU while others are on CUDA.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code"># Debug: print all tensor devices in your forward pass
+ <div class="error-card" data-tags="expected all tensors on same device Expected all tensors to be on the same device found at least two devices">
+ <div class="error-title">RuntimeError: Expected all tensors to be on the same device, but found at least two devices<span class="severity-tag sev-med">Medium</span></div>
+ <div class="error-heading">Fix Mixed Device Tensors in Operations</div>
+ <div class="error-cause">An operation (addition, concatenation, matrix multiply) received tensors from different devices. Often a newly created tensor defaulting to CPU while others are on CUDA.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code"># Debug: print all tensor devices in your forward pass
 for name, param in model.named_parameters():
-    print(f"{name}: {param.device}")
+  print(f"{name}: {param.device}")
 
 # Common culprit: creating new tensors without specifying device
 # Wrong:
-mask = torch.ones(batch_size, seq_len)  # defaults to CPU!
+mask = torch.ones(batch_size, seq_len) # defaults to CPU!
 # Correct:
 mask = torch.ones(batch_size, seq_len, device=x.device)
 
@@ -401,16 +401,16 @@ mask = torch.ones(batch_size, seq_len, device=x.device)
 positions = torch.arange(seq_len).to(x.device)
 
 # Or use device-aware tensor creation
-zeros = torch.zeros_like(x)  # inherits device from x
+zeros = torch.zeros_like(x) # inherits device from x
 eye = torch.eye(n, device=x.device)</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="CUDA error device-side assert triggered launched from device-side assert">
-          <div class="error-title">RuntimeError: CUDA error: device-side assert triggered<span class="severity-tag sev-high">High Impact</span></div>
-          <div class="error-heading">Fix Device-Side Assert (Asynchronous Error)</div>
-          <div class="error-cause">A CUDA kernel assertion failed asynchronously. The reported traceback is usually wrong. Set CUDA_LAUNCH_BLOCKING=1 to get the actual error location and cause.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># Step 1: Get the real error location
+ <div class="error-card" data-tags="CUDA error device-side assert triggered launched from device-side assert">
+ <div class="error-title">RuntimeError: CUDA error: device-side assert triggered<span class="severity-tag sev-high">High Impact</span></div>
+ <div class="error-heading">Fix Device-Side Assert (Asynchronous Error)</div>
+ <div class="error-cause">A CUDA kernel assertion failed asynchronously. The reported traceback is usually wrong. Set CUDA_LAUNCH_BLOCKING=1 to get the actual error location and cause.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># Step 1: Get the real error location
 import os
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 # Re-run — traceback now points to actual failing line
@@ -419,26 +419,26 @@ os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 # 1. Class index out of range in CrossEntropyLoss
 loss_fn = torch.nn.CrossEntropyLoss()
 # Targets must be in [0, num_classes-1], not [1, num_classes]
-targets = targets - 1  # If 1-indexed, convert to 0-indexed
+targets = targets - 1 # If 1-indexed, convert to 0-indexed
 
 # 2. Embedding index out of range
 assert input_ids.max() < vocab_size, f"Max token {input_ids.max()} >= vocab_size {vocab_size}"
 
 # 3. NaN/Inf in inputs causing assertion failures
 torch.autograd.set_detect_anomaly(True)</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="cannot assign cuda Tensor as parameter data CUDA tensor parameter requires_grad leaf">
-          <div class="error-title">RuntimeError: a Tensor with requires_grad=True was used in an in-place operation<span class="severity-tag sev-med">Medium</span></div>
-          <div class="error-heading">Fix In-Place Operation on Grad Tensor</div>
-          <div class="error-cause">PyTorch cannot differentiate through in-place operations on tensors that require gradients. The gradient computation graph is broken by in-place modification.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># Wrong: in-place operation on tensor that needs gradient
+ <div class="error-card" data-tags="cannot assign cuda Tensor as parameter data CUDA tensor parameter requires_grad leaf">
+ <div class="error-title">RuntimeError: a Tensor with requires_grad=True was used in an in-place operation<span class="severity-tag sev-med">Medium</span></div>
+ <div class="error-heading">Fix In-Place Operation on Grad Tensor</div>
+ <div class="error-cause">PyTorch cannot differentiate through in-place operations on tensors that require gradients. The gradient computation graph is broken by in-place modification.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># Wrong: in-place operation on tensor that needs gradient
 x = model_output
-x += positional_encoding  # In-place! Breaks autograd
+x += positional_encoding # In-place! Breaks autograd
 
 # Correct: out-of-place addition
-x = x + positional_encoding  # Creates new tensor, safe
+x = x + positional_encoding # Creates new tensor, safe
 
 # Same issue with indexing:
 # Wrong:
@@ -449,20 +449,20 @@ output = output * (~mask).float()
 # Cloning before in-place if needed:
 x = x.clone()
 x[indices] = new_values</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="CUBLAS_STATUS_EXECUTION_FAILED cublas cuBLAS execution failed GEMM">
-          <div class="error-title">RuntimeError: CUDA error: CUBLAS_STATUS_EXECUTION_FAILED when calling cublasSgemm<span class="severity-tag sev-high">High Impact</span></div>
-          <div class="error-heading">Fix cuBLAS Execution Failed</div>
-          <div class="error-cause">cuBLAS matrix multiplication kernel failed. Often caused by NaN/Inf values in tensors, incompatible tensor shapes, or insufficient GPU memory for the GEMM operation.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># 1. Check for NaN/Inf before the failing operation
+ <div class="error-card" data-tags="CUBLAS_STATUS_EXECUTION_FAILED cublas cuBLAS execution failed GEMM">
+ <div class="error-title">RuntimeError: CUDA error: CUBLAS_STATUS_EXECUTION_FAILED when calling cublasSgemm<span class="severity-tag sev-high">High Impact</span></div>
+ <div class="error-heading">Fix cuBLAS Execution Failed</div>
+ <div class="error-cause">cuBLAS matrix multiplication kernel failed. Often caused by NaN/Inf values in tensors, incompatible tensor shapes, or insufficient GPU memory for the GEMM operation.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># 1. Check for NaN/Inf before the failing operation
 def check_tensor(t, name="tensor"):
-    if torch.isnan(t).any():
-        print(f"NaN detected in {name}")
-    if torch.isinf(t).any():
-        print(f"Inf detected in {name}")
-    return t
+  if torch.isnan(t).any():
+    print(f"NaN detected in {name}")
+  if torch.isinf(t).any():
+    print(f"Inf detected in {name}")
+  return t
 
 # 2. Gradient clipping to prevent explosion
 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
@@ -476,14 +476,14 @@ os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 # 5. Check weight initialization
 # Kaiming/He init for ReLU networks:
 torch.nn.init.kaiming_normal_(layer.weight, mode='fan_out', nonlinearity='relu')</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="insufficient driver invalid PTX PTX JIT compilation failed cuda PTX compilation">
-          <div class="error-title">RuntimeError: Error building extension, CUDA_HOME not set / PTX JIT compilation failed<span class="severity-tag sev-med">Medium</span></div>
-          <div class="error-heading">Fix CUDA_HOME and Custom Extension Build Errors</div>
-          <div class="error-cause">Building CUDA C++ extensions (e.g., custom ops, Flash Attention) requires CUDA toolkit installed and CUDA_HOME pointing to it. PTX JIT compilation fails if driver and toolkit versions differ greatly.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code"># Check CUDA_HOME
+ <div class="error-card" data-tags="insufficient driver invalid PTX PTX JIT compilation failed cuda PTX compilation">
+ <div class="error-title">RuntimeError: Error building extension, CUDA_HOME not set / PTX JIT compilation failed<span class="severity-tag sev-med">Medium</span></div>
+ <div class="error-heading">Fix CUDA_HOME and Custom Extension Build Errors</div>
+ <div class="error-cause">Building CUDA C++ extensions (e.g., custom ops, Flash Attention) requires CUDA toolkit installed and CUDA_HOME pointing to it. PTX JIT compilation fails if driver and toolkit versions differ greatly.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code"># Check CUDA_HOME
 import os
 print(os.environ.get("CUDA_HOME", "NOT SET"))
 
@@ -496,26 +496,26 @@ print(os.environ.get("CUDA_HOME", "NOT SET"))
 
 # For custom extensions, ensure CUDA toolkit matches PyTorch
 import torch
-print(torch.version.cuda)  # Must match your nvcc version
+print(torch.version.cuda) # Must match your nvcc version
 
 # Build with correct arch flags for your GPU
 import torch.utils.cpp_extension
-torch.utils.cpp_extension.CUDA_HOME  # Should not be None
+torch.utils.cpp_extension.CUDA_HOME # Should not be None
 
 # Pre-compile extensions instead of JIT when possible
 from torch.utils.cpp_extension import load
 my_op = load(name="my_op", sources=["my_op.cu"], verbose=True)</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="multiprocessing DataLoader worker CUDA error start method cuda multiprocessing spawn">
-          <div class="error-title">RuntimeError: Cannot re-initialize CUDA in forked subprocess / CUDA and multiprocessing<span class="severity-tag sev-med">Medium</span></div>
-          <div name="error-heading" class="error-heading">Fix CUDA + DataLoader Multiprocessing</div>
-          <div class="error-cause">CUDA does not work with Python's default fork-based multiprocessing. DataLoader workers that try to use CUDA will fail unless the start method is set to spawn or forkserver.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code># Option 1: Do not use CUDA in DataLoader workers
+ <div class="error-card" data-tags="multiprocessing DataLoader worker CUDA error start method cuda multiprocessing spawn">
+ <div class="error-title">RuntimeError: Cannot re-initialize CUDA in forked subprocess / CUDA and multiprocessing<span class="severity-tag sev-med">Medium</span></div>
+ <div name="error-heading" class="error-heading">Fix CUDA + DataLoader Multiprocessing</div>
+ <div class="error-cause">CUDA does not work with Python's default fork-based multiprocessing. DataLoader workers that try to use CUDA will fail unless the start method is set to spawn or forkserver.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code># Option 1: Do not use CUDA in DataLoader workers
 # Keep all CUDA operations in main process, only use CPU in workers
 def worker_fn(x):
-    return preprocess_cpu_only(x)  # No CUDA here
+  return preprocess_cpu_only(x) # No CUDA here
 
 # Option 2: Set multiprocessing start method
 import torch.multiprocessing as mp
@@ -523,28 +523,28 @@ mp.set_start_method("spawn", force=True)
 
 # Option 3: Ensure DataLoader uses spawn
 dataloader = DataLoader(
-    dataset,
-    num_workers=4,
-    multiprocessing_context="spawn"
+  dataset,
+  num_workers=4,
+  multiprocessing_context="spawn"
 )
 
 # Option 4: Use pin_memory for faster CPU->GPU transfers
 dataloader = DataLoader(dataset, num_workers=4, pin_memory=True)</code></pre>
-        </div>
+ </div>
 
-        <div class="error-card" data-tags="autocast bfloat16 float16 half precision amp mixed precision RuntimeError expected scalar type Half">
-          <div class="error-title">RuntimeError: "expected scalar type Half but found Float" in autocast / mixed precision<span class="severity-tag sev-low">Easy Fix</span></div>
-          <div class="error-heading">Fix Mixed Precision / AMP Dtype Errors</div>
-          <div class="error-cause">Tensors of different floating-point precisions (float32 vs float16) are mixed in an operation outside of autocast context. Or autocast is applied inconsistently across model and loss.</div>
-          <div class="fix-label">Fix</div>
-          <pre><code>from torch.cuda.amp import autocast, GradScaler
+ <div class="error-card" data-tags="autocast bfloat16 float16 half precision amp mixed precision RuntimeError expected scalar type Half">
+ <div class="error-title">RuntimeError: "expected scalar type Half but found Float" in autocast / mixed precision<span class="severity-tag sev-low">Easy Fix</span></div>
+ <div class="error-heading">Fix Mixed Precision / AMP Dtype Errors</div>
+ <div class="error-cause">Tensors of different floating-point precisions (float32 vs float16) are mixed in an operation outside of autocast context. Or autocast is applied inconsistently across model and loss.</div>
+ <div class="fix-label">Fix</div>
+ <pre><code>from torch.cuda.amp import autocast, GradScaler
 
 scaler = GradScaler()
 
 # Wrap the ENTIRE forward pass in autocast, including loss
-with autocast(dtype=torch.float16):  # or bfloat16 for Ampere+
-    output = model(input)
-    loss = criterion(output, target)  # Must be inside autocast
+with autocast(dtype=torch.float16): # or bfloat16 for Ampere+
+  output = model(input)
+  loss = criterion(output, target) # Must be inside autocast
 
 # Scale loss before backward
 scaler.scale(loss).backward()
@@ -554,133 +554,133 @@ optimizer.zero_grad(set_to_none=True)
 
 # For bfloat16 (RTX 30xx, A100 — better stability, no scaler needed)
 with autocast(device_type="cuda", dtype=torch.bfloat16):
-    output = model(input)
-    loss = criterion(output, target)
-loss.backward()  # No scaler needed for bfloat16</code></pre>
-        </div>
+  output = model(input)
+  loss = criterion(output, target)
+loss.backward() # No scaler needed for bfloat16</code></pre>
+ </div>
 
-      </div>
+ </div>
 
-      <div class="no-results" id="noResults">
-        No matching errors found. Try a different search term, or browse all 15 errors above.
-      </div>
+ <div class="no-results" id="noResults">
+ No matching errors found. Try a different search term, or browse all 15 errors above.
+ </div>
 
-      <section class="related-links" style="margin-top:2rem;">
-        <h2>Related Questions</h2>
-        <div class="related-grid">
-          <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">Fix CUDA Out of Memory</a>
-          <a href="/answers/weight-on-cpu-input-on-cuda.html" class="related-card">Fix Weight on CPU, Input on CUDA</a>
-          <a href="/tools/cuda-out-of-memory.html" class="related-card">CUDA OOM Solver Tool</a>
-          <a href="/tools/memory-calculator.html" class="related-card">GPU Memory Calculator</a>
-        </div>
-      </section>
+ <section class="related-links" style="margin-top:2rem;">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">Fix CUDA Out of Memory</a>
+ <a href="/answers/weight-on-cpu-input-on-cuda.html" class="related-card">Fix Weight on CPU, Input on CUDA</a>
+ <a href="/tools/cuda-out-of-memory.html" class="related-card">CUDA OOM Solver Tool</a>
+ <a href="/tools/memory-calculator.html" class="related-card">GPU Memory Calculator</a>
+ </div>
+ </section>
 
-      <div style="text-align:center;margin:2rem 0;">
-        <a href="/tools/cuda-out-of-memory.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the CUDA OOM Solver Tool</a>
-      </div>
-    </article>
-  </main>
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/cuda-out-of-memory.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the CUDA OOM Solver Tool</a>
+ </div>
+ </article>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ </div>
+ </footer>
 
-  <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 
-  <script>
-  (function() {
-    var searchInput = document.getElementById('errorSearch');
-    var cards = document.querySelectorAll('.error-card');
-    var statsEl = document.getElementById('searchStats');
-    var noResults = document.getElementById('noResults');
+ <script>
+ (function() {
+  var searchInput = document.getElementById('errorSearch');
+  var cards = document.querySelectorAll('.error-card');
+  var statsEl = document.getElementById('searchStats');
+  var noResults = document.getElementById('noResults');
 
-    function normalize(str) {
-      return str.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+  function normalize(str) {
+   return str.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+  }
+
+  searchInput.addEventListener('input', function() {
+   var query = normalize(this.value.trim());
+   var terms = query.split(/\s+/).filter(Boolean);
+   var visible = 0;
+
+   cards.forEach(function(card) {
+    var tags = normalize(card.getAttribute('data-tags') || '');
+    var title = normalize(card.querySelector('.error-title') ? card.querySelector('.error-title').textContent : '');
+    var heading = normalize(card.querySelector('.error-heading') ? card.querySelector('.error-heading').textContent : '');
+    var cause = normalize(card.querySelector('.error-cause') ? card.querySelector('.error-cause').textContent : '');
+    var haystack = tags + ' ' + title + ' ' + heading + ' ' + cause;
+
+    var match = terms.length === 0 || terms.every(function(t) { return haystack.indexOf(t) !== -1; });
+    if (match) {
+     card.classList.remove('hidden');
+     visible++;
+    } else {
+     card.classList.add('hidden');
     }
+   });
 
-    searchInput.addEventListener('input', function() {
-      var query = normalize(this.value.trim());
-      var terms = query.split(/\s+/).filter(Boolean);
-      var visible = 0;
+   if (terms.length === 0) {
+    statsEl.textContent = 'Showing all 15 errors — type to filter';
+   } else {
+    statsEl.textContent = 'Showing ' + visible + ' of 15 errors matching "' + this.value.trim() + '"';
+   }
 
-      cards.forEach(function(card) {
-        var tags = normalize(card.getAttribute('data-tags') || '');
-        var title = normalize(card.querySelector('.error-title') ? card.querySelector('.error-title').textContent : '');
-        var heading = normalize(card.querySelector('.error-heading') ? card.querySelector('.error-heading').textContent : '');
-        var cause = normalize(card.querySelector('.error-cause') ? card.querySelector('.error-cause').textContent : '');
-        var haystack = tags + ' ' + title + ' ' + heading + ' ' + cause;
+   noResults.style.display = (visible === 0 && terms.length > 0) ? 'block' : 'none';
+  });
 
-        var match = terms.length === 0 || terms.every(function(t) { return haystack.indexOf(t) !== -1; });
-        if (match) {
-          card.classList.remove('hidden');
-          visible++;
-        } else {
-          card.classList.add('hidden');
-        }
-      });
-
-      if (terms.length === 0) {
-        statsEl.textContent = 'Showing all 15 errors — type to filter';
-      } else {
-        statsEl.textContent = 'Showing ' + visible + ' of 15 errors matching "' + this.value.trim() + '"';
-      }
-
-      noResults.style.display = (visible === 0 && terms.length > 0) ? 'block' : 'none';
-    });
-
-    // Mobile nav toggle
-    var toggle = document.querySelector('.mobile-toggle');
-    var nav = document.querySelector('nav');
-    if (toggle && nav) {
-      toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
-    }
-  })();
-  </script>
-  <script src="/assets/js/share.js"></script>
+  // Mobile nav toggle
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
 </body>
 </html>

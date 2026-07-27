@@ -1,132 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+ <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog — HeyTensor</title>
-  <meta name="description" content="Articles on PyTorch tensor shapes, debugging shape errors, and layer output formulas for deep learning engineers.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/blog/">
-  <link rel="alternate" hreflang="en" href="https://heytensor.com/blog/">
-  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/blog/">
-<link rel="alternate" type="application/atom+xml" title="HeyTensor — PyTorch Tensor Shape Calculator &amp; Error Debugger Blog Feed" href="/blog/feed.xml">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Blog — HeyTensor">
-  <meta property="og:description" content="Articles on PyTorch tensor shapes, debugging shape errors, and layer output formulas for deep learning engineers.">
-  <meta property="og:url" content="https://heytensor.com/blog/">
-  <meta property="og:site_name" content="Zovo Tools">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Blog — HeyTensor">
-  <meta name="twitter:description" content="Articles on PyTorch tensor shapes, debugging shape errors, and layer output formulas for deep learning engineers.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Blog, HeyTensor</title>
+ <meta name="description" content="Articles on PyTorch tensor shapes, debugging shape errors, and layer output formulas for deep learning engineers.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/blog/">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/blog/">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/blog/">
+<link rel="alternate" type="application/atom+xml" title="HeyTensor, PyTorch Tensor Shape Calculator &amp; Error Debugger Blog Feed" href="/blog/feed.xml">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Blog, HeyTensor">
+ <meta property="og:description" content="Articles on PyTorch tensor shapes, debugging shape errors, and layer output formulas for deep learning engineers.">
+ <meta property="og:url" content="https://heytensor.com/blog/">
+ <meta property="og:site_name" content="Zovo Tools">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Blog, HeyTensor">
+ <meta name="twitter:description" content="Articles on PyTorch tensor shapes, debugging shape errors, and layer output formulas for deep learning engineers.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": "HeyTensor Blog",
-  "url": "https://heytensor.com/blog/",
-  "description": "Latest articles and insights from HeyTensor.",
-  "publisher": {
-    "@type": "Organization",
-    "name": "Zovo",
-    "url": "https://zovo.one"
-  }
+ "@context": "https://schema.org",
+ "@type": "CollectionPage",
+ "name": "HeyTensor Blog",
+ "url": "https://heytensor.com/blog/",
+ "description": "Latest articles and insights from HeyTensor.",
+ "publisher": {
+  "@type": "Organization",
+  "name": "Zovo",
+  "url": "https://zovo.one"
+ }
 }
 </script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/" class="active">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/" class="active">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="article" style="max-width:720px;margin:0 auto;padding:40px 20px;">
-    <h1 style="font-size:1.8rem;margin-bottom:32px;">Blog</h1>
+ <div class="article" style="max-width:720px;margin:0 auto;padding:40px 20px;">
+ <h1 style="font-size:1.8rem;margin-bottom:32px;">Blog</h1>
 
-    <ul class="blog-list">
-      <li class="blog-item">
-        <h3><a href="/blog/pytorch-shape-errors-explained.html">Every PyTorch Shape Error Explained (With Fixes)</a></h3>
-        <div class="blog-meta">April 2025 &middot; 8 min read</div>
-        <p class="blog-excerpt">A comprehensive reference covering the 10 most common PyTorch RuntimeErrors related to tensor shapes. Each error includes the exact error text, root cause analysis, and a concrete code fix.</p>
-      </li>
-      <li class="blog-item">
-        <h3><a href="/blog/tensor-shape-cheat-sheet.html">Tensor Shape Cheat Sheet: Every Layer's Input/Output Formula</a></h3>
-        <div class="blog-meta">April 2025 &middot; 7 min read</div>
-        <p class="blog-excerpt">Quick-reference formulas for every common neural network layer type. Includes worked examples with real numbers for Conv2d, Linear, LSTM, MaxPool2d, and more.</p>
-      </li>
-    </ul>
-  </div>
+ <ul class="blog-list">
+ <li class="blog-item">
+ <h3><a href="/blog/pytorch-shape-errors-explained.html">Every PyTorch Shape Error Explained (With Fixes)</a></h3>
+ <div class="blog-meta">April 2025 &middot; 8 min read</div>
+ <p class="blog-excerpt">A comprehensive reference covering the 10 most common PyTorch RuntimeErrors related to tensor shapes. Each error includes the exact error text, root cause analysis, and a concrete code fix.</p>
+ </li>
+ <li class="blog-item">
+ <h3><a href="/blog/tensor-shape-cheat-sheet.html">Tensor Shape Cheat Sheet, Every Layer's Input/Output Formula</a></h3>
+ <div class="blog-meta">April 2025 &middot; 7 min read</div>
+ <p class="blog-excerpt">Quick-reference formulas for every common neural network layer type. Includes worked examples with real numbers for Conv2d, Linear, LSTM, MaxPool2d, and more.</p>
+ </li>
+ </ul>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-        <div class="footer-brand">Zovo Tools</div>
-        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
-        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
-    </div>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever →</a>
+ <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+ </div>
 </footer>
 
 <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 </body>
 </html>

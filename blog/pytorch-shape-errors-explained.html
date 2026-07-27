@@ -1,310 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+ <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Every PyTorch Shape Error Explained — mat1/mat2, view size, expected 4D (With Fixes)</title>
-  <meta name="description" content="10 PyTorch tensor shape RuntimeErrors: mat1 mat2 shapes cannot be multiplied, view size not compatible, expected 4D input got 3D, and 7 more. Root cause + fix code for each.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/blog/pytorch-shape-errors-explained.html">
-  <link rel="alternate" hreflang="en" href="https://heytensor.com/blog/pytorch-shape-errors-explained.html">
-  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/blog/pytorch-shape-errors-explained.html">
-<link rel="alternate" type="application/atom+xml" title="HeyTensor — PyTorch Tensor Shape Calculator &amp; Error Debugger Blog Feed" href="/blog/feed.xml">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Every PyTorch Shape Error Explained (With Fixes)">
-  <meta property="og:description" content="The 10 most common PyTorch tensor shape errors, explained with root causes and code fixes.">
-  <meta property="og:url" content="https://heytensor.com/blog/pytorch-shape-errors-explained.html">
-  <meta property="og:site_name" content="Zovo Tools">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Every PyTorch Shape Error Explained (With Fixes)">
-  <meta name="twitter:description" content="The 10 most common PyTorch tensor shape errors, explained with root causes and code fixes.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Every PyTorch Shape Error Explained (With Fixes)",
-    "description": "The 10 most common PyTorch tensor shape RuntimeErrors explained with root causes and code fixes.",
-    "datePublished": "2026-04-01",
-    "dateModified": "2026-04-06",
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "HeyTensor"
-    },
-    "mainEntityOfPage": "https://heytensor.com/blog/pytorch-shape-errors-explained.html"
-  }
-  </script>
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://heytensor.com/blog/"},{"@type":"ListItem","position":3,"name":"Every PyTorch Shape Error Explained (With Fixes)"}]}
-  </script>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Every PyTorch Shape Error Explained, mat1/mat2, view size, expected 4D (With Fixes)</title>
+ <meta name="description" content="10 PyTorch tensor shape RuntimeErrors: mat1 mat2 shapes cannot be multiplied, view size not compatible, expected 4D input got 3D, and 7 more. Root cause + fix code for each.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/blog/pytorch-shape-errors-explained.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/blog/pytorch-shape-errors-explained.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/blog/pytorch-shape-errors-explained.html">
+<link rel="alternate" type="application/atom+xml" title="HeyTensor, PyTorch Tensor Shape Calculator &amp; Error Debugger Blog Feed" href="/blog/feed.xml">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Every PyTorch Shape Error Explained (With Fixes)">
+ <meta property="og:description" content="The 10 most common PyTorch tensor shape errors, explained with root causes and code fixes.">
+ <meta property="og:url" content="https://heytensor.com/blog/pytorch-shape-errors-explained.html">
+ <meta property="og:site_name" content="Zovo Tools">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Every PyTorch Shape Error Explained (With Fixes)">
+ <meta name="twitter:description" content="The 10 most common PyTorch tensor shape errors, explained with root causes and code fixes.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Every PyTorch Shape Error Explained (With Fixes)",
+  "description": "The 10 most common PyTorch tensor shape RuntimeErrors explained with root causes and code fixes.",
+  "datePublished": "2026-04-01",
+  "dateModified": "2026-04-06",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "publisher": {
+   "@type": "Organization",
+   "name": "HeyTensor"
+  },
+  "mainEntityOfPage": "https://heytensor.com/blog/pytorch-shape-errors-explained.html"
+ }
+ </script>
+ <script type="application/ld+json">
+ {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://heytensor.com/blog/"},{"@type":"ListItem","position":3,"name":"Every PyTorch Shape Error Explained (With Fixes)"}]}
+ </script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/" class="active">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/" class="active">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <article class="article">
-    <h1>Every PyTorch Shape Error Explained (With Fixes)</h1>
-    <div class="meta">April 2025 &middot; 8 min read &middot; By <a href="/about.html">Michael Lip</a></div>
+ <article class="article">
+ <h1>Every PyTorch Shape Error Explained (With Fixes)</h1>
+ <div class="meta">April 2025 &middot; 8 min read &middot; By <a href="/about.html">Michael Lip</a></div>
 
-    <p>Shape errors are the most common category of PyTorch RuntimeErrors. They happen when tensor dimensions do not match what a layer or operation expects. The error messages contain the information you need to fix them, but the wording can be cryptic if you do not know what to look for.</p>
+ <p>Shape errors are the most common category of PyTorch RuntimeErrors. They happen when tensor dimensions do not match what a layer or operation expects. The error messages contain the information you need to fix them, but the wording can be cryptic if you do not know what to look for.</p>
 
-    <p>This guide covers the 10 most common shape-related errors in PyTorch 2.x. Each entry includes the exact error text, what causes it, and how to fix it with real code.</p>
+ <p>This guide covers the 10 most common shape-related errors in PyTorch 2.x. Each entry includes the exact error text, what causes it, and how to fix it with real code.</p>
 
-    <h2>1. mat1 and mat2 shapes cannot be multiplied</h2>
+ <h2>1. mat1 and mat2 shapes cannot be multiplied</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)</code></pre>
 
-    <p><strong>Cause:</strong> A <code>nn.Linear</code> layer's <code>in_features</code> does not match the actual input size. In this example, the input has 512 features per sample but the Linear layer expects 256.</p>
+ <p>Cause: A <code>nn.Linear</code> layer's <code>in_features</code> does not match the actual input size. In this example, the input has 512 features per sample but the Linear layer expects 256.</p>
 
-    <p><strong>Fix:</strong> Change <code>in_features</code> to match the actual input size. To find the correct value, print the tensor shape before the Linear layer.</p>
+ <p>Fix: Change <code>in_features</code> to match the actual input size. To find the correct value, print the tensor shape before the Linear layer.</p>
 
-    <pre><code># Before:
+ <pre><code># Before:
 self.fc = nn.Linear(256, 10)
 
 # After:
 self.fc = nn.Linear(512, 10)
 
 # Or debug with:
-print(x.shape)  # torch.Size([64, 512])
+print(x.shape) # torch.Size([64, 512])
 self.fc = nn.Linear(x.shape[1], 10)</code></pre>
 
-    <p>This is the single most common PyTorch shape error. It almost always involves a <code>nn.Linear</code> layer receiving flattened CNN features. Use HeyTensor's <a href="/">Chain Mode</a> to trace the exact shape through your layers and find the correct in_features value.</p>
+ <p>This is the single most common PyTorch shape error. It almost always involves a <code>nn.Linear</code> layer receiving flattened CNN features. Use HeyTensor's <a href="/">Chain Mode</a> to trace the exact shape through your layers and find the correct in_features value.</p>
 
-    <h2>2. Expected input batch_size (X) to match target batch_size (Y)</h2>
+ <h2>2. Expected input batch_size (X) to match target batch_size (Y)</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: Expected input batch_size (32) to match target batch_size (16)</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: Expected input batch_size (32) to match target batch_size (16)</code></pre>
 
-    <p><strong>Cause:</strong> The model output and the labels have different first-dimension sizes. This happens when a reshape operation accidentally merges or splits the batch dimension.</p>
+ <p>Cause: The model output and the labels have different first-dimension sizes. This happens when a reshape operation accidentally merges or splits the batch dimension.</p>
 
-    <p><strong>Fix:</strong> Check for <code>.view()</code> or <code>.reshape()</code> calls that might change the batch size. Ensure your data loader returns matching batches.</p>
+ <p>Fix: Check for <code>.view()</code> or <code>.reshape()</code> calls that might change the batch size. Ensure your data loader returns matching batches.</p>
 
-    <pre><code># Wrong — might change batch size:
+ <pre><code># Wrong — might change batch size:
 x = x.view(-1, num_classes)
 
 # Right — preserve batch size:
 x = x.view(x.size(0), -1)</code></pre>
 
-    <h2>3. size mismatch, m1: [AxB], m2: [CxD]</h2>
+ <h2>3. size mismatch, m1, [AxB], m2, [CxD]</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: size mismatch, m1: [32 x 9216], m2: [1024 x 128]</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: size mismatch, m1: [32 x 9216], m2: [1024 x 128]</code></pre>
 
-    <p><strong>Cause:</strong> Same root cause as error 1, but from an older PyTorch version or from <code>torch.mm()</code> directly. The columns of the first matrix (9216) must equal the rows of the second (1024).</p>
+ <p>Cause: Same root cause as error 1, but from an older PyTorch version or from <code>torch.mm()</code> directly. The columns of the first matrix (9216) must equal the rows of the second (1024).</p>
 
-    <p><strong>Fix:</strong> Set <code>in_features=9216</code> in your Linear layer, or adjust the previous layer to output 1024 features.</p>
+ <p>Fix: Set <code>in_features=9216</code> in your Linear layer, or adjust the previous layer to output 1024 features.</p>
 
-    <h2>4. Expected 4D input (got 2D input)</h2>
+ <h2>4. Expected 4D input (got 2D input)</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: Expected 4D (got 2D) input to Conv2d</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: Expected 4D (got 2D) input to Conv2d</code></pre>
 
-    <p><strong>Cause:</strong> <code>nn.Conv2d</code> expects input shaped as <code>(batch, channels, height, width)</code>. A 2D tensor like <code>(batch, features)</code> cannot be processed by a Conv layer.</p>
+ <p>Cause: <code>nn.Conv2d</code> expects input shaped as <code>(batch, channels, height, width)</code>. A 2D tensor like <code>(batch, features)</code> cannot be processed by a Conv layer.</p>
 
-    <p><strong>Fix:</strong> Reshape or unsqueeze to add the missing dimensions.</p>
+ <p>Fix: Reshape or unsqueeze to add the missing dimensions.</p>
 
-    <pre><code># If you have grayscale images stored as (batch, 784):
+ <pre><code># If you have grayscale images stored as (batch, 784):
 x = x.view(batch_size, 1, 28, 28)
 
 # Or for single images without batch dim:
-x = x.unsqueeze(0)  # adds batch dim</code></pre>
+x = x.unsqueeze(0) # adds batch dim</code></pre>
 
-    <h2>5. shape '[X]' is invalid for input of size Y</h2>
+ <h2>5. shape '[X]' is invalid for input of size Y</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: shape '[32, 3, 32, 32]' is invalid for input of size 49152</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: shape '[32, 3, 32, 32]' is invalid for input of size 49152</code></pre>
 
-    <p><strong>Cause:</strong> The product of target dimensions (32 * 3 * 32 * 32 = 98304) does not equal the total number of elements (49152). The math does not work out.</p>
+ <p>Cause: The product of target dimensions (32 * 3 * 32 * 32 = 98304) does not equal the total number of elements (49152). The math does not work out.</p>
 
-    <p><strong>Fix:</strong> Use <code>-1</code> in one dimension to let PyTorch calculate it automatically, or compute the correct shape manually.</p>
+ <p>Fix: Use <code>-1</code> in one dimension to let PyTorch calculate it automatically, or compute the correct shape manually.</p>
 
-    <pre><code># Let PyTorch figure out one dimension:
-x = x.view(batch_size, 3, -1)  # auto-calculates last dim
+ <pre><code># Let PyTorch figure out one dimension:
+x = x.view(batch_size, 3, -1) # auto-calculates last dim
 
 # Or compute: 49152 / 32 = 1536 elements per sample
 x = x.view(32, 1536)</code></pre>
 
-    <h2>6. Given groups=1, weight of size [64, 3, 3, 3]</h2>
+ <h2>6. Given groups=1, weight of size [64, 3, 3, 3]</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: Given groups=1, weight of size [64, 3, 3, 3], expected input[1, 1, 28, 28] to have 3 channels, but got 1 channels instead</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: Given groups=1, weight of size [64, 3, 3, 3], expected input[1, 1, 28, 28] to have 3 channels, but got 1 channels instead</code></pre>
 
-    <p><strong>Cause:</strong> The Conv2d layer was defined with <code>in_channels=3</code> (from the weight shape) but received a single-channel input.</p>
+ <p>Cause: The Conv2d layer was defined with <code>in_channels=3</code> (from the weight shape) but received a single-channel input.</p>
 
-    <p><strong>Fix:</strong> Match <code>in_channels</code> to your actual data. Grayscale images have 1 channel, RGB images have 3.</p>
+ <p>Fix: Match <code>in_channels</code> to your actual data. Grayscale images have 1 channel, RGB images have 3.</p>
 
-    <pre><code># For grayscale:
+ <pre><code># For grayscale:
 self.conv1 = nn.Conv2d(1, 64, kernel_size=3)
 
 # For RGB:
 self.conv1 = nn.Conv2d(3, 64, kernel_size=3)</code></pre>
 
-    <h2>7. The size of tensor a (X) must match the size of tensor b (Y)</h2>
+ <h2>7. The size of tensor a (X) must match the size of tensor b (Y)</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: The size of tensor a (128) must match the size of tensor b (64) at non-singleton dimension 1</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: The size of tensor a (128) must match the size of tensor b (64) at non-singleton dimension 1</code></pre>
 
-    <p><strong>Cause:</strong> An element-wise operation (add, multiply, etc.) between two tensors with incompatible shapes at the specified dimension. Broadcasting rules require matching sizes or size 1.</p>
+ <p>Cause: An element-wise operation (add, multiply, etc.) between two tensors with incompatible shapes at the specified dimension. Broadcasting rules require matching sizes or size 1.</p>
 
-    <p><strong>Fix:</strong> Reshape one tensor so dimensions align, or check that the tensors come from matching operations.</p>
+ <p>Fix: Reshape one tensor so dimensions align, or check that the tensors come from matching operations.</p>
 
-    <pre><code># If adding a skip connection:
+ <pre><code># If adding a skip connection:
 # residual shape: [batch, 64, 32, 32]
-# x shape:        [batch, 128, 16, 16]  # mismatch!
+# x shape:    [batch, 128, 16, 16] # mismatch!
 
 # Fix with 1x1 conv to match channels and spatial dims:
 self.downsample = nn.Sequential(
-    nn.Conv2d(64, 128, 1, stride=2),
-    nn.BatchNorm2d(128)
+  nn.Conv2d(64, 128, 1, stride=2),
+  nn.BatchNorm2d(128)
 )</code></pre>
 
-    <h2>8. Dimension out of range</h2>
+ <h2>8. Dimension out of range</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>IndexError: Dimension out of range (expected to be in range of [-2, 1], but got 2)</code></pre>
+ <p>Error text:</p>
+ <pre><code>IndexError: Dimension out of range (expected to be in range of [-2, 1], but got 2)</code></pre>
 
-    <p><strong>Cause:</strong> Calling an operation on a dimension that does not exist. A 2D tensor has dimensions 0 and 1 (or -1 and -2). Requesting dimension 2 fails.</p>
+ <p>Cause: Calling an operation on a dimension that does not exist. A 2D tensor has dimensions 0 and 1 (or -1 and -2). Requesting dimension 2 fails.</p>
 
-    <p><strong>Fix:</strong> Print <code>tensor.dim()</code> and check which dimensions are valid.</p>
+ <p>Fix: Print <code>tensor.dim()</code> and check which dimensions are valid.</p>
 
-    <pre><code># Wrong — 2D tensor has no dim=2:
+ <pre><code># Wrong — 2D tensor has no dim=2:
 x = torch.softmax(x, dim=2)
 
 # Right:
-x = torch.softmax(x, dim=1)  # or dim=-1</code></pre>
+x = torch.softmax(x, dim=1) # or dim=-1</code></pre>
 
-    <h2>9. Expected hidden size (2, 32, 256), got (2, 64, 256)</h2>
+ <h2>9. Expected hidden size (2, 32, 256), got (2, 64, 256)</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: Expected hidden[0] size (2, 32, 256), got [2, 64, 256]</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: Expected hidden[0] size (2, 32, 256), got [2, 64, 256]</code></pre>
 
-    <p><strong>Cause:</strong> When passing hidden states between LSTM/GRU forward calls, the batch size of the hidden state does not match the new input batch size. This commonly happens at the end of an epoch when the last batch is smaller.</p>
+ <p>Cause: When passing hidden states between LSTM/GRU forward calls, the batch size of the hidden state does not match the new input batch size. This commonly happens at the end of an epoch when the last batch is smaller.</p>
 
-    <p><strong>Fix:</strong> Either pad the last batch or re-initialize hidden states at each batch.</p>
+ <p>Fix: Either pad the last batch or re-initialize hidden states at each batch.</p>
 
-    <pre><code># Re-initialize hidden state each batch:
+ <pre><code># Re-initialize hidden state each batch:
 def init_hidden(self, batch_size):
-    return (torch.zeros(2, batch_size, 256),
-            torch.zeros(2, batch_size, 256))</code></pre>
+  return (torch.zeros(2, batch_size, 256),
+      torch.zeros(2, batch_size, 256))</code></pre>
 
-    <h2>10. multi-target not supported in CrossEntropyLoss</h2>
+ <h2>10. multi-target not supported in CrossEntropyLoss</h2>
 
-    <p><strong>Error text:</strong></p>
-    <pre><code>RuntimeError: multi-target not supported at /pytorch/aten/src/THNN/generic/ClassNLLCriterion.c</code></pre>
+ <p>Error text:</p>
+ <pre><code>RuntimeError: multi-target not supported at /pytorch/aten/src/THNN/generic/ClassNLLCriterion.c</code></pre>
 
-    <p><strong>Cause:</strong> <code>nn.CrossEntropyLoss</code> expects targets as class indices of shape <code>(batch,)</code>, not one-hot encoded tensors of shape <code>(batch, num_classes)</code>.</p>
+ <p>Cause: <code>nn.CrossEntropyLoss</code> expects targets as class indices of shape <code>(batch,)</code>, not one-hot encoded tensors of shape <code>(batch, num_classes)</code>.</p>
 
-    <p><strong>Fix:</strong> Convert one-hot targets to class indices, or use <code>nn.BCEWithLogitsLoss</code> for multi-label classification.</p>
+ <p>Fix: Convert one-hot targets to class indices, or use <code>nn.BCEWithLogitsLoss</code> for multi-label classification.</p>
 
-    <pre><code># Convert one-hot to indices:
+ <pre><code># Convert one-hot to indices:
 targets = targets.argmax(dim=1)
 
 # Or use BCEWithLogitsLoss for multi-label:
 criterion = nn.BCEWithLogitsLoss()</code></pre>
 
-    <h2>Debugging Strategy</h2>
+ <h2>Debugging Strategy</h2>
 
-    <p>When you hit a shape error you cannot immediately parse, follow this process:</p>
+ <p>When you hit a shape error you cannot immediately parse, follow this process:</p>
 
-    <ol>
-      <li>Add <code>print(x.shape)</code> before and after each layer in your forward method.</li>
-      <li>Use <a href="/">HeyTensor's Chain Mode</a> to model your architecture and see shapes at every step.</li>
-      <li>Paste the exact error into HeyTensor's <a href="/">Error Debugger</a> to extract dimensions and get a targeted fix.</li>
-      <li>Check for accidental dimension changes from <code>.view()</code>, <code>.reshape()</code>, or <code>.permute()</code> calls.</li>
-    </ol>
+ <ol>
+ <li>Add <code>print(x.shape)</code> before and after each layer in your forward method.</li>
+ <li>Use <a href="/">HeyTensor's Chain Mode</a> to model your architecture and see shapes at every step.</li>
+ <li>Paste the exact error into HeyTensor's <a href="/">Error Debugger</a> to extract dimensions and get a targeted fix.</li>
+ <li>Check for accidental dimension changes from <code>.view()</code>, <code>.reshape()</code>, or <code>.permute()</code> calls.</li>
+ </ol>
 
-    <p>Most shape errors come from three places: the transition from convolutional to linear layers (forgetting to flatten or using wrong in_features), mismatched skip connections in ResNets, and incorrect hidden state handling in RNNs. Build your architectures incrementally and verify shapes as you go.</p>
+ <p>Most shape errors come from three places: the transition from convolutional to linear layers (forgetting to flatten or using wrong in_features), mismatched skip connections in ResNets, and incorrect hidden state handling in RNNs. Build your architectures incrementally and verify shapes as you go.</p>
 
-    <p><em>Try the <a href="https://abwex.com" rel="nofollow">A/B test calculator at abwex.com</a> if you are running experiments on model variants.</em></p>
+ <p><em>Try the <a href="https://abwex.com" rel="nofollow">A/B test calculator at abwex.com</a> if you are running experiments on model variants.</em></p>
 
-      <div class="sources">
-        <h3>Sources &amp; References</h3>
-        <ol>
-          <li><a href="https://pytorch.org/docs/stable/tensors.html" target="_blank">PyTorch Tensor Documentation</a></li>
-          <li><a href="https://en.wikipedia.org/wiki/Tensor" target="_blank">Wikipedia: Tensor</a></li>
-          <li><a href="https://numpy.org/doc/stable/reference/arrays.ndarray.html" target="_blank">NumPy ndarray Reference</a></li>
-        </ol>
-      </div>
-  </article>
+ <div class="sources">
+ <h3>Sources &amp; References</h3>
+ <ol>
+ <li><a href="https://pytorch.org/docs/stable/tensors.html" target="_blank">PyTorch Tensor Documentation</a></li>
+ <li><a href="https://en.wikipedia.org/wiki/Tensor" target="_blank">Wikipedia: Tensor</a></li>
+ <li><a href="https://numpy.org/doc/stable/reference/arrays.ndarray.html" target="_blank">NumPy ndarray Reference</a></li>
+ </ol>
+ </div>
+ </article>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-        <div class="footer-brand">Zovo Tools</div>
-        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
-        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
-    </div>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever →</a>
+ <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+ </div>
 </footer>
 
 <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 </body>
 </html>

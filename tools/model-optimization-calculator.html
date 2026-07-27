@@ -1,796 +1,796 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Model Optimization Calculator — Quantize &amp; Prune</title>
-  <meta name="description" content="Calculate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and pruning on your model. Instant browser-based estimates.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/tools/model-optimization-calculator.html">
-  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/model-optimization-calculator.html">
-  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/model-optimization-calculator.html">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Model Optimization Calculator — Quantize &amp; Prune">
-  <meta property="og:description" content="Estimate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and structured pruning for your PyTorch model.">
-  <meta property="og:url" content="https://heytensor.com/tools/model-optimization-calculator.html">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Model Optimization Calculator — Quantize &amp; Prune">
-  <meta name="twitter:description" content="Instant estimates: FP16/INT8/INT4 quantization and pruning. Size, speedup, accuracy tradeoffs for your model.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Model Optimization Calculator — Quantize &amp; Prune",
-    "url": "https://heytensor.com/tools/model-optimization-calculator.html",
-    "description": "Calculate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and pruning on your neural network.",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "browserRequirements": "Requires JavaScript",
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    },
-    "datePublished": "2026-05-28",
-    "dateModified": "2026-05-28"
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Model Optimization Calculator, Quantize &amp; Prune</title>
+ <meta name="description" content="Calculate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and pruning on your model. Instant browser-based estimates.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/model-optimization-calculator.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/model-optimization-calculator.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/model-optimization-calculator.html">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Model Optimization Calculator, Quantize &amp; Prune">
+ <meta property="og:description" content="Estimate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and structured pruning for your PyTorch model.">
+ <meta property="og:url" content="https://heytensor.com/tools/model-optimization-calculator.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Model Optimization Calculator, Quantize &amp; Prune">
+ <meta name="twitter:description" content="Instant estimates: FP16/INT8/INT4 quantization and pruning. Size, speedup, accuracy tradeoffs for your model.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Model Optimization Calculator, Quantize &amp; Prune",
+  "url": "https://heytensor.com/tools/model-optimization-calculator.html",
+  "description": "Calculate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and pruning on your neural network.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "browserRequirements": "Requires JavaScript",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28"
+ }
+ </script>
+ <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Model Optimization Calculator"}]}</script>
+ <style>
+  .calc-grid {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 1rem;
+   margin-bottom: 1.25rem;
   }
-  </script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Model Optimization Calculator"}]}</script>
-  <style>
-    .calc-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-    }
-    @media (max-width: 560px) { .calc-grid { grid-template-columns: 1fr; } }
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-    .field-group label {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .field-group input, .field-group select {
-      padding: 0.6rem 0.85rem;
-      background: var(--bg-card);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.92rem;
-      outline: none;
-      transition: border-color 0.2s;
-      -webkit-appearance: none;
-    }
-    .field-group input:focus, .field-group select:focus { border-color: var(--accent); }
-    .opt-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 0.65rem;
-      margin-bottom: 1.25rem;
-    }
-    .opt-card {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.85rem 0.65rem;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      user-select: none;
-    }
-    .opt-card:hover { border-color: #3a3a3a; }
-    .opt-card.selected { border-color: var(--accent); background: rgba(59,130,246,0.08); }
-    .opt-card .opt-name {
-      font-family: var(--font-display);
-      font-size: 0.85rem;
-      color: var(--text);
-      margin-bottom: 0.3rem;
-    }
-    .opt-card .opt-bits {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-    }
-    .pruning-slider-wrap {
-      margin-bottom: 1.25rem;
-      display: none;
-    }
-    .pruning-slider-wrap.visible { display: block; }
-    .pruning-slider-wrap label {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.4rem;
-    }
-    .pruning-slider-wrap label span { color: var(--accent); font-size: 0.9rem; }
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      outline: none;
-      cursor: pointer;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      background: var(--accent);
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    .results-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-      margin-top: 1.25rem;
-    }
-    .results-panel h3 {
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .metric-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-    .metric-label {
-      font-size: 0.82rem;
-      color: var(--text-dim);
-      width: 130px;
-      flex-shrink: 0;
-    }
-    .bar-track {
-      flex: 1;
-      height: 20px;
-      background: #0d0d0d;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-    .bar-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.4s ease;
-      position: relative;
-    }
-    .bar-label {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      width: 100px;
-      text-align: right;
-      flex-shrink: 0;
-    }
-    .big-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-    }
-    @media (max-width: 480px) { .big-metrics { grid-template-columns: 1fr 1fr; } }
-    .big-metric {
-      background: #0d0d0d;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 0.85rem;
-      text-align: center;
-    }
-    .big-metric .bm-value {
-      font-family: var(--font-display);
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-    .big-metric .bm-label {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
-    .accuracy-badge {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-    .badge-green { background: rgba(34,197,94,0.15); color: #22C55E; }
-    .badge-yellow { background: rgba(234,179,8,0.15); color: #EAB308; }
-    .badge-orange { background: rgba(249,115,22,0.15); color: #F97316; }
-    .badge-red { background: rgba(239,68,68,0.15); color: #EF4444; }
-    pre {
-      background: #0d0d0d;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1rem 1.1rem;
-      overflow-x: auto;
-      font-family: var(--font-display);
-      font-size: 0.78rem;
-      line-height: 1.65;
-      color: #d4d4d4;
-      margin: 0.75rem 0;
-    }
-    code { font-family: var(--font-display); font-size: 0.85em; color: #8be9fd; }
-    details summary { cursor: pointer; padding: 0.6rem 0; color: var(--text); font-weight: 500; }
-    details { border-bottom: 1px solid var(--border); padding-bottom: 0.25rem; margin-bottom: 0.25rem; }
-    details p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.7; padding: 0.25rem 0 0.75rem 0; }
-  </style>
+  @media (max-width: 560px) { .calc-grid { grid-template-columns: 1fr; } }
+  .field-group {
+   display: flex;
+   flex-direction: column;
+   gap: 0.35rem;
+  }
+  .field-group label {
+   font-size: 0.82rem;
+   font-weight: 600;
+   color: var(--text-dim);
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+  }
+  .field-group input, .field-group select {
+   padding: 0.6rem 0.85rem;
+   background: var(--bg-card);
+   border: 1.5px solid var(--border);
+   border-radius: var(--radius);
+   color: var(--text);
+   font-family: var(--font-body);
+   font-size: 0.92rem;
+   outline: none;
+   transition: border-color 0.2s;
+   -webkit-appearance: none;
+  }
+  .field-group input:focus, .field-group select:focus { border-color: var(--accent); }
+  .opt-cards {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+   gap: 0.65rem;
+   margin-bottom: 1.25rem;
+  }
+  .opt-card {
+   background: var(--bg-card);
+   border: 1.5px solid var(--border);
+   border-radius: var(--radius);
+   padding: 0.85rem 0.65rem;
+   text-align: center;
+   cursor: pointer;
+   transition: border-color 0.2s, background 0.2s;
+   user-select: none;
+  }
+  .opt-card:hover { border-color: #3a3a3a; }
+  .opt-card.selected { border-color: var(--accent); background: rgba(59,130,246,0.08); }
+  .opt-card .opt-name {
+   font-family: var(--font-display);
+   font-size: 0.85rem;
+   color: var(--text);
+   margin-bottom: 0.3rem;
+  }
+  .opt-card .opt-bits {
+   font-size: 0.78rem;
+   color: var(--text-dim);
+  }
+  .pruning-slider-wrap {
+   margin-bottom: 1.25rem;
+   display: none;
+  }
+  .pruning-slider-wrap.visible { display: block; }
+  .pruning-slider-wrap label {
+   font-size: 0.82rem;
+   font-weight: 600;
+   color: var(--text-dim);
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 0.4rem;
+  }
+  .pruning-slider-wrap label span { color: var(--accent); font-size: 0.9rem; }
+  input[type=range] {
+   -webkit-appearance: none;
+   width: 100%;
+   height: 4px;
+   background: var(--border);
+   border-radius: 2px;
+   outline: none;
+   cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   width: 16px;
+   height: 16px;
+   background: var(--accent);
+   border-radius: 50%;
+   cursor: pointer;
+  }
+  .results-panel {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 1.25rem 1.5rem;
+   margin-top: 1.25rem;
+  }
+  .results-panel h3 {
+   font-family: var(--font-display);
+   font-size: 0.9rem;
+   color: var(--text-dim);
+   margin-bottom: 1rem;
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+  }
+  .metric-row {
+   display: flex;
+   align-items: center;
+   gap: 0.75rem;
+   margin-bottom: 0.75rem;
+  }
+  .metric-label {
+   font-size: 0.82rem;
+   color: var(--text-dim);
+   width: 130px;
+   flex-shrink: 0;
+  }
+  .bar-track {
+   flex: 1;
+   height: 20px;
+   background: #0d0d0d;
+   border-radius: 4px;
+   overflow: hidden;
+   border: 1px solid var(--border);
+  }
+  .bar-fill {
+   height: 100%;
+   border-radius: 3px;
+   transition: width 0.4s ease;
+   position: relative;
+  }
+  .bar-label {
+   font-size: 0.78rem;
+   color: var(--text-dim);
+   width: 100px;
+   text-align: right;
+   flex-shrink: 0;
+  }
+  .big-metrics {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 0.75rem;
+   margin-bottom: 1.25rem;
+  }
+  @media (max-width: 480px) { .big-metrics { grid-template-columns: 1fr 1fr; } }
+  .big-metric {
+   background: #0d0d0d;
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 0.85rem;
+   text-align: center;
+  }
+  .big-metric .bm-value {
+   font-family: var(--font-display);
+   font-size: 1.4rem;
+   font-weight: 700;
+   margin-bottom: 0.25rem;
+  }
+  .big-metric .bm-label {
+   font-size: 0.75rem;
+   color: var(--text-dim);
+  }
+  .accuracy-badge {
+   display: inline-block;
+   padding: 0.2rem 0.6rem;
+   border-radius: 20px;
+   font-size: 0.78rem;
+   font-weight: 600;
+  }
+  .badge-green { background: rgba(34,197,94,0.15); color: #22C55E; }
+  .badge-yellow { background: rgba(234,179,8,0.15); color: #EAB308; }
+  .badge-orange { background: rgba(249,115,22,0.15); color: #F97316; }
+  .badge-red { background: rgba(239,68,68,0.15); color: #EF4444; }
+  pre {
+   background: #0d0d0d;
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   padding: 1rem 1.1rem;
+   overflow-x: auto;
+   font-family: var(--font-display);
+   font-size: 0.78rem;
+   line-height: 1.65;
+   color: #d4d4d4;
+   margin: 0.75rem 0;
+  }
+  code { font-family: var(--font-display); font-size: 0.85em; color: #8be9fd; }
+  details summary { cursor: pointer; padding: 0.6rem 0; color: var(--text); font-weight: 500; }
+  details { border-bottom: 1px solid var(--border); padding-bottom: 0.25rem; margin-bottom: 0.25rem; }
+  details p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.7; padding: 0.25rem 0 0.75rem 0; }
+ </style>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/model-optimization-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container" style="max-width:760px;">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Model Optimization Calculator</span>
-    </nav>
+ <main class="container" style="max-width:760px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Model Optimization Calculator</span>
+ </nav>
 
-    <section class="hero tool-hero" style="text-align:left;padding:2rem 0 1.5rem;">
-      <h1>Model Optimization Calculator<br><span style="color:var(--text-dim);font-size:0.55em;font-family:var(--font-body);font-weight:400;">Quantization &amp; Pruning Impact</span></h1>
-      <p style="color:var(--text-dim);font-size:0.95rem;margin-top:0.5rem;">Enter your model size and optimization technique to estimate size reduction, inference speedup, and accuracy impact. All calculations run in your browser.</p>
-    </section>
+ <section class="hero tool-hero" style="text-align:left;padding:2rem 0 1.5rem;">
+ <h1>Model Optimization Calculator<br><span style="color,var(--text-dim);font-size,0.55em;font-family,var(--font-body);font-weight,400;">Quantization &amp; Pruning Impact</span></h1>
+ <p style="color:var(--text-dim);font-size:0.95rem;margin-top:0.5rem;">Enter your model size and optimization technique to estimate size reduction, inference speedup, and accuracy impact. All calculations run in your browser.</p>
+ </section>
 
-    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem;">
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem;">
 
-      <div class="calc-grid">
-        <div class="field-group">
-          <label>Model Parameters</label>
-          <input type="number" id="numParams" value="7000" min="1" step="1" placeholder="e.g. 7000 (= 7B)">
-        </div>
-        <div class="field-group">
-          <label>Parameter Unit</label>
-          <select id="paramUnit">
-            <option value="1e9">Billions (B)</option>
-            <option value="1e6" selected>Millions (M)</option>
-            <option value="1e3">Thousands (K)</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label>Baseline Precision</label>
-          <select id="basePrecision">
-            <option value="fp32" selected>FP32 (32-bit float)</option>
-            <option value="fp16">FP16 (16-bit float)</option>
-            <option value="bf16">BF16 (bfloat16)</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label>Architecture Type</label>
-          <select id="archType">
-            <option value="transformer" selected>Transformer (LLM/BERT)</option>
-            <option value="cnn">CNN (ResNet/VGG)</option>
-            <option value="diffusion">Diffusion (UNet)</option>
-            <option value="mlp">MLP / Dense</option>
-          </select>
-        </div>
-      </div>
+ <div class="calc-grid">
+ <div class="field-group">
+ <label>Model Parameters</label>
+ <input type="number" id="numParams" value="7000" min="1" step="1" placeholder="e.g. 7000 (= 7B)">
+ </div>
+ <div class="field-group">
+ <label>Parameter Unit</label>
+ <select id="paramUnit">
+ <option value="1e9">Billions (B)</option>
+ <option value="1e6" selected>Millions (M)</option>
+ <option value="1e3">Thousands (K)</option>
+ </select>
+ </div>
+ <div class="field-group">
+ <label>Baseline Precision</label>
+ <select id="basePrecision">
+ <option value="fp32" selected>FP32 (32-bit float)</option>
+ <option value="fp16">FP16 (16-bit float)</option>
+ <option value="bf16">BF16 (bfloat16)</option>
+ </select>
+ </div>
+ <div class="field-group">
+ <label>Architecture Type</label>
+ <select id="archType">
+ <option value="transformer" selected>Transformer (LLM/BERT)</option>
+ <option value="cnn">CNN (ResNet/VGG)</option>
+ <option value="diffusion">Diffusion (UNet)</option>
+ <option value="mlp">MLP / Dense</option>
+ </select>
+ </div>
+ </div>
 
-      <div style="margin-bottom:0.75rem;">
-        <div style="font-size:0.82rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.65rem;">Optimization Technique</div>
-        <div class="opt-cards" id="optCards">
-          <div class="opt-card selected" data-opt="fp16" onclick="selectOpt(this)">
-            <div class="opt-name">FP16</div>
-            <div class="opt-bits">16-bit float</div>
-          </div>
-          <div class="opt-card" data-opt="bf16" onclick="selectOpt(this)">
-            <div class="opt-name">BF16</div>
-            <div class="opt-bits">Brain float16</div>
-          </div>
-          <div class="opt-card" data-opt="int8" onclick="selectOpt(this)">
-            <div class="opt-name">INT8</div>
-            <div class="opt-bits">8-bit integer</div>
-          </div>
-          <div class="opt-card" data-opt="int4" onclick="selectOpt(this)">
-            <div class="opt-name">INT4</div>
-            <div class="opt-bits">4-bit (GPTQ/AWQ)</div>
-          </div>
-          <div class="opt-card" data-opt="int2" onclick="selectOpt(this)">
-            <div class="opt-name">INT2/NF4</div>
-            <div class="opt-bits">2-4 bit mixed</div>
-          </div>
-          <div class="opt-card" data-opt="prune" onclick="selectOpt(this)">
-            <div class="opt-name">Pruning</div>
-            <div class="opt-bits">Structured/Sparse</div>
-          </div>
-          <div class="opt-card" data-opt="distill" onclick="selectOpt(this)">
-            <div class="opt-name">Distillation</div>
-            <div class="opt-bits">Student model</div>
-          </div>
-        </div>
-      </div>
+ <div style="margin-bottom:0.75rem;">
+ <div style="font-size:0.82rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.65rem;">Optimization Technique</div>
+ <div class="opt-cards" id="optCards">
+ <div class="opt-card selected" data-opt="fp16" onclick="selectOpt(this)">
+ <div class="opt-name">FP16</div>
+ <div class="opt-bits">16-bit float</div>
+ </div>
+ <div class="opt-card" data-opt="bf16" onclick="selectOpt(this)">
+ <div class="opt-name">BF16</div>
+ <div class="opt-bits">Brain float16</div>
+ </div>
+ <div class="opt-card" data-opt="int8" onclick="selectOpt(this)">
+ <div class="opt-name">INT8</div>
+ <div class="opt-bits">8-bit integer</div>
+ </div>
+ <div class="opt-card" data-opt="int4" onclick="selectOpt(this)">
+ <div class="opt-name">INT4</div>
+ <div class="opt-bits">4-bit (GPTQ/AWQ)</div>
+ </div>
+ <div class="opt-card" data-opt="int2" onclick="selectOpt(this)">
+ <div class="opt-name">INT2/NF4</div>
+ <div class="opt-bits">2-4 bit mixed</div>
+ </div>
+ <div class="opt-card" data-opt="prune" onclick="selectOpt(this)">
+ <div class="opt-name">Pruning</div>
+ <div class="opt-bits">Structured/Sparse</div>
+ </div>
+ <div class="opt-card" data-opt="distill" onclick="selectOpt(this)">
+ <div class="opt-name">Distillation</div>
+ <div class="opt-bits">Student model</div>
+ </div>
+ </div>
+ </div>
 
-      <div class="pruning-slider-wrap" id="pruneSliderWrap">
-        <label>
-          Pruning Sparsity
-          <span id="pruneValLabel">50%</span>
-        </label>
-        <input type="range" id="pruneSlider" min="10" max="90" value="50" step="5">
-      </div>
+ <div class="pruning-slider-wrap" id="pruneSliderWrap">
+ <label>
+ Pruning Sparsity
+ <span id="pruneValLabel">50%</span>
+ </label>
+ <input type="range" id="pruneSlider" min="10" max="90" value="50" step="5">
+ </div>
 
-      <div class="pruning-slider-wrap" id="distillSliderWrap">
-        <label>
-          Student Model Size (% of teacher)
-          <span id="distillValLabel">30%</span>
-        </label>
-        <input type="range" id="distillSlider" min="5" max="80" value="30" step="5">
-      </div>
+ <div class="pruning-slider-wrap" id="distillSliderWrap">
+ <label>
+ Student Model Size (% of teacher)
+ <span id="distillValLabel">30%</span>
+ </label>
+ <input type="range" id="distillSlider" min="5" max="80" value="30" step="5">
+ </div>
 
-    </div>
+ </div>
 
-    <div class="results-panel" id="resultsPanel">
-      <h3>Estimated Impact</h3>
+ <div class="results-panel" id="resultsPanel">
+ <h3>Estimated Impact</h3>
 
-      <div class="big-metrics" id="bigMetrics">
-        <div class="big-metric">
-          <div class="bm-value" id="metSizeOpt" style="color:#22C55E;">—</div>
-          <div class="bm-label">Optimized Size</div>
-        </div>
-        <div class="big-metric">
-          <div class="bm-value" id="metSpeedup" style="color:#3B82F6;">—</div>
-          <div class="bm-label">Inference Speedup</div>
-        </div>
-        <div class="big-metric">
-          <div class="bm-value" id="metAccDrop" style="color:#EAB308;">—</div>
-          <div class="bm-label">Accuracy Impact</div>
-        </div>
-      </div>
+ <div class="big-metrics" id="bigMetrics">
+ <div class="big-metric">
+ <div class="bm-value" id="metSizeOpt" style="color:#22C55E;">, </div>
+ <div class="bm-label">Optimized Size</div>
+ </div>
+ <div class="big-metric">
+ <div class="bm-value" id="metSpeedup" style="color:#3B82F6;">, </div>
+ <div class="bm-label">Inference Speedup</div>
+ </div>
+ <div class="big-metric">
+ <div class="bm-value" id="metAccDrop" style="color:#EAB308;">, </div>
+ <div class="bm-label">Accuracy Impact</div>
+ </div>
+ </div>
 
-      <div class="metric-row">
-        <div class="metric-label">Baseline size</div>
-        <div class="bar-track"><div class="bar-fill" id="barBase" style="background:#444;width:100%;"></div></div>
-        <div class="bar-label" id="lblBase">—</div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-label">Optimized size</div>
-        <div class="bar-track"><div class="bar-fill" id="barOpt" style="background:#22C55E;width:50%;"></div></div>
-        <div class="bar-label" id="lblOpt">—</div>
-      </div>
-      <div class="metric-row">
-        <div class="metric-label">Memory saved</div>
-        <div class="bar-track"><div class="bar-fill" id="barSaved" style="background:#3B82F6;width:50%;"></div></div>
-        <div class="bar-label" id="lblSaved">—</div>
-      </div>
+ <div class="metric-row">
+ <div class="metric-label">Baseline size</div>
+ <div class="bar-track"><div class="bar-fill" id="barBase" style="background:#444;width:100%;"></div></div>
+ <div class="bar-label" id="lblBase">, </div>
+ </div>
+ <div class="metric-row">
+ <div class="metric-label">Optimized size</div>
+ <div class="bar-track"><div class="bar-fill" id="barOpt" style="background:#22C55E;width:50%;"></div></div>
+ <div class="bar-label" id="lblOpt">, </div>
+ </div>
+ <div class="metric-row">
+ <div class="metric-label">Memory saved</div>
+ <div class="bar-track"><div class="bar-fill" id="barSaved" style="background:#3B82F6;width:50%;"></div></div>
+ <div class="bar-label" id="lblSaved">, </div>
+ </div>
 
-      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;font-size:0.85rem;color:var(--text-dim);">
-        <span>Accuracy risk:</span>
-        <span id="accBadge" class="accuracy-badge badge-green">Negligible</span>
-        <span style="margin-left:auto;" id="gpuNote"></span>
-      </div>
+ <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;gap:0.75rem;flex-wrap:wrap;align-items:center;font-size:0.85rem;color:var(--text-dim);">
+ <span>Accuracy risk:</span>
+ <span id="accBadge" class="accuracy-badge badge-green">Negligible</span>
+ <span style="margin-left:auto;" id="gpuNote"></span>
+ </div>
 
-      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
-        <div style="font-size:0.82rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem;">PyTorch Code</div>
-        <pre id="codeSnippet"><code>Loading...</code></pre>
-      </div>
-    </div>
+ <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+ <div style="font-size:0.82rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6rem;">PyTorch Code</div>
+ <pre id="codeSnippet"><code>Loading...</code></pre>
+ </div>
+ </div>
 
-    <div style="margin-top:2rem;">
-      <h2>Frequently Asked Questions</h2>
-      <details>
-        <summary>What is the difference between FP16 and BF16?</summary>
-        <p class="qas">Both use 16 bits but differ in bit allocation. FP16 (IEEE 754 half-precision) has 5 exponent bits and 10 mantissa bits — better precision for values near 1.0. BF16 (Brain Float16) has 8 exponent bits and 7 mantissa bits — same dynamic range as FP32, far fewer overflows. For training, prefer BF16 on Ampere+ (A100, RTX 30xx). For inference, both give ~2x memory reduction with minimal accuracy loss.</p>
-      </details>
-      <details>
-        <summary>When should I use INT8 vs INT4 quantization?</summary>
-        <p class="qas">INT8 (8-bit integer) is the safest choice: 4x size reduction vs FP32, 2-4x speedup on supported hardware, and accuracy loss typically under 0.5% on most tasks. Use torch.ao.quantization or bitsandbytes. INT4 (4-bit, e.g. GPTQ, AWQ, GGUF) gives 8x compression vs FP32 but with 1-3% accuracy drop. Best for inference-only deployment of large language models where memory is the bottleneck.</p>
-      </details>
-      <details>
-        <summary>Does pruning actually reduce model file size?</summary>
-        <p class="qas">It depends on the pruning type. Unstructured pruning (zeroing individual weights) does not reduce file size unless sparse storage formats are used — but can reduce compute if hardware supports sparse matmul. Structured pruning (removing entire channels, heads, or layers) directly reduces parameter count and gives actual size/speedup gains. For real deployment savings, use structured pruning or combine unstructured pruning with sparse inference engines (NVIDIA Ampere sparse cores).</p>
-      </details>
-      <details>
-        <summary>What GPU is needed for INT4 inference?</summary>
-        <p class="qas">INT4 quantization support: NVIDIA Turing+ (RTX 20xx, T4) for basic INT4, Ampere+ (A100, RTX 30xx) for fused INT4 GEMM kernels. For consumer GPUs, bitsandbytes 4-bit works on any CUDA GPU with compute capability 7.5+. Apple Silicon (MPS) supports 4-bit via llama.cpp Metal backend. CPU inference (GGUF INT4) works on any modern CPU but is ~5-20x slower than GPU.</p>
-      </details>
-      <details>
-        <summary>Is this tool free?</summary>
-        <p class="qas">Yes. All HeyTensor tools are free, run entirely in your browser, and require no signup or account.</p>
-      </details>
-    </div>
+ <div style="margin-top:2rem;">
+ <h2>Frequently Asked Questions</h2>
+ <details>
+ <summary>What is the difference between FP16 and BF16?</summary>
+ <p class="qas">Both use 16 bits but differ in bit allocation. FP16 (IEEE 754 half-precision) has 5 exponent bits and 10 mantissa bits, better precision for values near 1.0. BF16 (Brain Float16) has 8 exponent bits and 7 mantissa bits, same dynamic range as FP32, far fewer overflows. For training, prefer BF16 on Ampere+ (A100, RTX 30xx). For inference, both give ~2x memory reduction with minimal accuracy loss.</p>
+ </details>
+ <details>
+ <summary>When should I use INT8 vs INT4 quantization?</summary>
+ <p class="qas">INT8 (8-bit integer) is the safest choice: 4x size reduction vs FP32, 2-4x speedup on supported hardware, and accuracy loss typically under 0.5% on most tasks. Use torch.ao.quantization or bitsandbytes. INT4 (4-bit, e.g. GPTQ, AWQ, GGUF) gives 8x compression vs FP32 but with 1-3% accuracy drop. Best for inference-only deployment of large language models where memory is the bottleneck.</p>
+ </details>
+ <details>
+ <summary>Does pruning actually reduce model file size?</summary>
+ <p class="qas">It depends on the pruning type. Unstructured pruning (zeroing individual weights) does not reduce file size unless sparse storage formats are used, but can reduce compute if hardware supports sparse matmul. Structured pruning (removing entire channels, heads, or layers) directly reduces parameter count and gives actual size/speedup gains. For real deployment savings, use structured pruning or combine unstructured pruning with sparse inference engines (NVIDIA Ampere sparse cores).</p>
+ </details>
+ <details>
+ <summary>What GPU is needed for INT4 inference?</summary>
+ <p class="qas">INT4 quantization support: NVIDIA Turing+ (RTX 20xx, T4) for basic INT4, Ampere+ (A100, RTX 30xx) for fused INT4 GEMM kernels. For consumer GPUs, bitsandbytes 4-bit works on any CUDA GPU with compute capability 7.5+. Apple Silicon (MPS) supports 4-bit via llama.cpp Metal backend. CPU inference (GGUF INT4) works on any modern CPU but is ~5-20x slower than GPU.</p>
+ </details>
+ <details>
+ <summary>Is this tool free?</summary>
+ <p class="qas">Yes. All HeyTensor tools are free, run entirely in your browser, and require no signup or account.</p>
+ </details>
+ </div>
 
-    <section class="related-tools" style="margin-top:2rem;">
-      <h2>Related Tools</h2>
-      <div class="related-grid">
-        <a href="/tools/memory-calculator.html" class="related-card">
-          <h3>GPU Memory Calculator</h3>
-          <p>Estimate VRAM for training: parameters, gradients, optimizer states, activations.</p>
-        </a>
-        <a href="/tools/parameter-counter.html" class="related-card">
-          <h3>Parameter Counter</h3>
-          <p>Count exact parameters per layer for your neural network architecture.</p>
-        </a>
-        <a href="/tools/flops-calculator.html" class="related-card">
-          <h3>FLOPs Calculator</h3>
-          <p>Estimate floating-point operations per forward pass.</p>
-        </a>
-      </div>
-    </section>
-  </main>
+ <section class="related-tools" style="margin-top:2rem;">
+ <h2>Related Tools</h2>
+ <div class="related-grid">
+ <a href="/tools/memory-calculator.html" class="related-card">
+ <h3>GPU Memory Calculator</h3>
+ <p>Estimate VRAM for training: parameters, gradients, optimizer states, activations.</p>
+ </a>
+ <a href="/tools/parameter-counter.html" class="related-card">
+ <h3>Parameter Counter</h3>
+ <p>Count exact parameters per layer for your neural network architecture.</p>
+ </a>
+ <a href="/tools/flops-calculator.html" class="related-card">
+ <h3>FLOPs Calculator</h3>
+ <p>Estimate floating-point operations per forward pass.</p>
+ </a>
+ </div>
+ </section>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ </div>
+ </footer>
 
-  <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 
-  <script>
-  (function() {
-    var OPT_DATA = {
-      fp16:    { bits: 16, baselineBits: 32, sizeRatio: 0.5,   speedup: [1.5, 2.0], accDrop: [0, 0.3],  badge: 'badge-green',  risk: 'Negligible' },
-      bf16:    { bits: 16, baselineBits: 32, sizeRatio: 0.5,   speedup: [1.5, 2.0], accDrop: [0, 0.2],  badge: 'badge-green',  risk: 'Negligible' },
-      int8:    { bits: 8,  baselineBits: 32, sizeRatio: 0.25,  speedup: [2.0, 4.0], accDrop: [0.2, 0.8], badge: 'badge-green', risk: 'Very Low' },
-      int4:    { bits: 4,  baselineBits: 32, sizeRatio: 0.125, speedup: [3.0, 5.0], accDrop: [0.5, 2.5], badge: 'badge-yellow', risk: 'Low-Medium' },
-      int2:    { bits: 3,  baselineBits: 32, sizeRatio: 0.09,  speedup: [4.0, 7.0], accDrop: [2.0, 6.0], badge: 'badge-orange', risk: 'Medium-High' },
-      prune:   { bits: 32, baselineBits: 32, sizeRatio: null,  speedup: [1.2, 3.0], accDrop: [0.5, 4.0], badge: 'badge-yellow', risk: 'Variable' },
-      distill: { bits: 32, baselineBits: 32, sizeRatio: null,  speedup: [2.0, 10.0], accDrop: [1.0, 5.0], badge: 'badge-yellow', risk: 'Task Dependent' }
-    };
+ <script>
+ (function() {
+  var OPT_DATA = {
+   fp16:  { bits: 16, baselineBits: 32, sizeRatio: 0.5,  speedup: [1.5, 2.0], accDrop: [0, 0.3], badge: 'badge-green', risk: 'Negligible' },
+   bf16:  { bits: 16, baselineBits: 32, sizeRatio: 0.5,  speedup: [1.5, 2.0], accDrop: [0, 0.2], badge: 'badge-green', risk: 'Negligible' },
+   int8:  { bits: 8, baselineBits: 32, sizeRatio: 0.25, speedup: [2.0, 4.0], accDrop: [0.2, 0.8], badge: 'badge-green', risk: 'Very Low' },
+   int4:  { bits: 4, baselineBits: 32, sizeRatio: 0.125, speedup: [3.0, 5.0], accDrop: [0.5, 2.5], badge: 'badge-yellow', risk: 'Low-Medium' },
+   int2:  { bits: 3, baselineBits: 32, sizeRatio: 0.09, speedup: [4.0, 7.0], accDrop: [2.0, 6.0], badge: 'badge-orange', risk: 'Medium-High' },
+   prune:  { bits: 32, baselineBits: 32, sizeRatio: null, speedup: [1.2, 3.0], accDrop: [0.5, 4.0], badge: 'badge-yellow', risk: 'Variable' },
+   distill: { bits: 32, baselineBits: 32, sizeRatio: null, speedup: [2.0, 10.0], accDrop: [1.0, 5.0], badge: 'badge-yellow', risk: 'Task Dependent' }
+  };
 
-    var CODE_SNIPPETS = {
-      fp16: `import torch
+  var CODE_SNIPPETS = {
+   fp16: `import torch
 from torch.cuda.amp import autocast
 
 model = model.to("cuda")
 
 # Inference in FP16
 with torch.no_grad():
-    with autocast(dtype=torch.float16):
-        output = model(input.cuda())
+  with autocast(dtype=torch.float16):
+    output = model(input.cuda())
 
 # Or: convert entire model to half precision
-model = model.half()  # Inference only, not for training`,
+model = model.half() # Inference only, not for training`,
 
-      bf16: `import torch
+   bf16: `import torch
 from torch.cuda.amp import autocast
 
 model = model.to("cuda")
 
 # BF16 inference (Ampere+ GPUs: RTX 30xx, A100)
 with torch.no_grad():
-    with autocast(device_type="cuda", dtype=torch.bfloat16):
-        output = model(input.cuda())
+  with autocast(device_type="cuda", dtype=torch.bfloat16):
+    output = model(input.cuda())
 
 # Check BF16 support
 print(torch.cuda.is_bf16_supported())`,
 
-      int8: `# Using bitsandbytes (easiest path)
+   int8: `# Using bitsandbytes (easiest path)
 # pip install bitsandbytes
 
 import torch
 from transformers import AutoModelForCausalLM
 
 model = AutoModelForCausalLM.from_pretrained(
-    "model_name",
-    load_in_8bit=True,   # bitsandbytes INT8
-    device_map="auto"
+  "model_name",
+  load_in_8bit=True,  # bitsandbytes INT8
+  device_map="auto"
 )
 
 # Native PyTorch: torch.ao.quantization
 import torch.ao.quantization as quant
 model_int8 = quant.quantize_dynamic(
-    model, {torch.nn.Linear}, dtype=torch.qint8
+  model, {torch.nn.Linear}, dtype=torch.qint8
 )`,
 
-      int4: `# GPTQ / AWQ quantization (state of the art)
+   int4: `# GPTQ / AWQ quantization (state of the art)
 # pip install auto-gptq
 
 from auto_gptq import AutoGPTQForCausalLM, BaseQuantizeConfig
 
 quantize_config = BaseQuantizeConfig(
-    bits=4,           # 4-bit quantization
-    group_size=128,   # quantization granularity
-    desc_act=False    # act order — False=faster
+  bits=4,      # 4-bit quantization
+  group_size=128,  # quantization granularity
+  desc_act=False  # act order — False=faster
 )
 
 # Or bitsandbytes 4-bit (easier, less optimal):
 model = AutoModelForCausalLM.from_pretrained(
-    "model_name",
-    load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",    # NF4 distribution
-    bnb_4bit_compute_dtype=torch.bfloat16
+  "model_name",
+  load_in_4bit=True,
+  bnb_4bit_quant_type="nf4",  # NF4 distribution
+  bnb_4bit_compute_dtype=torch.bfloat16
 )`,
 
-      int2: `# NF4 / QLoRA style (2-4 bit mixed precision)
+   int2: `# NF4 / QLoRA style (2-4 bit mixed precision)
 # pip install bitsandbytes transformers
 
 from transformers import BitsAndBytesConfig
 
 bnb_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.bfloat16,
-    bnb_4bit_use_double_quant=True  # Double quantization ~0.4 bits extra reduction
+  load_in_4bit=True,
+  bnb_4bit_quant_type="nf4",
+  bnb_4bit_compute_dtype=torch.bfloat16,
+  bnb_4bit_use_double_quant=True # Double quantization ~0.4 bits extra reduction
 )
 
 model = AutoModelForCausalLM.from_pretrained(
-    "model_name",
-    quantization_config=bnb_config,
-    device_map="auto"
+  "model_name",
+  quantization_config=bnb_config,
+  device_map="auto"
 )`,
 
-      prune: `import torch
+   prune: `import torch
 import torch.nn.utils.prune as prune
 
 # Unstructured magnitude pruning (zeros weights, no size reduction without sparse storage)
-prune.l1_unstructured(layer, name="weight", amount=0.5)  # 50% sparsity
+prune.l1_unstructured(layer, name="weight", amount=0.5) # 50% sparsity
 
 # Structured pruning (actually reduces size)
 prune.ln_structured(layer, name="weight", amount=0.3, n=2, dim=0)
 
 # Global pruning across all Linear layers
 parameters_to_prune = [
-    (module, "weight")
-    for module in model.modules()
-    if isinstance(module, torch.nn.Linear)
+  (module, "weight")
+  for module in model.modules()
+  if isinstance(module, torch.nn.Linear)
 ]
 prune.global_unstructured(
-    parameters_to_prune,
-    pruning_method=prune.L1Unstructured,
-    amount=0.5
+  parameters_to_prune,
+  pruning_method=prune.L1Unstructured,
+  amount=0.5
 )
 
 # Make pruning permanent (removes _orig and _mask buffers)
 for module, _ in parameters_to_prune:
-    prune.remove(module, "weight")`,
+  prune.remove(module, "weight")`,
 
-      distill: `import torch
+   distill: `import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 # Knowledge distillation training loop
 def distill_loss(student_logits, teacher_logits, labels, T=4.0, alpha=0.5):
-    # Soft targets from teacher (temperature T)
-    soft_loss = F.kl_div(
-        F.log_softmax(student_logits / T, dim=1),
-        F.softmax(teacher_logits / T, dim=1),
-        reduction="batchmean"
-    ) * (T ** 2)
-    # Hard labels from ground truth
-    hard_loss = F.cross_entropy(student_logits, labels)
-    return alpha * soft_loss + (1 - alpha) * hard_loss
+  # Soft targets from teacher (temperature T)
+  soft_loss = F.kl_div(
+    F.log_softmax(student_logits / T, dim=1),
+    F.softmax(teacher_logits / T, dim=1),
+    reduction="batchmean"
+  ) * (T ** 2)
+  # Hard labels from ground truth
+  hard_loss = F.cross_entropy(student_logits, labels)
+  return alpha * soft_loss + (1 - alpha) * hard_loss
 
 # Training
 with torch.no_grad():
-    teacher_logits = teacher_model(inputs)
+  teacher_logits = teacher_model(inputs)
 student_logits = student_model(inputs)
 loss = distill_loss(student_logits, teacher_logits, labels)`
-    };
+  };
 
-    var selectedOpt = 'fp16';
-    var pruneSlider = document.getElementById('pruneSlider');
-    var distillSlider = document.getElementById('distillSlider');
+  var selectedOpt = 'fp16';
+  var pruneSlider = document.getElementById('pruneSlider');
+  var distillSlider = document.getElementById('distillSlider');
 
-    window.selectOpt = function(el) {
-      document.querySelectorAll('.opt-card').forEach(function(c) { c.classList.remove('selected'); });
-      el.classList.add('selected');
-      selectedOpt = el.getAttribute('data-opt');
-      document.getElementById('pruneSliderWrap').classList.toggle('visible', selectedOpt === 'prune');
-      document.getElementById('distillSliderWrap').classList.toggle('visible', selectedOpt === 'distill');
-      compute();
-    };
+  window.selectOpt = function(el) {
+   document.querySelectorAll('.opt-card').forEach(function(c) { c.classList.remove('selected'); });
+   el.classList.add('selected');
+   selectedOpt = el.getAttribute('data-opt');
+   document.getElementById('pruneSliderWrap').classList.toggle('visible', selectedOpt === 'prune');
+   document.getElementById('distillSliderWrap').classList.toggle('visible', selectedOpt === 'distill');
+   compute();
+  };
 
-    pruneSlider.addEventListener('input', function() {
-      document.getElementById('pruneValLabel').textContent = this.value + '%';
-      compute();
-    });
+  pruneSlider.addEventListener('input', function() {
+   document.getElementById('pruneValLabel').textContent = this.value + '%';
+   compute();
+  });
 
-    distillSlider.addEventListener('input', function() {
-      document.getElementById('distillValLabel').textContent = this.value + '%';
-      compute();
-    });
+  distillSlider.addEventListener('input', function() {
+   document.getElementById('distillValLabel').textContent = this.value + '%';
+   compute();
+  });
 
-    ['numParams','paramUnit','basePrecision','archType'].forEach(function(id) {
-      document.getElementById(id).addEventListener('input', compute);
-      document.getElementById(id).addEventListener('change', compute);
-    });
+  ['numParams','paramUnit','basePrecision','archType'].forEach(function(id) {
+   document.getElementById(id).addEventListener('input', compute);
+   document.getElementById(id).addEventListener('change', compute);
+  });
 
-    function formatBytes(bytes) {
-      if (bytes >= 1e9) return (bytes / 1e9).toFixed(2) + ' GB';
-      if (bytes >= 1e6) return (bytes / 1e6).toFixed(1) + ' MB';
-      if (bytes >= 1e3) return (bytes / 1e3).toFixed(0) + ' KB';
-      return bytes.toFixed(0) + ' B';
-    }
+  function formatBytes(bytes) {
+   if (bytes >= 1e9) return (bytes / 1e9).toFixed(2) + ' GB';
+   if (bytes >= 1e6) return (bytes / 1e6).toFixed(1) + ' MB';
+   if (bytes >= 1e3) return (bytes / 1e3).toFixed(0) + ' KB';
+   return bytes.toFixed(0) + ' B';
+  }
 
-    function baseBits(prec) {
-      return { fp32: 32, fp16: 16, bf16: 16 }[prec] || 32;
-    }
+  function baseBits(prec) {
+   return { fp32: 32, fp16: 16, bf16: 16 }[prec] || 32;
+  }
 
-    function compute() {
-      var params = parseFloat(document.getElementById('numParams').value) || 0;
-      var unit = parseFloat(document.getElementById('paramUnit').value) || 1e6;
-      var basePrecId = document.getElementById('basePrecision').value;
-      var arch = document.getElementById('archType').value;
-      var opt = OPT_DATA[selectedOpt];
+  function compute() {
+   var params = parseFloat(document.getElementById('numParams').value) || 0;
+   var unit = parseFloat(document.getElementById('paramUnit').value) || 1e6;
+   var basePrecId = document.getElementById('basePrecision').value;
+   var arch = document.getElementById('archType').value;
+   var opt = OPT_DATA[selectedOpt];
 
-      var totalParams = params * unit;
-      var baseB = baseBits(basePrecId);
-      var baseBytes = totalParams * (baseB / 8);
+   var totalParams = params * unit;
+   var baseB = baseBits(basePrecId);
+   var baseBytes = totalParams * (baseB / 8);
 
-      var optBytes, sizeRatio;
-      if (selectedOpt === 'prune') {
-        var sparsity = parseFloat(pruneSlider.value) / 100;
-        sizeRatio = 1 - sparsity;
-        optBytes = baseBytes * sizeRatio;
-      } else if (selectedOpt === 'distill') {
-        var studentFrac = parseFloat(distillSlider.value) / 100;
-        sizeRatio = studentFrac;
-        optBytes = baseBytes * sizeRatio;
-      } else {
-        sizeRatio = opt.sizeRatio * (baseB / 32);
-        sizeRatio = Math.max(0.05, Math.min(1, sizeRatio));
-        optBytes = baseBytes * sizeRatio;
-      }
+   var optBytes, sizeRatio;
+   if (selectedOpt === 'prune') {
+    var sparsity = parseFloat(pruneSlider.value) / 100;
+    sizeRatio = 1 - sparsity;
+    optBytes = baseBytes * sizeRatio;
+   } else if (selectedOpt === 'distill') {
+    var studentFrac = parseFloat(distillSlider.value) / 100;
+    sizeRatio = studentFrac;
+    optBytes = baseBytes * sizeRatio;
+   } else {
+    sizeRatio = opt.sizeRatio * (baseB / 32);
+    sizeRatio = Math.max(0.05, Math.min(1, sizeRatio));
+    optBytes = baseBytes * sizeRatio;
+   }
 
-      var savedBytes = baseBytes - optBytes;
-      var savedPct = (savedBytes / baseBytes * 100);
+   var savedBytes = baseBytes - optBytes;
+   var savedPct = (savedBytes / baseBytes * 100);
 
-      // Speedup estimate — architecture modifies speedup
-      var archMult = { transformer: 1.0, cnn: 0.85, diffusion: 0.9, mlp: 1.1 }[arch] || 1.0;
-      var speedupLow = opt.speedup[0] * archMult;
-      var speedupHigh = opt.speedup[1] * archMult;
-      if (selectedOpt === 'prune') {
-        var sparsity2 = parseFloat(pruneSlider.value) / 100;
-        speedupLow = 1 + sparsity2 * 0.8;
-        speedupHigh = 1 + sparsity2 * 2.0;
-      } else if (selectedOpt === 'distill') {
-        var sf = parseFloat(distillSlider.value) / 100;
-        speedupLow = (1 / sf) * 0.7;
-        speedupHigh = (1 / sf) * 1.0;
-      }
+   // Speedup estimate — architecture modifies speedup
+   var archMult = { transformer: 1.0, cnn: 0.85, diffusion: 0.9, mlp: 1.1 }[arch] || 1.0;
+   var speedupLow = opt.speedup[0] * archMult;
+   var speedupHigh = opt.speedup[1] * archMult;
+   if (selectedOpt === 'prune') {
+    var sparsity2 = parseFloat(pruneSlider.value) / 100;
+    speedupLow = 1 + sparsity2 * 0.8;
+    speedupHigh = 1 + sparsity2 * 2.0;
+   } else if (selectedOpt === 'distill') {
+    var sf = parseFloat(distillSlider.value) / 100;
+    speedupLow = (1 / sf) * 0.7;
+    speedupHigh = (1 / sf) * 1.0;
+   }
 
-      // Accuracy estimate
-      var accLow = opt.accDrop[0];
-      var accHigh = opt.accDrop[1];
-      if (selectedOpt === 'prune') {
-        var sp = parseFloat(pruneSlider.value) / 100;
-        accLow = sp < 0.5 ? 0.2 : sp * 4;
-        accHigh = sp < 0.5 ? sp * 2 : sp * 8;
-      } else if (selectedOpt === 'distill') {
-        var sf2 = parseFloat(distillSlider.value) / 100;
-        accLow = (1 - sf2) * 2;
-        accHigh = (1 - sf2) * 8;
-      }
-      // FP16/BF16 from FP16 baseline = no gain
-      if ((selectedOpt === 'fp16' || selectedOpt === 'bf16') && basePrecId !== 'fp32') {
-        optBytes = baseBytes;
-        sizeRatio = 1;
-        savedPct = 0;
-      }
+   // Accuracy estimate
+   var accLow = opt.accDrop[0];
+   var accHigh = opt.accDrop[1];
+   if (selectedOpt === 'prune') {
+    var sp = parseFloat(pruneSlider.value) / 100;
+    accLow = sp < 0.5 ? 0.2 : sp * 4;
+    accHigh = sp < 0.5 ? sp * 2 : sp * 8;
+   } else if (selectedOpt === 'distill') {
+    var sf2 = parseFloat(distillSlider.value) / 100;
+    accLow = (1 - sf2) * 2;
+    accHigh = (1 - sf2) * 8;
+   }
+   // FP16/BF16 from FP16 baseline = no gain
+   if ((selectedOpt === 'fp16' || selectedOpt === 'bf16') && basePrecId !== 'fp32') {
+    optBytes = baseBytes;
+    sizeRatio = 1;
+    savedPct = 0;
+   }
 
-      // Update big metrics
-      document.getElementById('metSizeOpt').textContent = formatBytes(optBytes);
-      document.getElementById('metSpeedup').textContent = speedupLow.toFixed(1) + '–' + speedupHigh.toFixed(1) + 'x';
-      document.getElementById('metAccDrop').textContent = '-' + accLow.toFixed(1) + ' to -' + accHigh.toFixed(1) + '%';
+   // Update big metrics
+   document.getElementById('metSizeOpt').textContent = formatBytes(optBytes);
+   document.getElementById('metSpeedup').textContent = speedupLow.toFixed(1) + '–' + speedupHigh.toFixed(1) + 'x';
+   document.getElementById('metAccDrop').textContent = '-' + accLow.toFixed(1) + ' to -' + accHigh.toFixed(1) + '%';
 
-      // Bars
-      document.getElementById('barBase').style.width = '100%';
-      document.getElementById('lblBase').textContent = formatBytes(baseBytes);
-      var optPct = Math.max(4, (optBytes / baseBytes) * 100);
-      document.getElementById('barOpt').style.width = optPct + '%';
-      document.getElementById('lblOpt').textContent = formatBytes(optBytes);
-      document.getElementById('barSaved').style.width = Math.max(0, savedPct) + '%';
-      document.getElementById('lblSaved').textContent = savedPct > 0 ? savedPct.toFixed(0) + '% less' : '0%';
+   // Bars
+   document.getElementById('barBase').style.width = '100%';
+   document.getElementById('lblBase').textContent = formatBytes(baseBytes);
+   var optPct = Math.max(4, (optBytes / baseBytes) * 100);
+   document.getElementById('barOpt').style.width = optPct + '%';
+   document.getElementById('lblOpt').textContent = formatBytes(optBytes);
+   document.getElementById('barSaved').style.width = Math.max(0, savedPct) + '%';
+   document.getElementById('lblSaved').textContent = savedPct > 0 ? savedPct.toFixed(0) + '% less' : '0%';
 
-      // Badge
-      var badge = document.getElementById('accBadge');
-      badge.className = 'accuracy-badge ' + opt.badge;
-      badge.textContent = opt.risk;
+   // Badge
+   var badge = document.getElementById('accBadge');
+   badge.className = 'accuracy-badge ' + opt.badge;
+   badge.textContent = opt.risk;
 
-      // GPU note
-      var gpuNote = '';
-      if (totalParams > 1e9) {
-        var gb = optBytes / 1e9;
-        if (gb <= 4) gpuNote = 'Fits: 8GB GPU';
-        else if (gb <= 8) gpuNote = 'Fits: 16GB GPU';
-        else if (gb <= 16) gpuNote = 'Fits: 24GB GPU';
-        else if (gb <= 40) gpuNote = 'Fits: 48GB GPU';
-        else gpuNote = 'Needs: A100/H100 80GB+';
-      }
-      document.getElementById('gpuNote').textContent = gpuNote;
+   // GPU note
+   var gpuNote = '';
+   if (totalParams > 1e9) {
+    var gb = optBytes / 1e9;
+    if (gb <= 4) gpuNote = 'Fits: 8GB GPU';
+    else if (gb <= 8) gpuNote = 'Fits: 16GB GPU';
+    else if (gb <= 16) gpuNote = 'Fits: 24GB GPU';
+    else if (gb <= 40) gpuNote = 'Fits: 48GB GPU';
+    else gpuNote = 'Needs: A100/H100 80GB+';
+   }
+   document.getElementById('gpuNote').textContent = gpuNote;
 
-      // Code snippet
-      document.getElementById('codeSnippet').innerHTML = '<code>' + escapeHtml(CODE_SNIPPETS[selectedOpt] || '') + '</code>';
-    }
+   // Code snippet
+   document.getElementById('codeSnippet').innerHTML = '<code>' + escapeHtml(CODE_SNIPPETS[selectedOpt] || '') + '</code>';
+  }
 
-    function escapeHtml(str) {
-      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
+  function escapeHtml(str) {
+   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
 
-    // Mobile nav
-    var toggle = document.querySelector('.mobile-toggle');
-    var nav = document.querySelector('nav');
-    if (toggle && nav) { toggle.addEventListener('click', function() { nav.classList.toggle('open'); }); }
+  // Mobile nav
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) { toggle.addEventListener('click', function() { nav.classList.toggle('open'); }); }
 
-    compute();
-  })();
-  </script>
-  <script src="/assets/js/share.js"></script>
+  compute();
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
 <script src="/assets/js/sticky-result.js"></script>
 </body>
 </html>

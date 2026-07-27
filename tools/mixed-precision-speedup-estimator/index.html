@@ -7,7 +7,7 @@
 <meta name="description" content="Estimate training speedup from FP32 to FP16/BF16. GPU-specific performance modeling.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://heytensor.com/tools/mixed-precision-speedup-estimator/">
-<meta property="og:title" content="Mixed Precision Speedup Estimator — HeyTensor">
+<meta property="og:title" content="Mixed Precision Speedup Estimator, HeyTensor">
 <meta property="og:description" content="Estimate training speedup with mixed precision (FP16/BF16)">
 <meta property="og:url" content="https://heytensor.com/tools/mixed-precision-speedup-estimator/">
 <meta property="og:type" content="website">
@@ -15,13 +15,13 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Mixed Precision Speedup Estimator",
-  "url": "https://heytensor.com/tools/mixed-precision-speedup-estimator/",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "description": "Estimate training speedup from mixed precision training"
+ "@context": "https://schema.org",
+ "@type": "WebApplication",
+ "name": "Mixed Precision Speedup Estimator",
+ "url": "https://heytensor.com/tools/mixed-precision-speedup-estimator/",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "description": "Estimate training speedup from mixed precision training"
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,318 +35,318 @@
 
 <div class="container">
 <h1>Mixed Precision Speedup Estimator</h1>
-    <p class="subtitle">Estimate training speedup with FP16/BF16 on your GPU</p>
+ <p class="subtitle">Estimate training speedup with FP16/BF16 on your GPU</p>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="tool-section">
-    <h2 style="color: #e8e8e8; margin-bottom: 24px;">Model & GPU Configuration</h2>
+ <div class="tool-section">
+ <h2 style="color: #e8e8e8; margin-bottom: 24px;">Model & GPU Configuration</h2>
 
-    <div class="input-grid">
-      <div class="input-group">
-        <label for="gpuType">GPU Type</label>
-        <select id="gpuType" onchange="updateGPUSpecs()">
-          <option value="rtx3090">RTX 3090 Ti</option>
-          <option value="a100">A100 40GB</option>
-          <option value="h100">H100 (SXM)</option>
-          <option value="l40s">L40S</option>
-          <option value="rtx4090">RTX 4090</option>
-          <option value="a6000">RTX A6000</option>
-        </select>
-        <p class="help-text">Your GPU model</p>
-      </div>
+ <div class="input-grid">
+ <div class="input-group">
+ <label for="gpuType">GPU Type</label>
+ <select id="gpuType" onchange="updateGPUSpecs()">
+ <option value="rtx3090">RTX 3090 Ti</option>
+ <option value="a100">A100 40GB</option>
+ <option value="h100">H100 (SXM)</option>
+ <option value="l40s">L40S</option>
+ <option value="rtx4090">RTX 4090</option>
+ <option value="a6000">RTX A6000</option>
+ </select>
+ <p class="help-text">Your GPU model</p>
+ </div>
 
-      <div class="input-group">
-        <label for="modelSize">Model Size (B)</label>
-        <input type="number" id="modelSize" placeholder="e.g., 7" min="0.1" value="7" step="0.1">
-        <p class="help-text">Billion parameters</p>
-      </div>
+ <div class="input-group">
+ <label for="modelSize">Model Size (B)</label>
+ <input type="number" id="modelSize" placeholder="e.g., 7" min="0.1" value="7" step="0.1">
+ <p class="help-text">Billion parameters</p>
+ </div>
 
-      <div class="input-group">
-        <label for="batchSize">Batch Size</label>
-        <input type="number" id="batchSize" placeholder="e.g., 32" min="1" value="32">
-        <p class="help-text">Samples per batch</p>
-      </div>
+ <div class="input-group">
+ <label for="batchSize">Batch Size</label>
+ <input type="number" id="batchSize" placeholder="e.g., 32" min="1" value="32">
+ <p class="help-text">Samples per batch</p>
+ </div>
 
-      <div class="input-group">
-        <label for="seqLength">Sequence Length</label>
-        <input type="number" id="seqLength" placeholder="e.g., 512" min="1" value="512">
-        <p class="help-text">Token sequence length</p>
-      </div>
+ <div class="input-group">
+ <label for="seqLength">Sequence Length</label>
+ <input type="number" id="seqLength" placeholder="e.g., 512" min="1" value="512">
+ <p class="help-text">Token sequence length</p>
+ </div>
 
-      <div class="input-group">
-        <label for="precision">Precision</label>
-        <select id="precision">
-          <option value="fp32">FP32 (baseline)</option>
-          <option value="fp16">FP16 (mixed)</option>
-          <option value="bf16">BF16 (mixed)</option>
-          <option value="int8">INT8 (quantized)</option>
-        </select>
-        <p class="help-text">Target precision</p>
-      </div>
+ <div class="input-group">
+ <label for="precision">Precision</label>
+ <select id="precision">
+ <option value="fp32">FP32 (baseline)</option>
+ <option value="fp16">FP16 (mixed)</option>
+ <option value="bf16">BF16 (mixed)</option>
+ <option value="int8">INT8 (quantized)</option>
+ </select>
+ <p class="help-text">Target precision</p>
+ </div>
 
-      <div class="input-group">
-        <label for="computeIntensity">Memory Bound %</label>
-        <input type="number" id="computeIntensity" placeholder="e.g., 50" min="0" max="100" value="50">
-        <p class="help-text">Estimated workload (0=compute, 100=memory)</p>
-      </div>
-    </div>
+ <div class="input-group">
+ <label for="computeIntensity">Memory Bound %</label>
+ <input type="number" id="computeIntensity" placeholder="e.g., 50" min="0" max="100" value="50">
+ <p class="help-text">Estimated workload (0=compute, 100=memory)</p>
+ </div>
+ </div>
 
-    <button class="calculation-button" onclick="estimateSpeedup()">Estimate Speedup</button>
-  </div>
+ <button class="calculation-button" onclick="estimateSpeedup()">Estimate Speedup</button>
+ </div>
 
-  <div class="results-section" id="resultsSection">
-    <h2 style="color: #e8e8e8; margin-bottom: 20px;">Speedup Analysis</h2>
+ <div class="results-section" id="resultsSection">
+ <h2 style="color: #e8e8e8; margin-bottom: 20px;">Speedup Analysis</h2>
 
-    <div class="result-grid">
-      <div class="result-card">
-        <div class="result-label">Training Speedup</div>
-        <div class="result-value" id="speedupFactor">1.5<span class="result-unit">x</span></div>
-      </div>
+ <div class="result-grid">
+ <div class="result-card">
+ <div class="result-label">Training Speedup</div>
+ <div class="result-value" id="speedupFactor">1.5<span class="result-unit">x</span></div>
+ </div>
 
-      <div class="result-card">
-        <div class="result-label">Tokens/Second</div>
-        <div class="result-value" id="tokensPerSec">850</div>
-      </div>
+ <div class="result-card">
+ <div class="result-label">Tokens/Second</div>
+ <div class="result-value" id="tokensPerSec">850</div>
+ </div>
 
-      <div class="result-card">
-        <div class="result-label">Memory Overhead</div>
-        <div class="result-value" id="memoryOverhead">-45%</div>
-      </div>
+ <div class="result-card">
+ <div class="result-label">Memory Overhead</div>
+ <div class="result-value" id="memoryOverhead">-45%</div>
+ </div>
 
-      <div class="result-card">
-        <div class="result-label">Training Time (100K steps)</div>
-        <div class="result-value" id="trainingTime" style="font-size: 1.2rem;">2.5h</div>
-      </div>
-    </div>
+ <div class="result-card">
+ <div class="result-label">Training Time (100K steps)</div>
+ <div class="result-value" id="trainingTime" style="font-size: 1.2rem;">2.5h</div>
+ </div>
+ </div>
 
-    <div class="breakdown-section">
-      <div class="breakdown-title">Performance Breakdown</div>
-      <div class="breakdown-item">
-        <span class="breakdown-label">GPU Peak FP32:</span>
-        <span class="breakdown-value" id="peakFp32">82.1 TFLOPS</span>
-      </div>
-      <div class="breakdown-item">
-        <span class="breakdown-label">GPU Peak FP16:</span>
-        <span class="breakdown-value" id="peakFp16">164.2 TFLOPS</span>
-      </div>
-      <div class="breakdown-item">
-        <span class="breakdown-label">Achievable Utilization:</span>
-        <span class="breakdown-value" id="utilization">65%</span>
-      </div>
-      <div class="breakdown-item">
-        <span class="breakdown-label">Speedup from Precision:</span>
-        <span class="breakdown-value" id="precisionSpeedup">1.4x</span>
-      </div>
-      <div class="breakdown-item">
-        <span class="breakdown-label">Memory Bandwidth Gain:</span>
-        <span class="breakdown-value" id="bandwidthGain">2.0x</span>
-      </div>
-    </div>
+ <div class="breakdown-section">
+ <div class="breakdown-title">Performance Breakdown</div>
+ <div class="breakdown-item">
+ <span class="breakdown-label">GPU Peak FP32:</span>
+ <span class="breakdown-value" id="peakFp32">82.1 TFLOPS</span>
+ </div>
+ <div class="breakdown-item">
+ <span class="breakdown-label">GPU Peak FP16:</span>
+ <span class="breakdown-value" id="peakFp16">164.2 TFLOPS</span>
+ </div>
+ <div class="breakdown-item">
+ <span class="breakdown-label">Achievable Utilization:</span>
+ <span class="breakdown-value" id="utilization">65%</span>
+ </div>
+ <div class="breakdown-item">
+ <span class="breakdown-label">Speedup from Precision:</span>
+ <span class="breakdown-value" id="precisionSpeedup">1.4x</span>
+ </div>
+ <div class="breakdown-item">
+ <span class="breakdown-label">Memory Bandwidth Gain:</span>
+ <span class="breakdown-value" id="bandwidthGain">2.0x</span>
+ </div>
+ </div>
 
-    <canvas id="speedupChart"></canvas>
-  </div>
+ <canvas id="speedupChart"></canvas>
+ </div>
 
-  <div class="partner-section">
-    <p class="partner-label">Recommended by our team</p>
-    <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
-    <p class="partner-desc">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
-  </div>
+ <div class="partner-section">
+ <p class="partner-label">Recommended by our team</p>
+ <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
+ <p class="partner-desc">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
+ </div>
 
-  <div class="ad-section">
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-  </div>
+ <div class="ad-section">
+ <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 </div>
 
 <script>
 const gpuSpecs = {
-  rtx3090: { name: 'RTX 3090 Ti', fp32TFLOPS: 82.1, fp16TFLOPS: 164.2, memoryGB: 24, bandwidthGBps: 936 },
-  a100: { name: 'A100 40GB', fp32TFLOPS: 312, fp16TFLOPS: 624, memoryGB: 40, bandwidthGBps: 2039 },
-  h100: { name: 'H100', fp32TFLOPS: 756, fp16TFLOPS: 1513, memoryGB: 80, bandwidthGBps: 3352 },
-  l40s: { name: 'L40S', fp32TFLOPS: 362, fp16TFLOPS: 725, memoryGB: 48, bandwidthGBps: 960 },
-  rtx4090: { name: 'RTX 4090', fp32TFLOPS: 165, fp16TFLOPS: 330, memoryGB: 24, bandwidthGBps: 1008 },
-  a6000: { name: 'RTX A6000', fp32TFLOPS: 91.1, fp16TFLOPS: 182.2, memoryGB: 48, bandwidthGBps: 576 }
+ rtx3090: { name: 'RTX 3090 Ti', fp32TFLOPS: 82.1, fp16TFLOPS: 164.2, memoryGB: 24, bandwidthGBps: 936 },
+ a100: { name: 'A100 40GB', fp32TFLOPS: 312, fp16TFLOPS: 624, memoryGB: 40, bandwidthGBps: 2039 },
+ h100: { name: 'H100', fp32TFLOPS: 756, fp16TFLOPS: 1513, memoryGB: 80, bandwidthGBps: 3352 },
+ l40s: { name: 'L40S', fp32TFLOPS: 362, fp16TFLOPS: 725, memoryGB: 48, bandwidthGBps: 960 },
+ rtx4090: { name: 'RTX 4090', fp32TFLOPS: 165, fp16TFLOPS: 330, memoryGB: 24, bandwidthGBps: 1008 },
+ a6000: { name: 'RTX A6000', fp32TFLOPS: 91.1, fp16TFLOPS: 182.2, memoryGB: 48, bandwidthGBps: 576 }
 };
 
 function updateGPUSpecs() {
-  // Auto-update on selection
+ // Auto-update on selection
 }
 
 function estimateSpeedup() {
-  const gpuType = document.getElementById('gpuType').value;
-  const modelSize = parseFloat(document.getElementById('modelSize').value) || 0;
-  const batchSize = parseInt(document.getElementById('batchSize').value) || 1;
-  const seqLength = parseInt(document.getElementById('seqLength').value) || 512;
-  const precision = document.getElementById('precision').value;
-  const memoryBound = parseFloat(document.getElementById('computeIntensity').value) || 50;
+ const gpuType = document.getElementById('gpuType').value;
+ const modelSize = parseFloat(document.getElementById('modelSize').value) || 0;
+ const batchSize = parseInt(document.getElementById('batchSize').value) || 1;
+ const seqLength = parseInt(document.getElementById('seqLength').value) || 512;
+ const precision = document.getElementById('precision').value;
+ const memoryBound = parseFloat(document.getElementById('computeIntensity').value) || 50;
 
-  const gpu = gpuSpecs[gpuType];
+ const gpu = gpuSpecs[gpuType];
 
-  if (modelSize <= 0) {
-    alert('Please enter valid model size');
-    return;
-  }
+ if (modelSize <= 0) {
+  alert('Please enter valid model size');
+  return;
+ }
 
-  // Baseline: FP32
-  let speedup = 1.0;
-  let fp32TFlops = gpu.fp32TFLOPS;
-  let fp16TFlops = gpu.fp16TFLOPS;
+ // Baseline: FP32
+ let speedup = 1.0;
+ let fp32TFlops = gpu.fp32TFLOPS;
+ let fp16TFlops = gpu.fp16TFLOPS;
 
-  // Precision speedup factors
-  const precisionFactors = {
-    fp32: 1.0,
-    fp16: (memoryBound > 50) ? 1.8 : 1.5,
-    bf16: (memoryBound > 50) ? 1.7 : 1.45,
-    int8: (memoryBound > 50) ? 2.5 : 2.0
-  };
+ // Precision speedup factors
+ const precisionFactors = {
+  fp32: 1.0,
+  fp16: (memoryBound > 50) ? 1.8 : 1.5,
+  bf16: (memoryBound > 50) ? 1.7 : 1.45,
+  int8: (memoryBound > 50) ? 2.5 : 2.0
+ };
 
-  const baseSpeedup = precisionFactors[precision] || 1.0;
+ const baseSpeedup = precisionFactors[precision] || 1.0;
 
-  // Memory bandwidth overhead reduction
-  const precisionBytesReduction = {
-    fp32: 1.0,
-    fp16: 0.5,
-    bf16: 0.5,
-    int8: 0.25
-  };
+ // Memory bandwidth overhead reduction
+ const precisionBytesReduction = {
+  fp32: 1.0,
+  fp16: 0.5,
+  bf16: 0.5,
+  int8: 0.25
+ };
 
-  const memoryReduction = (1 - precisionBytesReduction[precision]) * 100;
+ const memoryReduction = (1 - precisionBytesReduction[precision]) * 100;
 
-  // Compute model FLOPs
-  const totalParams = modelSize * 1_000_000_000;
-  const flopsPerToken = totalParams * 2; // forward + backward
-  const flopsPerBatch = flopsPerToken * batchSize * seqLength;
-  const flopsPerSecondTarget = (precision === 'fp32') ? fp32TFlops * 1e12 : fp16TFlops * 1e12;
+ // Compute model FLOPs
+ const totalParams = modelSize * 1_000_000_000;
+ const flopsPerToken = totalParams * 2; // forward + backward
+ const flopsPerBatch = flopsPerToken * batchSize * seqLength;
+ const flopsPerSecondTarget = (precision === 'fp32') ? fp32TFlops * 1e12 : fp16TFlops * 1e12;
 
-  // Achievable throughput
-  let achievableSpeedup = 1.0;
-  if (memoryBound > 50) {
-    // Compute-bound: can leverage higher precision speedup
-    achievableSpeedup = baseSpeedup * 0.9; // 90% utilization
-  } else {
-    // Memory-bound: limited by bandwidth
-    const fpActual = (precision === 'fp32') ? fp32TFlops : fp16TFlops;
-    achievableSpeedup = (fpActual / gpu.fp32TFLOPS) * 0.85; // 85% utilization
-  }
+ // Achievable throughput
+ let achievableSpeedup = 1.0;
+ if (memoryBound > 50) {
+  // Compute-bound: can leverage higher precision speedup
+  achievableSpeedup = baseSpeedup * 0.9; // 90% utilization
+ } else {
+  // Memory-bound: limited by bandwidth
+  const fpActual = (precision === 'fp32') ? fp32TFlops : fp16TFlops;
+  achievableSpeedup = (fpActual / gpu.fp32TFLOPS) * 0.85; // 85% utilization
+ }
 
-  // Compute tokens/sec
-  const baseTokensPerSec = 500; // baseline for reference GPU
-  const tokensPerSec = Math.round(baseTokensPerSec * achievableSpeedup);
+ // Compute tokens/sec
+ const baseTokensPerSec = 500; // baseline for reference GPU
+ const tokensPerSec = Math.round(baseTokensPerSec * achievableSpeedup);
 
-  // Training time estimate (100K steps)
-  const stepsPerSecond = tokensPerSec / seqLength;
-  const secondsFor100K = 100000 / stepsPerSecond;
-  const hoursFor100K = secondsFor100K / 3600;
-  const timeStr = hoursFor100K < 24
-    ? `${hoursFor100K.toFixed(1)}h`
-    : `${(hoursFor100K / 24).toFixed(1)}d`;
+ // Training time estimate (100K steps)
+ const stepsPerSecond = tokensPerSec / seqLength;
+ const secondsFor100K = 100000 / stepsPerSecond;
+ const hoursFor100K = secondsFor100K / 3600;
+ const timeStr = hoursFor100K < 24
+  ? `${hoursFor100K.toFixed(1)}h`
+  : `${(hoursFor100K / 24).toFixed(1)}d`;
 
-  // Update UI
-  document.getElementById('speedupFactor').innerHTML = `${achievableSpeedup.toFixed(2)}<span class="result-unit">x</span>`;
-  document.getElementById('tokensPerSec').textContent = tokensPerSec;
-  document.getElementById('memoryOverhead').textContent = memoryReduction > 0 ? `-${memoryReduction.toFixed(0)}%` : `+${Math.abs(memoryReduction).toFixed(0)}%`;
-  document.getElementById('trainingTime').textContent = timeStr;
+ // Update UI
+ document.getElementById('speedupFactor').innerHTML = `${achievableSpeedup.toFixed(2)}<span class="result-unit">x</span>`;
+ document.getElementById('tokensPerSec').textContent = tokensPerSec;
+ document.getElementById('memoryOverhead').textContent = memoryReduction > 0 ? `-${memoryReduction.toFixed(0)}%` : `+${Math.abs(memoryReduction).toFixed(0)}%`;
+ document.getElementById('trainingTime').textContent = timeStr;
 
-  // Breakdown
-  document.getElementById('peakFp32').textContent = fp32TFlops.toFixed(1) + ' TFLOPS';
-  document.getElementById('peakFp16').textContent = fp16TFlops.toFixed(1) + ' TFLOPS';
-  document.getElementById('utilization').textContent = (memoryBound > 50 ? 90 : 85) + '%';
-  document.getElementById('precisionSpeedup').textContent = baseSpeedup.toFixed(2) + 'x';
-  document.getElementById('bandwidthGain').textContent = (1 / precisionBytesReduction[precision]).toFixed(1) + 'x';
+ // Breakdown
+ document.getElementById('peakFp32').textContent = fp32TFlops.toFixed(1) + ' TFLOPS';
+ document.getElementById('peakFp16').textContent = fp16TFlops.toFixed(1) + ' TFLOPS';
+ document.getElementById('utilization').textContent = (memoryBound > 50 ? 90 : 85) + '%';
+ document.getElementById('precisionSpeedup').textContent = baseSpeedup.toFixed(2) + 'x';
+ document.getElementById('bandwidthGain').textContent = (1 / precisionBytesReduction[precision]).toFixed(1) + 'x';
 
-  // Draw chart
-  drawSpeedupChart(achievableSpeedup, baseSpeedup);
+ // Draw chart
+ drawSpeedupChart(achievableSpeedup, baseSpeedup);
 
-  document.getElementById('resultsSection').classList.add('show');
+ document.getElementById('resultsSection').classList.add('show');
 
-  if (typeof window.adsbygoogle !== 'undefined') {
-    window.adsbygoogle.push({});
-  }
+ if (typeof window.adsbygoogle !== 'undefined') {
+  window.adsbygoogle.push({});
+ }
 }
 
 function drawSpeedupChart(achievable, precision) {
-  const canvas = document.getElementById('speedupChart');
-  const ctx = canvas.getContext('2d');
-  const width = canvas.offsetWidth * window.devicePixelRatio;
-  const height = canvas.offsetHeight * window.devicePixelRatio;
+ const canvas = document.getElementById('speedupChart');
+ const ctx = canvas.getContext('2d');
+ const width = canvas.offsetWidth * window.devicePixelRatio;
+ const height = canvas.offsetHeight * window.devicePixelRatio;
 
-  canvas.width = width;
-  canvas.height = height;
-  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+ canvas.width = width;
+ canvas.height = height;
+ ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 
-  const chartWidth = canvas.offsetWidth;
-  const chartHeight = canvas.offsetHeight;
+ const chartWidth = canvas.offsetWidth;
+ const chartHeight = canvas.offsetHeight;
 
-  // Clear
-  ctx.fillStyle = '#0f172a';
-  ctx.fillRect(0, 0, chartWidth, chartHeight);
+ // Clear
+ ctx.fillStyle = '#0f172a';
+ ctx.fillRect(0, 0, chartWidth, chartHeight);
 
-  // Grid
-  ctx.strokeStyle = '#334155';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 4; i++) {
-    const y = (i / 4) * chartHeight;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(chartWidth, y);
-    ctx.stroke();
-  }
+ // Grid
+ ctx.strokeStyle = '#334155';
+ ctx.lineWidth = 1;
+ for (let i = 0; i <= 4; i++) {
+  const y = (i / 4) * chartHeight;
+  ctx.beginPath();
+  ctx.moveTo(0, y);
+  ctx.lineTo(chartWidth, y);
+  ctx.stroke();
+ }
 
-  // Y-axis labels
-  ctx.fillStyle = '#94a3b8';
-  ctx.font = '12px sans-serif';
-  ctx.textAlign = 'right';
-  for (let i = 0; i <= 4; i++) {
-    const y = chartHeight - (i / 4) * chartHeight;
-    ctx.fillText((i * 0.5).toFixed(1) + 'x', -10, y + 4);
-  }
+ // Y-axis labels
+ ctx.fillStyle = '#94a3b8';
+ ctx.font = '12px sans-serif';
+ ctx.textAlign = 'right';
+ for (let i = 0; i <= 4; i++) {
+  const y = chartHeight - (i / 4) * chartHeight;
+  ctx.fillText((i * 0.5).toFixed(1) + 'x', -10, y + 4);
+ }
 
-  // Bars
-  const barWidth = chartWidth / 3;
-  const scenarios = [
-    { name: 'FP32 (baseline)', value: 1.0, color: '#64748b' },
-    { name: 'Precision gain', value: precision, color: '#f97316' },
-    { name: 'Actual speedup', value: achievable, color: '#3b82f6' }
-  ];
+ // Bars
+ const barWidth = chartWidth / 3;
+ const scenarios = [
+  { name: 'FP32 (baseline)', value: 1.0, color: '#64748b' },
+  { name: 'Precision gain', value: precision, color: '#f97316' },
+  { name: 'Actual speedup', value: achievable, color: '#3b82f6' }
+ ];
 
-  scenarios.forEach((s, i) => {
-    const x = i * barWidth + barWidth * 0.2;
-    const barHeight = (s.value / 2) * chartHeight;
-    const y = chartHeight - barHeight;
+ scenarios.forEach((s, i) => {
+  const x = i * barWidth + barWidth * 0.2;
+  const barHeight = (s.value / 2) * chartHeight;
+  const y = chartHeight - barHeight;
 
-    ctx.fillStyle = s.color;
-    ctx.fillRect(x, y, barWidth * 0.6, barHeight);
+  ctx.fillStyle = s.color;
+  ctx.fillRect(x, y, barWidth * 0.6, barHeight);
 
-    ctx.fillStyle = '#e8e8e8';
-    ctx.textAlign = 'center';
-    ctx.fillText(s.value.toFixed(2) + 'x', x + barWidth * 0.3, chartHeight + 20);
-  });
+  ctx.fillStyle = '#e8e8e8';
+  ctx.textAlign = 'center';
+  ctx.fillText(s.value.toFixed(2) + 'x', x + barWidth * 0.3, chartHeight + 20);
+ });
 }
 
 document.getElementById('gpuType').addEventListener('change', updateGPUSpecs);

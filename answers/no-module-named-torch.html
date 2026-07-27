@@ -1,181 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix: ModuleNotFoundError: No module named 'torch' — Install PyTorch</title>
-  <meta name="description" content="Run: pip install torch torchvision. For CUDA GPU support: pip install torch --index-url https://download.pytorch.org/whl/cu121. Works for pip, conda, venv, and Docker.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/answers/no-module-named-torch.html">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Fix: No Module Named torch — Install PyTorch">
-  <meta property="og:description" content="Install PyTorch: pip install torch torchvision. For CUDA: pip install torch --index-url https://download.pytorch.org/whl/cu121.">
-  <meta property="og:url" content="https://heytensor.com/answers/no-module-named-torch.html">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fix: No Module Named torch">
-  <meta name="twitter:description" content="Install PyTorch: pip install torch torchvision.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [{
-      "@type": "Question",
-      "name": "How to fix ModuleNotFoundError No module named torch?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Install PyTorch with: pip install torch torchvision. For CUDA GPU support, use: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121 (for CUDA 12.1). If you have multiple Python versions, ensure you're using the right pip: python3 -m pip install torch. For conda: conda install pytorch torchvision -c pytorch."
-      }
-    }]
-  }
-  </script>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Fix: ModuleNotFoundError: No module named 'torch', Install PyTorch</title>
+ <meta name="description" content="Run: pip install torch torchvision. For CUDA GPU support: pip install torch --index-url https://download.pytorch.org/whl/cu121. Works for pip, conda, venv, and Docker.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/no-module-named-torch.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: No Module Named torch, Install PyTorch">
+ <meta property="og:description" content="Install PyTorch: pip install torch torchvision. For CUDA: pip install torch --index-url https://download.pytorch.org/whl/cu121.">
+ <meta property="og:url" content="https://heytensor.com/answers/no-module-named-torch.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: No Module Named torch">
+ <meta name="twitter:description" content="Install PyTorch: pip install torch torchvision.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+   "@type": "Question",
+   "name": "How to fix ModuleNotFoundError No module named torch?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Install PyTorch with: pip install torch torchvision. For CUDA GPU support, use: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121 (for CUDA 12.1). If you have multiple Python versions, ensure you're using the right pip: python3 -m pip install torch. For conda: conda install pytorch torchvision -c pytorch."
+   }
+  }]
+ }
+ </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"No Module Named torch"}]}</script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/" class="active">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container" style="max-width:720px;">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>No Module Named torch</span>
-    </nav>
+ <main class="container" style="max-width:720px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>No Module Named torch</span>
+ </nav>
 
-    <article>
-      <h1>How to Fix "No Module Named torch"</h1>
+ <article>
+ <h1>How to Fix "No Module Named torch"</h1>
 
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
-        <p style="margin:0;line-height:1.7;"><strong>Install PyTorch: <code>pip install torch torchvision</code>.</strong> For CUDA GPU support: <code>pip install torch --index-url https://download.pytorch.org/whl/cu121</code></p>
-      </div>
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">Install PyTorch: <code>pip install torch torchvision</code>. For CUDA GPU support: <code>pip install torch --index-url https://download.pytorch.org/whl/cu121</code></p>
+ </div>
 
-      <h2>CPU Only (All Platforms)</h2>
-      <pre><code>pip install torch torchvision torchaudio</code></pre>
+ <h2>CPU Only (All Platforms)</h2>
+ <pre><code>pip install torch torchvision torchaudio</code></pre>
 
-      <h2>With CUDA GPU Support</h2>
-      <pre><code># CUDA 12.1 (recommended for most modern GPUs)
+ <h2>With CUDA GPU Support</h2>
+ <pre><code># CUDA 12.1 (recommended for most modern GPUs)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 # CUDA 11.8 (older GPUs)
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118</code></pre>
 
-      <h2>With Conda</h2>
-      <pre><code># CPU only
+ <h2>With Conda</h2>
+ <pre><code># CPU only
 conda install pytorch torchvision torchaudio cpuonly -c pytorch
 
 # CUDA 12.1
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia</code></pre>
 
-      <h2>Common Issues</h2>
+ <h2>Common Issues</h2>
 
-      <h3>Wrong Python version</h3>
-      <pre><code># Make sure pip matches your Python
+ <h3>Wrong Python version</h3>
+ <pre><code># Make sure pip matches your Python
 python3 -m pip install torch
 # or
 python -m pip install torch</code></pre>
 
-      <h3>Virtual environment not activated</h3>
-      <pre><code># Activate your venv first
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+ <h3>Virtual environment not activated</h3>
+ <pre><code># Activate your venv first
+source venv/bin/activate # Linux/Mac
+venv\Scripts\activate   # Windows
 pip install torch</code></pre>
 
-      <h3>Verify installation</h3>
-      <pre><code>python -c "import torch; print(torch.__version__)"
+ <h3>Verify installation</h3>
+ <pre><code>python -c "import torch; print(torch.__version__)"
 # Should print something like: 2.3.0
 
 # Check CUDA availability
 python -c "import torch; print(torch.cuda.is_available())"</code></pre>
 
-      <section class="related-links">
-        <h2>Related Questions</h2>
-        <div class="related-grid">
-          <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">How to fix CUDA out of memory?</a>
-          <a href="/answers/runtime-error-expected-scalar-type-float.html" class="related-card">How to fix "expected scalar type Float"?</a>
-          <a href="/answers/pytorch-vs-tensorflow-2026.html" class="related-card">PyTorch vs TensorFlow in 2026</a>
-        
-        <a href="https://claudhq.com/errors/" class="related-card" title="Claude Code Error Reference">Troubleshoot AI Coding Errors — ClaudHQ Guide</a>
-      </div>
-      </section>
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">How to fix CUDA out of memory?</a>
+ <a href="/answers/runtime-error-expected-scalar-type-float.html" class="related-card">How to fix "expected scalar type Float"?</a>
+ <a href="/answers/pytorch-vs-tensorflow-2026.html" class="related-card">PyTorch vs TensorFlow in 2026</a>
+ 
+ <a href="https://claudhq.com/errors/" class="related-card" title="Claude Code Error Reference">Troubleshoot AI Coding Errors, ClaudHQ Guide</a>
+ </div>
+ </section>
 
-      <div style="text-align:center;margin:2rem 0;">
-        <a href="/" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try HeyTensor Shape Calculator</a>
-      </div>
-    </article>
-  </main>
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try HeyTensor Shape Calculator</a>
+ </div>
+ </article>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ </div>
+ </footer>
 
-  <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
-  <script src="/assets/js/share.js"></script>
+ <script src="/assets/js/share.js"></script>
 </body>
 </html>

@@ -1,144 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linear Layer Shape Calculator — PyTorch | HeyTensor</title>
-  <meta name="description" content="Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/tools/linear-layer-calculator.html">
-  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/linear-layer-calculator.html">
-  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/linear-layer-calculator.html">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Linear Layer Shape Calculator — PyTorch | HeyTensor">
-  <meta property="og:description" content="Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.">
-  <meta property="og:url" content="https://heytensor.com/tools/linear-layer-calculator.html">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Linear Layer Shape Calculator — PyTorch | HeyTensor">
-  <meta name="twitter:description" content="Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="/assets/tools.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Linear Layer Shape Calculator",
-    "url": "https://heytensor.com/tools/linear-layer-calculator.html",
-    "description": "Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "browserRequirements": "Requires JavaScript",
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    },
-    "datePublished": "2026-04-06",
-    "dateModified": "2026-04-06"
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is the output shape of nn.Linear?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "nn.Linear(in_features, out_features) transforms only the last dimension. For input [batch, in_features], output is [batch, out_features]. For input [batch, seq, in_features], output is [batch, seq, out_features]."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How many parameters does a Linear layer have?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A Linear layer has in_features * out_features weights plus out_features biases (if bias=True). Total: in_features * out_features + out_features. For Linear(512, 10), that's 512*10 + 10 = 5,130 parameters."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why do I get a shape error with Linear after Conv2d?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is this tool free?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. All HeyTensor tools are free, run in your browser, and require no signup."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does this work offline?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load."
-        }
-      }
-    ]
-  }
-  </script>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Linear Layer Shape Calculator, PyTorch | HeyTensor</title>
+ <meta name="description" content="Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/linear-layer-calculator.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/linear-layer-calculator.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/linear-layer-calculator.html">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Linear Layer Shape Calculator, PyTorch | HeyTensor">
+ <meta property="og:description" content="Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.">
+ <meta property="og:url" content="https://heytensor.com/tools/linear-layer-calculator.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Linear Layer Shape Calculator, PyTorch | HeyTensor">
+ <meta name="twitter:description" content="Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <link rel="stylesheet" href="/assets/tools.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Linear Layer Shape Calculator",
+  "url": "https://heytensor.com/tools/linear-layer-calculator.html",
+  "description": "Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "browserRequirements": "Requires JavaScript",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "datePublished": "2026-04-06",
+  "dateModified": "2026-04-06"
+ }
+ </script>
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
+    "@type": "Question",
+    "name": "What is the output shape of nn.Linear?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "nn.Linear(in_features, out_features) transforms only the last dimension. For input [batch, in_features], output is [batch, out_features]. For input [batch, seq, in_features], output is [batch, seq, out_features]."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "How many parameters does a Linear layer have?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "A Linear layer has in_features * out_features weights plus out_features biases (if bias=True). Total: in_features * out_features + out_features. For Linear(512, 10), that's 512*10 + 10 = 5,130 parameters."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Why do I get a shape error with Linear after Conv2d?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Is this tool free?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Yes. All HeyTensor tools are free, run in your browser, and require no signup."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Does this work offline?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load."
+    }
+   }
+  ]
+ }
+ </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Linear Layer Shape Calculator"}]}</script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/linear-layer-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Linear Layer Shape Calculator</span>
-    </nav>
+ <main class="container">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Linear Layer Shape Calculator</span>
+ </nav>
 
-    <section class="hero tool-hero">
-      <h1>Linear Layer Shape Calculator</h1>
-      <p>Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.</p>
-      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
-    </section>
+ <section class="hero tool-hero">
+ <h1>Linear Layer Shape Calculator</h1>
+ <p>Calculate the output shape of a PyTorch nn.Linear layer. Enter input shape and out_features to see the output tensor dimensions instantly.</p>
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+ </section>
 
-    <div id="tool-container"
-         data-component="shape-calculator"
-         data-config='{&quot;layer&quot;:&quot;Linear&quot;}'>
-    </div>
+ <div id="tool-container"
+     data-component="shape-calculator"
+     data-config='{&quot;layer&quot;:&quot;Linear&quot;}'>
+ </div>
 
-    <div class="last-updated"><time datetime="2026-04-06">Last updated: April 6, 2026</time></div>
+ <div class="last-updated"><time datetime="2026-04-06">Last updated: April 6, 2026</time></div>
 
-    <section class="code-examples" style="max-width:720px;margin:2rem auto;">
-  <h2>PyTorch Linear Layer Code</h2>
-  <pre><code>import torch.nn as nn
+ <section class="code-examples" style="max-width:720px;margin:2rem auto;">
+ <h2>PyTorch Linear Layer Code</h2>
+ <pre><code>import torch.nn as nn
 
 # Define Linear layer
 linear = nn.Linear(in_features=512, out_features=10)
@@ -146,125 +146,125 @@ linear = nn.Linear(in_features=512, out_features=10)
 # Input: batch=32, features=512
 x = torch.randn(32, 512)
 output = linear(x)
-print(output.shape)  # torch.Size([32, 10])
+print(output.shape) # torch.Size([32, 10])
 
 # Parameters: in_features * out_features + out_features (bias)
-print(sum(p.numel() for p in linear.parameters()))  # 5130
+print(sum(p.numel() for p in linear.parameters())) # 5130
 
 # Common pattern: flatten CNN output → Linear
 model = nn.Sequential(
-    nn.Flatten(),           # (batch, C, H, W) → (batch, C*H*W)
-    nn.Linear(512 * 7 * 7, 4096),
-    nn.ReLU(),
-    nn.Linear(4096, 1000)
+  nn.Flatten(),      # (batch, C, H, W) → (batch, C*H*W)
+  nn.Linear(512 * 7 * 7, 4096),
+  nn.ReLU(),
+  nn.Linear(4096, 1000)
 )</code></pre>
 </section>
 
-    <section class="faq-section">
-      <h2>Frequently Asked Questions</h2>
-            <details>
-        <summary>What is the output shape of nn.Linear?</summary>
-        <p class="qas">nn.Linear(in_features, out_features) transforms only the last dimension. For input [batch, in_features], output is [batch, out_features]. For input [batch, seq, in_features], output is [batch, seq, out_features].</p>
-      </details>
+ <section class="faq-section">
+ <h2>Frequently Asked Questions</h2>
+ <details>
+ <summary>What is the output shape of nn.Linear?</summary>
+ <p class="qas">nn.Linear(in_features, out_features) transforms only the last dimension. For input [batch, in_features], output is [batch, out_features]. For input [batch, seq, in_features], output is [batch, seq, out_features].</p>
+ </details>
 
-      <details>
-        <summary>How many parameters does a Linear layer have?</summary>
-        <p class="qas">A Linear layer has in_features * out_features weights plus out_features biases (if bias=True). Total: in_features * out_features + out_features. For Linear(512, 10), that&#39;s 512*10 + 10 = 5,130 parameters.</p>
-      </details>
+ <details>
+ <summary>How many parameters does a Linear layer have?</summary>
+ <p class="qas">A Linear layer has in_features * out_features weights plus out_features biases (if bias=True). Total: in_features * out_features + out_features. For Linear(512, 10), that&#39;s 512*10 + 10 = 5,130 parameters.</p>
+ </details>
 
-      <details>
-        <summary>Why do I get a shape error with Linear after Conv2d?</summary>
-        <p class="qas">Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W.</p>
-      </details>
-      <details><summary>Is this tool free?</summary>
-        <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
-      <details><summary>Does this work offline?</summary>
-        <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
-    </section>
+ <details>
+ <summary>Why do I get a shape error with Linear after Conv2d?</summary>
+ <p class="qas">Conv2d outputs a 4D tensor [batch, channels, H, W], but Linear expects the last dimension to match in_features. You need to flatten first: use nn.Flatten() to convert [batch, C, H, W] to [batch, C*H*W], then set in_features = C*H*W.</p>
+ </details>
+ <details><summary>Is this tool free?</summary>
+ <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
+ <details><summary>Does this work offline?</summary>
+ <p class="qas">Once loaded, the tool runs entirely in your browser. No internet needed after the initial page load.</p></details>
+ </section>
 
-    <section class="related-tools">
-      <h2>Related Tools</h2>
-      <div class="related-grid">
-                <a href="/tools/flatten-calculator.html" class="related-card">
-          <h3>Flatten Output Shape Calculator</h3>
-          <p>Calculate the output shape of nn.Flatten in PyTorch. See how a multi-dimensional tensor collapses...</p>
-        </a>
-        <a href="/tools/conv2d-calculator.html" class="related-card">
-          <h3>Conv2d Output Size Calculator</h3>
-          <p>Calculate the output height, width, and channels of a PyTorch Conv2d layer. Enter input shape,...</p>
-        </a>
-        <a href="/tools/parameter-counter.html" class="related-card">
-          <h3>Neural Network Parameter Counter</h3>
-          <p>Count the total parameters in your neural network. Add layers, specify dimensions, and get the...</p>
-        </a>
-      </div>
-    </section>
+ <section class="related-tools">
+ <h2>Related Tools</h2>
+ <div class="related-grid">
+ <a href="/tools/flatten-calculator.html" class="related-card">
+ <h3>Flatten Output Shape Calculator</h3>
+ <p>Calculate the output shape of nn.Flatten in PyTorch. See how a multi-dimensional tensor collapses...</p>
+ </a>
+ <a href="/tools/conv2d-calculator.html" class="related-card">
+ <h3>Conv2d Output Size Calculator</h3>
+ <p>Calculate the output height, width, and channels of a PyTorch Conv2d layer. Enter input shape...</p>
+ </a>
+ <a href="/tools/parameter-counter.html" class="related-card">
+ <h3>Neural Network Parameter Counter</h3>
+ <p>Count the total parameters in your neural network. Add layers, specify dimensions, and get the...</p>
+ </a>
+ </div>
+ </section>
 
-    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
-      <h2>About This Tool</h2>
-      <p>This tool is part of <a href="/">HeyTensor</a>, a free suite of PyTorch and deep learning utilities. All calculations run entirely in your browser — no data is sent to any server. The source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
-      <h3>Contact</h3>
-      <p>HeyTensor is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
-    </section>
-  </main>
+ <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+ <h2>About This Tool</h2>
+ <p>This tool is part of <a href="/">HeyTensor</a>, a free suite of PyTorch and deep learning utilities. All calculations run entirely in your browser, no data is sent to any server. The source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+ <h3>Contact</h3>
+ <p>HeyTensor is built and maintained by <a href="https://zovo.one">Michael Lip</a>. For questions or feedback, email <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
+ </section>
+ </main>
 
-    <div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
-    <span style="font-size:0.85rem;color:#8b949e;">&#128202; Based on real data from our <a href="/research/pytorch-error-database.html" style="color:#58a6ff;">PyTorch Error Database</a> &mdash; 52 errors analyzed from Stack Overflow</span>
-  </div>
+ <div class="research-callout" style="max-width:900px;margin:2rem auto;padding:1rem 1.5rem;background:rgba(139,233,253,0.05);border-left:3px solid #8be9fd;border-radius:0 8px 8px 0;">
+ <span style="font-size:0.85rem;color:#8b949e;">&#128202; Based on real data from our <a href="/research/pytorch-error-database.html" style="color:#58a6ff;">PyTorch Error Database</a> &mdash; 52 errors analyzed from Stack Overflow</span>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-        <div class="footer-brand">Zovo Tools</div>
-        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
-        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
-    </div>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever →</a>
+ <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+ </div>
 </footer>
 
 <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 
-  <script src="/assets/js/app.js"></script>
-  <script src="/assets/js/sticky-result.js"></script>
+ <script src="/assets/js/app.js"></script>
+ <script src="/assets/js/sticky-result.js"></script>
 
 <script src="/assets/js/share.js"></script>
 <script src="/assets/js/pro-nudge.js"></script>

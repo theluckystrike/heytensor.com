@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-  <title>Gradient Accumulation Calculator · heytensor</title>
-  <meta name="description" content="Compute accumulation steps, scaled LR, and throughput overhead for distributed training. Interactive PyTorch GradScaler snippet included.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/tools/gradient-accumulation-calculator">
-  <!-- JSON-LD: WebApplication + FAQPage + BreadcrumbList -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebApplication",
-        "name": "Gradient Accumulation Calculator",
-        "url": "https://heytensor.com/tools/gradient-accumulation-calculator",
-        "applicationCategory": "Developer Tool",
-        "operatingSystem": "All",
-        "browserRequirements": "JavaScript enabled",
-        "description": "Compute accumulation steps, scaled learning rate, and overhead for distributed training."
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Why use gradient accumulation?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "It simulates a larger effective batch size when GPU memory is limited, by accumulating gradients over several forward/backward passes before updating weights."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does LR scaling work?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Linear scaling multiplies the base LR by (effective_bs / base_bs). Square‑root scaling multiplies by sqrt(effective_bs / base_bs). Both help maintain training dynamics."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "When should I use gradient checkpointing?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "If accumulation steps exceed 8, checkpointing reduces memory by recomputing activations during backward, at the cost of ~20% extra compute."
-            }
-          }
-        ]
-      },
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com" },
-          { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools" },
-          { "@type": "ListItem", "position": 3, "name": "Gradient Accumulation Calculator", "item": "https://heytensor.com/tools/gradient-accumulation-calculator" }
-        ]
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+ <title>Gradient Accumulation Calculator · heytensor</title>
+ <meta name="description" content="Compute accumulation steps, scaled LR, and throughput overhead for distributed training. Interactive PyTorch GradScaler snippet included.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/gradient-accumulation-calculator">
+ 
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@graph": [
+   {
+    "@type": "WebApplication",
+    "name": "Gradient Accumulation Calculator",
+    "url": "https://heytensor.com/tools/gradient-accumulation-calculator",
+    "applicationCategory": "Developer Tool",
+    "operatingSystem": "All",
+    "browserRequirements": "JavaScript enabled",
+    "description": "Compute accumulation steps, scaled learning rate, and overhead for distributed training."
+   },
+   {
+    "@type": "FAQPage",
+    "mainEntity": [
+     {
+      "@type": "Question",
+      "name": "Why use gradient accumulation?",
+      "acceptedAnswer": {
+       "@type": "Answer",
+       "text": "It simulates a larger effective batch size when GPU memory is limited, by accumulating gradients over several forward/backward passes before updating weights."
       }
+     },
+     {
+      "@type": "Question",
+      "name": "How does LR scaling work?",
+      "acceptedAnswer": {
+       "@type": "Answer",
+       "text": "Linear scaling multiplies the base LR by (effective_bs / base_bs). Square‑root scaling multiplies by sqrt(effective_bs / base_bs). Both help maintain training dynamics."
+      }
+     },
+     {
+      "@type": "Question",
+      "name": "When should I use gradient checkpointing?",
+      "acceptedAnswer": {
+       "@type": "Answer",
+       "text": "If accumulation steps exceed 8, checkpointing reduces memory by recomputing activations during backward, at the cost of ~20% extra compute."
+      }
+     }
     ]
-  }
-  </script>
+   },
+   {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com" },
+     { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools" },
+     { "@type": "ListItem", "position": 3, "name": "Gradient Accumulation Calculator", "item": "https://heytensor.com/tools/gradient-accumulation-calculator" }
+    ]
+   }
+  ]
+ }
+ </script>
 
 <meta property="og:title" content="Gradient Accumulation Calculator · heytensor">
 <meta property="og:description" content="Compute accumulation steps, scaled LR, and throughput overhead for distributed training. Interactive PyTorch GradScaler snippet included.">
@@ -76,114 +76,114 @@
 </head>
 <body>
 <div class="container">
-<h1>⚡ Gradient Accumulation <small>heytensor.com</small></h1>
-    <p style="color:#94a3b8; margin-top:0.3rem;">Effective batch size simulator · LR scaling · PyTorch snippet</p>
+<h1> Gradient Accumulation <small>heytensor.com</small></h1>
+ <p style="color:#94a3b8; margin-top:0.3rem;">Effective batch size simulator · LR scaling · PyTorch snippet</p>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <!-- Calculator card -->
-  <div class="card">
-    <div class="grid-2">
-      <div>
-        <div class="form-group">
-          <label for="effBs">Desired effective batch size</label>
-          <input type="number" id="effBs" value="2048" min="1" step="1">
-        </div>
-        <div class="form-group">
-          <label for="gpuBs">Per-GPU batch size</label>
-          <input type="number" id="gpuBs" value="8" min="1" step="1">
-        </div>
-        <div class="form-group">
-          <label for="numGpus">Number of GPUs (1–512)</label>
-          <input type="number" id="numGpus" value="8" min="1" max="512" step="1">
-        </div>
-      </div>
-      <div>
-        <div class="form-group">
-          <label for="lrRule">LR scaling rule</label>
-          <select id="lrRule">
-            <option value="linear" selected>Linear (lr *= ratio)</option>
-            <option value="sqrt">Square‑root (lr *= sqrt(ratio))</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="baseBs">Base batch size (default 256)</label>
-          <input type="number" id="baseBs" value="256" min="1" step="1">
-        </div>
-        <div class="form-group">
-          <label for="baseLr">Base learning rate</label>
-          <input type="number" id="baseLr" value="0.001" min="0" step="0.0001" style="width:100%">
-        </div>
-      </div>
-    </div>
-    <div class="flex-wrap">
-      <button class="btn" id="computeBtn">Compute</button>
-      <span style="color:#94a3b8; font-size:0.9rem;">Accumulation steps = effective / (per_gpu × gpus)</span>
-    </div>
-  </div>
+ 
+ <div class="card">
+ <div class="grid-2">
+ <div>
+ <div class="form-group">
+ <label for="effBs">Desired effective batch size</label>
+ <input type="number" id="effBs" value="2048" min="1" step="1">
+ </div>
+ <div class="form-group">
+ <label for="gpuBs">Per-GPU batch size</label>
+ <input type="number" id="gpuBs" value="8" min="1" step="1">
+ </div>
+ <div class="form-group">
+ <label for="numGpus">Number of GPUs (1-512)</label>
+ <input type="number" id="numGpus" value="8" min="1" max="512" step="1">
+ </div>
+ </div>
+ <div>
+ <div class="form-group">
+ <label for="lrRule">LR scaling rule</label>
+ <select id="lrRule">
+ <option value="linear" selected>Linear (lr *= ratio)</option>
+ <option value="sqrt">Square‑root (lr *= sqrt(ratio))</option>
+ </select>
+ </div>
+ <div class="form-group">
+ <label for="baseBs">Base batch size (default 256)</label>
+ <input type="number" id="baseBs" value="256" min="1" step="1">
+ </div>
+ <div class="form-group">
+ <label for="baseLr">Base learning rate</label>
+ <input type="number" id="baseLr" value="0.001" min="0" step="0.0001" style="width:100%">
+ </div>
+ </div>
+ </div>
+ <div class="flex-wrap">
+ <button class="btn" id="computeBtn">Compute</button>
+ <span style="color:#94a3b8; font-size:0.9rem;">Accumulation steps = effective / (per_gpu × gpus)</span>
+ </div>
+ </div>
 
-  <!-- Results -->
-  <div class="card" id="resultsPanel">
-    <h2>📊 Results</h2>
-    <div class="results-grid" id="statsGrid">
-      <div class="stat-box"><span class="label">Accumulation steps</span><div class="value" id="accumSteps">—</div></div>
-      <div class="stat-box"><span class="label">Scaled LR</span><div class="value" id="scaledLr">—</div><div class="sub" id="lrDetail"></div></div>
-      <div class="stat-box"><span class="label">Steps per optimizer update</span><div class="value" id="stepsPerOpt">—</div></div>
-      <div class="stat-box"><span class="label">Throughput overhead (est.)</span><div class="value" id="overhead">—</div><div class="sub">per accum step</div></div>
-    </div>
-    <div id="recommendationBox" class="recommend">💡 Recommendation will appear here.</div>
+ 
+ <div class="card" id="resultsPanel">
+ <h2> Results</h2>
+ <div class="results-grid" id="statsGrid">
+ <div class="stat-box"><span class="label">Accumulation steps</span><div class="value" id="accumSteps">, </div></div>
+ <div class="stat-box"><span class="label">Scaled LR</span><div class="value" id="scaledLr">, </div><div class="sub" id="lrDetail"></div></div>
+ <div class="stat-box"><span class="label">Steps per optimizer update</span><div class="value" id="stepsPerOpt">, </div></div>
+ <div class="stat-box"><span class="label">Throughput overhead (est.)</span><div class="value" id="overhead">, </div><div class="sub">per accum step</div></div>
+ </div>
+ <div id="recommendationBox" class="recommend"> Recommendation will appear here.</div>
 
-    <h3>🧪 PyTorch training loop snippet (GradScaler + accumulation)</h3>
-    <pre id="codeSnippet">// Click "Compute" to generate snippet</pre>
-  </div>
+ <h3> PyTorch training loop snippet (GradScaler + accumulation)</h3>
+ <pre id="codeSnippet">// Click "Compute" to generate snippet</pre>
+ </div>
 
-  <!-- Comparison table -->
-  <div class="card">
-    <h2>📐 Common batch size configurations</h2>
-    <div class="table-scroll"><table>
-      <thead><tr><th>Effective BS</th><th>Per-GPU BS</th><th>GPUs</th><th>Accum steps</th><th>Scaled LR (linear)</th></tr></thead>
-      <tbody id="comparisonBody">
-        <tr><td>2048</td><td>8</td><td>8</td><td>32</td><td>0.008</td></tr>
-        <tr><td>1024</td><td>16</td><td>8</td><td>8</td><td>0.004</td></tr>
-        <tr><td>4096</td><td>8</td><td>16</td><td>32</td><td>0.016</td></tr>
-        <tr><td>512</td><td>4</td><td>8</td><td>16</td><td>0.002</td></tr>
-      </tbody>
-    </table></div>
-    <p style="color:#94a3b8; font-size:0.85rem;">* Assumes base BS=256, base LR=0.001. Linear scaling.</p>
-  </div>
+ 
+ <div class="card">
+ <h2> Common batch size configurations</h2>
+ <div class="table-scroll"><table>
+ <thead><tr><th>Effective BS</th><th>Per-GPU BS</th><th>GPUs</th><th>Accum steps</th><th>Scaled LR (linear)</th></tr></thead>
+ <tbody id="comparisonBody">
+ <tr><td>2048</td><td>8</td><td>8</td><td>32</td><td>0.008</td></tr>
+ <tr><td>1024</td><td>16</td><td>8</td><td>8</td><td>0.004</td></tr>
+ <tr><td>4096</td><td>8</td><td>16</td><td>32</td><td>0.016</td></tr>
+ <tr><td>512</td><td>4</td><td>8</td><td>16</td><td>0.002</td></tr>
+ </tbody>
+ </table></div>
+ <p style="color:#94a3b8; font-size:0.85rem;">* Assumes base BS=256, base LR=0.001. Linear scaling.</p>
+ </div>
 
-  <!-- FAQ minimal (schema already included) -->
-  <div style="margin: 1rem 0 0.5rem; color:#94a3b8; font-size:0.9rem;">
-    <p><strong>❓ Why accumulation?</strong> Simulate larger batch under memory limits. &nbsp; 
-    <strong>❓ LR scaling?</strong> Linear or sqrt maintain dynamics. &nbsp; 
-    <strong>❓ Checkpointing?</strong> Recommended if accum &gt; 8.</p>
-  </div>
+ 
+ <div style="margin: 1rem 0 0.5rem; color:#94a3b8; font-size:0.9rem;">
+ <p> Why accumulation? Simulate larger batch under memory limits. &nbsp; 
+ LR scaling? Linear or sqrt maintain dynamics. &nbsp; 
+ Checkpointing? Recommended if accum &gt; 8.</p>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -191,173 +191,173 @@
 </div>
 
 <script>
-  (function() {
-    // DOM refs
-    const effBsEl = document.getElementById('effBs');
-    const gpuBsEl = document.getElementById('gpuBs');
-    const numGpusEl = document.getElementById('numGpus');
-    const lrRuleEl = document.getElementById('lrRule');
-    const baseBsEl = document.getElementById('baseBs');
-    const baseLrEl = document.getElementById('baseLr');
-    const computeBtn = document.getElementById('computeBtn');
+ (function() {
+  // DOM refs
+  const effBsEl = document.getElementById('effBs');
+  const gpuBsEl = document.getElementById('gpuBs');
+  const numGpusEl = document.getElementById('numGpus');
+  const lrRuleEl = document.getElementById('lrRule');
+  const baseBsEl = document.getElementById('baseBs');
+  const baseLrEl = document.getElementById('baseLr');
+  const computeBtn = document.getElementById('computeBtn');
 
-    const accumStepsEl = document.getElementById('accumSteps');
-    const scaledLrEl = document.getElementById('scaledLr');
-    const lrDetailEl = document.getElementById('lrDetail');
-    const stepsPerOptEl = document.getElementById('stepsPerOpt');
-    const overheadEl = document.getElementById('overhead');
-    const recommendationBox = document.getElementById('recommendationBox');
-    const codeSnippet = document.getElementById('codeSnippet');
-    const comparisonBody = document.getElementById('comparisonBody');
+  const accumStepsEl = document.getElementById('accumSteps');
+  const scaledLrEl = document.getElementById('scaledLr');
+  const lrDetailEl = document.getElementById('lrDetail');
+  const stepsPerOptEl = document.getElementById('stepsPerOpt');
+  const overheadEl = document.getElementById('overhead');
+  const recommendationBox = document.getElementById('recommendationBox');
+  const codeSnippet = document.getElementById('codeSnippet');
+  const comparisonBody = document.getElementById('comparisonBody');
 
-    function compute() {
-      // parse values
-      const effBs = parseFloat(effBsEl.value);
-      const gpuBs = parseFloat(gpuBsEl.value);
-      const numGpus = parseInt(numGpusEl.value, 10);
-      const rule = lrRuleEl.value;
-      const baseBs = parseFloat(baseBsEl.value);
-      const baseLr = parseFloat(baseLrEl.value);
+  function compute() {
+   // parse values
+   const effBs = parseFloat(effBsEl.value);
+   const gpuBs = parseFloat(gpuBsEl.value);
+   const numGpus = parseInt(numGpusEl.value, 10);
+   const rule = lrRuleEl.value;
+   const baseBs = parseFloat(baseBsEl.value);
+   const baseLr = parseFloat(baseLrEl.value);
 
-      // validation
-      if (!effBs || effBs <= 0 || !gpuBs || gpuBs <= 0 || !numGpus || numGpus < 1 || numGpus > 512) {
-        accumStepsEl.textContent = '⚠️';
-        scaledLrEl.textContent = '—';
-        lrDetailEl.textContent = 'invalid input';
-        stepsPerOptEl.textContent = '—';
-        overheadEl.textContent = '—';
-        recommendationBox.className = 'recommend';
-        recommendationBox.innerHTML = '❌ Please enter valid positive numbers. GPUs 1–512.';
-        codeSnippet.textContent = '// Invalid input — check values.';
-        return;
-      }
-      if (!baseBs || baseBs <= 0 || !baseLr || baseLr < 0) {
-        accumStepsEl.textContent = '⚠️';
-        scaledLrEl.textContent = '—';
-        lrDetailEl.textContent = 'check base BS/LR';
-        stepsPerOptEl.textContent = '—';
-        overheadEl.textContent = '—';
-        recommendationBox.className = 'recommend';
-        recommendationBox.innerHTML = '❌ Base batch size and LR must be positive.';
-        codeSnippet.textContent = '// Invalid base parameters.';
-        return;
-      }
+   // validation
+   if (!effBs || effBs <= 0 || !gpuBs || gpuBs <= 0 || !numGpus || numGpus < 1 || numGpus > 512) {
+    accumStepsEl.textContent = '⚠️';
+    scaledLrEl.textContent = '—';
+    lrDetailEl.textContent = 'invalid input';
+    stepsPerOptEl.textContent = '—';
+    overheadEl.textContent = '—';
+    recommendationBox.className = 'recommend';
+    recommendationBox.innerHTML = '❌ Please enter valid positive numbers. GPUs 1–512.';
+    codeSnippet.textContent = '// Invalid input — check values.';
+    return;
+   }
+   if (!baseBs || baseBs <= 0 || !baseLr || baseLr < 0) {
+    accumStepsEl.textContent = '⚠️';
+    scaledLrEl.textContent = '—';
+    lrDetailEl.textContent = 'check base BS/LR';
+    stepsPerOptEl.textContent = '—';
+    overheadEl.textContent = '—';
+    recommendationBox.className = 'recommend';
+    recommendationBox.innerHTML = '❌ Base batch size and LR must be positive.';
+    codeSnippet.textContent = '// Invalid base parameters.';
+    return;
+   }
 
-      const denominator = gpuBs * numGpus;
-      if (denominator <= 0) {
-        accumStepsEl.textContent = '∞';
-        scaledLrEl.textContent = '—';
-        lrDetailEl.textContent = 'denominator zero';
-        stepsPerOptEl.textContent = '—';
-        overheadEl.textContent = '—';
-        recommendationBox.innerHTML = '⚠️ Per-GPU batch size * GPUs must be > 0.';
-        return;
-      }
+   const denominator = gpuBs * numGpus;
+   if (denominator <= 0) {
+    accumStepsEl.textContent = '∞';
+    scaledLrEl.textContent = '—';
+    lrDetailEl.textContent = 'denominator zero';
+    stepsPerOptEl.textContent = '—';
+    overheadEl.textContent = '—';
+    recommendationBox.innerHTML = '⚠️ Per-GPU batch size * GPUs must be > 0.';
+    return;
+   }
 
-      const accumSteps = effBs / denominator;
-      // check if integer? we show float but meaningful
-      const stepsDisplay = Number.isInteger(accumSteps) ? accumSteps : accumSteps.toFixed(4);
+   const accumSteps = effBs / denominator;
+   // check if integer? we show float but meaningful
+   const stepsDisplay = Number.isInteger(accumSteps) ? accumSteps : accumSteps.toFixed(4);
 
-      // LR scaling
-      const ratio = effBs / baseBs;
-      let scaledLr;
-      if (rule === 'linear') {
-        scaledLr = baseLr * ratio;
-      } else { // sqrt
-        scaledLr = baseLr * Math.sqrt(ratio);
-      }
-      const scaledLrDisplay = scaledLr.toFixed(6);
-      const ratioDisplay = ratio.toFixed(3);
+   // LR scaling
+   const ratio = effBs / baseBs;
+   let scaledLr;
+   if (rule === 'linear') {
+    scaledLr = baseLr * ratio;
+   } else { // sqrt
+    scaledLr = baseLr * Math.sqrt(ratio);
+   }
+   const scaledLrDisplay = scaledLr.toFixed(6);
+   const ratioDisplay = ratio.toFixed(3);
 
-      // steps per optimizer update = accumulation steps (each step processes per_gpu_bs * num_gpus samples)
-      const stepsPerOpt = accumSteps;
+   // steps per optimizer update = accumulation steps (each step processes per_gpu_bs * num_gpus samples)
+   const stepsPerOpt = accumSteps;
 
-      // throughput overhead: 1-3% per accumulation step (heuristic)
-      const overheadPercent = (accumSteps > 0) ? (1.5 + 0.8 * Math.min(accumSteps, 20) / 20).toFixed(2) : '0.0';
-      const overheadStr = `~${overheadPercent}% (est.)`;
+   // throughput overhead: 1-3% per accumulation step (heuristic)
+   const overheadPercent = (accumSteps > 0) ? (1.5 + 0.8 * Math.min(accumSteps, 20) / 20).toFixed(2) : '0.0';
+   const overheadStr = `~${overheadPercent}% (est.)`;
 
-      // update UI
-      accumStepsEl.textContent = stepsDisplay;
-      scaledLrEl.textContent = scaledLrDisplay;
-      lrDetailEl.textContent = `ratio = ${ratioDisplay} (${rule})`;
-      stepsPerOptEl.textContent = typeof stepsPerOpt === 'number' ? (Number.isInteger(stepsPerOpt) ? stepsPerOpt : stepsPerOpt.toFixed(2)) : stepsPerOpt;
-      overheadEl.textContent = overheadStr;
+   // update UI
+   accumStepsEl.textContent = stepsDisplay;
+   scaledLrEl.textContent = scaledLrDisplay;
+   lrDetailEl.textContent = `ratio = ${ratioDisplay} (${rule})`;
+   stepsPerOptEl.textContent = typeof stepsPerOpt === 'number' ? (Number.isInteger(stepsPerOpt) ? stepsPerOpt : stepsPerOpt.toFixed(2)) : stepsPerOpt;
+   overheadEl.textContent = overheadStr;
 
-      // recommendation
-      let recMsg = '';
-      let recClass = 'recommend';
-      if (accumSteps > 8) {
-        recMsg = `⚠️ Accumulation steps = ${stepsDisplay} (>8). Consider using gradient checkpointing to reduce memory.`;
-        recClass = 'recommend';
-      } else {
-        recMsg = `✅ Accumulation steps = ${stepsDisplay} (≤8). Standard training is fine.`;
-        recClass = 'recommend ok';
-      }
-      recommendationBox.className = recClass;
-      recommendationBox.innerHTML = '💡 ' + recMsg;
+   // recommendation
+   let recMsg = '';
+   let recClass = 'recommend';
+   if (accumSteps > 8) {
+    recMsg = `⚠️ Accumulation steps = ${stepsDisplay} (>8). Consider using gradient checkpointing to reduce memory.`;
+    recClass = 'recommend';
+   } else {
+    recMsg = `✅ Accumulation steps = ${stepsDisplay} (≤8). Standard training is fine.`;
+    recClass = 'recommend ok';
+   }
+   recommendationBox.className = recClass;
+   recommendationBox.innerHTML = '💡 ' + recMsg;
 
-      // PyTorch snippet
-      const snippet = `# PyTorch training loop with GradScaler & accumulation
+   // PyTorch snippet
+   const snippet = `# PyTorch training loop with GradScaler & accumulation
 model.train()
 optimizer.zero_grad()
 scaler = torch.cuda.amp.GradScaler()
 
 accum_steps = ${typeof accumSteps === 'number' ? (Number.isInteger(accumSteps) ? accumSteps : accumSteps.toFixed(2)) : accumSteps}
 for batch_idx, (data, target) in enumerate(dataloader):
-    with torch.cuda.amp.autocast():
-        output = model(data)
-        loss = criterion(output, target) / accum_steps  # normalize
-    
-    scaler.scale(loss).backward()
-    
-    if (batch_idx + 1) % accum_steps == 0:
-        scaler.step(optimizer)
-        scaler.update()
-        optimizer.zero_grad()
+  with torch.cuda.amp.autocast():
+    output = model(data)
+    loss = criterion(output, target) / accum_steps # normalize
+  
+  scaler.scale(loss).backward()
+  
+  if (batch_idx + 1) % accum_steps == 0:
+    scaler.step(optimizer)
+    scaler.update()
+    optimizer.zero_grad()
 
 # scaled LR used: ${scaledLrDisplay} (${rule} scaling, base_lr=${baseLr})`;
-      codeSnippet.textContent = snippet;
+   codeSnippet.textContent = snippet;
 
-      // update comparison table (4 configs)
-      const configs = [
-        { eff: 2048, perGpu: 8, gpus: 8 },
-        { eff: 1024, perGpu: 16, gpus: 8 },
-        { eff: 4096, perGpu: 8, gpus: 16 },
-        { eff: 512, perGpu: 4, gpus: 8 }
-      ];
-      const baseBsCmp = 256;
-      const baseLrCmp = 0.001;
-      let rowsHtml = '';
-      for (const cfg of configs) {
-        const denom = cfg.perGpu * cfg.gpus;
-        const steps = denom > 0 ? (cfg.eff / denom) : '∞';
-        const ratioCmp = cfg.eff / baseBsCmp;
-        const lrCmp = baseLrCmp * ratioCmp;
-        const stepsDisplayCmp = Number.isInteger(steps) ? steps : (typeof steps === 'number' ? steps.toFixed(2) : steps);
-        rowsHtml += `<tr><td>${cfg.eff}</td><td>${cfg.perGpu}</td><td>${cfg.gpus}</td><td>${stepsDisplayCmp}</td><td>${lrCmp.toFixed(4)}</td></tr>`;
-      }
-      comparisonBody.innerHTML = rowsHtml;
-    }
+   // update comparison table (4 configs)
+   const configs = [
+    { eff: 2048, perGpu: 8, gpus: 8 },
+    { eff: 1024, perGpu: 16, gpus: 8 },
+    { eff: 4096, perGpu: 8, gpus: 16 },
+    { eff: 512, perGpu: 4, gpus: 8 }
+   ];
+   const baseBsCmp = 256;
+   const baseLrCmp = 0.001;
+   let rowsHtml = '';
+   for (const cfg of configs) {
+    const denom = cfg.perGpu * cfg.gpus;
+    const steps = denom > 0 ? (cfg.eff / denom) : '∞';
+    const ratioCmp = cfg.eff / baseBsCmp;
+    const lrCmp = baseLrCmp * ratioCmp;
+    const stepsDisplayCmp = Number.isInteger(steps) ? steps : (typeof steps === 'number' ? steps.toFixed(2) : steps);
+    rowsHtml += `<tr><td>${cfg.eff}</td><td>${cfg.perGpu}</td><td>${cfg.gpus}</td><td>${stepsDisplayCmp}</td><td>${lrCmp.toFixed(4)}</td></tr>`;
+   }
+   comparisonBody.innerHTML = rowsHtml;
+  }
 
-    // initial compute on load
-    compute();
+  // initial compute on load
+  compute();
 
-    // bind button
-    computeBtn.addEventListener('click', compute);
+  // bind button
+  computeBtn.addEventListener('click', compute);
 
-    // also compute on Enter key in any input (optional)
-    const inputs = [effBsEl, gpuBsEl, numGpusEl, lrRuleEl, baseBsEl, baseLrEl];
-    inputs.forEach(el => el.addEventListener('change', compute));
-    // extra for number inputs
-    inputs.forEach(el => el.addEventListener('input', function() {
-      if (el.type === 'number') compute();
-    }));
-  })();
+  // also compute on Enter key in any input (optional)
+  const inputs = [effBsEl, gpuBsEl, numGpusEl, lrRuleEl, baseBsEl, baseLrEl];
+  inputs.forEach(el => el.addEventListener('change', compute));
+  // extra for number inputs
+  inputs.forEach(el => el.addEventListener('input', function() {
+   if (el.type === 'number') compute();
+  }));
+ })();
 </script>
 <div style="margin:30px auto;max-width:728px;text-align:center;padding:18px 24px;background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:10px">
 <p style="margin:0 0 6px;color:#94a3b8;font-size:0.85rem">Recommended by our team</p>
 <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:600;font-size:1.05rem;text-decoration:none">BeLikeNative.com</a>
-<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
+<p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
 </div>
 </body>
 </html>

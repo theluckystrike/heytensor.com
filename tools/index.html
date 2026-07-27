@@ -1,315 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PyTorch Tools — Shape Calculators, Error Debuggers, References | HeyTensor</title>
-  <meta name="description" content="Free PyTorch tools: shape calculators for Conv2d, Linear, LSTM, and more. Error debuggers, activation function comparisons, loss function guides, parameter counters, and GPU memory calculators.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/tools/">
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>PyTorch Tools, Shape Calculators, Error Debuggers, References | HeyTensor</title>
+ <meta name="description" content="Free PyTorch tools: shape calculators for Conv2d, Linear, LSTM, and more. Error debuggers, activation function comparisons, loss function guides, parameter counters, and GPU memory calculators.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools"}]}</script>
-  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/">
-  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="PyTorch Tools — Shape Calculators, Error Debuggers, References | HeyTensor">
-  <meta property="og:description" content="Free PyTorch tools: shape calculators, error debuggers, activation comparisons, loss guides, and memory estimators.">
-  <meta property="og:url" content="https://heytensor.com/tools/">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PyTorch Tools — HeyTensor">
-  <meta name="twitter:description" content="Free PyTorch tools: shape calculators, error debuggers, references, and memory calculators.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="/assets/tools.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": "PyTorch Tools",
-    "url": "https://heytensor.com/tools/",
-    "description": "Free PyTorch developer tools: shape calculators, error debuggers, reference guides, and model analysis utilities.",
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    }
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="PyTorch Tools, Shape Calculators, Error Debuggers, References | HeyTensor">
+ <meta property="og:description" content="Free PyTorch tools: shape calculators, error debuggers, activation comparisons, loss guides, and memory estimators.">
+ <meta property="og:url" content="https://heytensor.com/tools/">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="PyTorch Tools, HeyTensor">
+ <meta name="twitter:description" content="Free PyTorch tools: shape calculators, error debuggers, references, and memory calculators.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <link rel="stylesheet" href="/assets/tools.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "PyTorch Tools",
+  "url": "https://heytensor.com/tools/",
+  "description": "Free PyTorch developer tools: shape calculators, error debuggers, reference guides, and model analysis utilities.",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
   }
-  </script>
+ }
+ </script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container">
-    <section class="hero">
-      <h1>PyTorch <span>Developer Tools</span></h1>
-      <p>Free calculators, debuggers, and references for deep learning engineers. All tools run in your browser — no sign-up, no server, no tracking.</p>
-      <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
-    </section>
+ <main class="container">
+ <section class="hero">
+ <h1>PyTorch <span>Developer Tools</span></h1>
+ <p>Free calculators, debuggers, and references for deep learning engineers. All tools run in your browser, no sign-up, no server, no tracking.</p>
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+ </section>
 
-    <h2 class="tools-section-title">Shape Calculators</h2>
-    <div class="tools-grid">
-      <a href="/tools/conv2d-calculator.html" class="tool-card">
-        <h3>Conv2d Output Size Calculator</h3>
-        <p>Calculate output height, width, and channels for PyTorch Conv2d layers.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/conv1d-calculator.html" class="tool-card">
-        <h3>Conv1d Output Size Calculator</h3>
-        <p>Calculate output length for 1D convolutions on sequences and audio.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/linear-layer-calculator.html" class="tool-card">
-        <h3>Linear Layer Shape Calculator</h3>
-        <p>Calculate output dimensions for nn.Linear fully connected layers.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/lstm-shape-calculator.html" class="tool-card">
-        <h3>LSTM Output Shape Calculator</h3>
-        <p>Calculate output shape for LSTM layers including bidirectional and multi-layer.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/maxpool2d-calculator.html" class="tool-card">
-        <h3>MaxPool2d Output Size Calculator</h3>
-        <p>Calculate pooling output dimensions with kernel, stride, and padding.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/batchnorm-calculator.html" class="tool-card">
-        <h3>BatchNorm Shape Calculator</h3>
-        <p>Verify BatchNorm2d configuration and num_features matching.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/embedding-calculator.html" class="tool-card">
-        <h3>Embedding Layer Shape Calculator</h3>
-        <p>Calculate output shape for nn.Embedding lookup layers.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/flatten-calculator.html" class="tool-card">
-        <h3>Flatten Output Shape Calculator</h3>
-        <p>See how nn.Flatten collapses dimensions for fully connected layers.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/convtranspose2d-calculator.html" class="tool-card">
-        <h3>ConvTranspose2d Output Size Calculator</h3>
-        <p>Calculate output dimensions for transposed convolutions (upsampling).</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/multihead-attention-calculator.html" class="tool-card">
-        <h3>MultiHead Attention Shape Calculator</h3>
-        <p>Verify transformer attention layer configuration and output shapes.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/gru-shape-calculator.html" class="tool-card">
-        <h3>GRU Output Shape Calculator</h3>
-        <p>Calculate output shape for GRU layers including bidirectional mode.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/layernorm-calculator.html" class="tool-card">
-        <h3>LayerNorm Shape Calculator</h3>
-        <p>Verify LayerNorm normalized_shape configuration and parameter count.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/conv3d-calculator.html" class="tool-card">
-        <h3>Conv3d Output Size Calculator</h3>
-        <p>Calculate output depth, height, and width for 3D convolution layers.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/adaptiveavgpool2d-calculator.html" class="tool-card">
-        <h3>AdaptiveAvgPool2d Calculator</h3>
-        <p>Calculate output shape for adaptive average pooling layers.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-      <a href="/tools/reshape-calculator.html" class="tool-card">
-        <h3>Reshape / View Calculator</h3>
-        <p>Validate reshape operations and infer missing dimensions with -1.</p>
-        <span class="tool-tag">Shape Calculator</span>
-      </a>
-    </div>
+ <h2 class="tools-section-title">Shape Calculators</h2>
+ <div class="tools-grid">
+ <a href="/tools/conv2d-calculator.html" class="tool-card">
+ <h3>Conv2d Output Size Calculator</h3>
+ <p>Calculate output height, width, and channels for PyTorch Conv2d layers.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/conv1d-calculator.html" class="tool-card">
+ <h3>Conv1d Output Size Calculator</h3>
+ <p>Calculate output length for 1D convolutions on sequences and audio.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/linear-layer-calculator.html" class="tool-card">
+ <h3>Linear Layer Shape Calculator</h3>
+ <p>Calculate output dimensions for nn.Linear fully connected layers.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/lstm-shape-calculator.html" class="tool-card">
+ <h3>LSTM Output Shape Calculator</h3>
+ <p>Calculate output shape for LSTM layers including bidirectional and multi-layer.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/maxpool2d-calculator.html" class="tool-card">
+ <h3>MaxPool2d Output Size Calculator</h3>
+ <p>Calculate pooling output dimensions with kernel, stride, and padding.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/batchnorm-calculator.html" class="tool-card">
+ <h3>BatchNorm Shape Calculator</h3>
+ <p>Verify BatchNorm2d configuration and num_features matching.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/embedding-calculator.html" class="tool-card">
+ <h3>Embedding Layer Shape Calculator</h3>
+ <p>Calculate output shape for nn.Embedding lookup layers.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/flatten-calculator.html" class="tool-card">
+ <h3>Flatten Output Shape Calculator</h3>
+ <p>See how nn.Flatten collapses dimensions for fully connected layers.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/convtranspose2d-calculator.html" class="tool-card">
+ <h3>ConvTranspose2d Output Size Calculator</h3>
+ <p>Calculate output dimensions for transposed convolutions (upsampling).</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/multihead-attention-calculator.html" class="tool-card">
+ <h3>MultiHead Attention Shape Calculator</h3>
+ <p>Verify transformer attention layer configuration and output shapes.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/gru-shape-calculator.html" class="tool-card">
+ <h3>GRU Output Shape Calculator</h3>
+ <p>Calculate output shape for GRU layers including bidirectional mode.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/layernorm-calculator.html" class="tool-card">
+ <h3>LayerNorm Shape Calculator</h3>
+ <p>Verify LayerNorm normalized_shape configuration and parameter count.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/conv3d-calculator.html" class="tool-card">
+ <h3>Conv3d Output Size Calculator</h3>
+ <p>Calculate output depth, height, and width for 3D convolution layers.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/adaptiveavgpool2d-calculator.html" class="tool-card">
+ <h3>AdaptiveAvgPool2d Calculator</h3>
+ <p>Calculate output shape for adaptive average pooling layers.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/reshape-calculator.html" class="tool-card">
+ <h3>Reshape / View Calculator</h3>
+ <p>Validate reshape operations and infer missing dimensions with -1.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ </div>
 
-    <h2 class="tools-section-title">Error Debuggers</h2>
-    <div class="tools-grid">
-      <a href="/tools/shape-mismatch.html" class="tool-card">
-        <h3>PyTorch Shape Mismatch Error Debugger</h3>
-        <p>Paste any shape error and get a plain English explanation with fix.</p>
-        <span class="tool-tag">Error Debugger</span>
-      </a>
-      <a href="/tools/mat1-mat2-shapes.html" class="tool-card">
-        <h3>mat1 and mat2 shapes cannot be multiplied</h3>
-        <p>Fix the most common Linear layer error with dimension analysis.</p>
-        <span class="tool-tag">Error Debugger</span>
-      </a>
-      <a href="/tools/cuda-out-of-memory.html" class="tool-card">
-        <h3>CUDA Out of Memory — Solutions</h3>
-        <p>Quick solutions and memory optimization techniques for GPU training.</p>
-        <span class="tool-tag">Error Debugger</span>
-      </a>
-      <a href="/tools/view-size-not-compatible.html" class="tool-card">
-        <h3>view size not compatible — Fix</h3>
-        <p>Understand contiguous memory, view vs reshape, and how to fix it.</p>
-        <span class="tool-tag">Error Debugger</span>
-      </a>
-      <a href="/tools/broadcast-error.html" class="tool-card">
-        <h3>Broadcasting Error Debugger</h3>
-        <p>Fix "cannot be broadcast together" with shape analysis and rules.</p>
-        <span class="tool-tag">Error Debugger</span>
-      </a>
-      <a href="/tools/dimension-out-of-range.html" class="tool-card">
-        <h3>Dimension Out of Range — Fix</h3>
-        <p>Diagnose and fix IndexError for tensor dimension access.</p>
-        <span class="tool-tag">Error Debugger</span>
-      </a>
-      <a href="/tools/expected-input-size.html" class="tool-card">
-        <h3>Expected Input Size Error — Fix</h3>
-        <p>Fix "expected input of size" errors for BatchNorm, Conv, and Linear.</p>
-        <span class="tool-tag">Error Debugger</span>
-      </a>
-    </div>
+ <h2 class="tools-section-title">Error Debuggers</h2>
+ <div class="tools-grid">
+ <a href="/tools/shape-mismatch.html" class="tool-card">
+ <h3>PyTorch Shape Mismatch Error Debugger</h3>
+ <p>Paste any shape error and get a plain English explanation with fix.</p>
+ <span class="tool-tag">Error Debugger</span>
+ </a>
+ <a href="/tools/mat1-mat2-shapes.html" class="tool-card">
+ <h3>mat1 and mat2 shapes cannot be multiplied</h3>
+ <p>Fix the most common Linear layer error with dimension analysis.</p>
+ <span class="tool-tag">Error Debugger</span>
+ </a>
+ <a href="/tools/cuda-out-of-memory.html" class="tool-card">
+ <h3>CUDA Out of Memory, Solutions</h3>
+ <p>Quick solutions and memory optimization techniques for GPU training.</p>
+ <span class="tool-tag">Error Debugger</span>
+ </a>
+ <a href="/tools/view-size-not-compatible.html" class="tool-card">
+ <h3>view size not compatible, Fix</h3>
+ <p>Understand contiguous memory, view vs reshape, and how to fix it.</p>
+ <span class="tool-tag">Error Debugger</span>
+ </a>
+ <a href="/tools/broadcast-error.html" class="tool-card">
+ <h3>Broadcasting Error Debugger</h3>
+ <p>Fix "cannot be broadcast together" with shape analysis and rules.</p>
+ <span class="tool-tag">Error Debugger</span>
+ </a>
+ <a href="/tools/dimension-out-of-range.html" class="tool-card">
+ <h3>Dimension Out of Range, Fix</h3>
+ <p>Diagnose and fix IndexError for tensor dimension access.</p>
+ <span class="tool-tag">Error Debugger</span>
+ </a>
+ <a href="/tools/expected-input-size.html" class="tool-card">
+ <h3>Expected Input Size Error, Fix</h3>
+ <p>Fix "expected input of size" errors for BatchNorm, Conv, and Linear.</p>
+ <span class="tool-tag">Error Debugger</span>
+ </a>
+ </div>
 
-    <h2 class="tools-section-title">References</h2>
-    <div class="tools-grid">
-      <a href="/tools/activation-functions.html" class="tool-card">
-        <h3>Activation Functions Comparison</h3>
-        <p>Interactive plots, formulas, and pros/cons for ReLU, GELU, SiLU, and more.</p>
-        <span class="tool-tag">Reference</span>
-      </a>
-      <a href="/tools/loss-functions.html" class="tool-card">
-        <h3>Loss Functions Guide</h3>
-        <p>Formulas, code examples, and when to use each PyTorch loss function.</p>
-        <span class="tool-tag">Reference</span>
-      </a>
-      <a href="/tools/optimizers.html" class="tool-card">
-        <h3>Optimizers Comparison</h3>
-        <p>Adam vs SGD vs AdamW — key parameters, memory usage, and best practices.</p>
-        <span class="tool-tag">Reference</span>
-      </a>
-      <a href="/tools/einsum-calculator.html" class="tool-card">
-        <h3>Einsum Calculator</h3>
-        <p>Interactive einsum notation calculator for NumPy and PyTorch.</p>
-        <span class="tool-tag">Reference</span>
-      </a>
-    </div>
+ <h2 class="tools-section-title">References</h2>
+ <div class="tools-grid">
+ <a href="/tools/activation-functions.html" class="tool-card">
+ <h3>Activation Functions Comparison</h3>
+ <p>Interactive plots, formulas, and pros/cons for ReLU, GELU, SiLU, and more.</p>
+ <span class="tool-tag">Reference</span>
+ </a>
+ <a href="/tools/loss-functions.html" class="tool-card">
+ <h3>Loss Functions Guide</h3>
+ <p>Formulas, code examples, and when to use each PyTorch loss function.</p>
+ <span class="tool-tag">Reference</span>
+ </a>
+ <a href="/tools/optimizers.html" class="tool-card">
+ <h3>Optimizers Comparison</h3>
+ <p>Adam vs SGD vs AdamW, key parameters, memory usage, and best practices.</p>
+ <span class="tool-tag">Reference</span>
+ </a>
+ <a href="/tools/einsum-calculator.html" class="tool-card">
+ <h3>Einsum Calculator</h3>
+ <p>Interactive einsum notation calculator for NumPy and PyTorch.</p>
+ <span class="tool-tag">Reference</span>
+ </a>
+ </div>
 
-    <h2 class="tools-section-title">Model Analysis</h2>
-    <div class="tools-grid">
-      <a href="/tools/parameter-counter.html" class="tool-card">
-        <h3>Neural Network Parameter Counter</h3>
-        <p>Add layers and get exact parameter counts with per-layer breakdown.</p>
-        <span class="tool-tag">Model Tool</span>
-      </a>
-      <a href="/tools/memory-calculator.html" class="tool-card">
-        <h3>GPU Memory Calculator for Training</h3>
-        <p>Estimate VRAM for parameters, gradients, optimizer states, and activations.</p>
-        <span class="tool-tag">Model Tool</span>
-      </a>
-      <a href="/tools/flops-calculator.html" class="tool-card">
-        <h3>FLOPs Calculator</h3>
-        <p>Estimate floating-point operations per forward pass for your model.</p>
-        <span class="tool-tag">Model Tool</span>
-      </a>
-      <a href="/tools/learning-rate-finder.html" class="tool-card">
-        <h3>Learning Rate Finder</h3>
-        <p>Simulate LR range test to find optimal learning rate for training.</p>
-        <span class="tool-tag">Model Tool</span>
-      </a>
-      <a href="/tools/model-optimization-calculator.html" class="tool-card">
-        <h3>Model Optimization Calculator</h3>
-        <p>Estimate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and pruning.</p>
-        <span class="tool-tag">Model Tool</span>
-      </a>
-    </div>
+ <h2 class="tools-section-title">Model Analysis</h2>
+ <div class="tools-grid">
+ <a href="/tools/parameter-counter.html" class="tool-card">
+ <h3>Neural Network Parameter Counter</h3>
+ <p>Add layers and get exact parameter counts with per-layer breakdown.</p>
+ <span class="tool-tag">Model Tool</span>
+ </a>
+ <a href="/tools/memory-calculator.html" class="tool-card">
+ <h3>GPU Memory Calculator for Training</h3>
+ <p>Estimate VRAM for parameters, gradients, optimizer states, and activations.</p>
+ <span class="tool-tag">Model Tool</span>
+ </a>
+ <a href="/tools/flops-calculator.html" class="tool-card">
+ <h3>FLOPs Calculator</h3>
+ <p>Estimate floating-point operations per forward pass for your model.</p>
+ <span class="tool-tag">Model Tool</span>
+ </a>
+ <a href="/tools/learning-rate-finder.html" class="tool-card">
+ <h3>Learning Rate Finder</h3>
+ <p>Simulate LR range test to find optimal learning rate for training.</p>
+ <span class="tool-tag">Model Tool</span>
+ </a>
+ <a href="/tools/model-optimization-calculator.html" class="tool-card">
+ <h3>Model Optimization Calculator</h3>
+ <p>Estimate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and pruning.</p>
+ <span class="tool-tag">Model Tool</span>
+ </a>
+ </div>
 
-    <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
-      <h2>About These Tools</h2>
-      <p>Every tool on this page runs entirely in your browser. No data is sent to any server. No cookies, no analytics, no tracking. The source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
-      <p>These tools are built for ML engineers, researchers, and students who need quick answers about tensor shapes, layer configurations, and training requirements. All formulas match the official PyTorch documentation exactly.</p>
-      <h3>Contact</h3>
-      <p>Built and maintained by <a href="https://zovo.one">Michael Lip</a>. Questions or feedback: <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
-    </section>
-  </main>
+ <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
+ <h2>About These Tools</h2>
+ <p>Every tool on this page runs entirely in your browser. No data is sent to any server. No cookies, no analytics, no tracking. The source code is open on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+ <p>These tools are built for ML engineers, researchers, and students who need quick answers about tensor shapes, layer configurations, and training requirements. All formulas match the official PyTorch documentation exactly.</p>
+ <h3>Contact</h3>
+ <p>Built and maintained by <a href="https://zovo.one">Michael Lip</a>. Questions or feedback: <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
+ </section>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-        <div class="footer-brand">Zovo Tools</div>
-        <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-        <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime — $99 once, free forever →</a>
-        <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
-    </div>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever →</a>
+ <div class="footer-copy">© 2026 <a href="https://zovo.one">Zovo</a> · 47/500 founding spots</div>
+ </div>
 </footer>
 
 <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 
-  <script>
-    // Mobile nav toggle
-    var toggle = document.querySelector('.mobile-toggle');
-    var nav = document.querySelector('nav');
-    if (toggle && nav) {
-      toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
-    }
-  </script>
+ <script>
+  // Mobile nav toggle
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ </script>
 <script src="/assets/js/share.js"></script>
 <script src="/assets/js/sticky-result.js"></script>
 </body>

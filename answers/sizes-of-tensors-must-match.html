@@ -1,227 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sizes of tensors must match except in dimension (PyTorch)</title>
-  <meta name="description" content="Resize tensors so all non-concat dimensions match: F.interpolate to upsample, adaptive pooling to downsample, or pad_sequence for sequences. torch.cat fix inside.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/answers/sizes-of-tensors-must-match.html">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Fix: Sizes of tensors must match except in dimension — PyTorch">
-  <meta property="og:description" content="All tensors in torch.cat() must match shapes except in the concat dimension. Fix with padding, slicing, or reshape.">
-  <meta property="og:url" content="https://heytensor.com/answers/sizes-of-tensors-must-match.html">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fix: Sizes of tensors must match except in dimension — PyTorch">
-  <meta name="twitter:description" content="All tensors in torch.cat() must match shapes except in the concat dimension. Fix with padding, slicing, or reshape.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [{
-      "@type": "Question",
-      "name": "How to Fix \"Sizes of tensors must match except in dimension\" in PyTorch",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "This error occurs when using torch.cat() or torch.stack() with tensors that have mismatched dimensions. All tensors must have the same shape except in the concatenation dimension. Fix by padding shorter tensors, slicing longer ones, or reshaping to match."
-      }
-    }]
-  }
-  </script>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Sizes of tensors must match except in dimension (PyTorch)</title>
+ <meta name="description" content="Resize tensors so all non-concat dimensions match: F.interpolate to upsample, adaptive pooling to downsample, or pad_sequence for sequences. torch.cat fix inside.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/sizes-of-tensors-must-match.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: Sizes of tensors must match except in dimension, PyTorch">
+ <meta property="og:description" content="All tensors in torch.cat() must match shapes except in the concat dimension. Fix with padding, slicing, or reshape.">
+ <meta property="og:url" content="https://heytensor.com/answers/sizes-of-tensors-must-match.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: Sizes of tensors must match except in dimension, PyTorch">
+ <meta name="twitter:description" content="All tensors in torch.cat() must match shapes except in the concat dimension. Fix with padding, slicing, or reshape.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+   "@type": "Question",
+   "name": "How to Fix \"Sizes of tensors must match except in dimension\" in PyTorch",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "This error occurs when using torch.cat() or torch.stack() with tensors that have mismatched dimensions. All tensors must have the same shape except in the concatenation dimension. Fix by padding shorter tensors, slicing longer ones, or reshaping to match."
+   }
+  }]
+ }
+ </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Sizes Must Match"}]}</script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/" class="active">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container" style="max-width:720px;">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Sizes Must Match</span>
-    </nav>
+ <main class="container" style="max-width:720px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Sizes Must Match</span>
+ </nav>
 
-    <article>
-      <h1>How to Fix "Sizes of tensors must match except in dimension" in PyTorch</h1>
-      <p class="qas" data-keyword="Sizes of tensors must match except in dimension">In PyTorch, torch.cat and torch.stack require every non-concatenation dimension to match exactly; fix mismatches with F.interpolate, adaptive pooling, or pad_sequence.</p>
+ <article>
+ <h1>How to Fix "Sizes of tensors must match except in dimension" in PyTorch</h1>
+ <p class="qas" data-keyword="Sizes of tensors must match except in dimension">In PyTorch, torch.cat and torch.stack require every non-concatenation dimension to match exactly; fix mismatches with F.interpolate, adaptive pooling, or pad_sequence.</p>
 
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
-        <p style="margin:0;line-height:1.7;"><strong>The error <code>Sizes of tensors must match except in dimension</code> means when concatenating tensors with torch.cat() or torch.stack(), all non-concatenation dimensions must match exactly. For example, torch.cat([tensor_a, tensor_b], dim=0) requires both tensors to have the same shape in dimensions 1, 2, etc.</strong></p>
-      </div>
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">The error <code>Sizes of tensors must match except in dimension</code> means when concatenating tensors with torch.cat() or torch.stack(), all non-concatenation dimensions must match exactly. For example, torch.cat([tensor_a, tensor_b], dim=0) requires both tensors to have the same shape in dimensions 1, 2, etc.</p>
+ </div>
 
-      <h2>What Causes This Error</h2>
-      <p>When concatenating tensors with torch.cat() or torch.stack(), all non-concatenation dimensions must match exactly. For example, torch.cat([tensor_a, tensor_b], dim=0) requires both tensors to have the same shape in dimensions 1, 2, etc.</p>
+ <h2>What Causes This Error</h2>
+ <p>When concatenating tensors with torch.cat() or torch.stack(), all non-concatenation dimensions must match exactly. For example, torch.cat([tensor_a, tensor_b], dim=0) requires both tensors to have the same shape in dimensions 1, 2, etc.</p>
 
-      <h2>Scenario 1: Concatenating Feature Maps of Different Sizes</h2>
-      <p>Skip connections or multi-scale features may produce tensors of different spatial sizes.</p>
-      <h3>The Error</h3>
-      <pre><code>features_high = torch.randn(1, 64, 32, 32)  # 32x32
-features_low = torch.randn(1, 64, 16, 16)   # 16x16
+ <h2>Scenario 1, Concatenating Feature Maps of Different Sizes</h2>
+ <p>Skip connections or multi-scale features may produce tensors of different spatial sizes.</p>
+ <h3>The Error</h3>
+ <pre><code>features_high = torch.randn(1, 64, 32, 32) # 32x32
+features_low = torch.randn(1, 64, 16, 16)  # 16x16
 combined = torch.cat([features_high, features_low], dim=1)
 # RuntimeError: Sizes of tensors must match except in dimension 1.
 # Expected size 32 but got size 16 for tensor number 1 in the list</code></pre>
-      <h3>The Fix</h3>
-      <pre><code>import torch.nn.functional as F
+ <h3>The Fix</h3>
+ <pre><code>import torch.nn.functional as F
 
 features_high = torch.randn(1, 64, 32, 32)
 features_low = torch.randn(1, 64, 16, 16)
 
 # Option 1: Upsample the smaller tensor
 features_low_up = F.interpolate(features_low, size=(32, 32), mode='bilinear', align_corners=False)
-combined = torch.cat([features_high, features_low_up], dim=1)  # Works: [1, 128, 32, 32]
+combined = torch.cat([features_high, features_low_up], dim=1) # Works: [1, 128, 32, 32]
 
 # Option 2: Downsample the larger tensor
 features_high_down = F.adaptive_avg_pool2d(features_high, (16, 16))
-combined = torch.cat([features_high_down, features_low], dim=1)  # Works: [1, 128, 16, 16]</code></pre>
-      <p>In U-Net and FPN architectures, feature maps at different scales must be resized before concatenation. Use F.interpolate for upsampling or adaptive pooling for downsampling.</p>
+combined = torch.cat([features_high_down, features_low], dim=1) # Works: [1, 128, 16, 16]</code></pre>
+ <p>In U-Net and FPN architectures, feature maps at different scales must be resized before concatenation. Use F.interpolate for upsampling or adaptive pooling for downsampling.</p>
 
-      <h2>Scenario 2: Batching Sequences of Different Lengths</h2>
-      <p>NLP tasks often have variable-length sequences that cannot be directly concatenated.</p>
-      <h3>The Error</h3>
-      <pre><code>seq1 = torch.randn(5, 768)   # 5 tokens
-seq2 = torch.randn(8, 768)   # 8 tokens
+ <h2>Scenario 2, Batching Sequences of Different Lengths</h2>
+ <p>NLP tasks often have variable-length sequences that cannot be directly concatenated.</p>
+ <h3>The Error</h3>
+ <pre><code>seq1 = torch.randn(5, 768)  # 5 tokens
+seq2 = torch.randn(8, 768)  # 8 tokens
 batch = torch.stack([seq1, seq2])
 # RuntimeError: Sizes of tensors must match except in dimension 0</code></pre>
-      <h3>The Fix</h3>
-      <pre><code># Option 1: Pad to maximum length
+ <h3>The Fix</h3>
+ <pre><code># Option 1: Pad to maximum length
 from torch.nn.utils.rnn import pad_sequence
 
 seq1 = torch.randn(5, 768)
 seq2 = torch.randn(8, 768)
-batch = pad_sequence([seq1, seq2], batch_first=True)  # [2, 8, 768], padded with zeros
+batch = pad_sequence([seq1, seq2], batch_first=True) # [2, 8, 768], padded with zeros
 
 # Option 2: Truncate to minimum length
 min_len = min(seq1.size(0), seq2.size(0))
-batch = torch.stack([seq1[:min_len], seq2[:min_len]])  # [2, 5, 768]</code></pre>
-      <p>pad_sequence pads shorter tensors with zeros to match the longest. Use attention masks to ignore padded positions during training.</p>
+batch = torch.stack([seq1[:min_len], seq2[:min_len]]) # [2, 5, 768]</code></pre>
+ <p>pad_sequence pads shorter tensors with zeros to match the longest. Use attention masks to ignore padded positions during training.</p>
 
-      <h2>Scenario 3: Residual Connection Shape Mismatch</h2>
-      <p>Skip/residual connections require the input and output to have identical shapes.</p>
-      <h3>The Error</h3>
-      <pre><code>class Block(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.conv = nn.Conv2d(64, 128, 3, padding=1)  # Changes channels!
+ <h2>Scenario 3, Residual Connection Shape Mismatch</h2>
+ <p>Skip/residual connections require the input and output to have identical shapes.</p>
+ <h3>The Error</h3>
+ <pre><code>class Block(nn.Module):
+  def __init__(self):
+    super().__init__()
+    self.conv = nn.Conv2d(64, 128, 3, padding=1) # Changes channels!
 
-    def forward(self, x):  # x: [B, 64, H, W]
-        return x + self.conv(x)  # Error! [B, 64, H, W] + [B, 128, H, W]
+  def forward(self, x): # x: [B, 64, H, W]
+    return x + self.conv(x) # Error! [B, 64, H, W] + [B, 128, H, W]
 # RuntimeError: Sizes of tensors must match except in dimension</code></pre>
-      <h3>The Fix</h3>
-      <pre><code>class Block(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.conv = nn.Conv2d(64, 128, 3, padding=1)
-        self.shortcut = nn.Conv2d(64, 128, 1)  # 1x1 conv to match channels
+ <h3>The Fix</h3>
+ <pre><code>class Block(nn.Module):
+  def __init__(self):
+    super().__init__()
+    self.conv = nn.Conv2d(64, 128, 3, padding=1)
+    self.shortcut = nn.Conv2d(64, 128, 1) # 1x1 conv to match channels
 
-    def forward(self, x):
-        return self.shortcut(x) + self.conv(x)  # Both [B, 128, H, W]. Works!</code></pre>
-      <p>ResNet uses 1x1 convolutions (projection shortcuts) to match channel dimensions when the residual path changes the number of channels.</p>
+  def forward(self, x):
+    return self.shortcut(x) + self.conv(x) # Both [B, 128, H, W]. Works!</code></pre>
+ <p>ResNet uses 1x1 convolutions (projection shortcuts) to match channel dimensions when the residual path changes the number of channels.</p>
 
-      <h2>Quick Debugging Checklist</h2>
-      <ul>
-        <li>Print tensor <code>.dtype</code> and <code>.device</code> before operations</li>
-        <li>Check for in-place operations: <code>+=</code>, <code>*=</code>, <code>.add_()</code>, <code>.mul_()</code></li>
-        <li>Verify shapes with <code>print(tensor.shape)</code> at each step</li>
-        <li>Use <code>torch.autograd.set_detect_anomaly(True)</code> to pinpoint the exact operation</li>
-      </ul>
-      <pre><code># Enable anomaly detection to find the exact line
+ <h2>Quick Debugging Checklist</h2>
+ <ul>
+ <li>Print tensor <code>.dtype</code> and <code>.device</code> before operations</li>
+ <li>Check for in-place operations: <code>+=</code>, <code>*=</code>, <code>.add_()</code>, <code>.mul_()</code></li>
+ <li>Verify shapes with <code>print(tensor.shape)</code> at each step</li>
+ <li>Use <code>torch.autograd.set_detect_anomaly(True)</code> to pinpoint the exact operation</li>
+ </ul>
+ <pre><code># Enable anomaly detection to find the exact line
 torch.autograd.set_detect_anomaly(True)
 
 # Check tensor properties
 print(f"dtype: {tensor.dtype}, device: {tensor.device}, shape: {tensor.shape}")
 print(f"requires_grad: {tensor.requires_grad}")</code></pre>
 
-      <section class="related-links">
-        <h2>Related Questions</h2>
-        <div class="related-grid">
-          <a href="/answers/cannot-broadcast-tensors.html" class="related-card">Fix "cannot broadcast tensors"</a>
-          <a href="/answers/view-size-not-compatible.html" class="related-card">Fix "view size not compatible"</a>
-          <a href="/answers/expected-4d-input-got-3d.html" class="related-card">Fix "expected 4D input got 3D"</a>
-          <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">Fix "mat1 mat2 shapes cannot be multiplied"</a>
-        
-        <a href="https://claudhq.com/errors/" class="related-card" title="Claude Code Error Reference">Troubleshoot AI Coding Errors — ClaudHQ Guide</a>
-      </div>
-      </section>
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/cannot-broadcast-tensors.html" class="related-card">Fix "cannot broadcast tensors"</a>
+ <a href="/answers/view-size-not-compatible.html" class="related-card">Fix "view size not compatible"</a>
+ <a href="/answers/expected-4d-input-got-3d.html" class="related-card">Fix "expected 4D input got 3D"</a>
+ <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">Fix "mat1 mat2 shapes cannot be multiplied"</a>
+ 
+ <a href="https://claudhq.com/errors/" class="related-card" title="Claude Code Error Reference">Troubleshoot AI Coding Errors, ClaudHQ Guide</a>
+ </div>
+ </section>
 
-      <div style="text-align:center;margin:2rem 0;">
-        <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Solver</a>
-      </div>
-    </article>
-  </main>
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Solver</a>
+ </div>
+ </article>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ </div>
+ </footer>
 
-  <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
-  <script src="/assets/js/share.js"></script>
+ <script src="/assets/js/share.js"></script>
 </body>
 </html>

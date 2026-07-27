@@ -80,12 +80,26 @@
 
 .field { display: flex; flex-direction: column; gap: 7px; }
 
+/* tools.css uppercases every label. On this site the labels ARE code
+   identifiers, so that turned n_kv into N_KV and d_head into D_HEAD and made
+   the reader translate them back. Keep the author's casing. */
 .field label, #tool label {
+  display: block;
   font-family: var(--font-body);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-dim);
-  letter-spacing: 0.01em;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-bottom: 0;
+  line-height: 1.4;
+}
+
+/* The variable name inside a label reads better in the mono face. */
+.field label code, #tool label code {
+  font-family: var(--font-display);
+  font-size: 0.95em;
+  color: var(--text);
 }
 
 /* font-size 16px is inherited from style.css and prevents iOS auto-zoom.
@@ -163,6 +177,18 @@
   line-height: 1.7;
   margin: 18px 0;
 }
+
+/* Charts ship with a fixed width attribute (600px, 400px), which pushed the
+   page to 639px on a 390px screen. Let them scale down instead. */
+canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Nothing on a tool page may push the document wider than the screen. */
+.wrap, .container, .card, .chart-container { max-width: 100%; }
+img, svg, pre { max-width: 100%; }
 
 /* ── Tables. The wrapper is what stops the 638px mobile overflow. ── */
 .table-scroll { overflow-x: auto; margin: 18px 0; -webkit-overflow-scrolling: touch; }

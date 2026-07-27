@@ -7,7 +7,7 @@
 <meta name="description" content="Count network parameters: conv, linear, attention, RNN. Memory calculator for any architecture.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://heytensor.com/tools/neural-network-parameter-counter/">
-<meta property="og:title" content="Neural Network Parameter Counter — HeyTensor">
+<meta property="og:title" content="Neural Network Parameter Counter, HeyTensor">
 <meta property="og:description" content="Count total parameters and memory for any neural network architecture">
 <meta property="og:url" content="https://heytensor.com/tools/neural-network-parameter-counter/">
 <meta property="og:type" content="website">
@@ -15,13 +15,13 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Neural Network Parameter Counter",
-  "url": "https://heytensor.com/tools/neural-network-parameter-counter/",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "description": "Count total parameters and memory usage for neural network architectures"
+ "@context": "https://schema.org",
+ "@type": "WebApplication",
+ "name": "Neural Network Parameter Counter",
+ "url": "https://heytensor.com/tools/neural-network-parameter-counter/",
+ "applicationCategory": "BusinessApplication",
+ "operatingSystem": "Web",
+ "description": "Count total parameters and memory usage for neural network architectures"
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,93 +35,93 @@
 
 <div class="container">
 <h1>Neural Network Parameter Counter</h1>
-    <p class="subtitle">Count parameters and memory for any architecture</p>
+ <p class="subtitle">Count parameters and memory for any architecture</p>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="tool-grid">
-    <div class="tool-section">
-      <h2>Add Layers</h2>
+ <div class="tool-grid">
+ <div class="tool-section">
+ <h2>Add Layers</h2>
 
-      <div class="layer-selector">
-        <button class="layer-btn" onclick="prepareLayer('linear')">Linear</button>
-        <button class="layer-btn" onclick="prepareLayer('conv2d')">Conv2D</button>
-        <button class="layer-btn" onclick="prepareLayer('conv1d')">Conv1D</button>
-        <button class="layer-btn" onclick="prepareLayer('attention')">Attention</button>
-        <button class="layer-btn" onclick="prepareLayer('embedding')">Embedding</button>
-        <button class="layer-btn" onclick="prepareLayer('lstm')">LSTM</button>
-        <button class="layer-btn" onclick="prepareLayer('gru')">GRU</button>
-        <button class="layer-btn" onclick="prepareLayer('batchnorm')">BatchNorm</button>
-      </div>
+ <div class="layer-selector">
+ <button class="layer-btn" onclick="prepareLayer('linear')">Linear</button>
+ <button class="layer-btn" onclick="prepareLayer('conv2d')">Conv2D</button>
+ <button class="layer-btn" onclick="prepareLayer('conv1d')">Conv1D</button>
+ <button class="layer-btn" onclick="prepareLayer('attention')">Attention</button>
+ <button class="layer-btn" onclick="prepareLayer('embedding')">Embedding</button>
+ <button class="layer-btn" onclick="prepareLayer('lstm')">LSTM</button>
+ <button class="layer-btn" onclick="prepareLayer('gru')">GRU</button>
+ <button class="layer-btn" onclick="prepareLayer('batchnorm')">BatchNorm</button>
+ </div>
 
-      <div id="layerInputs" class="current-layer" style="padding: 16px; border-radius: 8px; margin-bottom: 16px; display: none;"></div>
+ <div id="layerInputs" class="current-layer" style="padding: 16px; border-radius: 8px; margin-bottom: 16px; display: none;"></div>
 
-      <div id="layersList"></div>
-    </div>
+ <div id="layersList"></div>
+ </div>
 
-    <div class="tool-section">
-      <h2>Summary</h2>
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div class="stat-label">Total Parameters</div>
-          <div class="stat-value" id="totalParams">0</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">FP32 Memory</div>
-          <div class="stat-value" id="memoryFp32" style="font-size: 1.2rem;">0 MB</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">FP16 Memory</div>
-          <div class="stat-value" id="memoryFp16" style="font-size: 1.2rem;">0 MB</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Layer Count</div>
-          <div class="stat-value" id="layerCount">0</div>
-        </div>
-      </div>
+ <div class="tool-section">
+ <h2>Summary</h2>
+ <div class="stat-grid">
+ <div class="stat-box">
+ <div class="stat-label">Total Parameters</div>
+ <div class="stat-value" id="totalParams">0</div>
+ </div>
+ <div class="stat-box">
+ <div class="stat-label">FP32 Memory</div>
+ <div class="stat-value" id="memoryFp32" style="font-size: 1.2rem;">0 MB</div>
+ </div>
+ <div class="stat-box">
+ <div class="stat-label">FP16 Memory</div>
+ <div class="stat-value" id="memoryFp16" style="font-size: 1.2rem;">0 MB</div>
+ </div>
+ <div class="stat-box">
+ <div class="stat-label">Layer Count</div>
+ <div class="stat-value" id="layerCount">0</div>
+ </div>
+ </div>
 
-      <div class="breakdown" id="breakdownDiv" style="display: none; margin-top: 20px;">
-        <div style="color: #cbd5e1; font-weight: 600; margin-bottom: 12px;">By Layer Type</div>
-        <div id="breakdownContent"></div>
-      </div>
-    </div>
-  </div>
+ <div class="breakdown" id="breakdownDiv" style="display: none; margin-top: 20px;">
+ <div style="color: #cbd5e1; font-weight: 600; margin-bottom: 12px;">By Layer Type</div>
+ <div id="breakdownContent"></div>
+ </div>
+ </div>
+ </div>
 
-  <div class="partner-section">
-    <p class="partner-label">Recommended by our team</p>
-    <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
-    <p class="partner-desc">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
-  </div>
+ <div class="partner-section">
+ <p class="partner-label">Recommended by our team</p>
+ <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" class="partner-link">BeLikeNative.com</a>
+ <p class="partner-desc">The #1 AI writing tool for freelancers, perfect grammar in any language, instantly.</p>
+ </div>
 
-  <div class="ad-section">
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-  </div>
+ <div class="ad-section">
+ <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+ </div>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 </div>
 
 <script>
@@ -129,240 +129,240 @@ let layers = [];
 let currentLayerType = null;
 
 const layerConfigs = {
-  linear: {
-    label: 'Linear (Fully Connected)',
-    params: [
-      { name: 'inputSize', label: 'Input Size', value: 768 },
-      { name: 'outputSize', label: 'Output Size', value: 768 },
-      { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
-    ],
-    calculate: (p) => {
-      const weights = p.inputSize * p.outputSize;
-      const bias = p.bias ? p.outputSize : 0;
-      return weights + bias;
-    },
-    describe: (p) => `${p.inputSize} → ${p.outputSize}${p.bias ? ' + bias' : ''}`
+ linear: {
+  label: 'Linear (Fully Connected)',
+  params: [
+   { name: 'inputSize', label: 'Input Size', value: 768 },
+   { name: 'outputSize', label: 'Output Size', value: 768 },
+   { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
+  ],
+  calculate: (p) => {
+   const weights = p.inputSize * p.outputSize;
+   const bias = p.bias ? p.outputSize : 0;
+   return weights + bias;
   },
+  describe: (p) => `${p.inputSize} → ${p.outputSize}${p.bias ? ' + bias' : ''}`
+ },
 
-  conv2d: {
-    label: 'Conv2D',
-    params: [
-      { name: 'inChannels', label: 'In Channels', value: 3 },
-      { name: 'outChannels', label: 'Out Channels', value: 64 },
-      { name: 'kernelSize', label: 'Kernel Size (3 or 5)', value: 3 },
-      { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
-    ],
-    calculate: (p) => {
-      const weights = p.inChannels * p.outChannels * p.kernelSize * p.kernelSize;
-      const bias = p.bias ? p.outChannels : 0;
-      return weights + bias;
-    },
-    describe: (p) => `${p.inChannels}→${p.outChannels}, K${p.kernelSize}×${p.kernelSize}`
+ conv2d: {
+  label: 'Conv2D',
+  params: [
+   { name: 'inChannels', label: 'In Channels', value: 3 },
+   { name: 'outChannels', label: 'Out Channels', value: 64 },
+   { name: 'kernelSize', label: 'Kernel Size (3 or 5)', value: 3 },
+   { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
+  ],
+  calculate: (p) => {
+   const weights = p.inChannels * p.outChannels * p.kernelSize * p.kernelSize;
+   const bias = p.bias ? p.outChannels : 0;
+   return weights + bias;
   },
+  describe: (p) => `${p.inChannels}→${p.outChannels}, K${p.kernelSize}×${p.kernelSize}`
+ },
 
-  conv1d: {
-    label: 'Conv1D',
-    params: [
-      { name: 'inChannels', label: 'In Channels', value: 512 },
-      { name: 'outChannels', label: 'Out Channels', value: 512 },
-      { name: 'kernelSize', label: 'Kernel Size', value: 5 },
-      { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
-    ],
-    calculate: (p) => {
-      const weights = p.inChannels * p.outChannels * p.kernelSize;
-      const bias = p.bias ? p.outChannels : 0;
-      return weights + bias;
-    },
-    describe: (p) => `${p.inChannels}→${p.outChannels}, K${p.kernelSize}`
+ conv1d: {
+  label: 'Conv1D',
+  params: [
+   { name: 'inChannels', label: 'In Channels', value: 512 },
+   { name: 'outChannels', label: 'Out Channels', value: 512 },
+   { name: 'kernelSize', label: 'Kernel Size', value: 5 },
+   { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
+  ],
+  calculate: (p) => {
+   const weights = p.inChannels * p.outChannels * p.kernelSize;
+   const bias = p.bias ? p.outChannels : 0;
+   return weights + bias;
   },
+  describe: (p) => `${p.inChannels}→${p.outChannels}, K${p.kernelSize}`
+ },
 
-  attention: {
-    label: 'Multi-Head Attention',
-    params: [
-      { name: 'dim', label: 'Dimension (d_model)', value: 768 },
-      { name: 'heads', label: 'Number of Heads', value: 12 },
-      { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
-    ],
-    calculate: (p) => {
-      // Q, K, V projections + output projection
-      const projParams = 4 * p.dim * p.dim; // 4 linear layers
-      const bias = p.bias ? 4 * p.dim : 0;
-      return projParams + bias;
-    },
-    describe: (p) => `${p.dim}D, ${p.heads} heads`
+ attention: {
+  label: 'Multi-Head Attention',
+  params: [
+   { name: 'dim', label: 'Dimension (d_model)', value: 768 },
+   { name: 'heads', label: 'Number of Heads', value: 12 },
+   { name: 'bias', label: 'Include Bias?', type: 'checkbox', value: true }
+  ],
+  calculate: (p) => {
+   // Q, K, V projections + output projection
+   const projParams = 4 * p.dim * p.dim; // 4 linear layers
+   const bias = p.bias ? 4 * p.dim : 0;
+   return projParams + bias;
   },
+  describe: (p) => `${p.dim}D, ${p.heads} heads`
+ },
 
-  embedding: {
-    label: 'Embedding',
-    params: [
-      { name: 'vocabSize', label: 'Vocabulary Size', value: 50000 },
-      { name: 'embedDim', label: 'Embedding Dimension', value: 768 }
-    ],
-    calculate: (p) => p.vocabSize * p.embedDim,
-    describe: (p) => `${p.vocabSize.toLocaleString()} × ${p.embedDim}`
+ embedding: {
+  label: 'Embedding',
+  params: [
+   { name: 'vocabSize', label: 'Vocabulary Size', value: 50000 },
+   { name: 'embedDim', label: 'Embedding Dimension', value: 768 }
+  ],
+  calculate: (p) => p.vocabSize * p.embedDim,
+  describe: (p) => `${p.vocabSize.toLocaleString()} × ${p.embedDim}`
+ },
+
+ lstm: {
+  label: 'LSTM Cell',
+  params: [
+   { name: 'inputSize', label: 'Input Size', value: 512 },
+   { name: 'hiddenSize', label: 'Hidden Size', value: 512 }
+  ],
+  calculate: (p) => {
+   // 4 gates (i, f, g, o) each with W and U weights
+   const weights = 4 * (p.inputSize * p.hiddenSize + p.hiddenSize * p.hiddenSize + p.hiddenSize);
+   return weights;
   },
+  describe: (p) => `${p.inputSize}→${p.hiddenSize}`
+ },
 
-  lstm: {
-    label: 'LSTM Cell',
-    params: [
-      { name: 'inputSize', label: 'Input Size', value: 512 },
-      { name: 'hiddenSize', label: 'Hidden Size', value: 512 }
-    ],
-    calculate: (p) => {
-      // 4 gates (i, f, g, o) each with W and U weights
-      const weights = 4 * (p.inputSize * p.hiddenSize + p.hiddenSize * p.hiddenSize + p.hiddenSize);
-      return weights;
-    },
-    describe: (p) => `${p.inputSize}→${p.hiddenSize}`
+ gru: {
+  label: 'GRU Cell',
+  params: [
+   { name: 'inputSize', label: 'Input Size', value: 512 },
+   { name: 'hiddenSize', label: 'Hidden Size', value: 512 }
+  ],
+  calculate: (p) => {
+   // 3 gates (r, z, h) each with W and U weights
+   const weights = 3 * (p.inputSize * p.hiddenSize + p.hiddenSize * p.hiddenSize + p.hiddenSize);
+   return weights;
   },
+  describe: (p) => `${p.inputSize}→${p.hiddenSize}`
+ },
 
-  gru: {
-    label: 'GRU Cell',
-    params: [
-      { name: 'inputSize', label: 'Input Size', value: 512 },
-      { name: 'hiddenSize', label: 'Hidden Size', value: 512 }
-    ],
-    calculate: (p) => {
-      // 3 gates (r, z, h) each with W and U weights
-      const weights = 3 * (p.inputSize * p.hiddenSize + p.hiddenSize * p.hiddenSize + p.hiddenSize);
-      return weights;
-    },
-    describe: (p) => `${p.inputSize}→${p.hiddenSize}`
-  },
-
-  batchnorm: {
-    label: 'Batch Normalization',
-    params: [
-      { name: 'numFeatures', label: 'Number of Features', value: 512 }
-    ],
-    calculate: (p) => p.numFeatures * 2, // scale + shift
-    describe: (p) => `${p.numFeatures} features`
-  }
+ batchnorm: {
+  label: 'Batch Normalization',
+  params: [
+   { name: 'numFeatures', label: 'Number of Features', value: 512 }
+  ],
+  calculate: (p) => p.numFeatures * 2, // scale + shift
+  describe: (p) => `${p.numFeatures} features`
+ }
 };
 
 function prepareLayer(type) {
-  currentLayerType = type;
-  const config = layerConfigs[type];
-  const inputsDiv = document.getElementById('layerInputs');
-  inputsDiv.style.display = 'block';
-  inputsDiv.innerHTML = `<div style="color: #e8e8e8; font-weight: 600; margin-bottom: 12px;">${config.label}</div>`;
+ currentLayerType = type;
+ const config = layerConfigs[type];
+ const inputsDiv = document.getElementById('layerInputs');
+ inputsDiv.style.display = 'block';
+ inputsDiv.innerHTML = `<div style="color: #e8e8e8; font-weight: 600; margin-bottom: 12px;">${config.label}</div>`;
 
-  config.params.forEach(p => {
-    if (p.type === 'checkbox') {
-      inputsDiv.innerHTML += `
-        <div class="input-group">
-          <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="${p.name}" ${p.value ? 'checked' : ''} style="cursor: pointer; width: auto;">
-            <span>${p.label}</span>
-          </label>
-        </div>
-      `;
-    } else {
-      inputsDiv.innerHTML += `
-        <div class="input-group">
-          <label for="${p.name}">${p.label}</label>
-          <input type="number" id="${p.name}" value="${p.value}" min="1">
-        </div>
-      `;
-    }
-  });
+ config.params.forEach(p => {
+  if (p.type === 'checkbox') {
+   inputsDiv.innerHTML += `
+    <div class="input-group">
+     <label style="display: flex; align-items: center; gap: 8px;">
+      <input type="checkbox" id="${p.name}" ${p.value ? 'checked' : ''} style="cursor: pointer; width: auto;">
+      <span>${p.label}</span>
+     </label>
+    </div>
+   `;
+  } else {
+   inputsDiv.innerHTML += `
+    <div class="input-group">
+     <label for="${p.name}">${p.label}</label>
+     <input type="number" id="${p.name}" value="${p.value}" min="1">
+    </div>
+   `;
+  }
+ });
 
-  inputsDiv.innerHTML += `<button class="add-button" onclick="addLayer()">Add Layer</button>`;
+ inputsDiv.innerHTML += `<button class="add-button" onclick="addLayer()">Add Layer</button>`;
 }
 
 function addLayer() {
-  if (!currentLayerType) return;
+ if (!currentLayerType) return;
 
-  const config = layerConfigs[currentLayerType];
-  const params = {};
+ const config = layerConfigs[currentLayerType];
+ const params = {};
 
-  config.params.forEach(p => {
-    const input = document.getElementById(p.name);
-    if (p.type === 'checkbox') {
-      params[p.name] = input.checked;
-    } else {
-      params[p.name] = parseInt(input.value) || p.value;
-    }
-  });
+ config.params.forEach(p => {
+  const input = document.getElementById(p.name);
+  if (p.type === 'checkbox') {
+   params[p.name] = input.checked;
+  } else {
+   params[p.name] = parseInt(input.value) || p.value;
+  }
+ });
 
-  const paramCount = config.calculate(params);
-  const description = config.describe(params);
+ const paramCount = config.calculate(params);
+ const description = config.describe(params);
 
-  layers.push({
-    type: currentLayerType,
-    name: config.label,
-    params: paramCount,
-    description: description,
-    id: Date.now()
-  });
+ layers.push({
+  type: currentLayerType,
+  name: config.label,
+  params: paramCount,
+  description: description,
+  id: Date.now()
+ });
 
-  updateLayersList();
-  document.getElementById('layerInputs').style.display = 'none';
+ updateLayersList();
+ document.getElementById('layerInputs').style.display = 'none';
 }
 
 function deleteLayer(id) {
-  layers = layers.filter(l => l.id !== id);
-  updateLayersList();
+ layers = layers.filter(l => l.id !== id);
+ updateLayersList();
 }
 
 function updateLayersList() {
-  const list = document.getElementById('layersList');
-  list.innerHTML = '';
+ const list = document.getElementById('layersList');
+ list.innerHTML = '';
 
-  layers.forEach((layer, idx) => {
-    list.innerHTML += `
-      <div class="layer-item">
-        <div class="layer-info">
-          <div class="layer-name">${idx + 1}. ${layer.name}</div>
-          <div class="layer-desc">${layer.description}</div>
-          <div class="layer-params">${layer.params.toLocaleString()} parameters</div>
-        </div>
-        <button class="delete-btn" onclick="deleteLayer(${layer.id})">Delete</button>
-      </div>
-    `;
-  });
+ layers.forEach((layer, idx) => {
+  list.innerHTML += `
+   <div class="layer-item">
+    <div class="layer-info">
+     <div class="layer-name">${idx + 1}. ${layer.name}</div>
+     <div class="layer-desc">${layer.description}</div>
+     <div class="layer-params">${layer.params.toLocaleString()} parameters</div>
+    </div>
+    <button class="delete-btn" onclick="deleteLayer(${layer.id})">Delete</button>
+   </div>
+  `;
+ });
 
-  updateTotals();
+ updateTotals();
 }
 
 function updateTotals() {
-  const totalParams = layers.reduce((sum, l) => sum + l.params, 0);
-  const fp32Memory = (totalParams * 4) / (1024 * 1024); // 4 bytes per FP32
-  const fp16Memory = (totalParams * 2) / (1024 * 1024); // 2 bytes per FP16
+ const totalParams = layers.reduce((sum, l) => sum + l.params, 0);
+ const fp32Memory = (totalParams * 4) / (1024 * 1024); // 4 bytes per FP32
+ const fp16Memory = (totalParams * 2) / (1024 * 1024); // 2 bytes per FP16
 
-  document.getElementById('totalParams').textContent = totalParams.toLocaleString();
-  document.getElementById('memoryFp32').textContent = fp32Memory.toFixed(2) + ' MB';
-  document.getElementById('memoryFp16').textContent = fp16Memory.toFixed(2) + ' MB';
-  document.getElementById('layerCount').textContent = layers.length;
+ document.getElementById('totalParams').textContent = totalParams.toLocaleString();
+ document.getElementById('memoryFp32').textContent = fp32Memory.toFixed(2) + ' MB';
+ document.getElementById('memoryFp16').textContent = fp16Memory.toFixed(2) + ' MB';
+ document.getElementById('layerCount').textContent = layers.length;
 
-  // Breakdown by type
-  if (layers.length > 0) {
-    const typeBreakdown = {};
-    layers.forEach(layer => {
-      if (!typeBreakdown[layer.type]) typeBreakdown[layer.type] = 0;
-      typeBreakdown[layer.type] += layer.params;
-    });
+ // Breakdown by type
+ if (layers.length > 0) {
+  const typeBreakdown = {};
+  layers.forEach(layer => {
+   if (!typeBreakdown[layer.type]) typeBreakdown[layer.type] = 0;
+   typeBreakdown[layer.type] += layer.params;
+  });
 
-    let breakdownHTML = '';
-    Object.entries(typeBreakdown).forEach(([type, params]) => {
-      const percent = ((params / totalParams) * 100).toFixed(1);
-      breakdownHTML += `
-        <div class="breakdown-item">
-          <span class="breakdown-label">${layerConfigs[type].label}</span>
-          <span class="breakdown-value">${params.toLocaleString()} (${percent}%)</span>
-        </div>
-      `;
-    });
+  let breakdownHTML = '';
+  Object.entries(typeBreakdown).forEach(([type, params]) => {
+   const percent = ((params / totalParams) * 100).toFixed(1);
+   breakdownHTML += `
+    <div class="breakdown-item">
+     <span class="breakdown-label">${layerConfigs[type].label}</span>
+     <span class="breakdown-value">${params.toLocaleString()} (${percent}%)</span>
+    </div>
+   `;
+  });
 
-    document.getElementById('breakdownContent').innerHTML = breakdownHTML;
-    document.getElementById('breakdownDiv').style.display = 'block';
-  } else {
-    document.getElementById('breakdownDiv').style.display = 'none';
-  }
+  document.getElementById('breakdownContent').innerHTML = breakdownHTML;
+  document.getElementById('breakdownDiv').style.display = 'block';
+ } else {
+  document.getElementById('breakdownDiv').style.display = 'none';
+ }
 
-  if (typeof window.adsbygoogle !== 'undefined') {
-    window.adsbygoogle.push({});
-  }
+ if (typeof window.adsbygoogle !== 'undefined') {
+  window.adsbygoogle.push({});
+ }
 }
 
 // Initialize

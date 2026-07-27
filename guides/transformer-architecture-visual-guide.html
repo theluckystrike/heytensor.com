@@ -1,815 +1,813 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transformer Architecture Guide — Visual Explainer</title>
-  <meta name="description" content="Interactive visual guide to transformer architecture. Step through Q/K/V matrices, attention scores, softmax, and multi-head attention with diagrams.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
-  <link rel="alternate" hreflang="en" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
-  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Transformer Architecture Guide — Visual Explainer">
-  <meta property="og:description" content="Interactive canvas-based visualization: step through Q/K/V projection, attention score computation, softmax normalization, and multi-head attention layer by layer.">
-  <meta property="og:url" content="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Transformer Architecture Guide — Visual Explainer">
-  <meta name="twitter:description" content="Step through Q/K/V matrices and attention layers interactively. No external libraries.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Transformer Architecture Guide — Visual Explainer",
-    "description": "Interactive step-by-step visual guide to transformer architecture with canvas-based diagrams showing Q/K/V matrices, attention scores, and multi-head attention.",
-    "datePublished": "2026-05-28",
-    "dateModified": "2026-05-28",
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "HeyTensor",
-      "url": "https://heytensor.com"
-    },
-    "mainEntityOfPage": "https://heytensor.com/guides/transformer-architecture-visual-guide.html",
-    "image": "https://heytensor.com/assets/og-image.png"
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Transformer Architecture Guide, Visual Explainer</title>
+ <meta name="description" content="Interactive visual guide to transformer architecture. Step through Q/K/V matrices, attention scores, softmax, and multi-head attention with diagrams.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Transformer Architecture Guide, Visual Explainer">
+ <meta property="og:description" content="Interactive canvas-based visualization: step through Q/K/V projection, attention score computation, softmax normalization, and multi-head attention layer by layer.">
+ <meta property="og:url" content="https://heytensor.com/guides/transformer-architecture-visual-guide.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Transformer Architecture Guide, Visual Explainer">
+ <meta name="twitter:description" content="Step through Q/K/V matrices and attention layers interactively. No external libraries.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Transformer Architecture Guide, Visual Explainer",
+  "description": "Interactive step-by-step visual guide to transformer architecture with canvas-based diagrams showing Q/K/V matrices, attention scores, and multi-head attention.",
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "publisher": {
+   "@type": "Organization",
+   "name": "HeyTensor",
+   "url": "https://heytensor.com"
+  },
+  "mainEntityOfPage": "https://heytensor.com/guides/transformer-architecture-visual-guide.html",
+  "image": "https://heytensor.com/assets/og-image.png"
+ }
+ </script>
+ <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://heytensor.com/guides/"},{"@type":"ListItem","position":3,"name":"Transformer Architecture Visual Guide"}]}</script>
+ <style>
+  .viz-container {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 1.5rem;
+   margin: 1.5rem 0;
   }
-  </script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://heytensor.com/guides/"},{"@type":"ListItem","position":3,"name":"Transformer Architecture Visual Guide"}]}</script>
-  <style>
-    .viz-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-    }
-    .step-indicator {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.25rem;
-      flex-wrap: wrap;
-    }
-    .step-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.72rem;
-      font-family: var(--font-display);
-      font-weight: 700;
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      color: var(--text-dim);
-      cursor: pointer;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-    .step-dot.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .step-dot.done {
-      background: rgba(59,130,246,0.15);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .step-connector {
-      flex: 1;
-      min-width: 12px;
-      height: 1.5px;
-      background: var(--border);
-    }
-    .step-title {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      color: var(--text);
-      margin-bottom: 0.4rem;
-    }
-    .step-desc {
-      font-size: 0.88rem;
-      color: var(--text-dim);
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
-    canvas {
-      display: block;
-      width: 100%;
-      border-radius: 6px;
-      background: #0d0d0d;
-    }
-    .nav-btns {
-      display: flex;
-      gap: 0.75rem;
-      margin-top: 1.25rem;
-      align-items: center;
-    }
-    .nav-btn {
-      padding: 0.55rem 1.4rem;
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .nav-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(59,130,246,0.08); }
-    .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .nav-btn.primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-      font-weight: 600;
-    }
-    .nav-btn.primary:hover:not(:disabled) { background: var(--accent-dim); }
-    .step-counter {
-      font-size: 0.82rem;
-      color: var(--text-dim);
-      margin-left: auto;
-    }
-    pre {
-      background: #0d0d0d;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1rem 1.1rem;
-      overflow-x: auto;
-      font-family: var(--font-display);
-      font-size: 0.78rem;
-      line-height: 1.65;
-      color: #d4d4d4;
-      margin: 0.75rem 0;
-    }
-    code { font-family: var(--font-display); font-size: 0.85em; color: #8be9fd; }
-    .formula-box {
-      background: #0d0d0d;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.85rem 1.1rem;
-      font-family: var(--font-display);
-      font-size: 0.82rem;
-      color: #f1f1f1;
-      margin: 0.75rem 0;
-      text-align: center;
-      letter-spacing: 0.03em;
-    }
-  </style>
+  .step-indicator {
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   margin-bottom: 1.25rem;
+   flex-wrap: wrap;
+  }
+  .step-dot {
+   width: 28px;
+   height: 28px;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-size: 0.72rem;
+   font-family: var(--font-display);
+   font-weight: 700;
+   background: var(--bg);
+   border: 1.5px solid var(--border);
+   color: var(--text-dim);
+   cursor: pointer;
+   transition: all 0.2s;
+   flex-shrink: 0;
+  }
+  .step-dot.active {
+   background: var(--accent);
+   border-color: var(--accent);
+   color: #fff;
+  }
+  .step-dot.done {
+   background: rgba(59,130,246,0.15);
+   border-color: var(--accent);
+   color: var(--accent);
+  }
+  .step-connector {
+   flex: 1;
+   min-width: 12px;
+   height: 1.5px;
+   background: var(--border);
+  }
+  .step-title {
+   font-family: var(--font-display);
+   font-size: 1rem;
+   color: var(--text);
+   margin-bottom: 0.4rem;
+  }
+  .step-desc {
+   font-size: 0.88rem;
+   color: var(--text-dim);
+   line-height: 1.6;
+   margin-bottom: 1rem;
+  }
+  canvas {
+   display: block;
+   width: 100%;
+   border-radius: 6px;
+   background: #0d0d0d;
+  }
+  .nav-btns {
+   display: flex;
+   gap: 0.75rem;
+   margin-top: 1.25rem;
+   align-items: center;
+  }
+  .nav-btn {
+   padding: 0.55rem 1.4rem;
+   background: var(--bg);
+   border: 1.5px solid var(--border);
+   border-radius: var(--radius);
+   color: var(--text);
+   font-family: var(--font-body);
+   font-size: 0.88rem;
+   cursor: pointer;
+   transition: border-color 0.2s, background 0.2s;
+  }
+  .nav-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(59,130,246,0.08); }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nav-btn.primary {
+   background: var(--accent);
+   border-color: var(--accent);
+   color: #fff;
+   font-weight: 600;
+  }
+  .nav-btn.primary:hover:not(:disabled) { background: var(--accent-dim); }
+  .step-counter {
+   font-size: 0.82rem;
+   color: var(--text-dim);
+   margin-left: auto;
+  }
+  pre {
+   background: #0d0d0d;
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   padding: 1rem 1.1rem;
+   overflow-x: auto;
+   font-family: var(--font-display);
+   font-size: 0.78rem;
+   line-height: 1.65;
+   color: #d4d4d4;
+   margin: 0.75rem 0;
+  }
+  code { font-family: var(--font-display); font-size: 0.85em; color: #8be9fd; }
+  .formula-box {
+   background: #0d0d0d;
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   padding: 0.85rem 1.1rem;
+   font-family: var(--font-display);
+   font-size: 0.82rem;
+   color: #f1f1f1;
+   margin: 0.75rem 0;
+   text-align: center;
+   letter-spacing: 0.03em;
+  }
+ </style>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/" class="active">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/" class="active">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container" style="max-width:780px;">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Transformer Architecture Visual Guide</span>
-    </nav>
+ <main class="container" style="max-width:780px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/guides/">Guides</a> <span>/</span> <span>Transformer Architecture Visual Guide</span>
+ </nav>
 
-    <article>
-      <h1>Transformer Architecture Visual Guide<br><span style="color:var(--text-dim);font-size:0.65em;font-family:var(--font-body);font-weight:400;">Self-Attention Explained Step by Step</span></h1>
+ <article>
+ <h1>Transformer Architecture Visual Guide<br><span style="color,var(--text-dim);font-size,0.65em;font-family,var(--font-body);font-weight,400;">Self-Attention Explained Step by Step</span></h1>
 
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
-        <p style="margin:0;line-height:1.7;"><strong>Use the interactive visualizer below to step through each stage of the transformer self-attention mechanism: input embedding, Q/K/V projection, attention score computation, softmax normalization, weighted aggregation, and multi-head attention.</strong></p>
-      </div>
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">Use the interactive visualizer below to step through each stage of the transformer self-attention mechanism: input embedding, Q/K/V projection, attention score computation, softmax normalization, weighted aggregation, and multi-head attention.</p>
+ </div>
 
-      <div class="viz-container">
-        <div class="step-indicator" id="stepIndicator"></div>
-        <div class="step-title" id="stepTitle"></div>
-        <div class="step-desc" id="stepDesc"></div>
-        <canvas id="attnCanvas" height="280"></canvas>
-        <div class="formula-box" id="formulaBox"></div>
-        <div class="nav-btns">
-          <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)">&#8592; Previous</button>
-          <button class="nav-btn primary" id="nextBtn" onclick="changeStep(1)">Next &#8594;</button>
-          <span class="step-counter" id="stepCounter"></span>
-        </div>
-      </div>
+ <div class="viz-container">
+ <div class="step-indicator" id="stepIndicator"></div>
+ <div class="step-title" id="stepTitle"></div>
+ <div class="step-desc" id="stepDesc"></div>
+ <canvas id="attnCanvas" height="280"></canvas>
+ <div class="formula-box" id="formulaBox"></div>
+ <div class="nav-btns">
+ <button class="nav-btn" id="prevBtn" onclick="changeStep(-1)">&#8592; Previous</button>
+ <button class="nav-btn primary" id="nextBtn" onclick="changeStep(1)">Next &#8594;</button>
+ <span class="step-counter" id="stepCounter"></span>
+ </div>
+ </div>
 
-      <h2>What Is Self-Attention?</h2>
-      <p>Self-attention allows every position in a sequence to attend to every other position in the same sequence. Unlike recurrent networks, all positions are processed in parallel — giving transformers their speed advantage and ability to capture long-range dependencies.</p>
+ <h2>What Is Self-Attention?</h2>
+ <p>Self-attention allows every position in a sequence to attend to every other position in the same sequence. Unlike recurrent networks, all positions are processed in parallel, giving transformers their speed advantage and ability to capture long-range dependencies.</p>
 
-      <h2>The Query, Key, Value Framework</h2>
-      <p>Each input token is projected into three vectors using learned weight matrices:</p>
-      <ul style="padding-left:1.5rem;line-height:1.9;color:var(--text-dim);">
-        <li><strong style="color:var(--text);">Query (Q)</strong> — What this token is looking for</li>
-        <li><strong style="color:var(--text);">Key (K)</strong> — What this token offers to other tokens</li>
-        <li><strong style="color:var(--text);">Value (V)</strong> — The actual content to be aggregated</li>
-      </ul>
-      <div class="formula-box">Attention(Q, K, V) = softmax( Q * K^T / sqrt(d_k) ) * V</div>
-      <p>The scaling factor <code>sqrt(d_k)</code> prevents dot products from growing too large in high-dimensional spaces, which would push softmax into saturation zones with near-zero gradients.</p>
+ <h2>The Query, Key, Value Framework</h2>
+ <p>Each input token is projected into three vectors using learned weight matrices:</p>
+ <ul style="padding-left:1.5rem;line-height:1.9;color:var(--text-dim);">
+ <li><strong style="color:var(--text);">Query (Q)</strong>, What this token is looking for</li>
+ <li><strong style="color:var(--text);">Key (K)</strong>, What this token offers to other tokens</li>
+ <li><strong style="color:var(--text);">Value (V)</strong>, The actual content to be aggregated</li>
+ </ul>
+ <div class="formula-box">Attention(Q, K, V) = softmax( Q * K^T / sqrt(d_k) ) * V</div>
+ <p>The scaling factor <code>sqrt(d_k)</code> prevents dot products from growing too large in high-dimensional spaces, which would push softmax into saturation zones with near-zero gradients.</p>
 
-      <h2>PyTorch Implementation</h2>
-      <pre><code>import torch
+ <h2>PyTorch Implementation</h2>
+ <pre><code>import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import math
 
 class ScaledDotProductAttention(nn.Module):
-    def forward(self, Q, K, V, mask=None):
-        d_k = Q.size(-1)
-        # Attention scores: (batch, heads, seq, seq)
-        scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
-        if mask is not None:
-            scores = scores.masked_fill(mask == 0, float('-inf'))
-        attn_weights = F.softmax(scores, dim=-1)
-        return torch.matmul(attn_weights, V), attn_weights
-
+  def forward(self, Q, K, V, mask=None):
+    d_k = Q.size(-1)
+    # Attention scores: (batch, heads, seq, seq)
+    scores = torch.matmul(Q, K.transpose(-2, -1)) / math.sqrt(d_k)
+    if mask is not None:
+      scores = scores.masked_fill(mask == 0, float('-inf'))
+    attn_weights = F.softmax(scores, dim=-1)
+    return torch.matmul(attn_weights, V), attn_weights
 
 class MultiHeadAttention(nn.Module):
-    def __init__(self, d_model=512, num_heads=8):
-        super().__init__()
-        assert d_model % num_heads == 0
-        self.d_k = d_model // num_heads
-        self.num_heads = num_heads
-        self.W_q = nn.Linear(d_model, d_model)
-        self.W_k = nn.Linear(d_model, d_model)
-        self.W_v = nn.Linear(d_model, d_model)
-        self.W_o = nn.Linear(d_model, d_model)
-        self.attention = ScaledDotProductAttention()
+  def __init__(self, d_model=512, num_heads=8):
+    super().__init__()
+    assert d_model % num_heads == 0
+    self.d_k = d_model // num_heads
+    self.num_heads = num_heads
+    self.W_q = nn.Linear(d_model, d_model)
+    self.W_k = nn.Linear(d_model, d_model)
+    self.W_v = nn.Linear(d_model, d_model)
+    self.W_o = nn.Linear(d_model, d_model)
+    self.attention = ScaledDotProductAttention()
 
-    def split_heads(self, x):
-        B, S, D = x.shape
-        return x.view(B, S, self.num_heads, self.d_k).transpose(1, 2)
+  def split_heads(self, x):
+    B, S, D = x.shape
+    return x.view(B, S, self.num_heads, self.d_k).transpose(1, 2)
 
-    def forward(self, Q, K, V, mask=None):
-        Q = self.split_heads(self.W_q(Q))  # (B, H, S, d_k)
-        K = self.split_heads(self.W_k(K))
-        V = self.split_heads(self.W_v(V))
-        x, weights = self.attention(Q, K, V, mask)
-        B, H, S, dk = x.shape
-        x = x.transpose(1, 2).contiguous().view(B, S, H * dk)
-        return self.W_o(x), weights  # (B, S, d_model)
-
+  def forward(self, Q, K, V, mask=None):
+    Q = self.split_heads(self.W_q(Q)) # (B, H, S, d_k)
+    K = self.split_heads(self.W_k(K))
+    V = self.split_heads(self.W_v(V))
+    x, weights = self.attention(Q, K, V, mask)
+    B, H, S, dk = x.shape
+    x = x.transpose(1, 2).contiguous().view(B, S, H * dk)
+    return self.W_o(x), weights # (B, S, d_model)
 
 # Usage
 d_model, num_heads, seq_len, batch = 512, 8, 64, 2
 x = torch.randn(batch, seq_len, d_model)
 mha = MultiHeadAttention(d_model, num_heads)
-out, attn = mha(x, x, x)  # Self-attention: Q=K=V=x
-print(out.shape)   # (2, 64, 512)
-print(attn.shape)  # (2, 8, 64, 64) — attention maps per head</code></pre>
+out, attn = mha(x, x, x) # Self-attention: Q=K=V=x
+print(out.shape)  # (2, 64, 512)
+print(attn.shape) # (2, 8, 64, 64) — attention maps per head</code></pre>
 
-      <h2>Key Dimensions to Know</h2>
-      <p style="color:var(--text-dim);">For a standard BERT-base transformer (d_model=768, num_heads=12):</p>
-      <ul style="padding-left:1.5rem;line-height:1.9;color:var(--text-dim);">
-        <li>d_k = d_model / num_heads = 768 / 12 = <strong style="color:var(--text);">64</strong></li>
-        <li>Q, K, V matrices: <strong style="color:var(--text);">(seq_len, 64)</strong> per head</li>
-        <li>Attention matrix: <strong style="color:var(--text);">(seq_len, seq_len)</strong> — quadratic in sequence length</li>
-        <li>Multi-head output: <strong style="color:var(--text);">(seq_len, 768)</strong> after concatenation + projection</li>
-      </ul>
+ <h2>Key Dimensions to Know</h2>
+ <p style="color:var(--text-dim);">For a standard BERT-base transformer (d_model=768, num_heads=12):</p>
+ <ul style="padding-left:1.5rem;line-height:1.9;color:var(--text-dim);">
+ <li>d_k = d_model / num_heads = 768 / 12 = <strong style="color:var(--text);">64</strong></li>
+ <li>Q, K, V matrices: <strong style="color:var(--text);">(seq_len, 64)</strong> per head</li>
+ <li>Attention matrix: <strong style="color:var(--text);">(seq_len, seq_len)</strong>, quadratic in sequence length</li>
+ <li>Multi-head output: <strong style="color:var(--text);">(seq_len, 768)</strong> after concatenation + projection</li>
+ </ul>
 
-      <h2>Why Multi-Head?</h2>
-      <p>Multiple attention heads allow the model to jointly attend to information from different representation subspaces. Head 1 might capture syntactic dependencies, head 5 might track coreference, and head 11 might focus on positional proximity — all in parallel within a single layer.</p>
+ <h2>Why Multi-Head?</h2>
+ <p>Multiple attention heads allow the model to jointly attend to information from different representation subspaces. Head 1 might capture syntactic dependencies, head 5 might track coreference, and head 11 might focus on positional proximity, all in parallel within a single layer.</p>
 
-      <section class="related-links" style="margin-top:2rem;">
-        <h2>Related Tools &amp; Guides</h2>
-        <div class="related-grid">
-          <a href="/tools/multihead-attention-calculator.html" class="related-card">MultiHead Attention Shape Calculator</a>
-          <a href="/answers/transformer-encoder-input-shape.html" class="related-card">Transformer Encoder Input Shape</a>
-          <a href="/answers/how-many-parameters-bert-base.html" class="related-card">BERT-Base Parameter Count</a>
-          <a href="/guides/fix-mat1-mat2-shapes-error.html" class="related-card">Fix mat1/mat2 Shape Error</a>
-        </div>
-      </section>
+ <section class="related-links" style="margin-top:2rem;">
+ <h2>Related Tools &amp; Guides</h2>
+ <div class="related-grid">
+ <a href="/tools/multihead-attention-calculator.html" class="related-card">MultiHead Attention Shape Calculator</a>
+ <a href="/answers/transformer-encoder-input-shape.html" class="related-card">Transformer Encoder Input Shape</a>
+ <a href="/answers/how-many-parameters-bert-base.html" class="related-card">BERT-Base Parameter Count</a>
+ <a href="/guides/fix-mat1-mat2-shapes-error.html" class="related-card">Fix mat1/mat2 Shape Error</a>
+ </div>
+ </section>
 
-      <div style="text-align:center;margin:2rem 0;">
-        <a href="/tools/multihead-attention-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the MultiHead Attention Calculator</a>
-      </div>
-    </article>
-  </main>
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/multihead-attention-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the MultiHead Attention Calculator</a>
+ </div>
+ </article>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ </div>
+ </footer>
 
-  <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 
-  <script>
-  (function() {
-    var STEPS = [
-      {
-        title: "Step 1: Input Token Embeddings",
-        desc: "Each token in the sequence is converted to a dense vector (embedding). For BERT-base: sequence of 5 tokens, each embedded to d_model=512 dimensions. These embeddings are the starting point for all attention computations.",
-        formula: "X ∈ R^(seq_len × d_model)   e.g. X ∈ R^(5 × 512)",
-        draw: drawEmbeddings
-      },
-      {
-        title: "Step 2: Linear Projection to Q, K, V",
-        desc: "Three separate learned weight matrices W_Q, W_K, W_V project the input X into Query, Key, and Value spaces. Each projection can learn to emphasize different aspects of the token representation.",
-        formula: "Q = X·W_Q    K = X·W_K    V = X·W_V    (each W ∈ R^(d_model × d_k))",
-        draw: drawProjection
-      },
-      {
-        title: "Step 3: Attention Score Computation (Q·Kᵀ)",
-        desc: "Dot products between every Query and every Key produce a (seq_len × seq_len) matrix of raw attention scores. High scores mean strong alignment between the query of token i and the key of token j.",
-        formula: "scores = Q · Kᵀ   ∈ R^(seq_len × seq_len)",
-        draw: drawScores
-      },
-      {
-        title: "Step 4: Scale by √d_k",
-        desc: "Scores are divided by √d_k to prevent the dot products from growing too large in high-dimensional space. Without scaling, softmax gradients vanish as d_k increases — the model fails to learn.",
-        formula: "scaled = scores / √d_k    (e.g. √64 = 8 for d_k=64)",
-        draw: drawScaled
-      },
-      {
-        title: "Step 5: Softmax — Attention Weights",
-        desc: "Softmax is applied row-wise so each token's attention weights sum to 1. This creates a probability distribution over all tokens for each query position. Rows with '-inf' masking (causal attention) become zero.",
-        formula: "A = softmax(scaled, dim=-1)   A[i,j] = how much token i attends to token j",
-        draw: drawSoftmax
-      },
-      {
-        title: "Step 6: Weighted Sum of Values",
-        desc: "The final output for each token is a weighted sum of all Value vectors, using the attention weights as weights. Token i's output is a mix of all other tokens' information, weighted by relevance.",
-        formula: "Output = A · V    ∈ R^(seq_len × d_k)",
-        draw: drawOutput
-      },
-      {
-        title: "Step 7: Multi-Head Attention",
-        desc: "Instead of one attention head, we run h=8 heads in parallel, each with its own W_Q/W_K/W_V projections and smaller d_k=d_model/h. Outputs are concatenated and projected by W_O back to d_model.",
-        formula: "MultiHead(Q,K,V) = Concat(head_1, ..., head_h) · W_O",
-        draw: drawMultiHead
-      }
-    ];
+ <script>
+ (function() {
+  var STEPS = [
+   {
+    title: "Step 1: Input Token Embeddings",
+    desc: "Each token in the sequence is converted to a dense vector (embedding). For BERT-base: sequence of 5 tokens, each embedded to d_model=512 dimensions. These embeddings are the starting point for all attention computations.",
+    formula: "X ∈ R^(seq_len × d_model)  e.g. X ∈ R^(5 × 512)",
+    draw: drawEmbeddings
+   },
+   {
+    title: "Step 2: Linear Projection to Q, K, V",
+    desc: "Three separate learned weight matrices W_Q, W_K, W_V project the input X into Query, Key, and Value spaces. Each projection can learn to emphasize different aspects of the token representation.",
+    formula: "Q = X·W_Q  K = X·W_K  V = X·W_V  (each W ∈ R^(d_model × d_k))",
+    draw: drawProjection
+   },
+   {
+    title: "Step 3: Attention Score Computation (Q·Kᵀ)",
+    desc: "Dot products between every Query and every Key produce a (seq_len × seq_len) matrix of raw attention scores. High scores mean strong alignment between the query of token i and the key of token j.",
+    formula: "scores = Q · Kᵀ  ∈ R^(seq_len × seq_len)",
+    draw: drawScores
+   },
+   {
+    title: "Step 4: Scale by √d_k",
+    desc: "Scores are divided by √d_k to prevent the dot products from growing too large in high-dimensional space. Without scaling, softmax gradients vanish as d_k increases — the model fails to learn.",
+    formula: "scaled = scores / √d_k  (e.g. √64 = 8 for d_k=64)",
+    draw: drawScaled
+   },
+   {
+    title: "Step 5: Softmax — Attention Weights",
+    desc: "Softmax is applied row-wise so each token's attention weights sum to 1. This creates a probability distribution over all tokens for each query position. Rows with '-inf' masking (causal attention) become zero.",
+    formula: "A = softmax(scaled, dim=-1)  A[i,j] = how much token i attends to token j",
+    draw: drawSoftmax
+   },
+   {
+    title: "Step 6: Weighted Sum of Values",
+    desc: "The final output for each token is a weighted sum of all Value vectors, using the attention weights as weights. Token i's output is a mix of all other tokens' information, weighted by relevance.",
+    formula: "Output = A · V  ∈ R^(seq_len × d_k)",
+    draw: drawOutput
+   },
+   {
+    title: "Step 7: Multi-Head Attention",
+    desc: "Instead of one attention head, we run h=8 heads in parallel, each with its own W_Q/W_K/W_V projections and smaller d_k=d_model/h. Outputs are concatenated and projected by W_O back to d_model.",
+    formula: "MultiHead(Q,K,V) = Concat(head_1, ..., head_h) · W_O",
+    draw: drawMultiHead
+   }
+  ];
 
-    var currentStep = 0;
-    var canvas = document.getElementById('attnCanvas');
-    var ctx = canvas.getContext('2d');
+  var currentStep = 0;
+  var canvas = document.getElementById('attnCanvas');
+  var ctx = canvas.getContext('2d');
 
-    function getW() { return canvas.offsetWidth; }
+  function getW() { return canvas.offsetWidth; }
 
-    function setupCanvas() {
-      var dpr = window.devicePixelRatio || 1;
-      var w = canvas.offsetWidth;
-      var h = 280;
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      ctx.scale(dpr, dpr);
-      canvas.style.height = h + 'px';
+  function setupCanvas() {
+   var dpr = window.devicePixelRatio || 1;
+   var w = canvas.offsetWidth;
+   var h = 280;
+   canvas.width = w * dpr;
+   canvas.height = h * dpr;
+   ctx.scale(dpr, dpr);
+   canvas.style.height = h + 'px';
+  }
+
+  function buildIndicator() {
+   var el = document.getElementById('stepIndicator');
+   el.innerHTML = '';
+   for (var i = 0; i < STEPS.length; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'step-dot' + (i === currentStep ? ' active' : (i < currentStep ? ' done' : ''));
+    dot.textContent = i + 1;
+    dot.setAttribute('data-step', i);
+    (function(idx) {
+     dot.addEventListener('click', function() { currentStep = idx; render(); });
+    })(i);
+    el.appendChild(dot);
+    if (i < STEPS.length - 1) {
+     var conn = document.createElement('div');
+     conn.className = 'step-connector';
+     el.appendChild(conn);
     }
+   }
+  }
 
-    function buildIndicator() {
-      var el = document.getElementById('stepIndicator');
-      el.innerHTML = '';
-      for (var i = 0; i < STEPS.length; i++) {
-        var dot = document.createElement('div');
-        dot.className = 'step-dot' + (i === currentStep ? ' active' : (i < currentStep ? ' done' : ''));
-        dot.textContent = i + 1;
-        dot.setAttribute('data-step', i);
-        (function(idx) {
-          dot.addEventListener('click', function() { currentStep = idx; render(); });
-        })(i);
-        el.appendChild(dot);
-        if (i < STEPS.length - 1) {
-          var conn = document.createElement('div');
-          conn.className = 'step-connector';
-          el.appendChild(conn);
-        }
-      }
+  function render() {
+   var step = STEPS[currentStep];
+   document.getElementById('stepTitle').textContent = step.title;
+   document.getElementById('stepDesc').textContent = step.desc;
+   document.getElementById('formulaBox').textContent = step.formula;
+   document.getElementById('prevBtn').disabled = (currentStep === 0);
+   document.getElementById('nextBtn').disabled = (currentStep === STEPS.length - 1);
+   document.getElementById('nextBtn').textContent = currentStep === STEPS.length - 1 ? 'Done' : 'Next \u2192';
+   document.getElementById('stepCounter').textContent = 'Step ' + (currentStep + 1) + ' of ' + STEPS.length;
+   buildIndicator();
+   setupCanvas();
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+   step.draw(ctx, getW(), 280);
+  }
+
+  window.changeStep = function(dir) {
+   var next = currentStep + dir;
+   if (next >= 0 && next < STEPS.length) { currentStep = next; render(); }
+  };
+
+  // ---- Drawing functions ----
+  var COLORS = {
+   q: '#3B82F6', k: '#22C55E', v: '#A855F7',
+   attn: '#EAB308', out: '#F97316',
+   bg: '#141414', border: '#2a2a2a', text: '#e8e8e8', dim: '#666'
+  };
+
+  function roundRect(cx, x, y, w, h, r, fill, stroke) {
+   cx.beginPath();
+   cx.moveTo(x + r, y);
+   cx.lineTo(x + w - r, y);
+   cx.arcTo(x + w, y, x + w, y + r, r);
+   cx.lineTo(x + w, y + h - r);
+   cx.arcTo(x + w, y + h, x + w - r, y + h, r);
+   cx.lineTo(x + r, y + h);
+   cx.arcTo(x, y + h, x, y + h - r, r);
+   cx.lineTo(x, y + r);
+   cx.arcTo(x, y, x + r, y, r);
+   cx.closePath();
+   if (fill) { cx.fillStyle = fill; cx.fill(); }
+   if (stroke) { cx.strokeStyle = stroke; cx.lineWidth = 1.5; cx.stroke(); }
+  }
+
+  function label(cx, text, x, y, color, size) {
+   cx.fillStyle = color || COLORS.text;
+   cx.font = (size || 11) + 'px "SF Mono", "Fira Code", "Cascadia Code", monospace';
+   cx.textAlign = 'center';
+   cx.fillText(text, x, y);
+  }
+
+  function drawEmbeddings(cx, W, H) {
+   var tokens = ['The', 'cat', 'sat', 'on', 'mat'];
+   var colors = ['#3B82F6','#22C55E','#A855F7','#EAB308','#F97316'];
+   var bw = 60, bh = 36, gap = 12;
+   var totalW = tokens.length * bw + (tokens.length - 1) * gap;
+   var startX = (W - totalW) / 2;
+   var tokenY = 30;
+   var embedH = 100;
+   var embedY = 90;
+
+   cx.fillStyle = COLORS.dim; cx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+   cx.textAlign = 'center';
+   cx.fillText('Input Tokens', W / 2, 20);
+
+   tokens.forEach(function(tok, i) {
+    var x = startX + i * (bw + gap);
+    roundRect(cx, x, tokenY, bw, bh, 6, colors[i] + '22', colors[i]);
+    label(cx, tok, x + bw / 2, tokenY + 22, colors[i], 10);
+
+    // Arrow down
+    cx.strokeStyle = colors[i]; cx.lineWidth = 1.5;
+    cx.beginPath(); cx.moveTo(x + bw/2, tokenY + bh); cx.lineTo(x + bw/2, embedY); cx.stroke();
+    cx.beginPath(); cx.moveTo(x + bw/2 - 4, embedY - 6); cx.lineTo(x + bw/2, embedY); cx.lineTo(x + bw/2 + 4, embedY - 6); cx.stroke();
+
+    // Embedding bar
+    roundRect(cx, x, embedY, bw, embedH, 4, colors[i] + '33', colors[i] + '88');
+    label(cx, 'd=512', x + bw/2, embedY + embedH/2 + 4, colors[i] + 'cc', 9);
+   });
+
+   cx.fillStyle = COLORS.dim; cx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+   cx.textAlign = 'center';
+   cx.fillText('Token Embeddings X \u2208 R^(5 \u00d7 512)', W / 2, embedY + embedH + 22);
+  }
+
+  function drawProjection(cx, W, H) {
+   var matrices = [
+    { name: 'W_Q', color: COLORS.q, label: 'Q', x: W*0.18 },
+    { name: 'W_K', color: COLORS.k, label: 'K', x: W*0.50 },
+    { name: 'W_V', color: COLORS.v, label: 'V', x: W*0.82 }
+   ];
+   var xCenters = matrices.map(function(m) { return m.x; });
+   var inputY = 40, inputH = 40, mW = 70, mH = 50, projY = 130, projH = 60;
+
+   // Input X box centered
+   roundRect(cx, W/2 - 50, inputY, 100, inputH, 6, '#1a1a1a', '#444');
+   label(cx, 'X (5 \u00d7 512)', W/2, inputY + 24, COLORS.text, 10);
+
+   matrices.forEach(function(m) {
+    // Arrow from X center to each matrix
+    cx.strokeStyle = m.color + '88'; cx.lineWidth = 1.5;
+    cx.setLineDash([4, 3]);
+    cx.beginPath(); cx.moveTo(W/2, inputY + inputH); cx.lineTo(m.x, projY - 12); cx.stroke();
+    cx.setLineDash([]);
+
+    // W matrix box
+    roundRect(cx, m.x - mW/2, projY - 50, mW, mH, 6, m.color + '22', m.color);
+    label(cx, m.name, m.x, projY - 50 + mH/2 + 4, m.color, 11);
+    label(cx, '512\u00d764', m.x, projY - 50 + mH/2 + 17, m.color + '99', 9);
+
+    // Arrow down
+    cx.strokeStyle = m.color; cx.lineWidth = 1.5;
+    cx.beginPath(); cx.moveTo(m.x, projY); cx.lineTo(m.x, projY + 10); cx.stroke();
+    cx.beginPath(); cx.moveTo(m.x - 4, projY + 4); cx.lineTo(m.x, projY + 12); cx.lineTo(m.x + 4, projY + 4); cx.stroke();
+
+    // Output projection
+    roundRect(cx, m.x - mW/2, projY + 14, mW, projH, 6, m.color + '33', m.color);
+    label(cx, m.label, m.x, projY + 14 + projH/2 - 4, m.color, 14);
+    label(cx, '5 \u00d7 64', m.x, projY + 14 + projH/2 + 12, m.color + 'aa', 9);
+   });
+
+   label(cx, 'Each projection is learned independently', W/2, H - 12, COLORS.dim, 10);
+  }
+
+  function drawScores(cx, W, H) {
+   var n = 5;
+   var cellSize = 32;
+   var matW = n * cellSize, matH = n * cellSize;
+   var qX = 28, qY = (H - matH) / 2;
+   var kX = qX + matW + 60, kY = 22;
+   var sX = kX + matW + 50, sY = (H - matH) / 2;
+
+   // Q matrix
+   label(cx, 'Q (5\u00d764)', qX + matW/2, qY - 12, COLORS.q, 10);
+   for (var i = 0; i < n; i++) {
+    for (var j = 0; j < 2; j++) {
+     var v = Math.random();
+     roundRect(cx, qX + j*16, qY + i*cellSize, 14, cellSize - 2, 2, COLORS.q + Math.floor(v*155+60).toString(16).padStart(2,'0'), null);
     }
+    cx.fillStyle = COLORS.dim; cx.font = '8px monospace'; cx.textAlign = 'left';
+    cx.fillText('...', qX + 36, qY + i*cellSize + cellSize/2 + 3);
+   }
 
-    function render() {
-      var step = STEPS[currentStep];
-      document.getElementById('stepTitle').textContent = step.title;
-      document.getElementById('stepDesc').textContent = step.desc;
-      document.getElementById('formulaBox').textContent = step.formula;
-      document.getElementById('prevBtn').disabled = (currentStep === 0);
-      document.getElementById('nextBtn').disabled = (currentStep === STEPS.length - 1);
-      document.getElementById('nextBtn').textContent = currentStep === STEPS.length - 1 ? 'Done' : 'Next \u2192';
-      document.getElementById('stepCounter').textContent = 'Step ' + (currentStep + 1) + ' of ' + STEPS.length;
-      buildIndicator();
-      setupCanvas();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      step.draw(ctx, getW(), 280);
+   // K^T matrix
+   label(cx, 'K\u1d40 (64\u00d75)', kX + matW/2, kY - 12, COLORS.k, 10);
+   for (var j2 = 0; j2 < n; j2++) {
+    for (var i2 = 0; i2 < 2; i2++) {
+     var v2 = Math.random();
+     roundRect(cx, kX + j2*cellSize, kY + i2*16, cellSize - 2, 14, 2, COLORS.k + Math.floor(v2*155+60).toString(16).padStart(2,'0'), null);
     }
+    cx.fillStyle = COLORS.dim; cx.font = '8px monospace'; cx.textAlign = 'center';
+    cx.fillText('|', kX + j2*cellSize + cellSize/2, kY + 42);
+   }
 
-    window.changeStep = function(dir) {
-      var next = currentStep + dir;
-      if (next >= 0 && next < STEPS.length) { currentStep = next; render(); }
-    };
+   // Dot multiply symbol
+   cx.fillStyle = COLORS.text; cx.font = 'bold 22px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('\u00b7', kX - 30, H/2 + 6);
 
-    // ---- Drawing functions ----
-    var COLORS = {
-      q: '#3B82F6', k: '#22C55E', v: '#A855F7',
-      attn: '#EAB308', out: '#F97316',
-      bg: '#141414', border: '#2a2a2a', text: '#e8e8e8', dim: '#666'
-    };
-
-    function roundRect(cx, x, y, w, h, r, fill, stroke) {
-      cx.beginPath();
-      cx.moveTo(x + r, y);
-      cx.lineTo(x + w - r, y);
-      cx.arcTo(x + w, y, x + w, y + r, r);
-      cx.lineTo(x + w, y + h - r);
-      cx.arcTo(x + w, y + h, x + w - r, y + h, r);
-      cx.lineTo(x + r, y + h);
-      cx.arcTo(x, y + h, x, y + h - r, r);
-      cx.lineTo(x, y + r);
-      cx.arcTo(x, y, x + r, y, r);
-      cx.closePath();
-      if (fill) { cx.fillStyle = fill; cx.fill(); }
-      if (stroke) { cx.strokeStyle = stroke; cx.lineWidth = 1.5; cx.stroke(); }
+   // Score matrix
+   var maxV = 1;
+   label(cx, 'Scores (5\u00d75)', sX + matW/2, sY - 12, COLORS.attn, 10);
+   for (var si = 0; si < n; si++) {
+    for (var sj = 0; sj < n; sj++) {
+     var v3 = 0.1 + Math.random() * 0.9;
+     var alpha = Math.floor(v3 * 200 + 30).toString(16).padStart(2,'0');
+     roundRect(cx, sX + sj*cellSize, sY + si*cellSize, cellSize - 2, cellSize - 2, 2, COLORS.attn + alpha, null);
+     cx.fillStyle = v3 > 0.6 ? '#111' : '#aaa';
+     cx.font = '8px monospace'; cx.textAlign = 'center';
+     cx.fillText((v3*5).toFixed(1), sX + sj*cellSize + cellSize/2, sY + si*cellSize + cellSize/2 + 3);
     }
+   }
 
-    function label(cx, text, x, y, color, size) {
-      cx.fillStyle = color || COLORS.text;
-      cx.font = (size || 11) + 'px "SF Mono", "Fira Code", "Cascadia Code", monospace';
-      cx.textAlign = 'center';
-      cx.fillText(text, x, y);
+   // = symbol
+   cx.fillStyle = COLORS.text; cx.font = 'bold 22px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('=', sX - 28, H/2 + 6);
+
+   label(cx, 'Raw dot-product scores — higher = more attention', W/2, H - 10, COLORS.dim, 10);
+  }
+
+  function drawScaled(cx, W, H) {
+   var n = 5, cell = 30;
+   var mW = n * cell, mH = n * cell;
+   var rawX = 30, rawY = (H - mH) / 2;
+   var scX = rawX + mW + 100, scY = rawY;
+
+   label(cx, 'Raw Scores', rawX + mW/2, rawY - 14, COLORS.attn, 10);
+   for (var i = 0; i < n; i++) {
+    for (var j = 0; j < n; j++) {
+     var v = 0.1 + Math.random();
+     var a = Math.floor(Math.min(v/2, 1) * 200 + 30).toString(16).padStart(2,'0');
+     roundRect(cx, rawX + j*cell, rawY + i*cell, cell-2, cell-2, 2, COLORS.attn + a, null);
+     cx.fillStyle = '#ccc'; cx.font = '8px monospace'; cx.textAlign = 'center';
+     cx.fillText((v*4).toFixed(1), rawX + j*cell + cell/2, rawY + i*cell + cell/2 + 3);
     }
+   }
 
-    function drawEmbeddings(cx, W, H) {
-      var tokens = ['The', 'cat', 'sat', 'on', 'mat'];
-      var colors = ['#3B82F6','#22C55E','#A855F7','#EAB308','#F97316'];
-      var bw = 60, bh = 36, gap = 12;
-      var totalW = tokens.length * bw + (tokens.length - 1) * gap;
-      var startX = (W - totalW) / 2;
-      var tokenY = 30;
-      var embedH = 100;
-      var embedY = 90;
+   // Divide symbol + sqrt(dk)
+   cx.fillStyle = COLORS.text; cx.font = 'bold 20px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('\u00f7', rawX + mW + 30, H/2 + 6);
+   roundRect(cx, rawX + mW + 42, H/2 - 22, 50, 30, 6, '#22C55E22', '#22C55E');
+   cx.fillStyle = '#22C55E'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('\u221a64', rawX + mW + 67, H/2 - 3);
+   cx.fillStyle = COLORS.dim; cx.font = '9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'; cx.textAlign = 'center';
+   cx.fillText('= 8', rawX + mW + 67, H/2 + 12);
 
-      cx.fillStyle = COLORS.dim; cx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      cx.textAlign = 'center';
-      cx.fillText('Input Tokens', W / 2, 20);
+   cx.fillStyle = COLORS.text; cx.font = 'bold 20px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('=', scX - 28, H/2 + 6);
 
-      tokens.forEach(function(tok, i) {
-        var x = startX + i * (bw + gap);
-        roundRect(cx, x, tokenY, bw, bh, 6, colors[i] + '22', colors[i]);
-        label(cx, tok, x + bw / 2, tokenY + 22, colors[i], 10);
-
-        // Arrow down
-        cx.strokeStyle = colors[i]; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(x + bw/2, tokenY + bh); cx.lineTo(x + bw/2, embedY); cx.stroke();
-        cx.beginPath(); cx.moveTo(x + bw/2 - 4, embedY - 6); cx.lineTo(x + bw/2, embedY); cx.lineTo(x + bw/2 + 4, embedY - 6); cx.stroke();
-
-        // Embedding bar
-        roundRect(cx, x, embedY, bw, embedH, 4, colors[i] + '33', colors[i] + '88');
-        label(cx, 'd=512', x + bw/2, embedY + embedH/2 + 4, colors[i] + 'cc', 9);
-      });
-
-      cx.fillStyle = COLORS.dim; cx.font = '11px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-      cx.textAlign = 'center';
-      cx.fillText('Token Embeddings X  \u2208  R^(5 \u00d7 512)', W / 2, embedY + embedH + 22);
+   label(cx, 'Scaled Scores', scX + mW/2, scY - 14, '#22C55E', 10);
+   for (var si = 0; si < n; si++) {
+    for (var sj = 0; sj < n; sj++) {
+     var v2 = 0.05 + Math.random() * 0.5;
+     var a2 = Math.floor(v2 * 255 + 40).toString(16).padStart(2,'0');
+     roundRect(cx, scX + sj*cell, scY + si*cell, cell-2, cell-2, 2, '#22C55E' + a2, null);
+     cx.fillStyle = '#ccc'; cx.font = '8px monospace'; cx.textAlign = 'center';
+     cx.fillText((v2*2).toFixed(2), scX + sj*cell + cell/2, scY + si*cell + cell/2 + 3);
     }
+   }
 
-    function drawProjection(cx, W, H) {
-      var matrices = [
-        { name: 'W_Q', color: COLORS.q, label: 'Q', x: W*0.18 },
-        { name: 'W_K', color: COLORS.k, label: 'K', x: W*0.50 },
-        { name: 'W_V', color: COLORS.v, label: 'V', x: W*0.82 }
-      ];
-      var xCenters = matrices.map(function(m) { return m.x; });
-      var inputY = 40, inputH = 40, mW = 70, mH = 50, projY = 130, projH = 60;
+   label(cx, 'Values shrunk by 8x — softmax gradients stay healthy', W/2, H - 10, COLORS.dim, 10);
+  }
 
-      // Input X box centered
-      roundRect(cx, W/2 - 50, inputY, 100, inputH, 6, '#1a1a1a', '#444');
-      label(cx, 'X  (5 \u00d7 512)', W/2, inputY + 24, COLORS.text, 10);
+  function drawSoftmax(cx, W, H) {
+   var n = 5, cell = 32;
+   var mW = n * cell, mH = n * cell;
+   var inX = 30, inY = (H - mH) / 2;
+   var outX = inX + mW + 110, outY = inY;
 
-      matrices.forEach(function(m) {
-        // Arrow from X center to each matrix
-        cx.strokeStyle = m.color + '88'; cx.lineWidth = 1.5;
-        cx.setLineDash([4, 3]);
-        cx.beginPath(); cx.moveTo(W/2, inputY + inputH); cx.lineTo(m.x, projY - 12); cx.stroke();
-        cx.setLineDash([]);
+   label(cx, 'Scaled Scores', inX + mW/2, inY - 14, COLORS.dim, 10);
+   var rawRows = [];
+   for (var i = 0; i < n; i++) {
+    var row = [];
+    for (var j = 0; j < n; j++) { row.push(Math.random() * 2 - 0.5); }
+    rawRows.push(row);
+   }
+   rawRows.forEach(function(row, i) {
+    row.forEach(function(v, j) {
+     var a = Math.floor(Math.max(0, Math.min((v + 1) / 2, 1)) * 160 + 40).toString(16).padStart(2,'0');
+     roundRect(cx, inX + j*cell, inY + i*cell, cell-2, cell-2, 2, COLORS.attn + a, null);
+     cx.fillStyle = '#ccc'; cx.font = '8px monospace'; cx.textAlign = 'center';
+     cx.fillText(v.toFixed(1), inX + j*cell + cell/2, inY + i*cell + cell/2 + 3);
+    });
+   });
 
-        // W matrix box
-        roundRect(cx, m.x - mW/2, projY - 50, mW, mH, 6, m.color + '22', m.color);
-        label(cx, m.name, m.x, projY - 50 + mH/2 + 4, m.color, 11);
-        label(cx, '512\u00d764', m.x, projY - 50 + mH/2 + 17, m.color + '99', 9);
+   // Softmax label
+   roundRect(cx, inX + mW + 18, H/2 - 22, 70, 34, 6, '#3B82F622', '#3B82F6');
+   cx.fillStyle = '#3B82F6'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('softmax', inX + mW + 53, H/2 - 6);
+   cx.fillStyle = COLORS.dim; cx.font = '9px monospace'; cx.textAlign = 'center';
+   cx.fillText('(row-wise)', inX + mW + 53, H/2 + 8);
 
-        // Arrow down
-        cx.strokeStyle = m.color; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(m.x, projY); cx.lineTo(m.x, projY + 10); cx.stroke();
-        cx.beginPath(); cx.moveTo(m.x - 4, projY + 4); cx.lineTo(m.x, projY + 12); cx.lineTo(m.x + 4, projY + 4); cx.stroke();
+   cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('\u2192', outX - 26, H/2 + 6);
 
-        // Output projection
-        roundRect(cx, m.x - mW/2, projY + 14, mW, projH, 6, m.color + '33', m.color);
-        label(cx, m.label, m.x, projY + 14 + projH/2 - 4, m.color, 14);
-        label(cx, '5 \u00d7 64', m.x, projY + 14 + projH/2 + 12, m.color + 'aa', 9);
-      });
+   label(cx, 'Attention Weights A', outX + mW/2, outY - 14, COLORS.q, 10);
+   rawRows.forEach(function(row, i) {
+    var exp = row.map(Math.exp);
+    var sum = exp.reduce(function(a, b) { return a + b; }, 0);
+    var softRow = exp.map(function(e) { return e / sum; });
+    softRow.forEach(function(v, j) {
+     roundRect(cx, outX + j*cell, outY + i*cell, cell-2, cell-2, 2, COLORS.q + Math.floor(v * 255 + 10).toString(16).padStart(2,'0'), null);
+     cx.fillStyle = '#ccc'; cx.font = '8px monospace'; cx.textAlign = 'center';
+     cx.fillText(v.toFixed(2), outX + j*cell + cell/2, outY + i*cell + cell/2 + 3);
+    });
+    // Sum indicator
+    var rowSum = softRow.reduce(function(a, b) { return a + b; }, 0);
+    cx.fillStyle = '#22C55E'; cx.font = '9px monospace'; cx.textAlign = 'left';
+    cx.fillText('\u03a3=' + rowSum.toFixed(1), outX + n*cell + 4, outY + i*cell + cell/2 + 3);
+   });
 
-      label(cx, 'Each projection is learned independently', W/2, H - 12, COLORS.dim, 10);
+   label(cx, 'Each row sums to 1.0 — probability distribution', W/2, H - 10, COLORS.dim, 10);
+  }
+
+  function drawOutput(cx, W, H) {
+   var n = 5, cell = 32;
+   var aX = 18, aY = 40;
+   var vX = aX + n*cell + 50, vY = 40;
+   var oX = vX + n*cell + 50, oY = 40;
+
+   label(cx, 'Attn Weights A (5\u00d75)', aX + n*cell/2, aY - 14, COLORS.q, 10);
+   label(cx, 'Values V (5\u00d764)', vX + n*cell/2, vY - 14, COLORS.v, 10);
+   label(cx, 'Output (5\u00d764)', oX + n*cell/2, oY - 14, COLORS.out, 10);
+
+   for (var i = 0; i < n; i++) {
+    for (var j = 0; j < n; j++) {
+     var a = 0.05 + Math.random() * 0.35;
+     roundRect(cx, aX + j*cell, aY + i*cell, cell-2, cell-2, 2, COLORS.q + Math.floor(a*200+30).toString(16).padStart(2,'0'), null);
     }
+   }
 
-    function drawScores(cx, W, H) {
-      var n = 5;
-      var cellSize = 32;
-      var matW = n * cellSize, matH = n * cellSize;
-      var qX = 28, qY = (H - matH) / 2;
-      var kX = qX + matW + 60, kY = 22;
-      var sX = kX + matW + 50, sY = (H - matH) / 2;
+   cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('\u00b7', vX - 26, H/2);
 
-      // Q matrix
-      label(cx, 'Q  (5\u00d764)', qX + matW/2, qY - 12, COLORS.q, 10);
-      for (var i = 0; i < n; i++) {
-        for (var j = 0; j < 2; j++) {
-          var v = Math.random();
-          roundRect(cx, qX + j*16, qY + i*cellSize, 14, cellSize - 2, 2, COLORS.q + Math.floor(v*155+60).toString(16).padStart(2,'0'), null);
-        }
-        cx.fillStyle = COLORS.dim; cx.font = '8px monospace'; cx.textAlign = 'left';
-        cx.fillText('...', qX + 36, qY + i*cellSize + cellSize/2 + 3);
-      }
-
-      // K^T matrix
-      label(cx, 'K\u1d40  (64\u00d75)', kX + matW/2, kY - 12, COLORS.k, 10);
-      for (var j2 = 0; j2 < n; j2++) {
-        for (var i2 = 0; i2 < 2; i2++) {
-          var v2 = Math.random();
-          roundRect(cx, kX + j2*cellSize, kY + i2*16, cellSize - 2, 14, 2, COLORS.k + Math.floor(v2*155+60).toString(16).padStart(2,'0'), null);
-        }
-        cx.fillStyle = COLORS.dim; cx.font = '8px monospace'; cx.textAlign = 'center';
-        cx.fillText('|', kX + j2*cellSize + cellSize/2, kY + 42);
-      }
-
-      // Dot multiply symbol
-      cx.fillStyle = COLORS.text; cx.font = 'bold 22px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('\u00b7', kX - 30, H/2 + 6);
-
-      // Score matrix
-      var maxV = 1;
-      label(cx, 'Scores  (5\u00d75)', sX + matW/2, sY - 12, COLORS.attn, 10);
-      for (var si = 0; si < n; si++) {
-        for (var sj = 0; sj < n; sj++) {
-          var v3 = 0.1 + Math.random() * 0.9;
-          var alpha = Math.floor(v3 * 200 + 30).toString(16).padStart(2,'0');
-          roundRect(cx, sX + sj*cellSize, sY + si*cellSize, cellSize - 2, cellSize - 2, 2, COLORS.attn + alpha, null);
-          cx.fillStyle = v3 > 0.6 ? '#111' : '#aaa';
-          cx.font = '8px monospace'; cx.textAlign = 'center';
-          cx.fillText((v3*5).toFixed(1), sX + sj*cellSize + cellSize/2, sY + si*cellSize + cellSize/2 + 3);
-        }
-      }
-
-      // = symbol
-      cx.fillStyle = COLORS.text; cx.font = 'bold 22px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('=', sX - 28, H/2 + 6);
-
-      label(cx, 'Raw dot-product scores — higher = more attention', W/2, H - 10, COLORS.dim, 10);
+   for (var vi = 0; vi < n; vi++) {
+    for (var vj = 0; vj < 2; vj++) {
+     var v = Math.random();
+     roundRect(cx, vX + vj*16, vY + vi*cell, 14, cell-2, 2, COLORS.v + Math.floor(v*180+40).toString(16).padStart(2,'0'), null);
     }
+    cx.fillStyle = COLORS.dim; cx.font = '9px monospace'; cx.textAlign = 'left';
+    cx.fillText('...', vX + 36, vY + vi*cell + cell/2 + 3);
+   }
 
-    function drawScaled(cx, W, H) {
-      var n = 5, cell = 30;
-      var mW = n * cell, mH = n * cell;
-      var rawX = 30, rawY = (H - mH) / 2;
-      var scX = rawX + mW + 100, scY = rawY;
+   cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('=', oX - 26, H/2);
 
-      label(cx, 'Raw Scores', rawX + mW/2, rawY - 14, COLORS.attn, 10);
-      for (var i = 0; i < n; i++) {
-        for (var j = 0; j < n; j++) {
-          var v = 0.1 + Math.random();
-          var a = Math.floor(Math.min(v/2, 1) * 200 + 30).toString(16).padStart(2,'0');
-          roundRect(cx, rawX + j*cell, rawY + i*cell, cell-2, cell-2, 2, COLORS.attn + a, null);
-          cx.fillStyle = '#ccc'; cx.font = '8px monospace'; cx.textAlign = 'center';
-          cx.fillText((v*4).toFixed(1), rawX + j*cell + cell/2, rawY + i*cell + cell/2 + 3);
-        }
-      }
-
-      // Divide symbol + sqrt(dk)
-      cx.fillStyle = COLORS.text; cx.font = 'bold 20px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('\u00f7', rawX + mW + 30, H/2 + 6);
-      roundRect(cx, rawX + mW + 42, H/2 - 22, 50, 30, 6, '#22C55E22', '#22C55E');
-      cx.fillStyle = '#22C55E'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('\u221a64', rawX + mW + 67, H/2 - 3);
-      cx.fillStyle = COLORS.dim; cx.font = '9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'; cx.textAlign = 'center';
-      cx.fillText('= 8', rawX + mW + 67, H/2 + 12);
-
-      cx.fillStyle = COLORS.text; cx.font = 'bold 20px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('=', scX - 28, H/2 + 6);
-
-      label(cx, 'Scaled Scores', scX + mW/2, scY - 14, '#22C55E', 10);
-      for (var si = 0; si < n; si++) {
-        for (var sj = 0; sj < n; sj++) {
-          var v2 = 0.05 + Math.random() * 0.5;
-          var a2 = Math.floor(v2 * 255 + 40).toString(16).padStart(2,'0');
-          roundRect(cx, scX + sj*cell, scY + si*cell, cell-2, cell-2, 2, '#22C55E' + a2, null);
-          cx.fillStyle = '#ccc'; cx.font = '8px monospace'; cx.textAlign = 'center';
-          cx.fillText((v2*2).toFixed(2), scX + sj*cell + cell/2, scY + si*cell + cell/2 + 3);
-        }
-      }
-
-      label(cx, 'Values shrunk by 8x — softmax gradients stay healthy', W/2, H - 10, COLORS.dim, 10);
+   for (var oi = 0; oi < n; oi++) {
+    for (var oj = 0; oj < 2; oj++) {
+     var ov = 0.3 + Math.random() * 0.5;
+     roundRect(cx, oX + oj*16, oY + oi*cell, 14, cell-2, 2, COLORS.out + Math.floor(ov*200+30).toString(16).padStart(2,'0'), null);
     }
+    cx.fillStyle = COLORS.dim; cx.font = '9px monospace'; cx.textAlign = 'left';
+    cx.fillText('...', oX + 36, oY + oi*cell + cell/2 + 3);
+   }
 
-    function drawSoftmax(cx, W, H) {
-      var n = 5, cell = 32;
-      var mW = n * cell, mH = n * cell;
-      var inX = 30, inY = (H - mH) / 2;
-      var outX = inX + mW + 110, outY = inY;
+   label(cx, 'Each output token is a weighted mix of all input values', W/2, H - 10, COLORS.dim, 10);
+  }
 
-      label(cx, 'Scaled Scores', inX + mW/2, inY - 14, COLORS.dim, 10);
-      var rawRows = [];
-      for (var i = 0; i < n; i++) {
-        var row = [];
-        for (var j = 0; j < n; j++) { row.push(Math.random() * 2 - 0.5); }
-        rawRows.push(row);
-      }
-      rawRows.forEach(function(row, i) {
-        row.forEach(function(v, j) {
-          var a = Math.floor(Math.max(0, Math.min((v + 1) / 2, 1)) * 160 + 40).toString(16).padStart(2,'0');
-          roundRect(cx, inX + j*cell, inY + i*cell, cell-2, cell-2, 2, COLORS.attn + a, null);
-          cx.fillStyle = '#ccc'; cx.font = '8px monospace'; cx.textAlign = 'center';
-          cx.fillText(v.toFixed(1), inX + j*cell + cell/2, inY + i*cell + cell/2 + 3);
-        });
-      });
+  function drawMultiHead(cx, W, H) {
+   var numHeads = 4;
+   var headW = 58, headH = 44, gap = 14;
+   var totalW = numHeads * (headW + gap) - gap;
+   var startX = (W - totalW) / 2;
+   var headY = 50;
+   var concatY = headY + headH + 70;
+   var projY = concatY + 44;
+   var headColors = [COLORS.q, COLORS.k, COLORS.v, COLORS.attn];
 
-      // Softmax label
-      roundRect(cx, inX + mW + 18, H/2 - 22, 70, 34, 6, '#3B82F622', '#3B82F6');
-      cx.fillStyle = '#3B82F6'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('softmax', inX + mW + 53, H/2 - 6);
-      cx.fillStyle = COLORS.dim; cx.font = '9px monospace'; cx.textAlign = 'center';
-      cx.fillText('(row-wise)', inX + mW + 53, H/2 + 8);
+   label(cx, 'h = 4 heads in parallel (d_k = d_model/4 per head)', W/2, 24, COLORS.dim, 10);
 
-      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('\u2192', outX - 26, H/2 + 6);
+   for (var h = 0; h < numHeads; h++) {
+    var x = startX + h * (headW + gap);
+    roundRect(cx, x, headY, headW, headH, 6, headColors[h] + '22', headColors[h]);
+    cx.fillStyle = headColors[h]; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+    cx.fillText('Head ' + (h+1), x + headW/2, headY + 16);
+    cx.fillStyle = headColors[h] + 'aa'; cx.font = '9px monospace'; cx.textAlign = 'center';
+    cx.fillText('Q_h K_h V_h', x + headW/2, headY + 30);
 
-      label(cx, 'Attention Weights A', outX + mW/2, outY - 14, COLORS.q, 10);
-      rawRows.forEach(function(row, i) {
-        var exp = row.map(Math.exp);
-        var sum = exp.reduce(function(a, b) { return a + b; }, 0);
-        var softRow = exp.map(function(e) { return e / sum; });
-        softRow.forEach(function(v, j) {
-          roundRect(cx, outX + j*cell, outY + i*cell, cell-2, cell-2, 2, COLORS.q + Math.floor(v * 255 + 10).toString(16).padStart(2,'0'), null);
-          cx.fillStyle = '#ccc'; cx.font = '8px monospace'; cx.textAlign = 'center';
-          cx.fillText(v.toFixed(2), outX + j*cell + cell/2, outY + i*cell + cell/2 + 3);
-        });
-        // Sum indicator
-        var rowSum = softRow.reduce(function(a, b) { return a + b; }, 0);
-        cx.fillStyle = '#22C55E'; cx.font = '9px monospace'; cx.textAlign = 'left';
-        cx.fillText('\u03a3=' + rowSum.toFixed(1), outX + n*cell + 4, outY + i*cell + cell/2 + 3);
-      });
+    // Line to concat box
+    cx.strokeStyle = headColors[h]; cx.lineWidth = 1.5;
+    cx.beginPath(); cx.moveTo(x + headW/2, headY + headH); cx.lineTo(x + headW/2, concatY - 6); cx.stroke();
+    cx.beginPath(); cx.moveTo(x + headW/2 - 3, concatY - 10); cx.lineTo(x + headW/2, concatY - 4); cx.lineTo(x + headW/2 + 3, concatY - 10); cx.stroke();
+   }
 
-      label(cx, 'Each row sums to 1.0 — probability distribution', W/2, H - 10, COLORS.dim, 10);
-    }
+   // Concat box
+   roundRect(cx, startX, concatY, totalW, 38, 6, '#F9731622', '#F97316');
+   cx.fillStyle = '#F97316'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('Concat(head_1, ..., head_4) \u2208 R^(5 \u00d7 d_model)', W/2, concatY + 22);
 
-    function drawOutput(cx, W, H) {
-      var n = 5, cell = 32;
-      var aX = 18, aY = 40;
-      var vX = aX + n*cell + 50, vY = 40;
-      var oX = vX + n*cell + 50, oY = 40;
+   // Arrow + W_O projection
+   cx.strokeStyle = '#F97316'; cx.lineWidth = 1.5;
+   cx.beginPath(); cx.moveTo(W/2, concatY + 38); cx.lineTo(W/2, projY - 6); cx.stroke();
+   cx.beginPath(); cx.moveTo(W/2 - 4, projY - 10); cx.lineTo(W/2, projY - 4); cx.lineTo(W/2 + 4, projY - 10); cx.stroke();
 
-      label(cx, 'Attn Weights A (5\u00d75)', aX + n*cell/2, aY - 14, COLORS.q, 10);
-      label(cx, 'Values V (5\u00d764)', vX + n*cell/2, vY - 14, COLORS.v, 10);
-      label(cx, 'Output (5\u00d764)', oX + n*cell/2, oY - 14, COLORS.out, 10);
+   roundRect(cx, W/2 - 100, projY, 200, 38, 6, COLORS.out + '22', COLORS.out);
+   cx.fillStyle = COLORS.out; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
+   cx.fillText('W_O projection \u2192 R^(5 \u00d7 d_model)', W/2, projY + 22);
 
-      for (var i = 0; i < n; i++) {
-        for (var j = 0; j < n; j++) {
-          var a = 0.05 + Math.random() * 0.35;
-          roundRect(cx, aX + j*cell, aY + i*cell, cell-2, cell-2, 2, COLORS.q + Math.floor(a*200+30).toString(16).padStart(2,'0'), null);
-        }
-      }
+   label(cx, 'Each head specializes in different relationship types', W/2, H - 10, COLORS.dim, 10);
+  }
 
-      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('\u00b7', vX - 26, H/2);
-
-      for (var vi = 0; vi < n; vi++) {
-        for (var vj = 0; vj < 2; vj++) {
-          var v = Math.random();
-          roundRect(cx, vX + vj*16, vY + vi*cell, 14, cell-2, 2, COLORS.v + Math.floor(v*180+40).toString(16).padStart(2,'0'), null);
-        }
-        cx.fillStyle = COLORS.dim; cx.font = '9px monospace'; cx.textAlign = 'left';
-        cx.fillText('...', vX + 36, vY + vi*cell + cell/2 + 3);
-      }
-
-      cx.fillStyle = COLORS.text; cx.font = 'bold 18px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('=', oX - 26, H/2);
-
-      for (var oi = 0; oi < n; oi++) {
-        for (var oj = 0; oj < 2; oj++) {
-          var ov = 0.3 + Math.random() * 0.5;
-          roundRect(cx, oX + oj*16, oY + oi*cell, 14, cell-2, 2, COLORS.out + Math.floor(ov*200+30).toString(16).padStart(2,'0'), null);
-        }
-        cx.fillStyle = COLORS.dim; cx.font = '9px monospace'; cx.textAlign = 'left';
-        cx.fillText('...', oX + 36, oY + oi*cell + cell/2 + 3);
-      }
-
-      label(cx, 'Each output token is a weighted mix of all input values', W/2, H - 10, COLORS.dim, 10);
-    }
-
-    function drawMultiHead(cx, W, H) {
-      var numHeads = 4;
-      var headW = 58, headH = 44, gap = 14;
-      var totalW = numHeads * (headW + gap) - gap;
-      var startX = (W - totalW) / 2;
-      var headY = 50;
-      var concatY = headY + headH + 70;
-      var projY = concatY + 44;
-      var headColors = [COLORS.q, COLORS.k, COLORS.v, COLORS.attn];
-
-      label(cx, 'h = 4 heads in parallel (d_k = d_model/4 per head)', W/2, 24, COLORS.dim, 10);
-
-      for (var h = 0; h < numHeads; h++) {
-        var x = startX + h * (headW + gap);
-        roundRect(cx, x, headY, headW, headH, 6, headColors[h] + '22', headColors[h]);
-        cx.fillStyle = headColors[h]; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-        cx.fillText('Head ' + (h+1), x + headW/2, headY + 16);
-        cx.fillStyle = headColors[h] + 'aa'; cx.font = '9px monospace'; cx.textAlign = 'center';
-        cx.fillText('Q_h K_h V_h', x + headW/2, headY + 30);
-
-        // Line to concat box
-        cx.strokeStyle = headColors[h]; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(x + headW/2, headY + headH); cx.lineTo(x + headW/2, concatY - 6); cx.stroke();
-        cx.beginPath(); cx.moveTo(x + headW/2 - 3, concatY - 10); cx.lineTo(x + headW/2, concatY - 4); cx.lineTo(x + headW/2 + 3, concatY - 10); cx.stroke();
-      }
-
-      // Concat box
-      roundRect(cx, startX, concatY, totalW, 38, 6, '#F9731622', '#F97316');
-      cx.fillStyle = '#F97316'; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('Concat(head_1, ..., head_4)  \u2208  R^(5 \u00d7 d_model)', W/2, concatY + 22);
-
-      // Arrow + W_O projection
-      cx.strokeStyle = '#F97316'; cx.lineWidth = 1.5;
-      cx.beginPath(); cx.moveTo(W/2, concatY + 38); cx.lineTo(W/2, projY - 6); cx.stroke();
-      cx.beginPath(); cx.moveTo(W/2 - 4, projY - 10); cx.lineTo(W/2, projY - 4); cx.lineTo(W/2 + 4, projY - 10); cx.stroke();
-
-      roundRect(cx, W/2 - 100, projY, 200, 38, 6, COLORS.out + '22', COLORS.out);
-      cx.fillStyle = COLORS.out; cx.font = '10px "SF Mono", "Fira Code", "Cascadia Code", monospace'; cx.textAlign = 'center';
-      cx.fillText('W_O projection  \u2192  R^(5 \u00d7 d_model)', W/2, projY + 22);
-
-      label(cx, 'Each head specializes in different relationship types', W/2, H - 10, COLORS.dim, 10);
-    }
-
-    // Init
-    render();
-    window.addEventListener('resize', function() { setupCanvas(); STEPS[currentStep].draw(ctx, getW(), 280); });
-    var toggle = document.querySelector('.mobile-toggle');
-    var nav = document.querySelector('nav');
-    if (toggle && nav) { toggle.addEventListener('click', function() { nav.classList.toggle('open'); }); }
-  })();
-  </script>
-  <script src="/assets/js/share.js"></script>
+  // Init
+  render();
+  window.addEventListener('resize', function() { setupCanvas(); STEPS[currentStep].draw(ctx, getW(), 280); });
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) { toggle.addEventListener('click', function() { nav.classList.toggle('open'); }); }
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
 </body>
 </html>

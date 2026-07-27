@@ -1,89 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>What Does Conv2d Output with 7x7 Input, Kernel 7? | HeyTensor</title>
-  <meta name="description" content="Conv2d with 7x7 input, kernel_size=7, stride=1, padding=0 outputs 1x1. Step-by-step formula breakdown with PyTorch code.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/answers/conv2d-output-7x7-kernel-7.html">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="What Does Conv2d Output with 7x7 Input, Kernel 7?">
-  <meta property="og:description" content="Conv2d with 7x7 input, kernel_size=7, stride=1, padding=0 outputs 1x1. Step-by-step formula breakdown with PyTorch code.">
-  <meta property="og:url" content="https://heytensor.com/answers/conv2d-output-7x7-kernel-7.html">
-  <meta property="og:site_name" content="HeyTensor">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="What Does Conv2d Output with 7x7 Input, Kernel 7?">
-  <meta name="twitter:description" content="Conv2d with 7x7 input, kernel_size=7, stride=1, padding=0 outputs 1x1. Step-by-step formula breakdown with PyTorch code.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [{
-      "@type": "Question",
-      "name": "What Does Conv2d Output with 7x7 Input, Kernel 7?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Conv2d with 7x7 input, kernel_size=7, stride=1, padding=0 outputs 1x1. The formula is: output = floor((input + 2*padding - kernel) / stride) + 1 = floor((7 + 2*0 - 7) / 1) + 1 = 1."
-      }
-    }]
-  }
-  </script>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>What Does Conv2d Output with 7x7 Input, Kernel 7? | HeyTensor</title>
+ <meta name="description" content="Conv2d with 7x7 input, kernel_size=7, stride=1, padding=0 outputs 1x1. Step-by-step formula breakdown with PyTorch code.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/conv2d-output-7x7-kernel-7.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="What Does Conv2d Output with 7x7 Input, Kernel 7?">
+ <meta property="og:description" content="Conv2d with 7x7 input, kernel_size=7, stride=1, padding=0 outputs 1x1. Step-by-step formula breakdown with PyTorch code.">
+ <meta property="og:url" content="https://heytensor.com/answers/conv2d-output-7x7-kernel-7.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="What Does Conv2d Output with 7x7 Input, Kernel 7?">
+ <meta name="twitter:description" content="Conv2d with 7x7 input, kernel_size=7, stride=1, padding=0 outputs 1x1. Step-by-step formula breakdown with PyTorch code.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+   "@type": "Question",
+   "name": "What Does Conv2d Output with 7x7 Input, Kernel 7?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Conv2d with 7x7 input, kernel_size=7, stride=1, padding=0 outputs 1x1. The formula is: output = floor((input + 2*padding - kernel) / stride) + 1 = floor((7 + 2*0 - 7) / 1) + 1 = 1."
+   }
+  }]
+ }
+ </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"Conv2d 7&times;7 Kernel 7"}]}</script>
 </head>
 <body>
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/" class="active">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="container" style="max-width:720px;">
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Conv2d 7&times;7 Kernel 7</span>
-    </nav>
+ <main class="container" style="max-width:720px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Conv2d 7&times;7 Kernel 7</span>
+ </nav>
 
-    <article>
-      <h1>What Does Conv2d Output with 7&times;7 Input, Kernel 7?</h1>
+ <article>
+ <h1>What Does Conv2d Output with 7&times;7 Input, Kernel 7?</h1>
 
-      <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
-        <p style="margin:0;line-height:1.7;"><strong>Conv2d with 7&times;7 input, kernel_size=7, stride=1, padding=0 outputs 1&times;1.</strong> The formula gives: floor((7 + 2&times;0 - 7) / 1) + 1 = 1.</p>
-      </div>
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">Conv2d with 7&times;7 input, kernel_size=7, stride=1, padding=0 outputs 1&times;1. The formula gives: floor((7 + 2&times;0 - 7) / 1) + 1 = 1.</p>
+ </div>
 
-      <h2>Formula Breakdown</h2>
-      <p>The Conv2d output size formula is:</p>
-      <pre><code>output_size = floor((input_size - kernel_size + 2 * padding) / stride) + 1</code></pre>
-      <p>Plugging in the values for 7&times;7 input:</p>
-      <pre><code>output = floor((7 - 7 + 2*0) / 1) + 1
+ <h2>Formula Breakdown</h2>
+ <p>The Conv2d output size formula is:</p>
+ <pre><code>output_size = floor((input_size - kernel_size + 2 * padding) / stride) + 1</code></pre>
+ <p>Plugging in the values for 7&times;7 input:</p>
+ <pre><code>output = floor((7 - 7 + 2*0) / 1) + 1
 output = floor((7 - 7 + 0) / 1) + 1
 output = floor(0 / 1) + 1
 output = floor(0) + 1
 output = 1</code></pre>
-      <p>So the spatial dimensions go from <strong>7&times;7</strong> to <strong>1&times;1</strong>.</p>
+ <p>So the spatial dimensions go from 7&times;7 to 1&times;1.</p>
 
-      <h2>PyTorch Code Example</h2>
-      <pre><code>import torch
+ <h2>PyTorch Code Example</h2>
+ <pre><code>import torch
 import torch.nn as nn
 
 # Define the Conv2d layer
@@ -92,98 +92,98 @@ conv = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=7, stride=1, padd
 # Create input tensor: (batch, channels, height, width)
 x = torch.randn(1, 64, 7, 7)
 output = conv(x)
-print(output.shape)  # torch.Size([1, 128, 1, 1])
+print(output.shape) # torch.Size([1, 128, 1, 1])
 
 # Verify with formula
 expected = (7 + 2 * 0 - 7) // 1 + 1
-print(f"Expected output size: {expected}x{expected}")  # 1x1</code></pre>
+print(f"Expected output size: {expected}x{expected}") # 1x1</code></pre>
 
-      <h2>Architecture Context</h2>
-      <p>This reduces a 7&times;7 feature map to 1&times;1 &mdash; equivalent to <strong>global average pooling</strong>. Found at the end of <strong>ResNet</strong> before the fully connected layer.</p>
+ <h2>Architecture Context</h2>
+ <p>This reduces a 7&times;7 feature map to 1&times;1 &mdash; equivalent to global average pooling. Found at the end of ResNet before the fully connected layer.</p>
 
-      <h2>Parameter Count</h2>
-      <p>A Conv2d(64, 128, 7) layer has:</p>
-      <pre><code>parameters = in_channels * out_channels * kernel_size^2 + out_channels (bias)
+ <h2>Parameter Count</h2>
+ <p>A Conv2d(64, 128, 7) layer has:</p>
+ <pre><code>parameters = in_channels * out_channels * kernel_size^2 + out_channels (bias)
 parameters = 64 * 128 * 7 * 7 + 128
 parameters = 401,536</code></pre>
-      <p>This layer has <strong>401,536 trainable parameters</strong> (401408 weights + 128 bias terms).</p>
+ <p>This layer has 401,536 trainable parameters (401408 weights + 128 bias terms).</p>
 
-      <h2>Practical Tips</h2>
-      <ul>
-        <li><strong>Memory usage:</strong> The output feature map for a single image is 128 &times; 1 &times; 1 = 128 float values (0.00 MB in float32).</li>
-        <li><strong>Batch dimension:</strong> Multiply memory by batch size. A batch of 32 uses 0.0 MB for this layer's output alone.</li>
-        <li><strong>Same padding rule:</strong> For any kernel, setting padding = (kernel_size - 1) / 2 with stride=1 preserves spatial dimensions.</li>
-      </ul>
+ <h2>Practical Tips</h2>
+ <ul>
+ <li>Memory usage. The output feature map for a single image is 128 &times; 1 &times; 1 = 128 float values (0.00 MB in float32).</li>
+ <li>Batch dimension. Multiply memory by batch size. A batch of 32 uses 0.0 MB for this layer's output alone.</li>
+ <li>Same padding rule. For any kernel, setting padding = (kernel_size - 1) / 2 with stride=1 preserves spatial dimensions.</li>
+ </ul>
 
-      <section class="related-links">
-        <h2>Related Questions</h2>
-        <div class="related-grid">
-          <a href="/answers/conv2d-output-224x224-kernel-3.html" class="related-card">Conv2d 224&times;224 Kernel 3</a>
-          <a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html" class="related-card">Conv2d 224&times;224 Kernel 7 Stride 2</a>
-          <a href="/answers/conv2d-output-32x32-kernel-5.html" class="related-card">Conv2d 32&times;32 Kernel 5</a>
-          <a href="/answers/what-is-stride-in-conv2d.html" class="related-card">What is Stride in Conv2d?</a>
-          <a href="/answers/what-is-padding-same-pytorch.html" class="related-card">What is padding="same" in PyTorch?</a>
-        
-        <a href="https://claudhq.com/how-to-use-claude-code-beginner-guide/" class="related-card" title="How to Use Claude Code">Get Started with AI-Assisted Coding — ClaudHQ Guide</a>
-      </div>
-      </section>
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/conv2d-output-224x224-kernel-3.html" class="related-card">Conv2d 224&times;224 Kernel 3</a>
+ <a href="/answers/conv2d-output-224x224-kernel-7-stride-2.html" class="related-card">Conv2d 224&times;224 Kernel 7 Stride 2</a>
+ <a href="/answers/conv2d-output-32x32-kernel-5.html" class="related-card">Conv2d 32&times;32 Kernel 5</a>
+ <a href="/answers/what-is-stride-in-conv2d.html" class="related-card">What is Stride in Conv2d?</a>
+ <a href="/answers/what-is-padding-same-pytorch.html" class="related-card">What is padding="same" in PyTorch?</a>
+ 
+ <a href="https://claudhq.com/how-to-use-claude-code-beginner-guide/" class="related-card" title="How to Use Claude Code">Get Started with AI-Assisted Coding, ClaudHQ Guide</a>
+ </div>
+ </section>
 
-      <div style="text-align:center;margin:2rem 0;">
-        <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>
-      </div>
-    </article>
-  </main>
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/conv2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Conv2d Calculator</a>
+ </div>
+ </article>
+ </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
-    </div>
-  </footer>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ </div>
+ </footer>
 
-  <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
-  <script src="/assets/js/share.js"></script>
+ <script src="/assets/js/share.js"></script>
 </body>
 </html>

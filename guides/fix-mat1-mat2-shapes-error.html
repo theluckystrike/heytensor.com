@@ -1,1427 +1,1401 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fix 'mat1 and mat2 shapes cannot be multiplied' in PyTorch — Complete Guide | HeyTensor</title>
-  <meta name="description" content="Complete guide to fixing PyTorch RuntimeError: mat1 and mat2 shapes cannot be multiplied. 7 real-world causes with code fixes, interactive shape checker, step-by-step debugging process, and prevention tips.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html">
-  <link rel="alternate" hreflang="en" href="https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html">
-  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="Fix 'mat1 and mat2 shapes cannot be multiplied' in PyTorch — Complete Guide">
-  <meta property="og:description" content="Complete guide to fixing PyTorch RuntimeError: mat1 and mat2 shapes cannot be multiplied. 7 real-world causes with code fixes, interactive shape checker, and prevention tips.">
-  <meta property="og:url" content="https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html">
-  <meta property="og:site_name" content="Zovo Tools">
-  <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Fix 'mat1 and mat2 shapes cannot be multiplied' in PyTorch — Complete Guide">
-  <meta name="twitter:description" content="7 real-world causes with code fixes, interactive shape checker, step-by-step debugging. The #1 PyTorch error, fully solved.">
-  <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Fix 'mat1 and mat2 shapes cannot be multiplied' in PyTorch, Complete Guide | HeyTensor</title>
+ <meta name="description" content="Complete guide to fixing PyTorch RuntimeError: mat1 and mat2 shapes cannot be multiplied. 7 real-world causes with code fixes, interactive shape checker, step-by-step debugging process, and prevention tips.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix 'mat1 and mat2 shapes cannot be multiplied' in PyTorch, Complete Guide">
+ <meta property="og:description" content="Complete guide to fixing PyTorch RuntimeError: mat1 and mat2 shapes cannot be multiplied. 7 real-world causes with code fixes, interactive shape checker, and prevention tips.">
+ <meta property="og:url" content="https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html">
+ <meta property="og:site_name" content="Zovo Tools">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix 'mat1 and mat2 shapes cannot be multiplied' in PyTorch, Complete Guide">
+ <meta name="twitter:description" content="7 real-world causes with code fixes, interactive shape checker, step-by-step debugging. The #1 PyTorch error, fully solved.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
 
-  <!-- Article Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Fix 'mat1 and mat2 shapes cannot be multiplied' in PyTorch — Complete Guide",
-    "description": "Complete guide to fixing PyTorch RuntimeError: mat1 and mat2 shapes cannot be multiplied. 7 real-world causes with code fixes, interactive shape checker, step-by-step debugging process, and prevention tips.",
-    "datePublished": "2026-05-16",
-    "dateModified": "2026-05-16",
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "HeyTensor",
-      "url": "https://heytensor.com"
-    },
-    "mainEntityOfPage": "https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html",
-    "image": "https://heytensor.com/assets/og-image.png"
+ 
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Fix 'mat1 and mat2 shapes cannot be multiplied' in PyTorch, Complete Guide",
+  "description": "Complete guide to fixing PyTorch RuntimeError: mat1 and mat2 shapes cannot be multiplied. 7 real-world causes with code fixes, interactive shape checker, step-by-step debugging process, and prevention tips.",
+  "datePublished": "2026-05-16",
+  "dateModified": "2026-05-16",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "publisher": {
+   "@type": "Organization",
+   "name": "HeyTensor",
+   "url": "https://heytensor.com"
+  },
+  "mainEntityOfPage": "https://heytensor.com/guides/fix-mat1-mat2-shapes-error.html",
+  "image": "https://heytensor.com/assets/og-image.png"
+ }
+ </script>
+
+ 
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Fix RuntimeError: mat1 and mat2 shapes cannot be multiplied in PyTorch",
+  "description": "Step-by-step guide to diagnosing and fixing the most common PyTorch RuntimeError. Covers Conv2d-to-Linear transitions, wrong in_features, batch dimension confusion, missing flatten, pooling mismatches, transfer learning errors, and custom architectures.",
+  "totalTime": "PT5M",
+  "supply": [{"@type": "HowToSupply", "name": "PyTorch >= 1.0"}],
+  "tool": [{"@type": "HowToTool", "name": "HeyTensor Shape Checker"}, {"@type": "HowToTool", "name": "Python REPL"}],
+  "step": [
+   {
+    "@type": "HowToStep",
+    "position": 1,
+    "name": "Read the error dimensions",
+    "text": "Parse the error: 'mat1 and mat2 shapes cannot be multiplied (AxB and CxD)'. B is your actual input feature count. C is what nn.Linear expects as in_features. B must equal C."
+   },
+   {
+    "@type": "HowToStep",
+    "position": 2,
+    "name": "Add shape diagnostics",
+    "text": "Insert print(x.shape) after every layer in your forward() method. This reveals the exact layer where the shape diverges from expectations."
+   },
+   {
+    "@type": "HowToStep",
+    "position": 3,
+    "name": "Identify the root cause",
+    "text": "Check for: missing flatten after Conv2d, wrong in_features value, changed input image size, missing or wrong pooling, batch dimension confusion, transfer learning classifier mismatch, or reshape/view errors."
+   },
+   {
+    "@type": "HowToStep",
+    "position": 4,
+    "name": "Compute the correct in_features",
+    "text": "For CNN-to-Linear: in_features = out_channels * H_out * W_out. Run a dummy pass: x = torch.zeros(1,C,H,W); x = features(x); print(x.flatten(1).shape[1]). Or use nn.LazyLinear."
+   },
+   {
+    "@type": "HowToStep",
+    "position": 5,
+    "name": "Fix and verify",
+    "text": "Update nn.Linear(in_features=correct_value, out_features=num_classes). Run a full forward pass with dummy data to confirm no errors. Remove debug print statements."
+   }
+  ],
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "datePublished": "2026-05-16"
+ }
+ </script>
+
+ 
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
+    "@type": "Question",
+    "name": "What causes RuntimeError: mat1 and mat2 shapes cannot be multiplied?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "This error means the inner dimensions of a matrix multiplication don't match. In PyTorch, it almost always occurs at an nn.Linear layer where in_features doesn't equal the actual number of features in the input tensor. The error message format is '(AxB and CxD)' where B (your actual features) must equal C (the Linear layer's in_features)."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "How do I find the correct in_features for nn.Linear after Conv2d?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Run a dummy forward pass: x = torch.zeros(1, C, H, W); x = conv_layers(x); print(x.flatten(1).shape[1]). This prints the exact number you need for in_features. Alternatively, use nn.LazyLinear(out_features) and PyTorch will infer it automatically on the first forward pass."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "What is the difference between mat1 and mat2 in the error message?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "mat1 is your input tensor (the data flowing through the network). mat2 is the weight matrix of the nn.Linear layer. For mat1 of shape (A, B), A is the batch size and B is the feature count. For mat2 of shape (C, D), C is in_features and D is out_features. The error fires when B != C."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Can nn.LazyLinear prevent this error?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Yes. nn.LazyLinear(out_features) defers the in_features calculation until the first forward pass. PyTorch automatically sets in_features to match whatever input it receives. This eliminates manual dimension calculations but adds a small overhead on the first call and makes the model non-scriptable until materialized."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Why do I get this error when using a pretrained model?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Pretrained models have a fixed classifier head. If you replace it with nn.Linear(wrong_size, num_classes), you get this error. Check the model's original classifier: print(model.fc) or print(model.classifier). The in_features of your replacement must match the backbone's output dimension (e.g., 2048 for ResNet-50, 512 for ResNet-18, 768 for ViT-Base)."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "How does nn.Flatten affect the shape before nn.Linear?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "nn.Flatten(start_dim=1) collapses all dimensions after the batch dimension into one. A tensor of shape (batch, C, H, W) becomes (batch, C*H*W). This C*H*W value is what in_features must equal. Forgetting to flatten, or flattening from the wrong dimension, are the two most common causes of this error."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Does this error happen with torch.matmul or torch.mm too?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Yes. torch.mm(A, B) requires A.shape[1] == B.shape[0]. torch.matmul follows the same rule for 2D inputs. The error message is identical. For batched matrix multiplication with torch.bmm, both tensors must be 3D and the inner dimensions must match: (batch, n, m) @ (batch, m, p)."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Is this error the same in PyTorch 1.x and 2.x?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "The error message is identical across PyTorch versions. However, PyTorch 2.0+ with torch.compile may report the error at compile time with a slightly different traceback. The fix is always the same: make the inner dimensions match."
+    }
+   }
+  ]
+ }
+ </script>
+
+ 
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+   {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/"},
+   {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://heytensor.com/guides/"},
+   {"@type": "ListItem", "position": 3, "name": "Fix mat1 and mat2 shapes cannot be multiplied"}
+  ]
+ }
+ </script>
+
+ <style>
+  /* Guide-specific styles */
+  .guide-article { max-width: 780px; margin: 0 auto; padding: 40px 20px 60px; }
+  .guide-article h1 { font-size: 2rem; margin-bottom: 8px; line-height: 1.25; }
+  .guide-article .meta { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 32px; }
+  .guide-article .meta a { color: var(--accent); }
+  .guide-article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 16px; padding-top: 8px; border-top: 1px solid var(--border); }
+  .guide-article h2:first-of-type { border-top: none; margin-top: 24px; }
+  .guide-article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; color: var(--text); }
+  .guide-article h4 { font-size: 1rem; margin-top: 20px; margin-bottom: 8px; }
+  .guide-article p { margin-bottom: 16px; color: var(--text); line-height: 1.8; }
+  .guide-article ul, .guide-article ol { margin-bottom: 16px; padding-left: 24px; }
+  .guide-article li { margin-bottom: 8px; line-height: 1.7; }
+  .guide-article code {
+   font-family: var(--font-display);
+   background: var(--bg-card);
+   padding: 2px 6px;
+   border-radius: 4px;
+   font-size: 0.85em;
   }
-  </script>
-
-  <!-- HowTo Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "HowTo",
-    "name": "How to Fix RuntimeError: mat1 and mat2 shapes cannot be multiplied in PyTorch",
-    "description": "Step-by-step guide to diagnosing and fixing the most common PyTorch RuntimeError. Covers Conv2d-to-Linear transitions, wrong in_features, batch dimension confusion, missing flatten, pooling mismatches, transfer learning errors, and custom architectures.",
-    "totalTime": "PT5M",
-    "supply": [{"@type": "HowToSupply", "name": "PyTorch >= 1.0"}],
-    "tool": [{"@type": "HowToTool", "name": "HeyTensor Shape Checker"}, {"@type": "HowToTool", "name": "Python REPL"}],
-    "step": [
-      {
-        "@type": "HowToStep",
-        "position": 1,
-        "name": "Read the error dimensions",
-        "text": "Parse the error: 'mat1 and mat2 shapes cannot be multiplied (AxB and CxD)'. B is your actual input feature count. C is what nn.Linear expects as in_features. B must equal C."
-      },
-      {
-        "@type": "HowToStep",
-        "position": 2,
-        "name": "Add shape diagnostics",
-        "text": "Insert print(x.shape) after every layer in your forward() method. This reveals the exact layer where the shape diverges from expectations."
-      },
-      {
-        "@type": "HowToStep",
-        "position": 3,
-        "name": "Identify the root cause",
-        "text": "Check for: missing flatten after Conv2d, wrong in_features value, changed input image size, missing or wrong pooling, batch dimension confusion, transfer learning classifier mismatch, or reshape/view errors."
-      },
-      {
-        "@type": "HowToStep",
-        "position": 4,
-        "name": "Compute the correct in_features",
-        "text": "For CNN-to-Linear: in_features = out_channels * H_out * W_out. Run a dummy pass: x = torch.zeros(1,C,H,W); x = features(x); print(x.flatten(1).shape[1]). Or use nn.LazyLinear."
-      },
-      {
-        "@type": "HowToStep",
-        "position": 5,
-        "name": "Fix and verify",
-        "text": "Update nn.Linear(in_features=correct_value, out_features=num_classes). Run a full forward pass with dummy data to confirm no errors. Remove debug print statements."
-      }
-    ],
-    "author": {
-      "@type": "Person",
-      "name": "Michael Lip",
-      "url": "https://zovo.one"
-    },
-    "datePublished": "2026-05-16"
+  .guide-article pre {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 16px;
+   overflow-x: auto;
+   margin-bottom: 16px;
+   font-family: var(--font-display);
+   font-size: 0.85rem;
+   line-height: 1.6;
   }
-  </script>
-
-  <!-- FAQPage Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What causes RuntimeError: mat1 and mat2 shapes cannot be multiplied?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "This error means the inner dimensions of a matrix multiplication don't match. In PyTorch, it almost always occurs at an nn.Linear layer where in_features doesn't equal the actual number of features in the input tensor. The error message format is '(AxB and CxD)' where B (your actual features) must equal C (the Linear layer's in_features)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I find the correct in_features for nn.Linear after Conv2d?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Run a dummy forward pass: x = torch.zeros(1, C, H, W); x = conv_layers(x); print(x.flatten(1).shape[1]). This prints the exact number you need for in_features. Alternatively, use nn.LazyLinear(out_features) and PyTorch will infer it automatically on the first forward pass."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between mat1 and mat2 in the error message?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "mat1 is your input tensor (the data flowing through the network). mat2 is the weight matrix of the nn.Linear layer. For mat1 of shape (A, B), A is the batch size and B is the feature count. For mat2 of shape (C, D), C is in_features and D is out_features. The error fires when B != C."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can nn.LazyLinear prevent this error?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. nn.LazyLinear(out_features) defers the in_features calculation until the first forward pass. PyTorch automatically sets in_features to match whatever input it receives. This eliminates manual dimension calculations but adds a small overhead on the first call and makes the model non-scriptable until materialized."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why do I get this error when using a pretrained model?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Pretrained models have a fixed classifier head. If you replace it with nn.Linear(wrong_size, num_classes), you get this error. Check the model's original classifier: print(model.fc) or print(model.classifier). The in_features of your replacement must match the backbone's output dimension (e.g., 2048 for ResNet-50, 512 for ResNet-18, 768 for ViT-Base)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does nn.Flatten affect the shape before nn.Linear?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "nn.Flatten(start_dim=1) collapses all dimensions after the batch dimension into one. A tensor of shape (batch, C, H, W) becomes (batch, C*H*W). This C*H*W value is what in_features must equal. Forgetting to flatten, or flattening from the wrong dimension, are the two most common causes of this error."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does this error happen with torch.matmul or torch.mm too?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. torch.mm(A, B) requires A.shape[1] == B.shape[0]. torch.matmul follows the same rule for 2D inputs. The error message is identical. For batched matrix multiplication with torch.bmm, both tensors must be 3D and the inner dimensions must match: (batch, n, m) @ (batch, m, p)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is this error the same in PyTorch 1.x and 2.x?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "The error message is identical across PyTorch versions. However, PyTorch 2.0+ with torch.compile may report the error at compile time with a slightly different traceback. The fix is always the same: make the inner dimensions match."
-        }
-      }
-    ]
+  .guide-article pre code { background: none; padding: 0; }
+  .guide-article blockquote {
+   border-left: 3px solid var(--accent);
+   padding-left: 16px;
+   color: var(--text-dim);
+   margin-bottom: 16px;
+   font-style: italic;
   }
-  </script>
-
-  <!-- BreadcrumbList Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Guides", "item": "https://heytensor.com/guides/"},
-      {"@type": "ListItem", "position": 3, "name": "Fix mat1 and mat2 shapes cannot be multiplied"}
-    ]
+  .guide-article strong { color: #fff; }
+  .guide-article table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-bottom: 16px;
+   font-size: 0.9rem;
   }
-  </script>
+  .guide-article th, .guide-article td {
+   padding: 10px 14px;
+   border: 1px solid var(--border);
+   text-align: left;
+  }
+  .guide-article th { background: var(--bg-card); font-weight: 600; }
 
-  <style>
-    /* Guide-specific styles */
-    .guide-article { max-width: 780px; margin: 0 auto; padding: 40px 20px 60px; }
-    .guide-article h1 { font-size: 2rem; margin-bottom: 8px; line-height: 1.25; }
-    .guide-article .meta { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 32px; }
-    .guide-article .meta a { color: var(--accent); }
-    .guide-article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 16px; padding-top: 8px; border-top: 1px solid var(--border); }
-    .guide-article h2:first-of-type { border-top: none; margin-top: 24px; }
-    .guide-article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; color: var(--text); }
-    .guide-article h4 { font-size: 1rem; margin-top: 20px; margin-bottom: 8px; }
-    .guide-article p { margin-bottom: 16px; color: var(--text); line-height: 1.8; }
-    .guide-article ul, .guide-article ol { margin-bottom: 16px; padding-left: 24px; }
-    .guide-article li { margin-bottom: 8px; line-height: 1.7; }
-    .guide-article code {
-      font-family: var(--font-display);
-      background: var(--bg-card);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.85em;
-    }
-    .guide-article pre {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      overflow-x: auto;
-      margin-bottom: 16px;
-      font-family: var(--font-display);
-      font-size: 0.85rem;
-      line-height: 1.6;
-    }
-    .guide-article pre code { background: none; padding: 0; }
-    .guide-article blockquote {
-      border-left: 3px solid var(--accent);
-      padding-left: 16px;
-      color: var(--text-dim);
-      margin-bottom: 16px;
-      font-style: italic;
-    }
-    .guide-article strong { color: #fff; }
-    .guide-article table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 16px;
-      font-size: 0.9rem;
-    }
-    .guide-article th, .guide-article td {
-      padding: 10px 14px;
-      border: 1px solid var(--border);
-      text-align: left;
-    }
-    .guide-article th { background: var(--bg-card); font-weight: 600; }
+  /* Error callout box */
+  .error-callout {
+   background: rgba(239, 68, 68, 0.06);
+   border: 1px solid var(--red);
+   border-left: 4px solid var(--red);
+   border-radius: var(--radius);
+   padding: 1.25rem 1.5rem;
+   margin: 1.5rem 0;
+   font-family: var(--font-display);
+   font-size: 0.9rem;
+   color: var(--red);
+   overflow-x: auto;
+  }
 
-    /* Error callout box */
-    .error-callout {
-      background: rgba(239, 68, 68, 0.06);
-      border: 1px solid var(--red);
-      border-left: 4px solid var(--red);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-      margin: 1.5rem 0;
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      color: var(--red);
-      overflow-x: auto;
-    }
+  /* Fix callout box */
+  .fix-callout {
+   background: rgba(34, 197, 94, 0.06);
+   border: 1px solid var(--green);
+   border-left: 4px solid var(--green);
+   border-radius: var(--radius);
+   padding: 1.25rem 1.5rem;
+   margin: 1.5rem 0;
+  }
+  .fix-callout strong { color: var(--green); }
 
-    /* Fix callout box */
-    .fix-callout {
-      background: rgba(34, 197, 94, 0.06);
-      border: 1px solid var(--green);
-      border-left: 4px solid var(--green);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-      margin: 1.5rem 0;
-    }
-    .fix-callout strong { color: var(--green); }
+  /* TLDR box */
+  .tldr-box {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-left: 4px solid var(--accent);
+   border-radius: var(--radius);
+   padding: 1.25rem 1.5rem;
+   margin: 1.5rem 0;
+  }
+  .tldr-box p { margin: 0; line-height: 1.7; }
 
-    /* TLDR box */
-    .tldr-box {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
-      margin: 1.5rem 0;
-    }
-    .tldr-box p { margin: 0; line-height: 1.7; }
+  /* Shape checker tool */
+  .shape-checker {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 24px;
+   margin: 24px 0;
+  }
+  .shape-checker h3 {
+   margin-top: 0 !important;
+   margin-bottom: 16px;
+   font-size: 1.1rem;
+  }
+  .checker-grid {
+   display: grid;
+   grid-template-columns: 1fr auto 1fr;
+   gap: 16px;
+   align-items: end;
+   margin-bottom: 16px;
+  }
+  .checker-field label {
+   display: block;
+   font-size: 0.8rem;
+   color: var(--text-dim);
+   margin-bottom: 4px;
+   font-family: var(--font-display);
+  }
+  .checker-field input {
+   width: 100%;
+   padding: 10px 12px;
+   background: var(--bg);
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   color: var(--text);
+   font-family: var(--font-display);
+   font-size: 0.95rem;
+  }
+  .checker-field input:focus { outline: none; border-color: var(--accent); }
+  .checker-op {
+   font-family: var(--font-display);
+   font-size: 1.5rem;
+   color: var(--text-dim);
+   text-align: center;
+   padding-bottom: 8px;
+  }
+  .checker-btn {
+   display: block;
+   width: 100%;
+   padding: 12px;
+   background: var(--accent);
+   color: #fff;
+   border: none;
+   border-radius: 6px;
+   font-family: var(--font-body);
+   font-size: 0.95rem;
+   font-weight: 600;
+   cursor: pointer;
+   transition: background 0.2s;
+  }
+  .checker-btn:hover { background: var(--accent-dim); }
+  .checker-result {
+   margin-top: 16px;
+   padding: 16px;
+   background: var(--bg);
+   border: 1px solid var(--border);
+   border-radius: 6px;
+   font-family: var(--font-display);
+   font-size: 0.9rem;
+   display: none;
+  }
+  .checker-result.visible { display: block; }
+  .checker-result.ok { border-color: var(--green); }
+  .checker-result.err { border-color: var(--red); }
+  .checker-result .result-status {
+   font-size: 1rem;
+   font-weight: 700;
+   margin-bottom: 8px;
+  }
+  .checker-result.ok .result-status { color: var(--green); }
+  .checker-result.err .result-status { color: var(--red); }
+  .checker-result .result-detail {
+   color: var(--text-dim);
+   font-size: 0.85rem;
+   line-height: 1.6;
+  }
+  .checker-result .result-shape {
+   color: var(--accent);
+   font-weight: 700;
+   font-size: 1rem;
+  }
+  .checker-examples {
+   margin-top: 12px;
+   display: flex;
+   gap: 8px;
+   flex-wrap: wrap;
+  }
+  .checker-example-btn {
+   padding: 4px 10px;
+   background: var(--bg);
+   border: 1px solid var(--border);
+   border-radius: 4px;
+   color: var(--text-dim);
+   font-family: var(--font-display);
+   font-size: 0.75rem;
+   cursor: pointer;
+   transition: all 0.2s;
+  }
+  .checker-example-btn:hover { border-color: var(--accent); color: var(--text); }
 
-    /* Shape checker tool */
-    .shape-checker {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      margin: 24px 0;
-    }
-    .shape-checker h3 {
-      margin-top: 0 !important;
-      margin-bottom: 16px;
-      font-size: 1.1rem;
-    }
-    .checker-grid {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 16px;
-      align-items: end;
-      margin-bottom: 16px;
-    }
-    .checker-field label {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      margin-bottom: 4px;
-      font-family: var(--font-display);
-    }
-    .checker-field input {
-      width: 100%;
-      padding: 10px 12px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      font-family: var(--font-display);
-      font-size: 0.95rem;
-    }
-    .checker-field input:focus { outline: none; border-color: var(--accent); }
-    .checker-op {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      color: var(--text-dim);
-      text-align: center;
-      padding-bottom: 8px;
-    }
-    .checker-btn {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .checker-btn:hover { background: var(--accent-dim); }
-    .checker-result {
-      margin-top: 16px;
-      padding: 16px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      display: none;
-    }
-    .checker-result.visible { display: block; }
-    .checker-result.ok { border-color: var(--green); }
-    .checker-result.err { border-color: var(--red); }
-    .checker-result .result-status {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-    .checker-result.ok .result-status { color: var(--green); }
-    .checker-result.err .result-status { color: var(--red); }
-    .checker-result .result-detail {
-      color: var(--text-dim);
-      font-size: 0.85rem;
-      line-height: 1.6;
-    }
-    .checker-result .result-shape {
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 1rem;
-    }
-    .checker-examples {
-      margin-top: 12px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .checker-example-btn {
-      padding: 4px 10px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--text-dim);
-      font-family: var(--font-display);
-      font-size: 0.75rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .checker-example-btn:hover { border-color: var(--accent); color: var(--text); }
+  /* Step numbers */
+  .step-num {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 28px;
+   height: 28px;
+   background: var(--accent);
+   color: #fff;
+   border-radius: 50%;
+   font-family: var(--font-display);
+   font-size: 0.8rem;
+   font-weight: 700;
+   margin-right: 8px;
+   flex-shrink: 0;
+  }
 
-    /* Step numbers */
-    .step-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 50%;
-      font-family: var(--font-display);
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-right: 8px;
-      flex-shrink: 0;
-    }
+  /* Cause section numbering */
+  .cause-header {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-top: 28px;
+   margin-bottom: 10px;
+  }
+  .cause-num {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   min-width: 32px;
+   height: 32px;
+   background: var(--red);
+   color: #fff;
+   border-radius: 6px;
+   font-family: var(--font-display);
+   font-size: 0.8rem;
+   font-weight: 700;
+   flex-shrink: 0;
+  }
+  .cause-header h3 { margin: 0 !important; }
 
-    /* Cause section numbering */
-    .cause-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 28px;
-      margin-bottom: 10px;
-    }
-    .cause-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 32px;
-      height: 32px;
-      background: var(--red);
-      color: #fff;
-      border-radius: 6px;
-      font-family: var(--font-display);
-      font-size: 0.8rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-    .cause-header h3 { margin: 0 !important; }
+  /* TOC */
+  .toc {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 20px 24px;
+   margin: 24px 0;
+  }
+  .toc h4 {
+   font-size: 0.85rem;
+   color: var(--text-dim);
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   margin-bottom: 12px;
+  }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 6px; font-size: 0.9rem; }
+  .toc a { color: var(--text); }
+  .toc a:hover { color: var(--accent); }
 
-    /* TOC */
-    .toc {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      margin: 24px 0;
-    }
-    .toc h4 {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 12px;
-    }
-    .toc ol { margin: 0; padding-left: 20px; }
-    .toc li { margin-bottom: 6px; font-size: 0.9rem; }
-    .toc a { color: var(--text); }
-    .toc a:hover { color: var(--accent); }
+  /* Prevent checklist */
+  .prevent-list { list-style: none; padding: 0; }
+  .prevent-list li {
+   padding: 8px 0 8px 28px;
+   position: relative;
+   border-bottom: 1px solid var(--border);
+  }
+  .prevent-list li:last-child { border-bottom: none; }
+  .prevent-list li::before {
+   content: '';
+   position: absolute;
+   left: 0;
+   top: 12px;
+   width: 16px;
+   height: 16px;
+   border: 2px solid var(--green);
+   border-radius: 3px;
+  }
 
-    /* Prevent checklist */
-    .prevent-list { list-style: none; padding: 0; }
-    .prevent-list li {
-      padding: 8px 0 8px 28px;
-      position: relative;
-      border-bottom: 1px solid var(--border);
-    }
-    .prevent-list li:last-child { border-bottom: none; }
-    .prevent-list li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 12px;
-      width: 16px;
-      height: 16px;
-      border: 2px solid var(--green);
-      border-radius: 3px;
-    }
+  /* Nav override for this page */
+  .nav { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 100; max-width: var(--max-width); margin: 0 auto; }
+  .nav-logo { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text); text-decoration: none; margin-right: auto; }
+  .nav-logo:hover { text-decoration: none; }
+  .nav-links { display: flex; list-style: none; gap: 24px; margin: 0; padding: 0; }
+  .nav-links a { color: var(--text-dim); font-size: 0.9rem; text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
 
-    /* Nav override for this page */
-    .nav { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 100; max-width: var(--max-width); margin: 0 auto; }
-    .nav-logo { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text); text-decoration: none; margin-right: auto; }
-    .nav-logo:hover { text-decoration: none; }
-    .nav-links { display: flex; list-style: none; gap: 24px; margin: 0; padding: 0; }
-    .nav-links a { color: var(--text-dim); font-size: 0.9rem; text-decoration: none; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); text-decoration: none; }
-
-    @media (max-width: 768px) {
-      .guide-article h1 { font-size: 1.5rem; }
-      .checker-grid { grid-template-columns: 1fr; }
-      .checker-op { display: none; }
-      .guide-article pre { font-size: 0.78rem; white-space: pre-wrap; }
-      .nav-links { display: none; }
-    }
-  </style>
+  @media (max-width: 768px) {
+   .guide-article h1 { font-size: 1.5rem; }
+   .checker-grid { grid-template-columns: 1fr; }
+   .checker-op { display: none; }
+   .guide-article pre { font-size: 0.78rem; white-space: pre-wrap; }
+   .nav-links { display: none; }
+  }
+ </style>
 </head>
 <body>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/" class="active">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/" class="active">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <main class="guide-article">
-    <nav class="breadcrumb" aria-label="Breadcrumb" style="font-size:0.82rem;color:var(--text-dim);margin-bottom:24px;">
-      <a href="/">Home</a> <span style="margin:0 6px;">/</span>
-      <a href="/guides/">Guides</a> <span style="margin:0 6px;">/</span>
-      <span>Fix mat1 and mat2 shapes error</span>
-    </nav>
+ <main class="guide-article">
+ <nav class="breadcrumb" aria-label="Breadcrumb" style="font-size:0.82rem;color:var(--text-dim);margin-bottom:24px;">
+ <a href="/">Home</a> <span style="margin:0 6px;">/</span>
+ <a href="/guides/">Guides</a> <span style="margin:0 6px;">/</span>
+ <span>Fix mat1 and mat2 shapes error</span>
+ </nav>
 
-    <article>
-      <h1>Fix "mat1 and mat2 shapes cannot be multiplied" in PyTorch</h1>
-      <p class="meta">By <a href="https://zovo.one">Michael Lip</a> &middot; <time datetime="2026-05-16">May 16, 2026</time> &middot; 12 min read</p>
+ <article>
+ <h1>Fix "mat1 and mat2 shapes cannot be multiplied" in PyTorch</h1>
+ <p class="meta">By <a href="https://zovo.one">Michael Lip</a> &middot; <time datetime="2026-05-16">May 16, 2026</time> &middot; 12 min read</p>
 
-      <div class="tldr-box">
-        <p><strong>TL;DR:</strong> This error means your <code>nn.Linear</code> layer's <code>in_features</code> does not match the last dimension of the input tensor. The fix: add <code>print(x.shape)</code> before the Linear layer, read the last number, then set <code>nn.Linear(that_number, out_features)</code>. If you are transitioning from Conv2d to Linear, you almost certainly need to flatten first and compute <code>in_features = out_channels * H_out * W_out</code>.</p>
-      </div>
+ <div class="tldr-box">
+ <p>TL;DR: This error means your <code>nn.Linear</code> layer's <code>in_features</code> does not match the last dimension of the input tensor. The fix: add <code>print(x.shape)</code> before the Linear layer, read the last number, then set <code>nn.Linear(that_number, out_features)</code>. If you are transitioning from Conv2d to Linear, you almost certainly need to flatten first and compute <code>in_features = out_channels * H_out * W_out</code>.</p>
+ </div>
 
-      <div class="error-callout">
-        RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x2048 and 512x10)
-      </div>
+ <div class="error-callout">
+ RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x2048 and 512x10)
+ </div>
 
-      <p>If you have ever trained a neural network in PyTorch, you have seen this error. It is the single most common PyTorch RuntimeError, appearing in <a href="/research/most-common-pytorch-errors.html">our analysis of 52 real-world PyTorch errors</a> as the #1 reported issue across Stack Overflow, GitHub Issues, and Reddit. The error fires at the exact moment PyTorch tries to multiply two matrices whose inner dimensions do not align &mdash; and it halts your entire training pipeline.</p>
+ <p>If you have ever trained a neural network in PyTorch, you have seen this error. It is the single most common PyTorch RuntimeError, appearing in <a href="/research/most-common-pytorch-errors.html">our analysis of 52 real-world PyTorch errors</a> as the #1 reported issue across Stack Overflow, GitHub Issues, and Reddit. The error fires at the exact moment PyTorch tries to multiply two matrices whose inner dimensions do not align &mdash; and it halts your entire training pipeline.</p>
 
-      <p>This guide covers every scenario that produces this error, gives you code you can copy-paste to fix each one, and includes an <a href="#shape-checker">interactive shape checker</a> so you can test matrix dimensions before you even write the Python.</p>
+ <p>This guide covers every scenario that produces this error, gives you code you can copy-paste to fix each one, and includes an <a href="#shape-checker">interactive shape checker</a> so you can test matrix dimensions before you even write the Python.</p>
 
-      <div class="toc">
-        <h4>Contents</h4>
-        <ol>
-          <li><a href="#what-it-means">What the error actually means</a></li>
-          <li><a href="#reading-the-error">How to read the error message</a></li>
-          <li><a href="#causes">7 real-world causes (with code fixes)</a></li>
-          <li><a href="#debug-process">Step-by-step debugging process</a></li>
-          <li><a href="#shape-checker">Interactive shape checker tool</a></li>
-          <li><a href="#prevention">Prevention tips and best practices</a></li>
-          <li><a href="#faq">FAQ</a></li>
-        </ol>
-      </div>
+ <div class="toc">
+ <h4>Contents</h4>
+ <ol>
+ <li><a href="#what-it-means">What the error actually means</a></li>
+ <li><a href="#reading-the-error">How to read the error message</a></li>
+ <li><a href="#causes">7 real-world causes (with code fixes)</a></li>
+ <li><a href="#debug-process">Step-by-step debugging process</a></li>
+ <li><a href="#shape-checker">Interactive shape checker tool</a></li>
+ <li><a href="#prevention">Prevention tips and best practices</a></li>
+ <li><a href="#faq">FAQ</a></li>
+ </ol>
+ </div>
 
-      <!-- =========================================================
-           SECTION 1: What it means
-           ========================================================= -->
-      <h2 id="what-it-means">What the Error Actually Means</h2>
+ 
+ <h2 id="what-it-means">What the Error Actually Means</h2>
 
-      <p>Matrix multiplication has one hard rule: if you multiply matrix A of shape <code>(m, n)</code> by matrix B of shape <code>(p, q)</code>, then <strong>n must equal p</strong>. The inner dimensions must match. The result will be shape <code>(m, q)</code>.</p>
+ <p>Matrix multiplication has one hard rule: if you multiply matrix A of shape <code>(m, n)</code> by matrix B of shape <code>(p, q)</code>, then n must equal p. The inner dimensions must match. The result will be shape <code>(m, q)</code>.</p>
 
-      <p>In PyTorch, <code>nn.Linear(in_features, out_features)</code> stores a weight matrix of shape <code>(out_features, in_features)</code>. During the forward pass, it computes <code>output = input @ weight.T + bias</code>. For this multiplication to work, the <strong>last dimension of your input tensor</strong> must equal <code>in_features</code>.</p>
+ <p>In PyTorch, <code>nn.Linear(in_features, out_features)</code> stores a weight matrix of shape <code>(out_features, in_features)</code>. During the forward pass, it computes <code>output = input @ weight.T + bias</code>. For this multiplication to work, the last dimension of your input tensor must equal <code>in_features</code>.</p>
 
-      <p>When it does not match, PyTorch raises:</p>
+ <p>When it does not match, PyTorch raises:</p>
 
-      <div class="error-callout">
-        RuntimeError: mat1 and mat2 shapes cannot be multiplied (AxB and CxD)
-      </div>
+ <div class="error-callout">
+ RuntimeError: mat1 and mat2 shapes cannot be multiplied (AxB and CxD)
+ </div>
 
-      <p>Here, <code>mat1</code> is your input tensor (shape A x B), and <code>mat2</code> is the weight matrix (shape C x D, which is <code>in_features x out_features</code> after transpose). The error fires because <strong>B != C</strong>.</p>
+ <p>Here, <code>mat1</code> is your input tensor (shape A x B), and <code>mat2</code> is the weight matrix (shape C x D, which is <code>in_features x out_features</code> after transpose). The error fires because B != C.</p>
 
-      <p>This same error can appear with <code>torch.mm()</code>, <code>torch.matmul()</code>, <code>torch.bmm()</code>, or the <code>@</code> operator. The root cause is always the same: inner dimensions do not align.</p>
+ <p>This same error can appear with <code>torch.mm()</code>, <code>torch.matmul()</code>, <code>torch.bmm()</code>, or the <code>@</code> operator. The root cause is always the same: inner dimensions do not align.</p>
 
+ 
+ <h2 id="reading-the-error">How to Read the Error Message</h2>
 
-      <!-- =========================================================
-           SECTION 2: Reading the error
-           ========================================================= -->
-      <h2 id="reading-the-error">How to Read the Error Message</h2>
+ <p>The error message contains every piece of information you need to fix it. Let us decode a real example:</p>
 
-      <p>The error message contains every piece of information you need to fix it. Let us decode a real example:</p>
+ <div class="error-callout">
+ RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x2048 and 512x10)
+ </div>
 
-      <div class="error-callout">
-        RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x2048 and 512x10)
-      </div>
+ <table>
+ <thead>
+ <tr><th>Component</th><th>Value</th><th>Meaning</th></tr>
+ </thead>
+ <tbody>
+ <tr><td><code>mat1</code></td><td>64 x 2048</td><td>Your input tensor. 64 is the batch size. <strong>2048 is the actual feature count.</strong></td></tr>
+ <tr><td><code>mat2</code></td><td>512 x 10</td><td>The Linear layer's weight matrix (transposed). <strong>512 is in_features (what it expects)</strong>. 10 is out_features.</td></tr>
+ <tr><td>The mismatch</td><td>2048 != 512</td><td>Your input has 2048 features but the Linear layer was defined with <code>in_features=512</code>.</td></tr>
+ <tr><td>The fix</td><td colspan="2">Change <code>nn.Linear(512, 10)</code> to <code>nn.Linear(2048, 10)</code></td></tr>
+ </tbody>
+ </table>
 
-      <table>
-        <thead>
-          <tr><th>Component</th><th>Value</th><th>Meaning</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>mat1</code></td><td>64 x 2048</td><td>Your input tensor. 64 is the batch size. <strong>2048 is the actual feature count.</strong></td></tr>
-          <tr><td><code>mat2</code></td><td>512 x 10</td><td>The Linear layer's weight matrix (transposed). <strong>512 is in_features (what it expects)</strong>. 10 is out_features.</td></tr>
-          <tr><td>The mismatch</td><td>2048 != 512</td><td>Your input has 2048 features but the Linear layer was defined with <code>in_features=512</code>.</td></tr>
-          <tr><td>The fix</td><td colspan="2">Change <code>nn.Linear(512, 10)</code> to <code>nn.Linear(2048, 10)</code></td></tr>
-        </tbody>
-      </table>
+ <p>The second number in mat1 (B) must equal the first number in mat2 (C). That is the entire rule. Every fix in this guide ultimately reduces to making those two numbers match.</p>
 
-      <p>The second number in mat1 (B) must equal the first number in mat2 (C). That is the entire rule. Every fix in this guide ultimately reduces to making those two numbers match.</p>
+ 
+ <h2 id="causes">7 Real-World Causes (With Code Fixes)</h2>
 
+ 
+ <div class="cause-header">
+ <span class="cause-num">1</span>
+ <h3>Forgot to Flatten After Conv2d</h3>
+ </div>
 
-      <!-- =========================================================
-           SECTION 3: 7 Real-World Causes
-           ========================================================= -->
-      <h2 id="causes">7 Real-World Causes (With Code Fixes)</h2>
+ <p>This is the #1 cause. After convolutional layers, your tensor is 4D: <code>(batch, channels, height, width)</code>. The <code>nn.Linear</code> layer expects a 2D input: <code>(batch, features)</code>. If you pass the 4D tensor directly, PyTorch internally reshapes it in a way that makes the dimensions wrong.</p>
 
-      <!-- CAUSE 1 -->
-      <div class="cause-header">
-        <span class="cause-num">1</span>
-        <h3>Forgot to Flatten After Conv2d</h3>
-      </div>
-
-      <p>This is the #1 cause. After convolutional layers, your tensor is 4D: <code>(batch, channels, height, width)</code>. The <code>nn.Linear</code> layer expects a 2D input: <code>(batch, features)</code>. If you pass the 4D tensor directly, PyTorch internally reshapes it in a way that makes the dimensions wrong.</p>
-
-      <pre><code># BUG: passing 4D tensor directly to Linear
+ <pre><code># BUG: passing 4D tensor directly to Linear
 class BrokenCNN(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
-        self.pool = nn.MaxPool2d(2)
-        self.fc = nn.Linear(64 * 16 * 16, 10)  # expects flattened
+  def __init__(self):
+    super().__init__()
+    self.conv1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
+    self.pool = nn.MaxPool2d(2)
+    self.fc = nn.Linear(64 * 16 * 16, 10) # expects flattened
 
-    def forward(self, x):          # x: (batch, 3, 32, 32)
-        x = self.pool(F.relu(self.conv1(x)))  # (batch, 64, 16, 16)
-        x = self.fc(x)             # ERROR! 4D tensor hits Linear
-        return x</code></pre>
-
-      <div class="fix-callout">
-        <strong>Fix:</strong> Add <code>x = x.flatten(1)</code> or <code>x = torch.flatten(x, 1)</code> before the Linear layer. You can also use <code>nn.Flatten()</code> as a module in <code>nn.Sequential</code>.
-      </div>
-
-      <pre><code># FIXED: flatten before Linear
-def forward(self, x):              # x: (batch, 3, 32, 32)
-    x = self.pool(F.relu(self.conv1(x)))  # (batch, 64, 16, 16)
-    x = x.flatten(1)               # (batch, 64*16*16) = (batch, 16384)
-    x = self.fc(x)                 # works!
+  def forward(self, x):     # x: (batch, 3, 32, 32)
+    x = self.pool(F.relu(self.conv1(x))) # (batch, 64, 16, 16)
+    x = self.fc(x)       # ERROR! 4D tensor hits Linear
     return x</code></pre>
 
-      <!-- CAUSE 2 -->
-      <div class="cause-header">
-        <span class="cause-num">2</span>
-        <h3>Wrong in_features Calculation</h3>
-      </div>
+ <div class="fix-callout">
+ Fix: Add <code>x = x.flatten(1)</code> or <code>x = torch.flatten(x, 1)</code> before the Linear layer. You can also use <code>nn.Flatten()</code> as a module in <code>nn.Sequential</code>.
+ </div>
 
-      <p>Even if you remembered to flatten, you may have computed <code>in_features</code> wrong. This is especially common when you have multiple Conv2d layers with different strides, paddings, and pooling operations. Each one changes the spatial dimensions, and the final flattened size is hard to calculate by hand.</p>
+ <pre><code># FIXED: flatten before Linear
+def forward(self, x):       # x: (batch, 3, 32, 32)
+  x = self.pool(F.relu(self.conv1(x))) # (batch, 64, 16, 16)
+  x = x.flatten(1)        # (batch, 64*16*16) = (batch, 16384)
+  x = self.fc(x)         # works!
+  return x</code></pre>
 
-      <pre><code># BUG: wrong in_features calculation
+ 
+ <div class="cause-header">
+ <span class="cause-num">2</span>
+ <h3>Wrong in_features Calculation</h3>
+ </div>
+
+ <p>Even if you remembered to flatten, you may have computed <code>in_features</code> wrong. This is especially common when you have multiple Conv2d layers with different strides, paddings, and pooling operations. Each one changes the spatial dimensions, and the final flattened size is hard to calculate by hand.</p>
+
+ <pre><code># BUG: wrong in_features calculation
 class MiscalcCNN(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 32, 3, padding=1),    # 32x32 -> 32x32
-            nn.ReLU(),
-            nn.MaxPool2d(2),                    # 32x32 -> 16x16
-            nn.Conv2d(32, 64, 3, padding=1),   # 16x16 -> 16x16
-            nn.ReLU(),
-            nn.MaxPool2d(2),                    # 16x16 -> 8x8
-            nn.Conv2d(64, 128, 3, padding=1),  # 8x8 -> 8x8
-            nn.ReLU(),
-            nn.MaxPool2d(2),                    # 8x8 -> 4x4
-        )
-        # BUG: wrote 128*8*8 but it's actually 128*4*4
-        self.classifier = nn.Linear(128 * 8 * 8, 10)
+  def __init__(self):
+    super().__init__()
+    self.features = nn.Sequential(
+      nn.Conv2d(3, 32, 3, padding=1),  # 32x32 -> 32x32
+      nn.ReLU(),
+      nn.MaxPool2d(2),          # 32x32 -> 16x16
+      nn.Conv2d(32, 64, 3, padding=1),  # 16x16 -> 16x16
+      nn.ReLU(),
+      nn.MaxPool2d(2),          # 16x16 -> 8x8
+      nn.Conv2d(64, 128, 3, padding=1), # 8x8 -> 8x8
+      nn.ReLU(),
+      nn.MaxPool2d(2),          # 8x8 -> 4x4
+    )
+    # BUG: wrote 128*8*8 but it's actually 128*4*4
+    self.classifier = nn.Linear(128 * 8 * 8, 10)
 
-    def forward(self, x):
-        x = self.features(x)
-        x = x.flatten(1)                       # (batch, 128*4*4) = (batch, 2048)
-        x = self.classifier(x)                 # ERROR: expects 8192, got 2048
-        return x</code></pre>
+  def forward(self, x):
+    x = self.features(x)
+    x = x.flatten(1)            # (batch, 128*4*4) = (batch, 2048)
+    x = self.classifier(x)         # ERROR: expects 8192, got 2048
+    return x</code></pre>
 
-      <div class="fix-callout">
-        <strong>Fix:</strong> Run a dummy forward pass to find the correct size. This method is foolproof regardless of how many layers you have.
-      </div>
+ <div class="fix-callout">
+ Fix: Run a dummy forward pass to find the correct size. This method is foolproof regardless of how many layers you have.
+ </div>
 
-      <pre><code># FIXED: use a dummy pass to find the correct in_features
+ <pre><code># FIXED: use a dummy pass to find the correct in_features
 import torch
 
 model_features = nn.Sequential(
-    nn.Conv2d(3, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-    nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-    nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+  nn.Conv2d(3, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+  nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+  nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
 )
 
 # Pass a dummy tensor through to discover the actual output size
 dummy = torch.zeros(1, 3, 32, 32)
 with torch.no_grad():
-    out = model_features(dummy)
+  out = model_features(dummy)
 flat_size = out.flatten(1).shape[1]
-print(f"Correct in_features: {flat_size}")  # 2048
+print(f"Correct in_features: {flat_size}") # 2048
 
 # Now use the correct value
-classifier = nn.Linear(flat_size, 10)  # nn.Linear(2048, 10)</code></pre>
+classifier = nn.Linear(flat_size, 10) # nn.Linear(2048, 10)</code></pre>
 
-      <!-- CAUSE 3 -->
-      <div class="cause-header">
-        <span class="cause-num">3</span>
-        <h3>Changed Input Image Size Without Updating the Linear Layer</h3>
-      </div>
+ 
+ <div class="cause-header">
+ <span class="cause-num">3</span>
+ <h3>Changed Input Image Size Without Updating the Linear Layer</h3>
+ </div>
 
-      <p>Your model was designed for 224x224 images but you are feeding it 256x256 or 128x128 images. The Conv2d and pooling layers produce a different spatial output, which changes the flattened size. The Linear layer still expects the original value.</p>
+ <p>Your model was designed for 224x224 images but you are feeding it 256x256 or 128x128 images. The Conv2d and pooling layers produce a different spatial output, which changes the flattened size. The Linear layer still expects the original value.</p>
 
-      <pre><code># Model designed for 224x224 inputs
+ <pre><code># Model designed for 224x224 inputs
 class ImageClassifier(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(3, 64, 7, stride=2, padding=3),  # 224->112
-            nn.ReLU(),
-            nn.MaxPool2d(3, stride=2, padding=1),       # 112->56
-            nn.Conv2d(64, 128, 3, padding=1),           # 56->56
-            nn.ReLU(),
-            nn.AdaptiveAvgPool2d((1, 1)),               # 56->1x1
-        )
-        self.fc = nn.Linear(128, 10)  # 128*1*1 = 128
+  def __init__(self):
+    super().__init__()
+    self.features = nn.Sequential(
+      nn.Conv2d(3, 64, 7, stride=2, padding=3), # 224->112
+      nn.ReLU(),
+      nn.MaxPool2d(3, stride=2, padding=1),    # 112->56
+      nn.Conv2d(64, 128, 3, padding=1),      # 56->56
+      nn.ReLU(),
+      nn.AdaptiveAvgPool2d((1, 1)),        # 56->1x1
+    )
+    self.fc = nn.Linear(128, 10) # 128*1*1 = 128
 
 # This works with 224x224 AND 256x256 AND any size!
 # Because AdaptiveAvgPool2d always outputs 1x1 spatial</code></pre>
 
-      <div class="fix-callout">
-        <strong>Fix:</strong> Use <code>nn.AdaptiveAvgPool2d((1, 1))</code> before your Linear layer. This forces the spatial dimensions to 1x1 regardless of input size, so <code>in_features = num_channels</code> always. This is how ResNet, EfficientNet, and most modern architectures handle it.
-      </div>
+ <div class="fix-callout">
+ Fix: Use <code>nn.AdaptiveAvgPool2d((1, 1))</code> before your Linear layer. This forces the spatial dimensions to 1x1 regardless of input size, so <code>in_features = num_channels</code> always. This is how ResNet, EfficientNet, and most modern architectures handle it.
+ </div>
 
-      <pre><code># The pattern every modern CNN uses:
-self.pool = nn.AdaptiveAvgPool2d((1, 1))  # any spatial -> 1x1
+ <pre><code># The pattern every modern CNN uses:
+self.pool = nn.AdaptiveAvgPool2d((1, 1)) # any spatial -> 1x1
 self.fc = nn.Linear(num_channels, num_classes)
 
 def forward(self, x):
-    x = self.features(x)      # (batch, C, H, W) -- H,W can be anything
-    x = self.pool(x)           # (batch, C, 1, 1) -- always!
-    x = x.flatten(1)           # (batch, C)
-    x = self.fc(x)             # works for any input resolution</code></pre>
+  x = self.features(x)   # (batch, C, H, W) -- H,W can be anything
+  x = self.pool(x)      # (batch, C, 1, 1) -- always!
+  x = x.flatten(1)      # (batch, C)
+  x = self.fc(x)       # works for any input resolution</code></pre>
 
-      <!-- CAUSE 4 -->
-      <div class="cause-header">
-        <span class="cause-num">4</span>
-        <h3>Transfer Learning: Wrong Classifier Head</h3>
-      </div>
+ 
+ <div class="cause-header">
+ <span class="cause-num">4</span>
+ <h3>Transfer Learning, Wrong Classifier Head</h3>
+ </div>
 
-      <p>When fine-tuning a pretrained model, you need to replace the classifier head with your own. But if you use the wrong <code>in_features</code>, you get this error. Each backbone produces a different feature size.</p>
+ <p>When fine-tuning a pretrained model, you need to replace the classifier head with your own. But if you use the wrong <code>in_features</code>, you get this error. Each backbone produces a different feature size.</p>
 
-      <pre><code># BUG: wrong in_features for the backbone
+ <pre><code># BUG: wrong in_features for the backbone
 import torchvision.models as models
 
 model = models.resnet50(weights='IMAGENET1K_V1')
 # ResNet-50's fc layer is nn.Linear(2048, 1000)
 # But you wrote 512 instead of 2048:
-model.fc = nn.Linear(512, 5)  # ERROR: backbone outputs 2048, not 512</code></pre>
+model.fc = nn.Linear(512, 5) # ERROR: backbone outputs 2048, not 512</code></pre>
 
-      <div class="fix-callout">
-        <strong>Fix:</strong> Inspect the existing classifier to get the correct <code>in_features</code>, then replace it.
-      </div>
+ <div class="fix-callout">
+ Fix: Inspect the existing classifier to get the correct <code>in_features</code>, then replace it.
+ </div>
 
-      <pre><code># FIXED: read the original in_features
+ <pre><code># FIXED: read the original in_features
 model = models.resnet50(weights='IMAGENET1K_V1')
-print(model.fc)  # Linear(in_features=2048, out_features=1000, bias=True)
+print(model.fc) # Linear(in_features=2048, out_features=1000, bias=True)
 
 # Use the correct value
-num_ftrs = model.fc.in_features  # 2048
-model.fc = nn.Linear(num_ftrs, 5)  # correct!
+num_ftrs = model.fc.in_features # 2048
+model.fc = nn.Linear(num_ftrs, 5) # correct!
 
 # Common backbone output sizes:
-# ResNet-18/34:  512
+# ResNet-18/34: 512
 # ResNet-50/101: 2048
-# VGG-16:       4096 (after classifier[0])
-# EfficientNet:  1280 (B0) to 2560 (B7)
-# ViT-Base:     768
-# ViT-Large:    1024</code></pre>
+# VGG-16:    4096 (after classifier[0])
+# EfficientNet: 1280 (B0) to 2560 (B7)
+# ViT-Base:   768
+# ViT-Large:  1024</code></pre>
 
-      <!-- CAUSE 5 -->
-      <div class="cause-header">
-        <span class="cause-num">5</span>
-        <h3>Batch Dimension Confusion in Manual Matrix Ops</h3>
-      </div>
+ 
+ <div class="cause-header">
+ <span class="cause-num">5</span>
+ <h3>Batch Dimension Confusion in Manual Matrix Ops</h3>
+ </div>
 
-      <p>When you use <code>torch.mm()</code> or the <code>@</code> operator directly instead of <code>nn.Linear</code>, it is easy to mix up which tensor should come first, or to forget that the batch dimension adds an extra axis.</p>
+ <p>When you use <code>torch.mm()</code> or the <code>@</code> operator directly instead of <code>nn.Linear</code>, it is easy to mix up which tensor should come first, or to forget that the batch dimension adds an extra axis.</p>
 
-      <pre><code># BUG: wrong order of operands
-W = torch.randn(10, 512)  # weight matrix (out, in)
-x = torch.randn(64, 256)  # input (batch, features)
+ <pre><code># BUG: wrong order of operands
+W = torch.randn(10, 512) # weight matrix (out, in)
+x = torch.randn(64, 256) # input (batch, features)
 
 # You want: output = x @ W.T
 # But you wrote:
-output = torch.mm(W, x)  # ERROR: (10x512) @ (64x256) -- 512 != 64</code></pre>
+output = torch.mm(W, x) # ERROR: (10x512) @ (64x256) -- 512 != 64</code></pre>
 
-      <div class="fix-callout">
-        <strong>Fix:</strong> For manual matrix multiplication, the input goes first: <code>x @ W.T</code>. Make sure the second dimension of the left matrix matches the first dimension of the right matrix.
-      </div>
+ <div class="fix-callout">
+ Fix: For manual matrix multiplication, the input goes first: <code>x @ W.T</code>. Make sure the second dimension of the left matrix matches the first dimension of the right matrix.
+ </div>
 
-      <pre><code># FIXED: correct operand order
-W = torch.randn(10, 512)  # weight matrix (out_features, in_features)
-x = torch.randn(64, 512)  # input (batch, in_features) -- note: 512, not 256
+ <pre><code># FIXED: correct operand order
+W = torch.randn(10, 512) # weight matrix (out_features, in_features)
+x = torch.randn(64, 512) # input (batch, in_features) -- note: 512, not 256
 
 # Option A: x @ W.T
-output = x @ W.T  # (64, 512) @ (512, 10) -> (64, 10) OK
+output = x @ W.T # (64, 512) @ (512, 10) -> (64, 10) OK
 
 # Option B: torch.mm
-output = torch.mm(x, W.T)  # same thing
+output = torch.mm(x, W.T) # same thing
 
 # Option C: for batched 3D tensors, use torch.bmm or torch.matmul
-x_3d = torch.randn(8, 64, 512)   # (batch, seq, features)
-W_3d = torch.randn(8, 512, 10)   # (batch, features, out)
-output = torch.bmm(x_3d, W_3d)   # (8, 64, 10)</code></pre>
+x_3d = torch.randn(8, 64, 512)  # (batch, seq, features)
+W_3d = torch.randn(8, 512, 10)  # (batch, features, out)
+output = torch.bmm(x_3d, W_3d)  # (8, 64, 10)</code></pre>
 
-      <!-- CAUSE 6 -->
-      <div class="cause-header">
-        <span class="cause-num">6</span>
-        <h3>Wrong Reshape or View Before Linear</h3>
-      </div>
+ 
+ <div class="cause-header">
+ <span class="cause-num">6</span>
+ <h3>Wrong Reshape or View Before Linear</h3>
+ </div>
 
-      <p>Using <code>.view()</code> or <code>.reshape()</code> with wrong arguments can silently rearrange your tensor into the wrong shape. PyTorch will not warn you until the matrix multiplication fails.</p>
+ <p>Using <code>.view()</code> or <code>.reshape()</code> with wrong arguments can silently rearrange your tensor into the wrong shape. PyTorch will not warn you until the matrix multiplication fails.</p>
 
-      <pre><code># BUG: reshaping to wrong dimensions
+ <pre><code># BUG: reshaping to wrong dimensions
 class BadReshape(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.conv = nn.Conv2d(3, 64, 3, padding=1)  # keeps 32x32
-        self.fc = nn.Linear(64, 10)
+  def __init__(self):
+    super().__init__()
+    self.conv = nn.Conv2d(3, 64, 3, padding=1) # keeps 32x32
+    self.fc = nn.Linear(64, 10)
 
-    def forward(self, x):            # (batch, 3, 32, 32)
-        x = F.relu(self.conv(x))     # (batch, 64, 32, 32)
-        # BUG: this makes x = (batch, 64) by taking only one spatial position
-        # Actually, view requires total elements to match
-        x = x.view(x.size(0), -1)   # (batch, 64*32*32) = (batch, 65536)
-        x = self.fc(x)              # ERROR: expects 64, got 65536
-        return x</code></pre>
+  def forward(self, x):      # (batch, 3, 32, 32)
+    x = F.relu(self.conv(x))   # (batch, 64, 32, 32)
+    # BUG: this makes x = (batch, 64) by taking only one spatial position
+    # Actually, view requires total elements to match
+    x = x.view(x.size(0), -1)  # (batch, 64*32*32) = (batch, 65536)
+    x = self.fc(x)       # ERROR: expects 64, got 65536
+    return x</code></pre>
 
-      <div class="fix-callout">
-        <strong>Fix:</strong> If you mean to flatten, the Linear layer must match the full flattened size. If you want to keep <code>in_features=64</code>, add a global average pooling layer to reduce spatial dimensions to 1x1 first.
-      </div>
+ <div class="fix-callout">
+ Fix: If you mean to flatten, the Linear layer must match the full flattened size. If you want to keep <code>in_features=64</code>, add a global average pooling layer to reduce spatial dimensions to 1x1 first.
+ </div>
 
-      <pre><code># FIXED Option A: match the flatten size
-self.fc = nn.Linear(64 * 32 * 32, 10)  # 65536
+ <pre><code># FIXED Option A: match the flatten size
+self.fc = nn.Linear(64 * 32 * 32, 10) # 65536
 
 # FIXED Option B: pool down first, then use small Linear
 def forward(self, x):
-    x = F.relu(self.conv(x))         # (batch, 64, 32, 32)
-    x = F.adaptive_avg_pool2d(x, 1)  # (batch, 64, 1, 1)
-    x = x.flatten(1)                 # (batch, 64)
-    x = self.fc(x)                   # nn.Linear(64, 10) -- works!
-    return x</code></pre>
+  x = F.relu(self.conv(x))     # (batch, 64, 32, 32)
+  x = F.adaptive_avg_pool2d(x, 1) # (batch, 64, 1, 1)
+  x = x.flatten(1)         # (batch, 64)
+  x = self.fc(x)          # nn.Linear(64, 10) -- works!
+  return x</code></pre>
 
-      <!-- CAUSE 7 -->
-      <div class="cause-header">
-        <span class="cause-num">7</span>
-        <h3>Multi-Head Attention or Transformer Dimension Mismatch</h3>
-      </div>
+ 
+ <div class="cause-header">
+ <span class="cause-num">7</span>
+ <h3>Multi-Head Attention or Transformer Dimension Mismatch</h3>
+ </div>
 
-      <p>In Transformer architectures, the <code>nn.MultiheadAttention</code> module requires <code>embed_dim</code> to be divisible by <code>num_heads</code>. Additionally, the projection matrices inside MHA perform matrix multiplications that fail if your input embedding dimension does not match the declared <code>embed_dim</code>.</p>
+ <p>In Transformer architectures, the <code>nn.MultiheadAttention</code> module requires <code>embed_dim</code> to be divisible by <code>num_heads</code>. Additionally, the projection matrices inside MHA perform matrix multiplications that fail if your input embedding dimension does not match the declared <code>embed_dim</code>.</p>
 
-      <pre><code># BUG: input embedding dim doesn't match declared embed_dim
+ <pre><code># BUG: input embedding dim doesn't match declared embed_dim
 class BrokenTransformer(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.embed = nn.Embedding(10000, 256)    # produces dim 256
-        self.attn = nn.MultiheadAttention(
-            embed_dim=512,   # BUG: says 512 but input is 256
-            num_heads=8
-        )
-        self.fc = nn.Linear(512, 10)
+  def __init__(self):
+    super().__init__()
+    self.embed = nn.Embedding(10000, 256)  # produces dim 256
+    self.attn = nn.MultiheadAttention(
+      embed_dim=512,  # BUG: says 512 but input is 256
+      num_heads=8
+    )
+    self.fc = nn.Linear(512, 10)
 
-    def forward(self, x):
-        x = self.embed(x)          # (seq, batch, 256)
-        x, _ = self.attn(x, x, x)  # ERROR: mat1 (N*8 x 256) and mat2 (512 x 512)
-        return self.fc(x)</code></pre>
+  def forward(self, x):
+    x = self.embed(x)     # (seq, batch, 256)
+    x, _ = self.attn(x, x, x) # ERROR: mat1 (N*8 x 256) and mat2 (512 x 512)
+    return self.fc(x)</code></pre>
 
-      <div class="fix-callout">
-        <strong>Fix:</strong> Make <code>embed_dim</code> match your actual embedding dimension. Or add a projection layer between them.
-      </div>
+ <div class="fix-callout">
+ Fix: Make <code>embed_dim</code> match your actual embedding dimension. Or add a projection layer between them.
+ </div>
 
-      <pre><code># FIXED Option A: match embed_dim to embedding output
-self.embed = nn.Embedding(10000, 512)  # change to 512
+ <pre><code># FIXED Option A: match embed_dim to embedding output
+self.embed = nn.Embedding(10000, 512) # change to 512
 self.attn = nn.MultiheadAttention(embed_dim=512, num_heads=8)
 
 # FIXED Option B: add a projection layer
 self.embed = nn.Embedding(10000, 256)
-self.proj = nn.Linear(256, 512)  # project 256 -> 512
+self.proj = nn.Linear(256, 512) # project 256 -> 512
 self.attn = nn.MultiheadAttention(embed_dim=512, num_heads=8)
 
 def forward(self, x):
-    x = self.embed(x)       # (seq, batch, 256)
-    x = self.proj(x)        # (seq, batch, 512)
-    x, _ = self.attn(x, x, x)  # works!
-    return self.fc(x)</code></pre>
+  x = self.embed(x)    # (seq, batch, 256)
+  x = self.proj(x)    # (seq, batch, 512)
+  x, _ = self.attn(x, x, x) # works!
+  return self.fc(x)</code></pre>
 
+ 
+ <h2 id="debug-process">Step-by-Step Debugging Process</h2>
 
-      <!-- =========================================================
-           SECTION 4: Step-by-step debugging
-           ========================================================= -->
-      <h2 id="debug-process">Step-by-Step Debugging Process</h2>
+ <p>When you encounter this error, follow these five steps in order. They will work for any architecture, any PyTorch version, any scenario.</p>
 
-      <p>When you encounter this error, follow these five steps in order. They will work for any architecture, any PyTorch version, any scenario.</p>
+ <h3><span class="step-num">1</span> Read the Error Dimensions</h3>
 
-      <h3><span class="step-num">1</span> Read the Error Dimensions</h3>
+ <p>Copy the two shapes from the error message. Write them down:</p>
 
-      <p>Copy the two shapes from the error message. Write them down:</p>
-
-      <pre><code># From the error:
-# mat1: (64, 2048)  -- your input
-# mat2: (512, 10)   -- the weight matrix
+ <pre><code># From the error:
+# mat1: (64, 2048) -- your input
+# mat2: (512, 10)  -- the weight matrix
 # Problem: 2048 != 512</code></pre>
 
-      <p>The first number in mat1 (64) is your batch size &mdash; ignore it. The second number (2048) is the actual feature count your data has. The first number in mat2 (512) is what the Linear layer was constructed with as <code>in_features</code>.</p>
+ <p>The first number in mat1 (64) is your batch size &mdash; ignore it. The second number (2048) is the actual feature count your data has. The first number in mat2 (512) is what the Linear layer was constructed with as <code>in_features</code>.</p>
 
-      <h3><span class="step-num">2</span> Add Shape Print Statements</h3>
+ <h3><span class="step-num">2</span> Add Shape Print Statements</h3>
 
-      <p>Insert <code>print(x.shape)</code> after every layer in your <code>forward()</code> method. This creates a complete shape trace:</p>
+ <p>Insert <code>print(x.shape)</code> after every layer in your <code>forward()</code> method. This creates a complete shape trace:</p>
 
-      <pre><code>def forward(self, x):
-    print(f"Input:       {x.shape}")
-    x = self.conv1(x)
-    print(f"After conv1: {x.shape}")
-    x = self.pool(x)
-    print(f"After pool:  {x.shape}")
-    x = self.conv2(x)
-    print(f"After conv2: {x.shape}")
-    x = self.pool(x)
-    print(f"After pool2: {x.shape}")
-    x = x.flatten(1)
-    print(f"After flat:  {x.shape}")  # <-- this is your actual in_features
-    x = self.fc(x)  # error would fire here
-    return x</code></pre>
+ <pre><code>def forward(self, x):
+  print(f"Input:    {x.shape}")
+  x = self.conv1(x)
+  print(f"After conv1: {x.shape}")
+  x = self.pool(x)
+  print(f"After pool: {x.shape}")
+  x = self.conv2(x)
+  print(f"After conv2: {x.shape}")
+  x = self.pool(x)
+  print(f"After pool2: {x.shape}")
+  x = x.flatten(1)
+  print(f"After flat: {x.shape}") # <-- this is your actual in_features
+  x = self.fc(x) # error would fire here
+  return x</code></pre>
 
-      <p>Run one batch. The print before the Linear layer tells you the exact value <code>in_features</code> should be.</p>
+ <p>Run one batch. The print before the Linear layer tells you the exact value <code>in_features</code> should be.</p>
 
-      <h3><span class="step-num">3</span> Run a Dummy Forward Pass</h3>
+ <h3><span class="step-num">3</span> Run a Dummy Forward Pass</h3>
 
-      <p>If you do not want to modify your forward method, create a dummy tensor matching your input shape and pass it through everything before the Linear layer:</p>
+ <p>If you do not want to modify your forward method, create a dummy tensor matching your input shape and pass it through everything before the Linear layer:</p>
 
-      <pre><code># For image models:
-dummy = torch.zeros(1, 3, 224, 224)  # match your actual input size
+ <pre><code># For image models:
+dummy = torch.zeros(1, 3, 224, 224) # match your actual input size
 with torch.no_grad():
-    features = model.features(dummy)  # or whatever your conv layers are
-    flat = features.flatten(1)
-    print(f"in_features should be: {flat.shape[1]}")
+  features = model.features(dummy) # or whatever your conv layers are
+  flat = features.flatten(1)
+  print(f"in_features should be: {flat.shape[1]}")
 
 # For sequence models:
-dummy = torch.zeros(1, 128, dtype=torch.long)  # (batch, seq_len)
+dummy = torch.zeros(1, 128, dtype=torch.long) # (batch, seq_len)
 with torch.no_grad():
-    emb = model.embedding(dummy)
-    print(f"Embedding dim: {emb.shape[-1]}")</code></pre>
+  emb = model.embedding(dummy)
+  print(f"Embedding dim: {emb.shape[-1]}")</code></pre>
 
-      <h3><span class="step-num">4</span> Fix the Linear Layer</h3>
+ <h3><span class="step-num">4</span> Fix the Linear Layer</h3>
 
-      <p>Update <code>in_features</code> to match the value you discovered. There are three approaches:</p>
+ <p>Update <code>in_features</code> to match the value you discovered. There are three approaches:</p>
 
-      <pre><code># Approach A: hardcode the correct value
+ <pre><code># Approach A: hardcode the correct value
 self.fc = nn.Linear(2048, 10)
 
 # Approach B: compute it dynamically in __init__
 dummy = torch.zeros(1, 3, 224, 224)
 with torch.no_grad():
-    n = self.features(dummy).flatten(1).shape[1]
+  n = self.features(dummy).flatten(1).shape[1]
 self.fc = nn.Linear(n, 10)
 
 # Approach C: use LazyLinear (PyTorch >= 1.8)
-self.fc = nn.LazyLinear(10)  # in_features inferred on first call</code></pre>
+self.fc = nn.LazyLinear(10) # in_features inferred on first call</code></pre>
 
-      <h3><span class="step-num">5</span> Verify With a Full Forward Pass</h3>
+ <h3><span class="step-num">5</span> Verify With a Full Forward Pass</h3>
 
-      <p>After fixing, always run a complete forward pass with dummy data to confirm there are no remaining shape issues:</p>
+ <p>After fixing, always run a complete forward pass with dummy data to confirm there are no remaining shape issues:</p>
 
-      <pre><code># Verify the entire model end-to-end
+ <pre><code># Verify the entire model end-to-end
 model = YourModel()
 model.eval()
 with torch.no_grad():
-    dummy_input = torch.randn(2, 3, 224, 224)  # batch=2, typical image
-    output = model(dummy_input)
-    print(f"Output shape: {output.shape}")  # should be (2, num_classes)
-    print("No errors -- model architecture is correct!")</code></pre>
+  dummy_input = torch.randn(2, 3, 224, 224) # batch=2, typical image
+  output = model(dummy_input)
+  print(f"Output shape: {output.shape}") # should be (2, num_classes)
+  print("No errors -- model architecture is correct!")</code></pre>
 
+ 
+ <h2 id="shape-checker">Interactive Matrix Shape Checker</h2>
 
-      <!-- =========================================================
-           SECTION 5: Interactive Shape Checker
-           ========================================================= -->
-      <h2 id="shape-checker">Interactive Matrix Shape Checker</h2>
+ <p>Use this tool to verify whether two matrices can be multiplied before you write the code. Enter the shapes as comma-separated dimensions (e.g., <code>64,512</code> for a 64x512 matrix).</p>
 
-      <p>Use this tool to verify whether two matrices can be multiplied before you write the code. Enter the shapes as comma-separated dimensions (e.g., <code>64,512</code> for a 64x512 matrix).</p>
+ <div class="shape-checker">
+ <h3>Matrix Multiplication Shape Checker</h3>
 
-      <div class="shape-checker">
-        <h3>Matrix Multiplication Shape Checker</h3>
+ <div class="checker-grid">
+ <div class="checker-field">
+ <label for="mat1-shape">mat1 shape (rows, cols)</label>
+ <input type="text" id="mat1-shape" placeholder="e.g. 64,512" autocomplete="off">
+ </div>
+ <div class="checker-op">@</div>
+ <div class="checker-field">
+ <label for="mat2-shape">mat2 shape (rows, cols)</label>
+ <input type="text" id="mat2-shape" placeholder="e.g. 512,10" autocomplete="off">
+ </div>
+ </div>
 
-        <div class="checker-grid">
-          <div class="checker-field">
-            <label for="mat1-shape">mat1 shape (rows, cols)</label>
-            <input type="text" id="mat1-shape" placeholder="e.g. 64,512" autocomplete="off">
-          </div>
-          <div class="checker-op">@</div>
-          <div class="checker-field">
-            <label for="mat2-shape">mat2 shape (rows, cols)</label>
-            <input type="text" id="mat2-shape" placeholder="e.g. 512,10" autocomplete="off">
-          </div>
-        </div>
+ <button class="checker-btn" onclick="checkShapes()">Check Compatibility</button>
 
-        <button class="checker-btn" onclick="checkShapes()">Check Compatibility</button>
+ <div class="checker-examples">
+ <span style="font-size:0.75rem;color:var(--text-dim);margin-right:4px;">Try:</span>
+ <button class="checker-example-btn" onclick="loadExample('64,2048','512,10')">64x2048 @ 512x10</button>
+ <button class="checker-example-btn" onclick="loadExample('64,512','512,10')">64x512 @ 512x10</button>
+ <button class="checker-example-btn" onclick="loadExample('32,768','768,3072')">32x768 @ 768x3072</button>
+ <button class="checker-example-btn" onclick="loadExample('16,256','512,128')">16x256 @ 512x128</button>
+ <button class="checker-example-btn" onclick="loadExample('8,64,32','8,32,16')">8x64x32 @ 8x32x16</button>
+ </div>
 
-        <div class="checker-examples">
-          <span style="font-size:0.75rem;color:var(--text-dim);margin-right:4px;">Try:</span>
-          <button class="checker-example-btn" onclick="loadExample('64,2048','512,10')">64x2048 @ 512x10</button>
-          <button class="checker-example-btn" onclick="loadExample('64,512','512,10')">64x512 @ 512x10</button>
-          <button class="checker-example-btn" onclick="loadExample('32,768','768,3072')">32x768 @ 768x3072</button>
-          <button class="checker-example-btn" onclick="loadExample('16,256','512,128')">16x256 @ 512x128</button>
-          <button class="checker-example-btn" onclick="loadExample('8,64,32','8,32,16')">8x64x32 @ 8x32x16</button>
-        </div>
+ <div id="checker-result" class="checker-result"></div>
+ </div>
 
-        <div id="checker-result" class="checker-result"></div>
-      </div>
+ 
+ <h2 id="prevention">Prevention Tips and Best Practices</h2>
 
+ <p>The best way to handle this error is to never encounter it in the first place. Here are the practices that eliminate it from your workflow permanently.</p>
 
-      <!-- =========================================================
-           SECTION 6: Prevention Tips
-           ========================================================= -->
-      <h2 id="prevention">Prevention Tips and Best Practices</h2>
+ <h3>Use nn.LazyLinear for Prototyping</h3>
 
-      <p>The best way to handle this error is to never encounter it in the first place. Here are the practices that eliminate it from your workflow permanently.</p>
+ <p>When you are experimenting with architectures, use <code>nn.LazyLinear(out_features)</code> instead of <code>nn.Linear(in_features, out_features)</code>. PyTorch will determine <code>in_features</code> automatically on the first forward pass. Once your architecture is finalized, replace it with a regular <code>nn.Linear</code> for production.</p>
 
-      <h3>Use nn.LazyLinear for Prototyping</h3>
-
-      <p>When you are experimenting with architectures, use <code>nn.LazyLinear(out_features)</code> instead of <code>nn.Linear(in_features, out_features)</code>. PyTorch will determine <code>in_features</code> automatically on the first forward pass. Once your architecture is finalized, replace it with a regular <code>nn.Linear</code> for production.</p>
-
-      <pre><code># During prototyping -- no more manual calculations
+ <pre><code># During prototyping -- no more manual calculations
 self.classifier = nn.Sequential(
-    nn.LazyLinear(256),
-    nn.ReLU(),
-    nn.LazyLinear(10),
+  nn.LazyLinear(256),
+  nn.ReLU(),
+  nn.LazyLinear(10),
 )
 
 # After architecture is finalized, materialize:
-model(dummy_input)  # trigger lazy initialization
-print(model.classifier[0])  # now shows actual in_features</code></pre>
+model(dummy_input) # trigger lazy initialization
+print(model.classifier[0]) # now shows actual in_features</code></pre>
 
-      <h3>Always Use AdaptiveAvgPool2d Before FC Layers</h3>
+ <h3>Always Use AdaptiveAvgPool2d Before FC Layers</h3>
 
-      <p>This is the single most effective prevention technique. It decouples the Linear layer's <code>in_features</code> from the input image resolution. ResNet, EfficientNet, MobileNet, and most modern architectures use this pattern.</p>
+ <p>This is the single most effective prevention technique. It decouples the Linear layer's <code>in_features</code> from the input image resolution. ResNet, EfficientNet, MobileNet, and most modern architectures use this pattern.</p>
 
-      <pre><code># This pattern works for ANY input resolution:
-self.features = nn.Sequential(...)       # your conv layers
+ <pre><code># This pattern works for ANY input resolution:
+self.features = nn.Sequential(...)    # your conv layers
 self.pool = nn.AdaptiveAvgPool2d((1, 1)) # always 1x1 output
 self.fc = nn.Linear(last_channels, num_classes)
 
 def forward(self, x):
-    x = self.features(x)   # (B, C, H, W) -- H,W can be anything
-    x = self.pool(x)        # (B, C, 1, 1) -- always
-    x = x.flatten(1)        # (B, C)
-    return self.fc(x)       # never fails</code></pre>
+  x = self.features(x)  # (B, C, H, W) -- H,W can be anything
+  x = self.pool(x)    # (B, C, 1, 1) -- always
+  x = x.flatten(1)    # (B, C)
+  return self.fc(x)    # never fails</code></pre>
 
-      <h3>Write a Shape Assertion</h3>
+ <h3>Write a Shape Assertion</h3>
 
-      <p>Add a one-line assertion at the start of your forward method to catch shape issues early with a clear error message:</p>
+ <p>Add a one-line assertion at the start of your forward method to catch shape issues early with a clear error message:</p>
 
-      <pre><code>def forward(self, x):
-    assert x.shape[-1] == self.fc.in_features, \
-        f"Expected input features {self.fc.in_features}, got {x.shape[-1]}"
-    return self.fc(x)</code></pre>
+ <pre><code>def forward(self, x):
+  assert x.shape[-1] == self.fc.in_features, \
+    f"Expected input features {self.fc.in_features}, got {x.shape[-1]}"
+  return self.fc(x)</code></pre>
 
-      <h3>Compute in_features Dynamically in __init__</h3>
+ <h3>Compute in_features Dynamically in __init__</h3>
 
-      <p>Instead of calculating the flatten size by hand, compute it with a dummy pass during <code>__init__</code>:</p>
+ <p>Instead of calculating the flatten size by hand, compute it with a dummy pass during <code>__init__</code>:</p>
 
-      <pre><code>class RobustCNN(nn.Module):
-    def __init__(self, in_channels=3, input_size=32, num_classes=10):
-        super().__init__()
-        self.features = nn.Sequential(
-            nn.Conv2d(in_channels, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-            nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-            nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-        )
-        # Automatically compute the correct in_features
-        with torch.no_grad():
-            dummy = torch.zeros(1, in_channels, input_size, input_size)
-            flat_size = self.features(dummy).flatten(1).shape[1]
-        self.classifier = nn.Linear(flat_size, num_classes)
+ <pre><code>class RobustCNN(nn.Module):
+  def __init__(self, in_channels=3, input_size=32, num_classes=10):
+    super().__init__()
+    self.features = nn.Sequential(
+      nn.Conv2d(in_channels, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+      nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+      nn.Conv2d(64, 128, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+    )
+    # Automatically compute the correct in_features
+    with torch.no_grad():
+      dummy = torch.zeros(1, in_channels, input_size, input_size)
+      flat_size = self.features(dummy).flatten(1).shape[1]
+    self.classifier = nn.Linear(flat_size, num_classes)
 
-    def forward(self, x):
-        x = self.features(x)
-        x = x.flatten(1)
-        return self.classifier(x)  # always correct</code></pre>
+  def forward(self, x):
+    x = self.features(x)
+    x = x.flatten(1)
+    return self.classifier(x) # always correct</code></pre>
 
-      <h3>Prevention Checklist</h3>
+ <h3>Prevention Checklist</h3>
 
-      <ul class="prevent-list">
-        <li>Always flatten 4D tensors before passing to <code>nn.Linear</code></li>
-        <li>Use <code>nn.AdaptiveAvgPool2d((1, 1))</code> to decouple from input resolution</li>
-        <li>Compute <code>in_features</code> via dummy forward pass, never by hand</li>
-        <li>Use <code>nn.LazyLinear</code> during prototyping</li>
-        <li>When fine-tuning, read <code>model.fc.in_features</code> before replacing</li>
-        <li>Add <code>print(x.shape)</code> debug lines during development</li>
-        <li>Run a full dummy forward pass after any architecture change</li>
-        <li>Test with at least two different batch sizes to catch batch-dim bugs</li>
-      </ul>
+ <ul class="prevent-list">
+ <li>Always flatten 4D tensors before passing to <code>nn.Linear</code></li>
+ <li>Use <code>nn.AdaptiveAvgPool2d((1, 1))</code> to decouple from input resolution</li>
+ <li>Compute <code>in_features</code> via dummy forward pass, never by hand</li>
+ <li>Use <code>nn.LazyLinear</code> during prototyping</li>
+ <li>When fine-tuning, read <code>model.fc.in_features</code> before replacing</li>
+ <li>Add <code>print(x.shape)</code> debug lines during development</li>
+ <li>Run a full dummy forward pass after any architecture change</li>
+ <li>Test with at least two different batch sizes to catch batch-dim bugs</li>
+ </ul>
 
-      <h3>The nn.LazyLinear vs nn.Linear Decision</h3>
+ <h3>The nn.LazyLinear vs nn.Linear Decision</h3>
 
-      <table>
-        <thead>
-          <tr><th>Feature</th><th>nn.Linear</th><th>nn.LazyLinear</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Requires in_features</td><td>Yes, at construction</td><td>No, inferred at first forward</td></tr>
-          <tr><td>TorchScript compatible</td><td>Yes</td><td>No (until materialized)</td></tr>
-          <tr><td>ONNX export</td><td>Yes</td><td>No (until materialized)</td></tr>
-          <tr><td>Debugging clarity</td><td>Better (explicit)</td><td>Worse (hidden shape)</td></tr>
-          <tr><td>Best for</td><td>Production, export</td><td>Prototyping, experiments</td></tr>
-        </tbody>
-      </table>
+ <table>
+ <thead>
+ <tr><th>Feature</th><th>nn.Linear</th><th>nn.LazyLinear</th></tr>
+ </thead>
+ <tbody>
+ <tr><td>Requires in_features</td><td>Yes, at construction</td><td>No, inferred at first forward</td></tr>
+ <tr><td>TorchScript compatible</td><td>Yes</td><td>No (until materialized)</td></tr>
+ <tr><td>ONNX export</td><td>Yes</td><td>No (until materialized)</td></tr>
+ <tr><td>Debugging clarity</td><td>Better (explicit)</td><td>Worse (hidden shape)</td></tr>
+ <tr><td>Best for</td><td>Production, export</td><td>Prototyping, experiments</td></tr>
+ </tbody>
+ </table>
 
+ 
+ <h2>Understanding Matrix Multiplication Shapes in PyTorch</h2>
 
-      <!-- =========================================================
-           SECTION: Understanding Matrix Multiplication Deeply
-           ========================================================= -->
-      <h2>Understanding Matrix Multiplication Shapes in PyTorch</h2>
+ <p>To truly prevent this error, it helps to understand what PyTorch is doing under the hood at each layer. Every <code>nn.Linear(in_features, out_features)</code> layer stores a weight matrix W of shape <code>(out_features, in_features)</code> and an optional bias vector b of shape <code>(out_features,)</code>. The forward computation is:</p>
 
-      <p>To truly prevent this error, it helps to understand what PyTorch is doing under the hood at each layer. Every <code>nn.Linear(in_features, out_features)</code> layer stores a weight matrix W of shape <code>(out_features, in_features)</code> and an optional bias vector b of shape <code>(out_features,)</code>. The forward computation is:</p>
-
-      <pre><code>output = input @ W.T + b
-# input:  (*, in_features)    -- * means any number of leading dims
-# W.T:    (in_features, out_features)
+ <pre><code>output = input @ W.T + b
+# input: (*, in_features)  -- * means any number of leading dims
+# W.T:  (in_features, out_features)
 # output: (*, out_features)</code></pre>
 
-      <p>The asterisk <code>*</code> means <code>nn.Linear</code> can handle inputs with more than 2 dimensions. If you pass a 3D tensor of shape <code>(batch, seq_len, embed_dim)</code>, it multiplies along the last dimension and preserves the others. The output is <code>(batch, seq_len, out_features)</code>. This is how Transformer feed-forward layers work.</p>
+ <p>The asterisk <code>*</code> means <code>nn.Linear</code> can handle inputs with more than 2 dimensions. If you pass a 3D tensor of shape <code>(batch, seq_len, embed_dim)</code>, it multiplies along the last dimension and preserves the others. The output is <code>(batch, seq_len, out_features)</code>. This is how Transformer feed-forward layers work.</p>
 
-      <p>The critical rule: <strong>the last dimension of the input must equal <code>in_features</code></strong>. If it does not, you get the mat1/mat2 error. Everything in this guide reduces to enforcing that single rule.</p>
+ <p>The critical rule: the last dimension of the input must equal <code>in_features</code>. If it does not, you get the mat1/mat2 error. Everything in this guide reduces to enforcing that single rule.</p>
 
-      <h3>Shape Propagation Through Common Layers</h3>
+ <h3>Shape Propagation Through Common Layers</h3>
 
-      <p>Here is a reference table showing how each layer transforms tensor shapes. Use this to trace shapes through your architecture manually when debugging:</p>
+ <p>Here is a reference table showing how each layer transforms tensor shapes. Use this to trace shapes through your architecture manually when debugging:</p>
 
-      <table>
-        <thead>
-          <tr><th>Layer</th><th>Input Shape</th><th>Output Shape</th><th>Key Parameter</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>nn.Linear(I, O)</code></td><td>(*, I)</td><td>(*, O)</td><td>Last dim must = I</td></tr>
-          <tr><td><code>nn.Conv2d(Ci, Co, k)</code></td><td>(B, Ci, H, W)</td><td>(B, Co, H', W')</td><td>H' depends on k, stride, pad</td></tr>
-          <tr><td><code>nn.MaxPool2d(k)</code></td><td>(B, C, H, W)</td><td>(B, C, H/k, W/k)</td><td>Spatial dims shrink</td></tr>
-          <tr><td><code>nn.AdaptiveAvgPool2d(s)</code></td><td>(B, C, H, W)</td><td>(B, C, s, s)</td><td>Output size fixed</td></tr>
-          <tr><td><code>nn.Flatten(1)</code></td><td>(B, C, H, W)</td><td>(B, C*H*W)</td><td>Collapses dims 1+</td></tr>
-          <tr><td><code>nn.Embedding(V, D)</code></td><td>(B, S) int</td><td>(B, S, D)</td><td>Adds embed dim</td></tr>
-          <tr><td><code>nn.LSTM(I, H)</code></td><td>(S, B, I)</td><td>(S, B, H)</td><td>Hidden size H</td></tr>
-          <tr><td><code>nn.BatchNorm2d(C)</code></td><td>(B, C, H, W)</td><td>(B, C, H, W)</td><td>Shape unchanged</td></tr>
-        </tbody>
-      </table>
+ <table>
+ <thead>
+ <tr><th>Layer</th><th>Input Shape</th><th>Output Shape</th><th>Key Parameter</th></tr>
+ </thead>
+ <tbody>
+ <tr><td><code>nn.Linear(I, O)</code></td><td>(*, I)</td><td>(*, O)</td><td>Last dim must = I</td></tr>
+ <tr><td><code>nn.Conv2d(Ci, Co, k)</code></td><td>(B, Ci, H, W)</td><td>(B, Co, H', W')</td><td>H' depends on k, stride, pad</td></tr>
+ <tr><td><code>nn.MaxPool2d(k)</code></td><td>(B, C, H, W)</td><td>(B, C, H/k, W/k)</td><td>Spatial dims shrink</td></tr>
+ <tr><td><code>nn.AdaptiveAvgPool2d(s)</code></td><td>(B, C, H, W)</td><td>(B, C, s, s)</td><td>Output size fixed</td></tr>
+ <tr><td><code>nn.Flatten(1)</code></td><td>(B, C, H, W)</td><td>(B, C*H*W)</td><td>Collapses dims 1+</td></tr>
+ <tr><td><code>nn.Embedding(V, D)</code></td><td>(B, S) int</td><td>(B, S, D)</td><td>Adds embed dim</td></tr>
+ <tr><td><code>nn.LSTM(I, H)</code></td><td>(S, B, I)</td><td>(S, B, H)</td><td>Hidden size H</td></tr>
+ <tr><td><code>nn.BatchNorm2d(C)</code></td><td>(B, C, H, W)</td><td>(B, C, H, W)</td><td>Shape unchanged</td></tr>
+ </tbody>
+ </table>
 
-      <h3>When This Error Appears in torch.compile</h3>
+ <h3>When This Error Appears in torch.compile</h3>
 
-      <p>If you are using <code>torch.compile()</code> (PyTorch 2.0+), the same error can surface during the compilation phase rather than at runtime. The traceback will include references to <code>torch._dynamo</code> and may look unfamiliar, but the fix is identical: make the inner dimensions match. To debug, temporarily disable compilation (<code>model = model</code> instead of <code>model = torch.compile(model)</code>) and add print statements.</p>
+ <p>If you are using <code>torch.compile()</code> (PyTorch 2.0+), the same error can surface during the compilation phase rather than at runtime. The traceback will include references to <code>torch._dynamo</code> and may look unfamiliar, but the fix is identical: make the inner dimensions match. To debug, temporarily disable compilation (<code>model = model</code> instead of <code>model = torch.compile(model)</code>) and add print statements.</p>
 
-      <h3>Batched vs Non-Batched Multiplication</h3>
+ <h3>Batched vs Non-Batched Multiplication</h3>
 
-      <p>The error message always shows the 2D view of the tensors, even if your original tensors are 3D or higher. For batched operations:</p>
+ <p>The error message always shows the 2D view of the tensors, even if your original tensors are 3D or higher. For batched operations:</p>
 
-      <pre><code># torch.bmm: both inputs must be 3D
-A = torch.randn(8, 64, 32)   # (batch, n, m)
-B = torch.randn(8, 32, 16)   # (batch, m, p)
-C = torch.bmm(A, B)          # (8, 64, 16) -- works, inner dim 32==32
+ <pre><code># torch.bmm: both inputs must be 3D
+A = torch.randn(8, 64, 32)  # (batch, n, m)
+B = torch.randn(8, 32, 16)  # (batch, m, p)
+C = torch.bmm(A, B)     # (8, 64, 16) -- works, inner dim 32==32
 
 # torch.matmul: handles broadcasting automatically
-A = torch.randn(64, 32)      # (n, m)
-B = torch.randn(8, 32, 16)   # (batch, m, p)
-C = torch.matmul(A, B)       # ERROR: can't broadcast (64,32) with (8,32,16)
+A = torch.randn(64, 32)   # (n, m)
+B = torch.randn(8, 32, 16)  # (batch, m, p)
+C = torch.matmul(A, B)    # ERROR: can't broadcast (64,32) with (8,32,16)
 
 # Fix: add batch dim
 A = torch.randn(8, 64, 32)
-C = torch.matmul(A, B)       # (8, 64, 16) -- works</code></pre>
+C = torch.matmul(A, B)    # (8, 64, 16) -- works</code></pre>
 
+ 
+ <h2 id="faq">Frequently Asked Questions</h2>
 
-      <!-- =========================================================
-           SECTION 7: FAQ
-           ========================================================= -->
-      <h2 id="faq">Frequently Asked Questions</h2>
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What causes RuntimeError: mat1 and mat2 shapes cannot be multiplied?</div>
+ <div class="faq-a">The inner dimensions of a matrix multiplication do not match. In PyTorch, this almost always occurs at an <code>nn.Linear</code> layer where <code>in_features</code> does not equal the actual number of features in the input tensor. The error message format is "(AxB and CxD)" where B (your actual features) must equal C (the Linear layer's <code>in_features</code>).</div>
+ </div>
 
-      <div class="faq-item">
-        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What causes RuntimeError: mat1 and mat2 shapes cannot be multiplied?</div>
-        <div class="faq-a">The inner dimensions of a matrix multiplication do not match. In PyTorch, this almost always occurs at an <code>nn.Linear</code> layer where <code>in_features</code> does not equal the actual number of features in the input tensor. The error message format is "(AxB and CxD)" where B (your actual features) must equal C (the Linear layer's <code>in_features</code>).</div>
-      </div>
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I find the correct in_features for nn.Linear after Conv2d?</div>
+ <div class="faq-a">Run a dummy forward pass: <code>x = torch.zeros(1, C, H, W); x = conv_layers(x); print(x.flatten(1).shape[1])</code>. This prints the exact number you need for <code>in_features</code>. Alternatively, use <code>nn.LazyLinear(out_features)</code> and PyTorch will infer it automatically on the first forward pass.</div>
+ </div>
 
-      <div class="faq-item">
-        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I find the correct in_features for nn.Linear after Conv2d?</div>
-        <div class="faq-a">Run a dummy forward pass: <code>x = torch.zeros(1, C, H, W); x = conv_layers(x); print(x.flatten(1).shape[1])</code>. This prints the exact number you need for <code>in_features</code>. Alternatively, use <code>nn.LazyLinear(out_features)</code> and PyTorch will infer it automatically on the first forward pass.</div>
-      </div>
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is the difference between mat1 and mat2 in the error message?</div>
+ <div class="faq-a"><code>mat1</code> is your input tensor (the data flowing through the network). <code>mat2</code> is the weight matrix of the <code>nn.Linear</code> layer. For mat1 of shape (A, B), A is the batch size and B is the feature count. For mat2 of shape (C, D), C is <code>in_features</code> and D is <code>out_features</code>. The error fires when B != C.</div>
+ </div>
 
-      <div class="faq-item">
-        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What is the difference between mat1 and mat2 in the error message?</div>
-        <div class="faq-a"><code>mat1</code> is your input tensor (the data flowing through the network). <code>mat2</code> is the weight matrix of the <code>nn.Linear</code> layer. For mat1 of shape (A, B), A is the batch size and B is the feature count. For mat2 of shape (C, D), C is <code>in_features</code> and D is <code>out_features</code>. The error fires when B != C.</div>
-      </div>
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can nn.LazyLinear prevent this error?</div>
+ <div class="faq-a">Yes. <code>nn.LazyLinear(out_features)</code> defers the <code>in_features</code> calculation until the first forward pass. PyTorch automatically sets <code>in_features</code> to match whatever input it receives. This eliminates manual dimension calculations but adds a small overhead on the first call and makes the model non-scriptable until materialized.</div>
+ </div>
 
-      <div class="faq-item">
-        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can nn.LazyLinear prevent this error?</div>
-        <div class="faq-a">Yes. <code>nn.LazyLinear(out_features)</code> defers the <code>in_features</code> calculation until the first forward pass. PyTorch automatically sets <code>in_features</code> to match whatever input it receives. This eliminates manual dimension calculations but adds a small overhead on the first call and makes the model non-scriptable until materialized.</div>
-      </div>
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Why do I get this error when using a pretrained model?</div>
+ <div class="faq-a">Pretrained models have a fixed classifier head. If you replace it with <code>nn.Linear(wrong_size, num_classes)</code>, you get this error. Check the model's original classifier: <code>print(model.fc)</code> or <code>print(model.classifier)</code>. The <code>in_features</code> of your replacement must match the backbone's output dimension (2048 for ResNet-50, 512 for ResNet-18, 768 for ViT-Base).</div>
+ </div>
 
-      <div class="faq-item">
-        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Why do I get this error when using a pretrained model?</div>
-        <div class="faq-a">Pretrained models have a fixed classifier head. If you replace it with <code>nn.Linear(wrong_size, num_classes)</code>, you get this error. Check the model's original classifier: <code>print(model.fc)</code> or <code>print(model.classifier)</code>. The <code>in_features</code> of your replacement must match the backbone's output dimension (2048 for ResNet-50, 512 for ResNet-18, 768 for ViT-Base).</div>
-      </div>
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does nn.Flatten affect the shape before nn.Linear?</div>
+ <div class="faq-a"><code>nn.Flatten(start_dim=1)</code> collapses all dimensions after the batch dimension into one. A tensor of shape (batch, C, H, W) becomes (batch, C*H*W). This C*H*W value is what <code>in_features</code> must equal. Forgetting to flatten, or flattening from the wrong dimension, are two of the most common causes of this error.</div>
+ </div>
 
-      <div class="faq-item">
-        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does nn.Flatten affect the shape before nn.Linear?</div>
-        <div class="faq-a"><code>nn.Flatten(start_dim=1)</code> collapses all dimensions after the batch dimension into one. A tensor of shape (batch, C, H, W) becomes (batch, C*H*W). This C*H*W value is what <code>in_features</code> must equal. Forgetting to flatten, or flattening from the wrong dimension, are two of the most common causes of this error.</div>
-      </div>
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does this error happen with torch.matmul or torch.mm too?</div>
+ <div class="faq-a">Yes. <code>torch.mm(A, B)</code> requires <code>A.shape[1] == B.shape[0]</code>. <code>torch.matmul</code> follows the same rule for 2D inputs. The error message is identical. For batched matrix multiplication with <code>torch.bmm</code>, both tensors must be 3D and the inner dimensions must match: (batch, n, m) @ (batch, m, p).</div>
+ </div>
 
-      <div class="faq-item">
-        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Does this error happen with torch.matmul or torch.mm too?</div>
-        <div class="faq-a">Yes. <code>torch.mm(A, B)</code> requires <code>A.shape[1] == B.shape[0]</code>. <code>torch.matmul</code> follows the same rule for 2D inputs. The error message is identical. For batched matrix multiplication with <code>torch.bmm</code>, both tensors must be 3D and the inner dimensions must match: (batch, n, m) @ (batch, m, p).</div>
-      </div>
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is this error the same in PyTorch 1.x and 2.x?</div>
+ <div class="faq-a">The error message is identical across PyTorch versions. However, PyTorch 2.0+ with <code>torch.compile</code> may report the error at compile time with a slightly different traceback. The fix is always the same: make the inner dimensions match.</div>
+ </div>
 
-      <div class="faq-item">
-        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is this error the same in PyTorch 1.x and 2.x?</div>
-        <div class="faq-a">The error message is identical across PyTorch versions. However, PyTorch 2.0+ with <code>torch.compile</code> may report the error at compile time with a slightly different traceback. The fix is always the same: make the inner dimensions match.</div>
-      </div>
+ 
+ <section class="related-links" style="margin-top:40px;">
+ <h2 style="border-top:none;">Related Resources</h2>
+ <div class="related-grid">
+ <a href="/" class="related-card">HeyTensor Shape Calculator</a>
+ <a href="/research/most-common-pytorch-errors.html" class="related-card">Most Common PyTorch Errors (Research)</a>
+ <a href="/research/ml-framework-comparison-2026.html" class="related-card">ML Framework Comparison 2026</a>
+ <a href="/tools/mat1-mat2-shapes.html" class="related-card">mat1/mat2 Shape Debugger Tool</a>
+ <a href="/tools/linear-layer-calculator.html" class="related-card">Linear Layer Shape Calculator</a>
+ <a href="/tools/flatten-calculator.html" class="related-card">Flatten Output Shape Calculator</a>
+ <a href="/answers/flatten-after-conv2d.html" class="related-card">What shape does Flatten produce?</a>
+ <a href="/tools/conv2d-calculator.html" class="related-card">Conv2d Output Shape Calculator</a>
+ </div>
+ </section>
 
+ <div style="text-align:center;margin:2.5rem 0;">
+ <a href="/" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Open HeyTensor Shape Calculator</a>
+ </div>
 
-      <!-- =========================================================
-           Related links
-           ========================================================= -->
-      <section class="related-links" style="margin-top:40px;">
-        <h2 style="border-top:none;">Related Resources</h2>
-        <div class="related-grid">
-          <a href="/" class="related-card">HeyTensor Shape Calculator</a>
-          <a href="/research/most-common-pytorch-errors.html" class="related-card">Most Common PyTorch Errors (Research)</a>
-          <a href="/research/ml-framework-comparison-2026.html" class="related-card">ML Framework Comparison 2026</a>
-          <a href="/tools/mat1-mat2-shapes.html" class="related-card">mat1/mat2 Shape Debugger Tool</a>
-          <a href="/tools/linear-layer-calculator.html" class="related-card">Linear Layer Shape Calculator</a>
-          <a href="/tools/flatten-calculator.html" class="related-card">Flatten Output Shape Calculator</a>
-          <a href="/answers/flatten-after-conv2d.html" class="related-card">What shape does Flatten produce?</a>
-          <a href="/tools/conv2d-calculator.html" class="related-card">Conv2d Output Shape Calculator</a>
-        </div>
-      </section>
+ </article>
+ </main>
 
-      <div style="text-align:center;margin:2.5rem 0;">
-        <a href="/" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Open HeyTensor Shape Calculator</a>
-      </div>
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ </div>
+ </footer>
 
-    </article>
-  </main>
-
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
-    </div>
-  </footer>
-
-  <nav class="zovo-network" aria-label="Zovo Tools Network">
-    <div class="zovo-network-inner">
-        <h3 class="zovo-network-title">Explore More Tools</h3>
-        <div class="zovo-network-links">
-            <a href="https://abwex.com">ABWex — A/B Testing</a>
-            <a href="https://b2berp.com">B2BERP — Business Tools</a>
-            <a href="https://bugbountyreality.com">BugBountyReality — Security</a>
-            <a href="https://claudflow.com">ClaudFlow — Workflows</a>
-            <a href="https://claudkit.com">ClaudKit — API Tools</a>
-            <a href="https://dismissticket.com">DismissTicket — Support</a>
-            <a href="https://enhio.com">Enhio — Text Tools</a>
-            <a href="https://epochpilot.com">EpochPilot — Timestamps</a>
-            <a href="https://gen8x.com">Gen8X — Color Tools</a>
-            <a href="https://gpt0x.com">GPT0X — AI Models</a>
-            <a href="https://ingredientcalculator.com">IngredientCalc — Recipes</a>
-            <a href="https://invokebot.com">InvokeBot — Webhooks</a>
-            <a href="https://kappafy.com">Kappafy — JSON</a>
-            <a href="https://kappakit.com">KappaKit — Dev Toolkit</a>
-            <a href="https://kickllm.com">KickLLM — LLM Costs</a>
-            <a href="https://krzen.com">Krzen — Image Tools</a>
-            <a href="https://lochbot.com">LochBot — Security</a>
-            <a href="https://lockml.com">LockML — ML Security</a>
-            <a href="https://ml0x.com">ML0X — ML Basics</a>
-            <a href="https://ml3x.com">ML3X — Matrix Math</a>
-            <a href="https://pictureeditor.net">PictureEditor — Image Editing</a>
-            <a href="https://recipetool.net">RecipeTool — Cooking</a>
-            <a href="https://viryd.com">Viryd — Dev Tools</a>
-        </div>
-    </div>
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
 </nav>
 
 <div class="pow-strip">
-  <div class="pow-strip-inner">
-    <span class="pow-label">By the same builder:</span>
-    <a href="https://github.com/theluckystrike" rel="nofollow">GitHub — theluckystrike</a>
-    <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative — Grammar AI</a>
-    <a href="https://earlythunder.com" rel="nofollow">EarlyThunder — Dev Blog</a>
-    <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
-    <a href="https://zovo.one" rel="nofollow">Zovo — AI Dev Tools</a>
-  </div>
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
 </div>
 
-  <script>
-  // ========================================
-  // Interactive Matrix Shape Checker
-  // ========================================
-  function parseShape(str) {
-    const trimmed = str.trim();
-    if (!trimmed) return null;
-    const parts = trimmed.split(/[,xX\s]+/).map(s => parseInt(s.trim(), 10));
-    if (parts.some(isNaN) || parts.length < 1) return null;
-    if (parts.some(d => d <= 0)) return null;
-    return parts;
+ <script>
+ // ========================================
+ // Interactive Matrix Shape Checker
+ // ========================================
+ function parseShape(str) {
+  const trimmed = str.trim();
+  if (!trimmed) return null;
+  const parts = trimmed.split(/[,xX\s]+/).map(s => parseInt(s.trim(), 10));
+  if (parts.some(isNaN) || parts.length < 1) return null;
+  if (parts.some(d => d <= 0)) return null;
+  return parts;
+ }
+
+ function formatShape(dims) {
+  return '(' + dims.join(', ') + ')';
+ }
+
+ function checkShapes() {
+  const mat1Input = document.getElementById('mat1-shape').value;
+  const mat2Input = document.getElementById('mat2-shape').value;
+  const resultDiv = document.getElementById('checker-result');
+
+  const dims1 = parseShape(mat1Input);
+  const dims2 = parseShape(mat2Input);
+
+  if (!dims1 || !dims2) {
+   resultDiv.className = 'checker-result visible err';
+   resultDiv.innerHTML = '<div class="result-status">Invalid Input</div>' +
+    '<div class="result-detail">Enter shapes as comma-separated positive integers. Examples: "64,512" or "8,64,32"</div>';
+   return;
   }
 
-  function formatShape(dims) {
-    return '(' + dims.join(', ') + ')';
-  }
+  // Handle different dimensionalities
+  let compatible = false;
+  let outputShape = [];
+  let explanation = '';
 
-  function checkShapes() {
-    const mat1Input = document.getElementById('mat1-shape').value;
-    const mat2Input = document.getElementById('mat2-shape').value;
-    const resultDiv = document.getElementById('checker-result');
-
-    const dims1 = parseShape(mat1Input);
-    const dims2 = parseShape(mat2Input);
-
-    if (!dims1 || !dims2) {
-      resultDiv.className = 'checker-result visible err';
-      resultDiv.innerHTML = '<div class="result-status">Invalid Input</div>' +
-        '<div class="result-detail">Enter shapes as comma-separated positive integers. Examples: "64,512" or "8,64,32"</div>';
-      return;
+  if (dims1.length === 1 && dims2.length === 1) {
+   // Dot product: both must have same length
+   compatible = dims1[0] === dims2[0];
+   if (compatible) {
+    outputShape = [1];
+    explanation = 'Dot product of two vectors with length ' + dims1[0] + '. Result is a scalar.';
+   } else {
+    explanation = 'Vector dot product requires both vectors to have the same length. ' +
+     'Got ' + dims1[0] + ' and ' + dims2[0] + '.';
+   }
+  } else if (dims1.length === 2 && dims2.length === 2) {
+   // Standard 2D matmul
+   compatible = dims1[1] === dims2[0];
+   if (compatible) {
+    outputShape = [dims1[0], dims2[1]];
+    explanation = 'Standard matrix multiplication. ' + formatShape(dims1) + ' @ ' + formatShape(dims2) + ' = ' + formatShape(outputShape) + '. Inner dimension ' + dims1[1] + ' matches.';
+   } else {
+    explanation = 'Inner dimensions do not match: mat1 has ' + dims1[1] + ' columns but mat2 has ' + dims2[0] + ' rows. ' +
+     'For nn.Linear, this means in_features=' + dims2[0] + ' but your input has ' + dims1[1] + ' features. ' +
+     'Fix: change nn.Linear(' + dims2[0] + ', ' + dims2[1] + ') to nn.Linear(' + dims1[1] + ', ' + dims2[1] + ').';
+   }
+  } else if (dims1.length === 3 && dims2.length === 3) {
+   // Batched matmul (bmm)
+   const batchMatch = dims1[0] === dims2[0];
+   const innerMatch = dims1[2] === dims2[1];
+   compatible = batchMatch && innerMatch;
+   if (compatible) {
+    outputShape = [dims1[0], dims1[1], dims2[2]];
+    explanation = 'Batched matrix multiplication (torch.bmm). Batch size ' + dims1[0] + ', inner dim ' + dims1[2] + ' matches. Output: ' + formatShape(outputShape) + '.';
+   } else if (!batchMatch) {
+    explanation = 'Batch dimensions do not match: ' + dims1[0] + ' vs ' + dims2[0] + '. For torch.bmm, both tensors must have the same batch size.';
+   } else {
+    explanation = 'Inner dimensions do not match: mat1 has ' + dims1[2] + ' columns but mat2 has ' + dims2[1] + ' rows in each batch.';
+   }
+  } else if (dims1.length >= 2 && dims2.length >= 2) {
+   // General matmul with broadcasting
+   const m1Last2 = dims1.slice(-2);
+   const m2Last2 = dims2.slice(-2);
+   compatible = m1Last2[1] === m2Last2[0];
+   if (compatible) {
+    const batchDims1 = dims1.slice(0, -2);
+    const batchDims2 = dims2.slice(0, -2);
+    const maxBatch = Math.max(batchDims1.length, batchDims2.length);
+    const batchOut = [];
+    for (let i = 0; i < maxBatch; i++) {
+     const d1 = i < batchDims1.length ? batchDims1[batchDims1.length - 1 - i] : 1;
+     const d2 = i < batchDims2.length ? batchDims2[batchDims2.length - 1 - i] : 1;
+     if (d1 !== d2 && d1 !== 1 && d2 !== 1) {
+      compatible = false;
+      explanation = 'Batch dimensions cannot be broadcast: ' + d1 + ' vs ' + d2 + '.';
+      break;
+     }
+     batchOut.unshift(Math.max(d1, d2));
     }
-
-    // Handle different dimensionalities
-    let compatible = false;
-    let outputShape = [];
-    let explanation = '';
-
-    if (dims1.length === 1 && dims2.length === 1) {
-      // Dot product: both must have same length
-      compatible = dims1[0] === dims2[0];
-      if (compatible) {
-        outputShape = [1];
-        explanation = 'Dot product of two vectors with length ' + dims1[0] + '. Result is a scalar.';
-      } else {
-        explanation = 'Vector dot product requires both vectors to have the same length. ' +
-          'Got ' + dims1[0] + ' and ' + dims2[0] + '.';
-      }
-    } else if (dims1.length === 2 && dims2.length === 2) {
-      // Standard 2D matmul
-      compatible = dims1[1] === dims2[0];
-      if (compatible) {
-        outputShape = [dims1[0], dims2[1]];
-        explanation = 'Standard matrix multiplication. ' + formatShape(dims1) + ' @ ' + formatShape(dims2) + ' = ' + formatShape(outputShape) + '. Inner dimension ' + dims1[1] + ' matches.';
-      } else {
-        explanation = 'Inner dimensions do not match: mat1 has ' + dims1[1] + ' columns but mat2 has ' + dims2[0] + ' rows. ' +
-          'For nn.Linear, this means in_features=' + dims2[0] + ' but your input has ' + dims1[1] + ' features. ' +
-          'Fix: change nn.Linear(' + dims2[0] + ', ' + dims2[1] + ') to nn.Linear(' + dims1[1] + ', ' + dims2[1] + ').';
-      }
-    } else if (dims1.length === 3 && dims2.length === 3) {
-      // Batched matmul (bmm)
-      const batchMatch = dims1[0] === dims2[0];
-      const innerMatch = dims1[2] === dims2[1];
-      compatible = batchMatch && innerMatch;
-      if (compatible) {
-        outputShape = [dims1[0], dims1[1], dims2[2]];
-        explanation = 'Batched matrix multiplication (torch.bmm). Batch size ' + dims1[0] + ', inner dim ' + dims1[2] + ' matches. Output: ' + formatShape(outputShape) + '.';
-      } else if (!batchMatch) {
-        explanation = 'Batch dimensions do not match: ' + dims1[0] + ' vs ' + dims2[0] + '. For torch.bmm, both tensors must have the same batch size.';
-      } else {
-        explanation = 'Inner dimensions do not match: mat1 has ' + dims1[2] + ' columns but mat2 has ' + dims2[1] + ' rows in each batch.';
-      }
-    } else if (dims1.length >= 2 && dims2.length >= 2) {
-      // General matmul with broadcasting
-      const m1Last2 = dims1.slice(-2);
-      const m2Last2 = dims2.slice(-2);
-      compatible = m1Last2[1] === m2Last2[0];
-      if (compatible) {
-        const batchDims1 = dims1.slice(0, -2);
-        const batchDims2 = dims2.slice(0, -2);
-        const maxBatch = Math.max(batchDims1.length, batchDims2.length);
-        const batchOut = [];
-        for (let i = 0; i < maxBatch; i++) {
-          const d1 = i < batchDims1.length ? batchDims1[batchDims1.length - 1 - i] : 1;
-          const d2 = i < batchDims2.length ? batchDims2[batchDims2.length - 1 - i] : 1;
-          if (d1 !== d2 && d1 !== 1 && d2 !== 1) {
-            compatible = false;
-            explanation = 'Batch dimensions cannot be broadcast: ' + d1 + ' vs ' + d2 + '.';
-            break;
-          }
-          batchOut.unshift(Math.max(d1, d2));
-        }
-        if (compatible) {
-          outputShape = [...batchOut, m1Last2[0], m2Last2[1]];
-          explanation = 'torch.matmul with broadcasting. Inner dim ' + m1Last2[1] + ' matches. Output: ' + formatShape(outputShape) + '.';
-        }
-      } else {
-        explanation = 'Inner dimensions do not match: mat1 last dim is ' + m1Last2[1] + ' but mat2 second-to-last dim is ' + m2Last2[0] + '.';
-      }
-    } else if (dims1.length === 1 && dims2.length === 2) {
-      compatible = dims1[0] === dims2[0];
-      if (compatible) {
-        outputShape = [dims2[1]];
-        explanation = 'Vector-matrix multiply. ' + formatShape(dims1) + ' @ ' + formatShape(dims2) + ' = ' + formatShape(outputShape) + '.';
-      } else {
-        explanation = 'Vector length ' + dims1[0] + ' does not match matrix rows ' + dims2[0] + '.';
-      }
-    } else if (dims1.length === 2 && dims2.length === 1) {
-      compatible = dims1[1] === dims2[0];
-      if (compatible) {
-        outputShape = [dims1[0]];
-        explanation = 'Matrix-vector multiply. ' + formatShape(dims1) + ' @ ' + formatShape(dims2) + ' = ' + formatShape(outputShape) + '.';
-      } else {
-        explanation = 'Matrix columns ' + dims1[1] + ' does not match vector length ' + dims2[0] + '.';
-      }
-    } else {
-      resultDiv.className = 'checker-result visible err';
-      resultDiv.innerHTML = '<div class="result-status">Unsupported Combination</div>' +
-        '<div class="result-detail">Enter 1D, 2D, or 3D shapes for matrix multiplication checking.</div>';
-      return;
-    }
-
     if (compatible) {
-      resultDiv.className = 'checker-result visible ok';
-      resultDiv.innerHTML =
-        '<div class="result-status">Compatible</div>' +
-        '<div class="result-detail">' + explanation + '</div>' +
-        '<div style="margin-top:8px;">Output shape: <span class="result-shape">' + formatShape(outputShape) + '</span></div>' +
-        '<div style="margin-top:4px;font-size:0.8rem;color:var(--text-dim);">Total output elements: ' + outputShape.reduce((a,b) => a*b, 1).toLocaleString() + '</div>';
-    } else {
-      resultDiv.className = 'checker-result visible err';
-      resultDiv.innerHTML =
-        '<div class="result-status">Incompatible &mdash; RuntimeError!</div>' +
-        '<div class="result-detail">' + explanation + '</div>';
+     outputShape = [...batchOut, m1Last2[0], m2Last2[1]];
+     explanation = 'torch.matmul with broadcasting. Inner dim ' + m1Last2[1] + ' matches. Output: ' + formatShape(outputShape) + '.';
     }
+   } else {
+    explanation = 'Inner dimensions do not match: mat1 last dim is ' + m1Last2[1] + ' but mat2 second-to-last dim is ' + m2Last2[0] + '.';
+   }
+  } else if (dims1.length === 1 && dims2.length === 2) {
+   compatible = dims1[0] === dims2[0];
+   if (compatible) {
+    outputShape = [dims2[1]];
+    explanation = 'Vector-matrix multiply. ' + formatShape(dims1) + ' @ ' + formatShape(dims2) + ' = ' + formatShape(outputShape) + '.';
+   } else {
+    explanation = 'Vector length ' + dims1[0] + ' does not match matrix rows ' + dims2[0] + '.';
+   }
+  } else if (dims1.length === 2 && dims2.length === 1) {
+   compatible = dims1[1] === dims2[0];
+   if (compatible) {
+    outputShape = [dims1[0]];
+    explanation = 'Matrix-vector multiply. ' + formatShape(dims1) + ' @ ' + formatShape(dims2) + ' = ' + formatShape(outputShape) + '.';
+   } else {
+    explanation = 'Matrix columns ' + dims1[1] + ' does not match vector length ' + dims2[0] + '.';
+   }
+  } else {
+   resultDiv.className = 'checker-result visible err';
+   resultDiv.innerHTML = '<div class="result-status">Unsupported Combination</div>' +
+    '<div class="result-detail">Enter 1D, 2D, or 3D shapes for matrix multiplication checking.</div>';
+   return;
   }
 
-  function loadExample(s1, s2) {
-    document.getElementById('mat1-shape').value = s1;
-    document.getElementById('mat2-shape').value = s2;
-    checkShapes();
+  if (compatible) {
+   resultDiv.className = 'checker-result visible ok';
+   resultDiv.innerHTML =
+    '<div class="result-status">Compatible</div>' +
+    '<div class="result-detail">' + explanation + '</div>' +
+    '<div style="margin-top:8px;">Output shape: <span class="result-shape">' + formatShape(outputShape) + '</span></div>' +
+    '<div style="margin-top:4px;font-size:0.8rem;color:var(--text-dim);">Total output elements: ' + outputShape.reduce((a,b) => a*b, 1).toLocaleString() + '</div>';
+  } else {
+   resultDiv.className = 'checker-result visible err';
+   resultDiv.innerHTML =
+    '<div class="result-status">Incompatible &mdash; RuntimeError!</div>' +
+    '<div class="result-detail">' + explanation + '</div>';
   }
+ }
 
-  // Check on Enter key
-  document.addEventListener('DOMContentLoaded', function() {
-    ['mat1-shape', 'mat2-shape'].forEach(function(id) {
-      document.getElementById(id).addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') checkShapes();
-      });
-    });
+ function loadExample(s1, s2) {
+  document.getElementById('mat1-shape').value = s1;
+  document.getElementById('mat2-shape').value = s2;
+  checkShapes();
+ }
+
+ // Check on Enter key
+ document.addEventListener('DOMContentLoaded', function() {
+  ['mat1-shape', 'mat2-shape'].forEach(function(id) {
+   document.getElementById(id).addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkShapes();
+   });
   });
-  </script>
+ });
+ </script>
 
 </body>
 </html>

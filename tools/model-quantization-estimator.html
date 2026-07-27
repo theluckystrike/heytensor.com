@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-  <title>Model Quantization Size Estimator — Calculate Compressed Model Size | heytensor.com</title>
-  <meta name="description" content="Estimate compressed model size after quantization. Compare FP32, FP16, BF16, INT8, INT4, GPTQ, AWQ, GGUF formats. Interactive tool with visual bars.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://heytensor.com/tools/model-quantization-estimator">
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+ <title>Model Quantization Size Estimator, Calculate Compressed Model Size | heytensor.com</title>
+ <meta name="description" content="Estimate compressed model size after quantization. Compare FP32, FP16, BF16, INT8, INT4, GPTQ, AWQ, GGUF formats. Interactive tool with visual bars.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/model-quantization-estimator">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Model Quantization Size Estimator"}]}</script>
-  <!-- JSON-LD FAQ Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is model quantization?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Model quantization reduces the numerical precision of weights (e.g., from 32-bit floats to 8-bit integers), decreasing memory footprint and accelerating inference with minimal accuracy loss."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How is quantized model size calculated?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Quantized size = number of parameters × bytes per parameter after quantization. For example, a 7B model in INT8 uses 7 × 1 = 7 GB, while FP32 uses 7 × 4 = 28 GB."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Which quantization format gives the best compression?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Lower bit-width formats like INT4, GPTQ-4bit, or GGUF Q4_K_M offer higher compression (4× vs FP32) but may slightly impact accuracy. Choose based on your hardware and quality needs."
-        }
-      }
-    ]
-  }
-  </script>
+ 
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
+    "@type": "Question",
+    "name": "What is model quantization?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Model quantization reduces the numerical precision of weights (e.g., from 32-bit floats to 8-bit integers), decreasing memory footprint and accelerating inference with minimal accuracy loss."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "How is quantized model size calculated?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Quantized size = number of parameters × bytes per parameter after quantization. For example, a 7B model in INT8 uses 7 × 1 = 7 GB, while FP32 uses 7 × 4 = 28 GB."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Which quantization format gives the best compression?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Lower bit-width formats like INT4, GPTQ-4bit, or GGUF Q4_K_M offer higher compression (4× vs FP32) but may slightly impact accuracy. Choose based on your hardware and quality needs."
+    }
+   }
+  ]
+ }
+ </script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/model-quantization-estimator","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,273 +52,273 @@
 </head>
 <body>
 <div class="container">
-<h1>⚡ Model Quantization Size Estimator</h1>
-    <p>Calculate compressed model size · FP32 · FP16 · BF16 · INT8 · INT4 · GPTQ · AWQ · GGUF</p>
+<h1> Model Quantization Size Estimator</h1>
+ <p>Calculate compressed model size · FP32 · FP16 · BF16 · INT8 · INT4 · GPTQ · AWQ · GGUF</p>
 
-  <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 
-  <div class="card">
-    <div class="input-grid">
-      <div class="input-group">
-        <label for="paramCount">Parameter count</label>
-        <input type="number" id="paramCount" value="7" step="0.1" min="0.1" max="99999" placeholder="e.g., 7">
-      </div>
-      <div class="input-group">
-        <label for="paramUnit">Unit</label>
-        <select id="paramUnit">
-          <option value="B" selected>Billions (B)</option>
-          <option value="M">Millions (M)</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label for="origPrecision">Original precision</label>
-        <select id="origPrecision">
-          <option value="FP32" selected>FP32 (32-bit)</option>
-          <option value="FP16">FP16 (16-bit)</option>
-          <option value="BF16">BF16 (16-bit)</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label for="targetQuant">Target quantization</label>
-        <select id="targetQuant">
-          <option value="INT8">INT8 (8-bit)</option>
-          <option value="INT4">INT4 (4-bit)</option>
-          <option value="GPTQ-4bit">GPTQ-4bit</option>
-          <option value="AWQ-4bit">AWQ-4bit</option>
-          <option value="GGUF_Q4_K_M" selected>GGUF Q4_K_M</option>
-          <option value="GGUF_Q5_K_M">GGUF Q5_K_M</option>
-          <option value="GGUF_Q8_0">GGUF Q8_0</option>
-        </select>
-      </div>
-      <div style="display: flex; align-items: flex-end;">
-        <button class="btn" id="calculateBtn">📊 Calculate</button>
-      </div>
-    </div>
+ <div class="card">
+ <div class="input-grid">
+ <div class="input-group">
+ <label for="paramCount">Parameter count</label>
+ <input type="number" id="paramCount" value="7" step="0.1" min="0.1" max="99999" placeholder="e.g., 7">
+ </div>
+ <div class="input-group">
+ <label for="paramUnit">Unit</label>
+ <select id="paramUnit">
+ <option value="B" selected>Billions (B)</option>
+ <option value="M">Millions (M)</option>
+ </select>
+ </div>
+ <div class="input-group">
+ <label for="origPrecision">Original precision</label>
+ <select id="origPrecision">
+ <option value="FP32" selected>FP32 (32-bit)</option>
+ <option value="FP16">FP16 (16-bit)</option>
+ <option value="BF16">BF16 (16-bit)</option>
+ </select>
+ </div>
+ <div class="input-group">
+ <label for="targetQuant">Target quantization</label>
+ <select id="targetQuant">
+ <option value="INT8">INT8 (8-bit)</option>
+ <option value="INT4">INT4 (4-bit)</option>
+ <option value="GPTQ-4bit">GPTQ-4bit</option>
+ <option value="AWQ-4bit">AWQ-4bit</option>
+ <option value="GGUF_Q4_K_M" selected>GGUF Q4_K_M</option>
+ <option value="GGUF_Q5_K_M">GGUF Q5_K_M</option>
+ <option value="GGUF_Q8_0">GGUF Q8_0</option>
+ </select>
+ </div>
+ <div style="display: flex; align-items: flex-end;">
+ <button class="btn" id="calculateBtn"> Calculate</button>
+ </div>
+ </div>
 
-    <!-- Results -->
-    <div class="results-panel" id="resultsPanel">
-      <div class="result-card"><div class="label">Original size</div><div class="value" id="origSizeVal">—</div><div class="sub" id="origPrecisionLabel">FP32</div></div>
-      <div class="result-card"><div class="label">Quantized size</div><div class="value" id="quantSizeVal">—</div><div class="sub" id="quantFormatLabel">GGUF Q4_K_M</div></div>
-      <div class="result-card"><div class="label">Compression ratio</div><div class="value" id="compressionRatio">—</div><div class="sub">× smaller</div></div>
-      <div class="result-card"><div class="label">Memory savings</div><div class="value" id="savingsPercent">—</div><div class="sub">% saved</div></div>
-    </div>
+ 
+ <div class="results-panel" id="resultsPanel">
+ <div class="result-card"><div class="label">Original size</div><div class="value" id="origSizeVal">, </div><div class="sub" id="origPrecisionLabel">FP32</div></div>
+ <div class="result-card"><div class="label">Quantized size</div><div class="value" id="quantSizeVal">, </div><div class="sub" id="quantFormatLabel">GGUF Q4_K_M</div></div>
+ <div class="result-card"><div class="label">Compression ratio</div><div class="value" id="compressionRatio">, </div><div class="sub">× smaller</div></div>
+ <div class="result-card"><div class="label">Memory savings</div><div class="value" id="savingsPercent">, </div><div class="sub">% saved</div></div>
+ </div>
 
-    <!-- Visual bars -->
-    <div class="bar-section" id="barSection">
-      <div class="bar-row"><span class="bar-label">Original</span><div class="bar-track"><div class="bar-fill" id="origBar" style="width:100%">100%</div></div><span class="bar-value" id="origBarValue">—</span></div>
-      <div class="bar-row"><span class="bar-label">Quantized</span><div class="bar-track"><div class="bar-fill" id="quantBar" style="width:40%">40%</div></div><span class="bar-value" id="quantBarValue">—</span></div>
-    </div>
+ 
+ <div class="bar-section" id="barSection">
+ <div class="bar-row"><span class="bar-label">Original</span><div class="bar-track"><div class="bar-fill" id="origBar" style="width:100%">100%</div></div><span class="bar-value" id="origBarValue">, </span></div>
+ <div class="bar-row"><span class="bar-label">Quantized</span><div class="bar-track"><div class="bar-fill" id="quantBar" style="width:40%">40%</div></div><span class="bar-value" id="quantBarValue">, </span></div>
+ </div>
 
-    <!-- Comparison table -->
-    <div class="table-wrap">
-      <div class="table-scroll"><table id="comparisonTable">
-        <thead><tr><th>Format</th><th>Bits</th><th>Size (GB)</th><th>Ratio vs FP32</th><th>Savings</th></tr></thead>
-        <tbody id="tableBody"></tbody>
-      </table></div>
-    </div>
-    <div class="note">* Sizes are estimates: 1B parameters = 10⁹. Actual overhead may vary.</div>
-  </div>
+ 
+ <div class="table-wrap">
+ <div class="table-scroll"><table id="comparisonTable">
+ <thead><tr><th>Format</th><th>Bits</th><th>Size (GB)</th><th>Ratio vs FP32</th><th>Savings</th></tr></thead>
+ <tbody id="tableBody"></tbody>
+ </table></div>
+ </div>
+ <div class="note">* Sizes are estimates: 1B parameters = 10⁹. Actual overhead may vary.</div>
+ </div>
 
-  <div class="footer">© 2025 heytensor.com</div>
+ <div class="footer">© 2025 heytensor.com</div>
 </div>
 
 <script>
-  (function() {
-    // ----- constants -----
-    const BYTES_PER = {
-      'FP32': 4,
-      'FP16': 2,
-      'BF16': 2,
-      'INT8': 1,
-      'INT4': 0.5,
-      'GPTQ-4bit': 0.5,
-      'AWQ-4bit': 0.5,
-      'GGUF_Q4_K_M': 0.5,   // ~4.5 bit but we approximate 4bit
-      'GGUF_Q5_K_M': 0.625, // 5 bit
-      'GGUF_Q8_0': 1        // 8 bit
-    };
+ (function() {
+  // ----- constants -----
+  const BYTES_PER = {
+   'FP32': 4,
+   'FP16': 2,
+   'BF16': 2,
+   'INT8': 1,
+   'INT4': 0.5,
+   'GPTQ-4bit': 0.5,
+   'AWQ-4bit': 0.5,
+   'GGUF_Q4_K_M': 0.5,  // ~4.5 bit but we approximate 4bit
+   'GGUF_Q5_K_M': 0.625, // 5 bit
+   'GGUF_Q8_0': 1    // 8 bit
+  };
 
-    const FORMAT_LABELS = {
-      'FP32': 'FP32',
-      'FP16': 'FP16',
-      'BF16': 'BF16',
-      'INT8': 'INT8',
-      'INT4': 'INT4',
-      'GPTQ-4bit': 'GPTQ-4bit',
-      'AWQ-4bit': 'AWQ-4bit',
-      'GGUF_Q4_K_M': 'GGUF Q4_K_M',
-      'GGUF_Q5_K_M': 'GGUF Q5_K_M',
-      'GGUF_Q8_0': 'GGUF Q8_0'
-    };
+  const FORMAT_LABELS = {
+   'FP32': 'FP32',
+   'FP16': 'FP16',
+   'BF16': 'BF16',
+   'INT8': 'INT8',
+   'INT4': 'INT4',
+   'GPTQ-4bit': 'GPTQ-4bit',
+   'AWQ-4bit': 'AWQ-4bit',
+   'GGUF_Q4_K_M': 'GGUF Q4_K_M',
+   'GGUF_Q5_K_M': 'GGUF Q5_K_M',
+   'GGUF_Q8_0': 'GGUF Q8_0'
+  };
 
-    const BITS_PER = {
-      'FP32': 32,
-      'FP16': 16,
-      'BF16': 16,
-      'INT8': 8,
-      'INT4': 4,
-      'GPTQ-4bit': 4,
-      'AWQ-4bit': 4,
-      'GGUF_Q4_K_M': 4.5,
-      'GGUF_Q5_K_M': 5,
-      'GGUF_Q8_0': 8
-    };
+  const BITS_PER = {
+   'FP32': 32,
+   'FP16': 16,
+   'BF16': 16,
+   'INT8': 8,
+   'INT4': 4,
+   'GPTQ-4bit': 4,
+   'AWQ-4bit': 4,
+   'GGUF_Q4_K_M': 4.5,
+   'GGUF_Q5_K_M': 5,
+   'GGUF_Q8_0': 8
+  };
 
-    // all quantization formats for table (excluding original precisions)
-    const QUANT_FORMATS = ['INT8','INT4','GPTQ-4bit','AWQ-4bit','GGUF_Q4_K_M','GGUF_Q5_K_M','GGUF_Q8_0'];
+  // all quantization formats for table (excluding original precisions)
+  const QUANT_FORMATS = ['INT8','INT4','GPTQ-4bit','AWQ-4bit','GGUF_Q4_K_M','GGUF_Q5_K_M','GGUF_Q8_0'];
 
-    // DOM refs
-    const paramInput = document.getElementById('paramCount');
-    const unitSelect = document.getElementById('paramUnit');
-    const origPrecisionSelect = document.getElementById('origPrecision');
-    const targetQuantSelect = document.getElementById('targetQuant');
-    const calcBtn = document.getElementById('calculateBtn');
+  // DOM refs
+  const paramInput = document.getElementById('paramCount');
+  const unitSelect = document.getElementById('paramUnit');
+  const origPrecisionSelect = document.getElementById('origPrecision');
+  const targetQuantSelect = document.getElementById('targetQuant');
+  const calcBtn = document.getElementById('calculateBtn');
 
-    const origSizeVal = document.getElementById('origSizeVal');
-    const quantSizeVal = document.getElementById('quantSizeVal');
-    const compressionRatio = document.getElementById('compressionRatio');
-    const savingsPercent = document.getElementById('savingsPercent');
-    const origPrecisionLabel = document.getElementById('origPrecisionLabel');
-    const quantFormatLabel = document.getElementById('quantFormatLabel');
+  const origSizeVal = document.getElementById('origSizeVal');
+  const quantSizeVal = document.getElementById('quantSizeVal');
+  const compressionRatio = document.getElementById('compressionRatio');
+  const savingsPercent = document.getElementById('savingsPercent');
+  const origPrecisionLabel = document.getElementById('origPrecisionLabel');
+  const quantFormatLabel = document.getElementById('quantFormatLabel');
 
-    const origBar = document.getElementById('origBar');
-    const quantBar = document.getElementById('quantBar');
-    const origBarValue = document.getElementById('origBarValue');
-    const quantBarValue = document.getElementById('quantBarValue');
+  const origBar = document.getElementById('origBar');
+  const quantBar = document.getElementById('quantBar');
+  const origBarValue = document.getElementById('origBarValue');
+  const quantBarValue = document.getElementById('quantBarValue');
 
-    const tableBody = document.getElementById('tableBody');
+  const tableBody = document.getElementById('tableBody');
 
-    // ----- helpers -----
-    function getParamsInBillions() {
-      let val = parseFloat(paramInput.value);
-      if (isNaN(val) || val <= 0) val = 7;
-      const unit = unitSelect.value;
-      return unit === 'B' ? val : val / 1000;
-    }
+  // ----- helpers -----
+  function getParamsInBillions() {
+   let val = parseFloat(paramInput.value);
+   if (isNaN(val) || val <= 0) val = 7;
+   const unit = unitSelect.value;
+   return unit === 'B' ? val : val / 1000;
+  }
 
-    function formatGB(sizeGB) {
-      if (sizeGB < 0.001) return '< 0.001';
-      if (sizeGB < 1) return sizeGB.toFixed(3);
-      if (sizeGB < 100) return sizeGB.toFixed(2);
-      return sizeGB.toFixed(1);
-    }
+  function formatGB(sizeGB) {
+   if (sizeGB < 0.001) return '< 0.001';
+   if (sizeGB < 1) return sizeGB.toFixed(3);
+   if (sizeGB < 100) return sizeGB.toFixed(2);
+   return sizeGB.toFixed(1);
+  }
 
-    function calculate() {
-      const paramsB = getParamsInBillions();
-      const origPrecision = origPrecisionSelect.value;
-      const targetQuant = targetQuantSelect.value;
+  function calculate() {
+   const paramsB = getParamsInBillions();
+   const origPrecision = origPrecisionSelect.value;
+   const targetQuant = targetQuantSelect.value;
 
-      const origBytes = BYTES_PER[origPrecision];
-      const quantBytes = BYTES_PER[targetQuant];
-      if (!origBytes || !quantBytes) return;
+   const origBytes = BYTES_PER[origPrecision];
+   const quantBytes = BYTES_PER[targetQuant];
+   if (!origBytes || !quantBytes) return;
 
-      const origSizeGB = paramsB * origBytes;
-      const quantSizeGB = paramsB * quantBytes;
-      const ratio = origSizeGB / quantSizeGB;
-      const savings = ((origSizeGB - quantSizeGB) / origSizeGB) * 100;
+   const origSizeGB = paramsB * origBytes;
+   const quantSizeGB = paramsB * quantBytes;
+   const ratio = origSizeGB / quantSizeGB;
+   const savings = ((origSizeGB - quantSizeGB) / origSizeGB) * 100;
 
-      // update result cards
-      origSizeVal.textContent = formatGB(origSizeGB) + ' GB';
-      quantSizeVal.textContent = formatGB(quantSizeGB) + ' GB';
-      origPrecisionLabel.textContent = FORMAT_LABELS[origPrecision] || origPrecision;
-      quantFormatLabel.textContent = FORMAT_LABELS[targetQuant] || targetQuant;
-      compressionRatio.textContent = ratio.toFixed(2);
-      savingsPercent.textContent = savings.toFixed(1);
+   // update result cards
+   origSizeVal.textContent = formatGB(origSizeGB) + ' GB';
+   quantSizeVal.textContent = formatGB(quantSizeGB) + ' GB';
+   origPrecisionLabel.textContent = FORMAT_LABELS[origPrecision] || origPrecision;
+   quantFormatLabel.textContent = FORMAT_LABELS[targetQuant] || targetQuant;
+   compressionRatio.textContent = ratio.toFixed(2);
+   savingsPercent.textContent = savings.toFixed(1);
 
-      // bars (relative to original = 100%)
-      const maxWidth = Math.max(origSizeGB, quantSizeGB, 0.001);
-      const origPercent = (origSizeGB / maxWidth) * 100;
-      const quantPercent = (quantSizeGB / maxWidth) * 100;
-      origBar.style.width = origPercent + '%';
-      origBar.textContent = origPercent > 15 ? Math.round(origPercent) + '%' : '';
-      quantBar.style.width = quantPercent + '%';
-      quantBar.textContent = quantPercent > 15 ? Math.round(quantPercent) + '%' : '';
-      origBarValue.textContent = formatGB(origSizeGB) + ' GB';
-      quantBarValue.textContent = formatGB(quantSizeGB) + ' GB';
+   // bars (relative to original = 100%)
+   const maxWidth = Math.max(origSizeGB, quantSizeGB, 0.001);
+   const origPercent = (origSizeGB / maxWidth) * 100;
+   const quantPercent = (quantSizeGB / maxWidth) * 100;
+   origBar.style.width = origPercent + '%';
+   origBar.textContent = origPercent > 15 ? Math.round(origPercent) + '%' : '';
+   quantBar.style.width = quantPercent + '%';
+   quantBar.textContent = quantPercent > 15 ? Math.round(quantPercent) + '%' : '';
+   origBarValue.textContent = formatGB(origSizeGB) + ' GB';
+   quantBarValue.textContent = formatGB(quantSizeGB) + ' GB';
 
-      // build comparison table (all quant formats + original as reference)
-      let rows = [];
-      // original row
-      rows.push({
-        format: FORMAT_LABELS[origPrecision],
-        bits: BITS_PER[origPrecision],
-        sizeGB: origSizeGB,
-        ratio: 1,
-        savings: 0,
-        highlight: false
-      });
-      // quant formats
-      QUANT_FORMATS.forEach(f => {
-        const b = BYTES_PER[f];
-        if (!b) return;
-        const size = paramsB * b;
-        const r = origSizeGB / size;
-        const sav = ((origSizeGB - size) / origSizeGB) * 100;
-        rows.push({
-          format: FORMAT_LABELS[f] || f,
-          bits: BITS_PER[f] || '—',
-          sizeGB: size,
-          ratio: r,
-          savings: sav,
-          highlight: (f === targetQuant)
-        });
-      });
+   // build comparison table (all quant formats + original as reference)
+   let rows = [];
+   // original row
+   rows.push({
+    format: FORMAT_LABELS[origPrecision],
+    bits: BITS_PER[origPrecision],
+    sizeGB: origSizeGB,
+    ratio: 1,
+    savings: 0,
+    highlight: false
+   });
+   // quant formats
+   QUANT_FORMATS.forEach(f => {
+    const b = BYTES_PER[f];
+    if (!b) return;
+    const size = paramsB * b;
+    const r = origSizeGB / size;
+    const sav = ((origSizeGB - size) / origSizeGB) * 100;
+    rows.push({
+     format: FORMAT_LABELS[f] || f,
+     bits: BITS_PER[f] || '—',
+     sizeGB: size,
+     ratio: r,
+     savings: sav,
+     highlight: (f === targetQuant)
+    });
+   });
 
-      // render table
-      tableBody.innerHTML = '';
-      rows.forEach(r => {
-        const tr = document.createElement('tr');
-        if (r.highlight) tr.className = 'highlight-row';
-        const bitsStr = typeof r.bits === 'number' ? r.bits + '-bit' : r.bits;
-        tr.innerHTML = `
-          <td><strong>${r.format}</strong></td>
-          <td>${bitsStr}</td>
-          <td>${formatGB(r.sizeGB)} GB</td>
-          <td>${r.ratio.toFixed(2)}×</td>
-          <td>${r.savings.toFixed(1)}%</td>
-        `;
-        tableBody.appendChild(tr);
-      });
-    }
+   // render table
+   tableBody.innerHTML = '';
+   rows.forEach(r => {
+    const tr = document.createElement('tr');
+    if (r.highlight) tr.className = 'highlight-row';
+    const bitsStr = typeof r.bits === 'number' ? r.bits + '-bit' : r.bits;
+    tr.innerHTML = `
+     <td><strong>${r.format}</strong></td>
+     <td>${bitsStr}</td>
+     <td>${formatGB(r.sizeGB)} GB</td>
+     <td>${r.ratio.toFixed(2)}×</td>
+     <td>${r.savings.toFixed(1)}%</td>
+    `;
+    tableBody.appendChild(tr);
+   });
+  }
 
-    // initial calculation
-    calcBtn.addEventListener('click', calculate);
-    // also recalc on enter in param field
-    paramInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
-    // recalc on unit/precision change (optional)
-    unitSelect.addEventListener('change', calculate);
-    origPrecisionSelect.addEventListener('change', calculate);
-    targetQuantSelect.addEventListener('change', calculate);
+  // initial calculation
+  calcBtn.addEventListener('click', calculate);
+  // also recalc on enter in param field
+  paramInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+  // recalc on unit/precision change (optional)
+  unitSelect.addEventListener('change', calculate);
+  origPrecisionSelect.addEventListener('change', calculate);
+  targetQuantSelect.addEventListener('change', calculate);
 
-    // run on load
-    window.addEventListener('DOMContentLoaded', calculate);
-  })();
+  // run on load
+  window.addEventListener('DOMContentLoaded', calculate);
+ })();
 </script>
 <script src="/assets/js/sticky-result.js"></script>
 <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 </body>
 </html>

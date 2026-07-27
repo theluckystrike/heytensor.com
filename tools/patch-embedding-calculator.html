@@ -12,34 +12,34 @@
 <meta property="og:type" content="website">
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebApplication",
-      "name": "ViT Patch Embedding Shape Calculator",
-      "url": "https://heytensor.com/tools/patch-embedding-calculator",
-      "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "Any",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "author": {
-        "@type": "Person",
-        "name": "Michael Lip",
-        "url": "https://zovo.one"
-      }
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools/" },
-        { "@type": "ListItem", "position": 3, "name": "ViT Patch Embedding Shape Calculator", "item": "https://heytensor.com/tools/patch-embedding-calculator" }
-      ]
-    }
-  ]
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "ViT Patch Embedding Shape Calculator",
+   "url": "https://heytensor.com/tools/patch-embedding-calculator",
+   "applicationCategory": "UtilitiesApplication",
+   "operatingSystem": "Any",
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+   },
+   "author": {
+    "@type": "Person",
+    "name": "Michael Lip",
+    "url": "https://zovo.one"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools/" },
+    { "@type": "ListItem", "position": 3, "name": "ViT Patch Embedding Shape Calculator", "item": "https://heytensor.com/tools/patch-embedding-calculator" }
+   ]
+  }
+ ]
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,76 +51,76 @@
 </head>
 <body>
 <header>
-    <div class="container header-inner">
-      <a href="/" class="logo">Hey<span>Tensor</span></a>
-      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
-      <nav>
-        <a href="/">Calculator</a>
-        <a href="/tools/" class="active">Tools</a>
-        <a href="/answers/">Answers</a>
-        <a href="/research/">Research</a>
-        <a href="/guides/">Guides</a>
-        <a href="/about.html">About</a>
-        <a href="/blog/">Blog</a>
-        <div class="nav-right">
-          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
-          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
 <main class="wrap">
 <main>
 <h1>Vision Transformer Patch Embedding Tensor Shapes</h1>
 <p class="intro">Enter your image dimensions and patch size to instantly see the patch grid, sequence length, embedding tensor shape, and parameter count for a ViT patch-embedding layer.</p>
 
 <section id="tool">
-  <div class="grid">
-    <div class="field">
-      <label for="imgH">Image height (px)</label>
-      <input type="number" id="imgH" value="224" min="1" step="1">
-    </div>
-    <div class="field">
-      <label for="imgW">Image width (px)</label>
-      <input type="number" id="imgW" value="224" min="1" step="1">
-    </div>
-    <div class="field">
-      <label for="patch">Patch size (px)</label>
-      <input type="number" id="patch" value="16" min="1" step="1">
-      <span class="hint">Square P×P patch</span>
-    </div>
-    <div class="field">
-      <label for="chan">Input channels (C)</label>
-      <input type="number" id="chan" value="3" min="1" step="1">
-      <span class="hint">3 = RGB</span>
-    </div>
-    <div class="field">
-      <label for="dim">Embedding dim (D)</label>
-      <input type="number" id="dim" value="768" min="1" step="1">
-    </div>
-    <div class="field">
-      <label for="batch">Batch size (B)</label>
-      <input type="number" id="batch" value="32" min="1" step="1">
-    </div>
-    <div class="field">
-      <label for="cls">CLS token</label>
-      <select id="cls">
-        <option value="1" selected>Include (1 prepended)</option>
-        <option value="0">None</option>
-      </select>
-    </div>
-  </div>
+ <div class="grid">
+ <div class="field">
+ <label for="imgH">Image height (px)</label>
+ <input type="number" id="imgH" value="224" min="1" step="1">
+ </div>
+ <div class="field">
+ <label for="imgW">Image width (px)</label>
+ <input type="number" id="imgW" value="224" min="1" step="1">
+ </div>
+ <div class="field">
+ <label for="patch">Patch size (px)</label>
+ <input type="number" id="patch" value="16" min="1" step="1">
+ <span class="hint">Square P×P patch</span>
+ </div>
+ <div class="field">
+ <label for="chan">Input channels (C)</label>
+ <input type="number" id="chan" value="3" min="1" step="1">
+ <span class="hint">3 = RGB</span>
+ </div>
+ <div class="field">
+ <label for="dim">Embedding dim (D)</label>
+ <input type="number" id="dim" value="768" min="1" step="1">
+ </div>
+ <div class="field">
+ <label for="batch">Batch size (B)</label>
+ <input type="number" id="batch" value="32" min="1" step="1">
+ </div>
+ <div class="field">
+ <label for="cls">CLS token</label>
+ <select id="cls">
+ <option value="1" selected>Include (1 prepended)</option>
+ <option value="0">None</option>
+ </select>
+ </div>
+ </div>
 
-  <div class="out">
-    <div class="shape" id="shapeLine"></div>
-    <div class="cards" id="cards"></div>
-    <div id="notes"></div>
-  </div>
+ <div class="out">
+ <div class="shape" id="shapeLine"></div>
+ <div class="cards" id="cards"></div>
+ <div id="notes"></div>
+ </div>
 </section>
 
 <section class="prose">
 <h2>How the patch embedding is computed</h2>
-<p>A Vision Transformer (ViT) cannot read raw pixels the way it reads tokens, so it first slices the image into a grid of non-overlapping square patches and projects each patch into a <code>D</code>-dimensional embedding vector. This calculator reproduces the exact arithmetic of <code>nn.Conv2d(C, D, kernel_size=P, stride=P)</code> — the standard PyTorch implementation of patch embedding — followed by a flatten and transpose.</p>
+<p>A Vision Transformer (ViT) cannot read raw pixels the way it reads tokens, so it first slices the image into a grid of non-overlapping square patches and projects each patch into a <code>D</code>-dimensional embedding vector. This calculator reproduces the exact arithmetic of <code>nn.Conv2d(C, D, kernel_size=P, stride=P)</code>, the standard PyTorch implementation of patch embedding, followed by a flatten and transpose.</p>
 
 <p>The patch grid along each axis is the floor of the image size divided by the patch size:</p>
 <div class="formula">
@@ -133,7 +133,7 @@ output shape = [B, seq_len, D]
 
 <p>Because the convolution uses <code>stride = kernel = P</code> with no padding, any pixels that don't fill a complete patch are silently dropped. The calculator flags this divisibility remainder so you catch the off-by-a-few-pixels bug that quietly shrinks your effective resolution.</p>
 
-<p>The projection weight is a Conv2d kernel of shape <code>[D, C, P, P]</code>, so the learnable parameter count of the patch-embed layer is <code>D × C × P × P + D</code> (the trailing <code>+ D</code> is the bias). Each patch contributes <code>C × P × P</code> floating-point values that get linearly mapped to <code>D</code> — for the classic ViT-Base/16 at 224px that is 3×16×16 = 768 inputs per patch, 196 patches, and a 590,592-weight projection. Adding the CLS token and learnable position embeddings of shape <code>[seq_len, D]</code> gives the full input tensor the transformer encoder consumes.</p>
+<p>The projection weight is a Conv2d kernel of shape <code>[D, C, P, P]</code>, so the learnable parameter count of the patch-embed layer is <code>D × C × P × P + D</code> (the trailing <code>+ D</code> is the bias). Each patch contributes <code>C × P × P</code> floating-point values that get linearly mapped to <code>D</code>, for the classic ViT-Base/16 at 224px that is 3×16×16 = 768 inputs per patch, 196 patches, and a 590,592-weight projection. Adding the CLS token and learnable position embeddings of shape <code>[seq_len, D]</code> gives the full input tensor the transformer encoder consumes.</p>
 
 <p>Use the live readout to size GPU memory (activation footprint scales with <code>B × seq_len × D</code>), to verify attention is quadratic in <code>seq_len</code>, and to plan resolution changes: doubling image side quadruples patch count and thus quadruples attention FLOPs.</p>
 </section>
@@ -148,91 +148,91 @@ output shape = [B, seq_len, D]
 
 </main>
 <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-brand">Zovo Tools</div>
-      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
-      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
-    </div>
-  </footer>
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
 
 <script>
 (function(){
-  var ids=['imgH','imgW','patch','chan','dim','batch','cls'];
-  var el={};
-  ids.forEach(function(i){el[i]=document.getElementById(i);});
-  var shapeLine=document.getElementById('shapeLine');
-  var cards=document.getElementById('cards');
-  var notes=document.getElementById('notes');
+ var ids=['imgH','imgW','patch','chan','dim','batch','cls'];
+ var el={};
+ ids.forEach(function(i){el[i]=document.getElementById(i);});
+ var shapeLine=document.getElementById('shapeLine');
+ var cards=document.getElementById('cards');
+ var notes=document.getElementById('notes');
 
-  function intv(node,min){
-    var v=parseInt(node.value,10);
-    if(isNaN(v)||v<min)return null;
-    return v;
-  }
-  function fmt(n){return n.toLocaleString('en-US');}
+ function intv(node,min){
+  var v=parseInt(node.value,10);
+  if(isNaN(v)||v<min)return null;
+  return v;
+ }
+ function fmt(n){return n.toLocaleString('en-US');}
 
-  function compute(){
-    var H=intv(el.imgH,1), W=intv(el.imgW,1), P=intv(el.patch,1),
-        C=intv(el.chan,1), D=intv(el.dim,1), B=intv(el.batch,1),
-        cls=parseInt(el.cls.value,10);
+ function compute(){
+  var H=intv(el.imgH,1), W=intv(el.imgW,1), P=intv(el.patch,1),
+    C=intv(el.chan,1), D=intv(el.dim,1), B=intv(el.batch,1),
+    cls=parseInt(el.cls.value,10);
 
-    if([H,W,P,C,D,B].some(function(x){return x===null;})){
-      shapeLine.innerHTML='<span class="tok">enter valid positive integers</span>';
-      cards.innerHTML=''; notes.innerHTML='';
-      return;
-    }
-
-    var nh=Math.floor(H/P), nw=Math.floor(W/P);
-    var numPatches=nh*nw;
-    var seq=numPatches+(cls?1:0);
-    var patchFloats=C*P*P;
-    var projParams=D*C*P*P+D;             // conv weight + bias
-    var posParams=seq*D;                  // learnable position embeddings
-    var clsParams=cls?D:0;                // cls token vector
-    var activations=B*seq*D;              // patch-embed output elements
-    var remH=H%P, remW=W%P;
-
-    shapeLine.innerHTML=
-      '<span class="tok b">'+fmt(B)+'</span>'+
-      '<span>&times;</span>'+
-      '<span class="tok">'+fmt(seq)+'</span>'+
-      '<span>&times;</span>'+
-      '<span class="tok">'+fmt(D)+'</span>'+
-      '<span style="color:var(--muted)">&nbsp; [B, seq_len, D]</span>';
-
-    var cardData=[
-      ['Patch grid', nh+' × '+nw, 'rows × cols'],
-      ['Num patches', fmt(numPatches), 'n_h × n_w'],
-      ['Sequence length', fmt(seq), cls?'+1 CLS token':'no CLS'],
-      ['Floats / patch', fmt(patchFloats), 'C × P × P'],
-      ['Proj params', fmt(projParams), 'D·C·P² + D'],
-      ['Pos-embed params', fmt(posParams), 'seq_len × D'],
-      ['CLS params', fmt(clsParams), cls?'D vector':'none'],
-      ['Output elements', fmt(activations), 'B × seq × D']
-    ];
-    cards.innerHTML=cardData.map(function(c){
-      return '<div class="card"><div class="k">'+c[0]+'</div><div class="v">'+c[1]+'</div><div class="s">'+c[2]+'</div></div>';
-    }).join('');
-
-    var n='';
-    if(remH===0&&remW===0){
-      n+='<div class="note ok">✓ Image divides evenly into '+P+'px patches — no pixels dropped.</div>';
-    }else{
-      n+='<div class="note warn">⚠ H%P='+remH+', W%P='+remW+' — '+
-         (remH*W+remW*H-remH*remW)+' edge pixels are discarded by the stride-P conv (no padding). '+
-         'Pick a patch size that divides both '+H+' and '+W+', or pad the image.</div>';
-    }
-    var totalParams=projParams+posParams+clsParams;
-    n+='<div class="note ok">Patch-embed input stack total learnable params: <b>'+fmt(totalParams)+'</b> '+
-       '(projection + position + CLS). Attention cost scales with seq_len² = '+fmt(seq*seq)+'.</div>';
-    notes.innerHTML=n;
+  if([H,W,P,C,D,B].some(function(x){return x===null;})){
+   shapeLine.innerHTML='<span class="tok">enter valid positive integers</span>';
+   cards.innerHTML=''; notes.innerHTML='';
+   return;
   }
 
-  ids.forEach(function(i){
-    el[i].addEventListener('input',compute);
-    el[i].addEventListener('change',compute);
-  });
-  compute();
+  var nh=Math.floor(H/P), nw=Math.floor(W/P);
+  var numPatches=nh*nw;
+  var seq=numPatches+(cls?1:0);
+  var patchFloats=C*P*P;
+  var projParams=D*C*P*P+D;       // conv weight + bias
+  var posParams=seq*D;         // learnable position embeddings
+  var clsParams=cls?D:0;        // cls token vector
+  var activations=B*seq*D;       // patch-embed output elements
+  var remH=H%P, remW=W%P;
+
+  shapeLine.innerHTML=
+   '<span class="tok b">'+fmt(B)+'</span>'+
+   '<span>&times;</span>'+
+   '<span class="tok">'+fmt(seq)+'</span>'+
+   '<span>&times;</span>'+
+   '<span class="tok">'+fmt(D)+'</span>'+
+   '<span style="color:var(--muted)">&nbsp; [B, seq_len, D]</span>';
+
+  var cardData=[
+   ['Patch grid', nh+' × '+nw, 'rows × cols'],
+   ['Num patches', fmt(numPatches), 'n_h × n_w'],
+   ['Sequence length', fmt(seq), cls?'+1 CLS token':'no CLS'],
+   ['Floats / patch', fmt(patchFloats), 'C × P × P'],
+   ['Proj params', fmt(projParams), 'D·C·P² + D'],
+   ['Pos-embed params', fmt(posParams), 'seq_len × D'],
+   ['CLS params', fmt(clsParams), cls?'D vector':'none'],
+   ['Output elements', fmt(activations), 'B × seq × D']
+  ];
+  cards.innerHTML=cardData.map(function(c){
+   return '<div class="card"><div class="k">'+c[0]+'</div><div class="v">'+c[1]+'</div><div class="s">'+c[2]+'</div></div>';
+  }).join('');
+
+  var n='';
+  if(remH===0&&remW===0){
+   n+='<div class="note ok">✓ Image divides evenly into '+P+'px patches — no pixels dropped.</div>';
+  }else{
+   n+='<div class="note warn">⚠ H%P='+remH+', W%P='+remW+' — '+
+     (remH*W+remW*H-remH*remW)+' edge pixels are discarded by the stride-P conv (no padding). '+
+     'Pick a patch size that divides both '+H+' and '+W+', or pad the image.</div>';
+  }
+  var totalParams=projParams+posParams+clsParams;
+  n+='<div class="note ok">Patch-embed input stack total learnable params: <b>'+fmt(totalParams)+'</b> '+
+    '(projection + position + CLS). Attention cost scales with seq_len² = '+fmt(seq*seq)+'.</div>';
+  notes.innerHTML=n;
+ }
+
+ ids.forEach(function(i){
+  el[i].addEventListener('input',compute);
+  el[i].addEventListener('change',compute);
+ });
+ compute();
 })();
 </script>
 </body>
