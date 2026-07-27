@@ -218,6 +218,55 @@ img, svg, pre { max-width: 100%; }
 
 .wrap td { color: var(--text-dim); }
 
+/* ── Buttons ──
+   The standalone pages styled their buttons inline, so removing their <style>
+   left browser defaults (grey chrome on a dark page). Cover every class they
+   use, plus unclassed buttons. .mobile-toggle keeps the header's own styling. */
+.wrap button:not(.mobile-toggle),
+.container button:not(.mobile-toggle),
+.layer-btn, .func-btn, .toggle-btn, .calculation-button {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg-hover);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 9px 15px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.wrap button:not(.mobile-toggle):hover,
+.container button:not(.mobile-toggle):hover,
+.layer-btn:hover, .func-btn:hover, .toggle-btn:hover, .calculation-button:hover {
+  background: var(--bg-card);
+  border-color: var(--border-hover);
+}
+
+/* The primary action reads amber so it is findable at a glance. */
+.wrap button.btn-primary, .container button.btn-primary,
+.wrap #computeBtn, .container #computeBtn,
+.wrap #updateBtn, .container #updateBtn,
+.toggle-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0B0B0D;
+}
+
+.wrap button.btn-primary:hover, .container button.btn-primary:hover,
+.wrap #computeBtn:hover, .container #computeBtn:hover,
+.wrap #updateBtn:hover, .container #updateBtn:hover {
+  background: var(--accent-dim);
+  border-color: var(--accent-dim);
+}
+
+.wrap button:focus-visible, .container button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  border-color: var(--accent);
+}
+
 /* ── Related links ── */
 .related { margin: 26px 0 10px; display: flex; flex-wrap: wrap; gap: 10px 18px; }
 
