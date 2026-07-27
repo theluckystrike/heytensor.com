@@ -24,197 +24,34 @@
       }
     }
     </script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0e27;
-            color: #e0e6ed;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: #00d4aa;
-            text-align: center;
-        }
-        .subtitle {
-            text-align: center;
-            color: #8892b0;
-            margin-bottom: 30px;
-            font-size: 0.95rem;
-        }
-        .controls {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-        .control-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #00d4aa;
-            font-size: 0.95rem;
-        }
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        input[type="range"] {
-            flex: 1;
-            height: 6px;
-            border-radius: 3px;
-            background: #1f2937;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #00d4aa;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #00d4aa;
-            cursor: pointer;
-            border: none;
-        }
-        .value-display {
-            min-width: 60px;
-            text-align: right;
-            font-weight: 600;
-            color: #00d4aa;
-        }
-        .function-buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 0;
-        }
-        .func-btn {
-            padding: 12px;
-            background: #1f2937;
-            border: 2px solid #374151;
-            color: #e0e6ed;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-        .func-btn:hover {
-            border-color: #00d4aa;
-        }
-        .func-btn.active {
-            background: #00d4aa;
-            color: #0a0e27;
-            border-color: #00d4aa;
-        }
-        .display-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        .chart-container {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        canvas {
-            width: 100%;
-            height: auto;
-            display: block;
-            background: #0f172a;
-            border-radius: 6px;
-        }
-        .info-panel {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .info-section {
-            margin-bottom: 20px;
-        }
-        .info-section h3 {
-            color: #00d4aa;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-        .info-text {
-            color: #d1d5db;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        .pros {
-            color: #86efac;
-            margin-top: 8px;
-        }
-        .cons {
-            color: #fca5a5;
-            margin-top: 8px;
-        }
-        .output-value {
-            background: #0f172a;
-            border-left: 3px solid #00d4aa;
-            padding: 12px;
-            border-radius: 4px;
-            margin-top: 8px;
-            font-family: 'Courier New', monospace;
-            color: #00d4aa;
-            font-weight: 600;
-        }
-        footer {
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.85rem;
-            margin-top: 40px;
-            padding: 20px 0;
-            border-top: 1px solid #1f2937;
-        }
-        @media (max-width: 768px) {
-            .control-row {
-                grid-template-columns: 1fr;
-            }
-            .function-buttons {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .display-section {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
     <div class="container">
         <h1>Activation Function Playground</h1>
         <p class="subtitle">Explore and compare activation functions for deep learning</p>
@@ -284,9 +121,13 @@
         </div>
     </div>
 
-    <footer>
-        © 2026 heytensor.com — ML Engineering Tools
-    </footer>
+    <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>

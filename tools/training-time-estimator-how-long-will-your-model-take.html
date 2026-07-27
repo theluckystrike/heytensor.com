@@ -31,49 +31,35 @@
     ]
   }
   </script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #0a0a0a;
-      color: #e5e5e5;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      padding: 2rem 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container { max-width: 1200px; width: 100%; }
-    h1 { font-size: 2.2rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.25rem; background: linear-gradient(135deg, #b388ff, #82b1ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .subhead { color: #aaa; margin-bottom: 2rem; font-size: 1rem; border-bottom: 1px solid #222; padding-bottom: 1rem; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-    @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
-    .card { background: #111; border: 1px solid #2a2a2a; border-radius: 20px; padding: 1.5rem; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-    .card h2 { font-size: 1.3rem; margin-bottom: 1.2rem; color: #ccc; font-weight: 500; letter-spacing: 0.3px; }
-    .input-group { margin-bottom: 1.2rem; }
-    .input-group label { display: block; font-size: 0.85rem; color: #aaa; margin-bottom: 0.3rem; }
-    .input-group input, .input-group select { width: 100%; padding: 0.7rem 0.8rem; background: #1e1e1e; border: 1px solid #333; border-radius: 12px; color: #f0f0f0; font-size: 0.95rem; outline: none; transition: 0.2s; }
-    .input-group input:focus, .input-group select:focus { border-color: #7c4dff; box-shadow: 0 0 0 2px rgba(124,77,255,0.2); }
-    .preset-badge { display: inline-block; background: #2a2a2a; border-radius: 30px; padding: 0.3rem 1rem; margin: 0.2rem 0.2rem 0 0; font-size: 0.75rem; cursor: pointer; border: 1px solid #3a3a3a; transition: all 0.15s; }
-    .preset-badge:hover { background: #3a2a5a; border-color: #7c4dff; }
-    .preset-badge.active { background: #3d2a6a; border-color: #b388ff; color: #d0b0ff; }
-    .flex { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.8rem; }
-    .stat-box { background: #1a1a1a; border-radius: 16px; padding: 0.8rem 1.2rem; margin-top: 0.5rem; display: flex; justify-content: space-between; border: 1px solid #2a2a2a; }
-    .stat-box span:first-child { color: #aaa; }
-    .stat-box .value { font-weight: 600; color: #b388ff; }
-    .cost-value { color: #82b1ff !important; }
-    .gpu-compare { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
-    .gpu-row { display: flex; justify-content: space-between; background: #1a1a1a; padding: 0.5rem 1rem; border-radius: 40px; border: 1px solid #2a2a2a; font-size: 0.9rem; }
-    .gpu-row .label { color: #bbb; }
-    .gpu-row .time { color: #b388ff; font-weight: 500; }
-    .gpu-row .efficiency { color: #7ecf8a; }
-    .footnote { font-size: 0.75rem; color: #666; margin-top: 1.5rem; text-align: center; border-top: 1px solid #222; padding-top: 1.2rem; }
-    .inline-icon { margin-right: 6px; opacity: 0.6; }
-    hr { border: none; border-top: 1px solid #222; margin: 1rem 0; }
-  </style>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/training-time-estimator","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
 <div class="container">
   <h1>⏱️ Training Time Estimator</h1>
   <div class="subhead">Estimate duration & cost · Compare single / multi-GPU scaling</div>
@@ -294,5 +280,12 @@
   })();
 </script>
 <script src="/assets/js/sticky-result.js"></script>
+<footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 </body>
 </html>

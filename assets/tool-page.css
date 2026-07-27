@@ -1,0 +1,215 @@
+/* ──────────────────────────────────────────────────────────────
+   tool-page.css
+
+   Bridges the standalone tool pages onto the HeyTensor v3 design
+   system. Those pages shipped with their own inline palette (blue
+   #0c1018 / cyan #7dd3fc) and their own nav and footer, so they
+   looked like a different site. This restyles the markup they
+   already use with the canonical tokens from style.css, which
+   means the tool HTML does not have to be rewritten.
+
+   Loads AFTER style.css and tools.css.
+   ────────────────────────────────────────────────────────────── */
+
+/* Reading column. Prose caps near 72ch so lines stay comfortable. */
+.wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.wrap > h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 40px 0 14px;
+}
+
+.wrap > h2 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin: 48px 0 14px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border);
+}
+
+.wrap > h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 30px 0 10px;
+}
+
+.wrap p {
+  margin: 14px 0;
+  color: var(--text-dim);
+  max-width: 72ch;
+  line-height: 1.75;
+}
+
+.wrap .intro {
+  font-size: 1.06rem;
+  color: var(--text);
+  line-height: 1.7;
+  margin-bottom: 26px;
+  max-width: 68ch;
+}
+
+.wrap ul, .wrap ol { margin: 14px 0 14px 22px; max-width: 72ch; }
+.wrap li { margin: 8px 0; color: var(--text-dim); line-height: 1.7; }
+
+/* ── The calculator panel ── */
+#tool {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  margin: 30px 0 34px;
+}
+
+#tool .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+  gap: 20px 18px;
+}
+
+.field { display: flex; flex-direction: column; gap: 7px; }
+
+.field label, #tool label {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.01em;
+}
+
+/* font-size 16px is inherited from style.css and prevents iOS auto-zoom.
+   Do not drop below 16px here. */
+#tool input, #tool select {
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  padding: 11px 12px;
+  width: 100%;
+}
+
+#tool input:focus, #tool select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+/* ── Result cards ── */
+.out {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+}
+
+.card .k {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+}
+
+.card .v {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 7px;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+/* ── Formula block ── */
+.formula {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 15px 17px;
+  font-family: var(--font-display);
+  font-size: 0.83rem;
+  color: var(--text);
+  overflow-x: auto;
+  line-height: 1.7;
+  margin: 18px 0;
+}
+
+/* ── Tables. The wrapper is what stops the 638px mobile overflow. ── */
+.table-scroll { overflow-x: auto; margin: 18px 0; -webkit-overflow-scrolling: touch; }
+
+.wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  min-width: 460px;
+}
+
+.wrap th, .wrap td {
+  border: 1px solid var(--border);
+  padding: 11px 13px;
+  text-align: left;
+}
+
+.wrap th {
+  background: var(--bg-elev);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.wrap td { color: var(--text-dim); }
+
+/* ── Related links ── */
+.related { margin: 26px 0 10px; display: flex; flex-wrap: wrap; gap: 10px 18px; }
+
+.related a {
+  color: var(--accent-link);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.related a:hover { color: var(--accent); text-decoration: underline; }
+
+.wrap a { color: var(--accent-link); }
+.wrap a:hover { color: var(--accent); }
+
+@media (max-width: 640px) {
+  .wrap > h1 { margin-top: 28px; }
+  #tool { padding: 20px 17px; }
+  .out { gap: 13px; }
+  .wrap > h2 { margin-top: 38px; }
+}

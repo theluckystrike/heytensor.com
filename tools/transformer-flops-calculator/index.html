@@ -41,175 +41,42 @@
     ]
   }
   </script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0f172a;
-      color: #e2e8f0;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      padding: 1.5rem 1rem;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container {
-      max-width: 1200px;
-      width: 100%;
-    }
-    h1, h2, h3 { font-weight: 500; letter-spacing: -0.02em; }
-    h1 { font-size: 2.2rem; margin-bottom: 0.25rem; color: #f1f5f9; }
-    .subhead { color: #94a3b8; margin-bottom: 2rem; border-left: 3px solid #38bdf8; padding-left: 1rem; }
-    .card {
-      background: #1e293b;
-      border-radius: 24px;
-      padding: 1.8rem 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-      border: 1px solid #334155;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.8rem;
-    }
-    .input-group {
-      margin-bottom: 1.2rem;
-    }
-    label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #cbd5e1;
-      margin-bottom: 0.3rem;
-    }
-    input, select {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 40px;
-      color: #f1f5f9;
-      font-size: 1rem;
-      transition: 0.2s;
-    }
-    input:focus, select:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 0 2px #38bdf855; }
-    .inline-hint { font-size: 0.8rem; color: #64748b; margin-top: 0.2rem; }
-    .btn {
-      background: #38bdf8;
-      color: #0f172a;
-      font-weight: 600;
-      padding: 0.8rem 2rem;
-      border: none;
-      border-radius: 40px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: 0.2s;
-      margin-top: 0.5rem;
-      width: 100%;
-    }
-    .btn:hover { background: #7dd3fc; transform: scale(1.01); }
-    .btn-secondary {
-      background: #334155;
-      color: #e2e8f0;
-      margin-top: 0.2rem;
-    }
-    .btn-secondary:hover { background: #475569; }
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin: 1.2rem 0;
-    }
-    .stat-box {
-      background: #0f172a;
-      border-radius: 20px;
-      padding: 1rem 0.8rem;
-      text-align: center;
-      border: 1px solid #2d3a4e;
-    }
-    .stat-box .value { font-size: 1.6rem; font-weight: 600; color: #38bdf8; word-break: break-word; }
-    .stat-box .label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.03em; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1rem 0;
-    }
-    th { text-align: left; color: #94a3b8; font-weight: 500; font-size: 0.8rem; padding: 0.6rem 0.3rem; border-bottom: 1px solid #2d3a4e; }
-    td { padding: 0.5rem 0.3rem; border-bottom: 1px solid #1e293b; }
-    .gauge-wrap { margin: 1.5rem 0 0.5rem; }
-    .gauge-bar {
-      background: #1e293b;
-      height: 24px;
-      border-radius: 40px;
-      overflow: hidden;
-      margin-top: 0.3rem;
-    }
-    .gauge-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #38bdf8, #2dd4bf);
-      transition: width 0.3s ease;
-      border-radius: 40px;
-    }
-    .gauge-label { display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; }
-    .comparison-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 0.8rem;
-      margin: 1rem 0;
-    }
-    .gpu-card {
-      background: #0f172a;
-      border-radius: 20px;
-      padding: 0.8rem;
-      text-align: center;
-      border: 1px solid #2d3a4e;
-    }
-    .gpu-card .gpu-name { font-weight: 600; color: #e2e8f0; }
-    .gpu-card .gpu-flops { font-size: 1.2rem; color: #38bdf8; }
-    .gpu-card .gpu-mfu { font-size: 0.8rem; color: #94a3b8; }
-    .footer {
-      margin-top: 3rem;
-      text-align: center;
-      color: #475569;
-      font-size: 0.9rem;
-      border-top: 1px solid #1e293b;
-      padding-top: 2rem;
-    }
-    .chinchilla-note {
-      background: #0f172a;
-      border-radius: 20px;
-      padding: 1rem 1.5rem;
-      border-left: 4px solid #38bdf8;
-      font-size: 0.9rem;
-      color: #cbd5e1;
-      margin: 1.5rem 0 0.5rem;
-    }
-    @media (max-width: 700px) {
-      .grid-2 { grid-template-columns: 1fr; gap: 0.8rem; }
-      h1 { font-size: 1.8rem; }
-      .card { padding: 1.2rem; }
-    }
-    .text-accent { color: #38bdf8; }
-    .text-muted { color: #64748b; }
-    .mt-2 { margin-top: 1.2rem; }
-    .mb-1 { margin-bottom: 0.8rem; }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; }
-  </style>
 
 <meta property="og:title" content="Transformer FLOPs Calculator · heytensor.com">
 <meta property="og:description" content="Compute forward/backward FLOPs, MFU, and GPU comparison for transformer training. Chinchilla scaling reference, dark theme, interactive.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://heytensor.com/tools/transformer-flops-calculator">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
 <div class="container">
-  <header>
-    <h1>⚡ Transformer FLOPs Calculator</h1>
+<h1>⚡ Transformer FLOPs Calculator</h1>
     <div class="subhead">heytensor.com — estimate training compute, MFU & GPU comparison</div>
+
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
   </header>
 
   <div class="card">
@@ -278,7 +145,7 @@
       <div class="gauge-label"><span>0%</span><span>40–60% typical</span><span>100%</span></div>
     </div>
 
-    <table id="breakdownTable">
+    <div class="table-scroll"><table id="breakdownTable">
       <thead><tr><th>Component</th><th>FLOPs (×10^12)</th><th>% of total</th></tr></thead>
       <tbody id="tableBody">
         <tr><td>Attention</td><td id="tdAttn">—</td><td id="tdAttnPct">—</td></tr>
@@ -287,7 +154,7 @@
         <tr><td>Backward</td><td id="tdBwd">—</td><td id="tdBwdPct">—</td></tr>
         <tr><td><strong>Total step</strong></td><td id="tdTotal"><strong>—</strong></td><td id="tdTotalPct">100%</td></tr>
       </tbody>
-    </table>
+    </table></div>
 
     <div class="chinchilla-note">
       📖 <strong>Chinchilla scaling law</strong>: For optimal compute, model size (params) and training tokens should scale roughly 1:1. 
@@ -302,8 +169,12 @@
     <p class="text-muted" style="font-size:0.8rem; margin-top:0.8rem;">* Achieved TFLOPS = total step FLOPs / step time. MFU = achieved / peak.</p>
   </div>
 
-  <footer class="footer">
-    © 2025 heytensor.com — Transformer FLOPs Calculator. All values approximate.
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
   </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>

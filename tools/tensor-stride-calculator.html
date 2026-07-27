@@ -35,56 +35,34 @@
   ]
 }
 </script>
-<style>
-  :root{
-    --bg:#0c1018; --panel:#141a26; --panel2:#1b2333; --line:#26304a;
-    --txt:#e7ecf6; --muted:#94a3c0; --accent:#5eead4; --accent2:#818cf8; --warn:#f87171;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--txt);
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-    line-height:1.6; font-size:16px;
-  }
-  nav,footer{display:flex;gap:18px;flex-wrap:wrap;align-items:center;padding:16px 22px;background:var(--panel);border-bottom:1px solid var(--line)}
-  footer{border-bottom:none;border-top:1px solid var(--line);margin-top:48px;color:var(--muted)}
-  nav a,footer a{color:var(--accent);text-decoration:none;font-weight:600}
-  nav a:hover,footer a:hover{text-decoration:underline}
-  main{max-width:880px;margin:0 auto;padding:28px 22px}
-  h1{font-size:1.9rem;line-height:1.2;margin:.2em 0 .3em}
-  h2{font-size:1.3rem;margin:1.6em 0 .5em;color:#fff}
-  .intro{color:var(--muted);font-size:1.05rem}
-  section#tool{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;margin:22px 0}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media(max-width:560px){.grid{grid-template-columns:1fr}}
-  label{display:block;font-weight:600;margin:0 0 6px;font-size:.92rem}
-  .hint{font-weight:400;color:var(--muted);font-size:.82rem}
-  input[type=text],input[type=number]{
-    width:100%;padding:11px 12px;background:var(--panel2);color:var(--txt);
-    border:1px solid var(--line);border-radius:9px;font-size:1rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  }
-  input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(94,234,212,.15)}
-  .out{margin-top:18px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:16px}
-  .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line);font-family:ui-monospace,Menlo,monospace}
-  .row:last-child{border-bottom:none}
-  .row b{color:var(--accent)}
-  .big{font-size:1.15rem}
-  code{background:var(--panel2);padding:2px 6px;border-radius:5px;font-family:ui-monospace,Menlo,monospace;color:var(--accent)}
-  table{width:100%;border-collapse:collapse;margin-top:10px;font-family:ui-monospace,Menlo,monospace;font-size:.9rem}
-  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
-  th{color:var(--muted);font-weight:600}
-  .err{color:var(--warn);font-weight:600}
-  .pill{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:2px 9px;margin:2px 4px 2px 0;font-family:ui-monospace,Menlo,monospace}
-  .relbox a{display:inline-block;margin:6px 10px 6px 0;color:var(--accent2);font-weight:600;text-decoration:none;border:1px solid var(--line);padding:8px 13px;border-radius:9px}
-  .relbox a:hover{border-color:var(--accent2)}
-  p{margin:.7em 0}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
-<nav>
-  <a href="/">heytensor.com</a>
-  <a href="/tools/">All Tools</a>
-</nav>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+<main class="wrap">
 <main>
   <h1>Calculate Tensor Strides and Storage Offsets</h1>
   <p class="intro">Enter a tensor shape and an index to see the contiguous strides PyTorch assigns and the exact flat position the element occupies in linear memory.</p>
@@ -120,11 +98,14 @@
   </section>
 </main>
 
-<footer>
-  <a href="/">heytensor.com</a>
-  <a href="/tools/">All Tools</a>
-  <span>© 2026 heytensor.com</span>
-</footer>
+</main>
+<footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 
 <script>
 (function(){
@@ -174,11 +155,11 @@
     html += '<div class="row"><span>Max valid offset</span><b>' + (total-1) + '</b></div>';
     html += '<div class="row"><span>Memory (float32)</span><b>' + (total*4) + ' bytes</b></div>';
 
-    html += '<table><thead><tr><th>dim</th><th>size</th><th>stride</th></tr></thead><tbody>';
+    html += '<div class="table-scroll"><table><thead><tr><th>dim</th><th>size</th><th>stride</th></tr></thead><tbody>';
     for(var d=0; d<shape.length; d++){
       html += '<tr><td>'+d+'</td><td>'+shape[d]+'</td><td>'+st[d]+'</td></tr>';
     }
-    html += '</tbody></table>';
+    html += '</tbody></table></div>';
 
     // offset lookup
     if(idx.length > 0){

@@ -42,79 +42,34 @@
   ]
 }
 </script>
-<style>
-:root{
-  --bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--border:#2d3748;
-  --text:#e6edf3;--muted:#9aa7b5;--accent:#5eead4;--accent2:#818cf8;
-  --warn:#fbbf24;--err:#f87171;--ok:#34d399;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-  line-height:1.6;
-}
-nav{
-  display:flex;gap:1.2rem;padding:1rem 1.5rem;border-bottom:1px solid var(--border);
-  background:var(--panel);flex-wrap:wrap;align-items:center;
-}
-nav a{color:var(--accent);text-decoration:none;font-weight:600;font-size:.95rem}
-nav a:hover{text-decoration:underline}
-main{max-width:920px;margin:0 auto;padding:1.5rem}
-h1{font-size:1.7rem;line-height:1.25;margin:.4rem 0 .6rem}
-h2{font-size:1.25rem;margin:2rem 0 .8rem;border-bottom:1px solid var(--border);padding-bottom:.4rem}
-.intro{color:var(--muted);font-size:1.02rem;margin-bottom:1.4rem}
-#tool{
-  background:var(--panel);border:1px solid var(--border);border-radius:14px;
-  padding:1.4rem;margin-bottom:1.6rem;
-}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem}
-.field{display:flex;flex-direction:column;gap:.35rem}
-.field label{font-size:.82rem;font-weight:600;color:var(--muted);letter-spacing:.02em}
-.field input,.field select{
-  background:var(--panel2);border:1px solid var(--border);border-radius:8px;
-  color:var(--text);padding:.6rem .7rem;font-size:1rem;font-family:inherit;width:100%;
-}
-.field input:focus,.field select:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 2px rgba(129,140,248,.25)}
-.hint{font-size:.72rem;color:#6b7785}
-.out{margin-top:1.5rem}
-.shape{
-  display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:1.05rem;background:var(--panel2);border:1px solid var(--border);
-  border-radius:10px;padding:1rem;
-}
-.tok{background:rgba(94,234,212,.12);border:1px solid rgba(94,234,212,.4);color:var(--accent);
-  padding:.2rem .55rem;border-radius:6px;font-weight:600}
-.tok.b{background:rgba(129,140,248,.12);border-color:rgba(129,140,248,.4);color:var(--accent2)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-top:1.2rem}
-.card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem}
-.card .k{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.card .v{font-size:1.35rem;font-weight:700;margin-top:.25rem;font-family:ui-monospace,Menlo,monospace}
-.card .s{font-size:.72rem;color:#6b7785;margin-top:.15rem}
-.note{margin-top:1rem;font-size:.86rem;padding:.7rem .9rem;border-radius:8px;border:1px solid}
-.note.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.35);color:var(--ok)}
-.note.warn{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.35);color:var(--warn)}
-.note.err{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.35);color:var(--err)}
-.prose p{margin:.7rem 0;color:#cdd7e1}
-.prose code{background:var(--panel2);padding:.12rem .4rem;border-radius:5px;font-size:.9em;color:var(--accent)}
-.prose ul{color:#cdd7e1}
-.formula{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--accent2);
-  border-radius:8px;padding:.8rem 1rem;font-family:ui-monospace,Menlo,monospace;font-size:.9rem;overflow-x:auto;margin:1rem 0}
-.related a{display:inline-block;margin:.3rem .6rem .3rem 0;background:var(--panel);border:1px solid var(--border);
-  border-radius:8px;padding:.55rem .9rem;color:var(--accent);text-decoration:none;font-weight:600;font-size:.92rem}
-.related a:hover{border-color:var(--accent)}
-footer{border-top:1px solid var(--border);background:var(--panel);padding:1.5rem;text-align:center;color:var(--muted);font-size:.9rem;margin-top:2rem}
-footer a{color:var(--accent);text-decoration:none;margin:0 .6rem}
-footer a:hover{text-decoration:underline}
-@media(max-width:480px){h1{font-size:1.4rem}main{padding:1rem}}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
-<nav>
-  <a href="/">heytensor.com</a>
-  <a href="/tools/">All Tools</a>
-</nav>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+<main class="wrap">
 <main>
 <h1>Vision Transformer Patch Embedding Tensor Shapes</h1>
 <p class="intro">Enter your image dimensions and patch size to instantly see the patch grid, sequence length, embedding tensor shape, and parameter count for a ViT patch-embedding layer.</p>
@@ -191,13 +146,14 @@ output shape = [B, seq_len, D]
 </section>
 </main>
 
-<footer>
-  <div>
-    <a href="/">heytensor.com</a>
-    <a href="/tools/">All Tools</a>
-  </div>
-  <p>© 2026 heytensor.com — PyTorch tensor shape calculators</p>
-</footer>
+</main>
+<footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 
 <script>
 (function(){

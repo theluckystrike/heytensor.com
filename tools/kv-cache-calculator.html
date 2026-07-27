@@ -35,43 +35,33 @@
   ]
 }
 </script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#0c1018;color:#e6edf3;line-height:1.6;padding:0 0 60px}
-nav{display:flex;gap:20px;padding:16px 22px;background:#11161f;border-bottom:1px solid #1f2937;flex-wrap:wrap}
-nav a{color:#7dd3fc;text-decoration:none;font-weight:600;font-size:14px}
-nav a:hover{text-decoration:underline}
-.wrap{max-width:860px;margin:0 auto;padding:0 18px}
-h1{font-size:1.7rem;margin:30px 0 12px;line-height:1.25}
-h2{font-size:1.25rem;margin:34px 0 12px;color:#bae6fd}
-p{margin:10px 0;color:#c4cdd8}
-.intro{font-size:1.05rem;color:#d6dee8}
-#tool{background:#11161f;border:1px solid #1f2937;border-radius:14px;padding:22px;margin:24px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
-.field{display:flex;flex-direction:column;gap:6px}
-label{font-size:13px;font-weight:600;color:#9fb0c3}
-input,select{background:#0c1018;border:1px solid #2a3647;color:#e6edf3;border-radius:8px;padding:9px 11px;font-size:15px;width:100%}
-input:focus,select:focus{outline:none;border-color:#38bdf8}
-.out{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
-.card{background:#0c1018;border:1px solid #243043;border-radius:10px;padding:16px}
-.card .k{font-size:12px;color:#8595a8;text-transform:uppercase;letter-spacing:.04em}
-.card .v{font-size:1.5rem;font-weight:700;color:#5eead4;margin-top:4px;word-break:break-word}
-.hint{font-size:12px;color:#7a8aa0;margin-top:4px}
-.formula{background:#0c1018;border:1px solid #243043;border-radius:8px;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:#9fe;overflow-x:auto}
-.related a{color:#7dd3fc;text-decoration:none;display:inline-block;margin:6px 14px 6px 0;font-weight:600}
-.related a:hover{text-decoration:underline}
-footer{border-top:1px solid #1f2937;margin-top:40px;padding:24px 18px;text-align:center;color:#8595a8;font-size:14px}
-footer a{color:#7dd3fc;text-decoration:none;margin:0 10px}
-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
-th,td{border:1px solid #243043;padding:8px 10px;text-align:left}
-th{background:#0c1018;color:#bae6fd}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
-<nav>
-  <a href="/">heytensor.com</a>
-  <a href="/tools/">All Tools</a>
-</nav>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
 
 <div class="wrap">
 <h1>Transformer KV Cache VRAM Estimator</h1>
@@ -127,13 +117,13 @@ th{background:#0c1018;color:#bae6fd}
 <p>This is where the calculator adds information most overview pages omit: KV cache scales with <em>n_kv</em>, not the full attention-head count. A 32-head model retrofitted to 8 KV heads via GQA cuts cache memory by 4&times; with no change to layers or head dim, which is precisely why long-context models adopt it. The output also reports <strong>bytes per token</strong> (the cache cost of every additional generated token) — multiply it by your target max context to forecast the worst-case footprint, and compare against free VRAM after weights and activations to find your true concurrency ceiling.</p>
 <p>Quantizing the cache to FP8 halves the footprint versus FP16 and INT4 quarters it, at some accuracy cost on long sequences. Because the formula is linear, doubling batch size or doubling context exactly doubles the cache, making capacity planning a single multiplication once you know bytes per token.</p>
 
-<table>
+<div class="table-scroll"><table>
 <tr><th>Lever</th><th>Effect on KV cache</th></tr>
 <tr><td>Halve KV heads (GQA)</td><td>Halves cache</td></tr>
 <tr><td>Double context length</td><td>Doubles cache</td></tr>
 <tr><td>FP16 → FP8</td><td>Halves cache</td></tr>
 <tr><td>Double batch</td><td>Doubles cache</td></tr>
-</table>
+</table></div>
 
 <section class="related">
 <h2>Related Tools</h2>
@@ -143,10 +133,13 @@ th{background:#0c1018;color:#bae6fd}
 </section>
 </div>
 
-<footer>
-  <div><a href="/">heytensor.com</a> · <a href="/tools/">All Tools</a></div>
-  <p>© 2026 heytensor.com</p>
-</footer>
+<footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 
 <script>
 (function(){

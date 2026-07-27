@@ -59,204 +59,39 @@
     ]
   }
   </script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #0f172a;
-      color: #e2e8f0;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      padding: 1.5rem 1rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      max-width: 1100px;
-      width: 100%;
-    }
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.25rem;
-      color: #f1f5f9;
-    }
-    .subhead {
-      color: #94a3b8;
-      margin-bottom: 2rem;
-      border-left: 4px solid #38bdf8;
-      padding-left: 1rem;
-    }
-    .card {
-      background: #1e293b;
-      border-radius: 1.25rem;
-      padding: 1.5rem 1.8rem;
-      box-shadow: 0 20px 35px -10px rgba(0,0,0,0.6);
-      margin-bottom: 2rem;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 2rem;
-    }
-    @media (max-width: 780px) {
-      .grid-2 { grid-template-columns: 1fr; gap: 1.5rem; }
-      h1 { font-size: 1.8rem; }
-      .card { padding: 1.2rem; }
-    }
-    .param-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem 1.2rem;
-      margin-bottom: 1.2rem;
-    }
-    .param-item {
-      flex: 1 0 120px;
-      min-width: 100px;
-    }
-    .param-item label {
-      display: block;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: #94a3b8;
-      margin-bottom: 0.2rem;
-    }
-    .param-item input, .param-item select {
-      width: 100%;
-      background: #0f172a;
-      border: 1px solid #334155;
-      color: #e2e8f0;
-      padding: 0.5rem 0.6rem;
-      border-radius: 0.6rem;
-      font-size: 0.95rem;
-      transition: 0.2s;
-    }
-    .param-item input:focus, .param-item select:focus {
-      outline: none;
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 2px #38bdf855;
-    }
-    .param-item input[type="number"] { -moz-appearance: textfield; }
-    .inline-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      align-items: center;
-    }
-    .inline-group .param-item { flex: 1; min-width: 70px; }
-    .btn {
-      background: #38bdf8;
-      color: #0f172a;
-      border: none;
-      font-weight: 600;
-      padding: 0.6rem 1.5rem;
-      border-radius: 2rem;
-      font-size: 0.95rem;
-      cursor: pointer;
-      transition: 0.2s;
-      margin-top: 0.5rem;
-    }
-    .btn:hover { background: #7dd3fc; transform: scale(1.02); }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #38bdf8;
-      color: #38bdf8;
-      margin-left: 0.5rem;
-    }
-    .btn-outline:hover { background: #38bdf822; }
-    .chart-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    canvas {
-      width: 100% !important;
-      height: auto !important;
-      aspect-ratio: 600 / 360;
-      background: #0f172a;
-      border-radius: 1rem;
-      display: block;
-      border: 1px solid #2d3a4e;
-      cursor: crosshair;
-    }
-    #tooltip {
-      position: absolute;
-      background: #1e293b;
-      border: 1px solid #38bdf8;
-      color: #e2e8f0;
-      padding: 0.4rem 0.8rem;
-      border-radius: 0.6rem;
-      font-size: 0.8rem;
-      pointer-events: none;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-      opacity: 0;
-      transition: opacity 0.1s;
-      white-space: nowrap;
-      z-index: 10;
-    }
-    .table-wrap {
-      overflow-x: auto;
-      margin: 1.5rem 0 0.8rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-    th {
-      background: #0f172a;
-      color: #94a3b8;
-      font-weight: 500;
-      padding: 0.5rem 0.3rem;
-      text-align: left;
-      border-bottom: 1px solid #334155;
-    }
-    td {
-      padding: 0.4rem 0.3rem;
-      border-bottom: 1px solid #1e2a3a;
-    }
-    .code-block {
-      background: #0f172a;
-      border-radius: 0.8rem;
-      padding: 1rem 1.2rem;
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 0.8rem;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
-      border: 1px solid #2d3a4e;
-      color: #a5d6ff;
-    }
-    .stat-badge {
-      display: inline-block;
-      background: #38bdf822;
-      color: #7dd3fc;
-      padding: 0.2rem 0.8rem;
-      border-radius: 2rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-    footer {
-      margin-top: 2.5rem;
-      color: #475569;
-      font-size: 0.85rem;
-      text-align: center;
-      border-top: 1px solid #1e293b;
-      padding-top: 1.5rem;
-    }
-    .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-  </style>
 
 <meta property="og:title" content="Cosine LR Schedule Visualizer · heytensor.com">
 <meta property="og:description" content="Interactive cosine learning rate schedule visualizer with warmup, SGDR restarts, constant phase. Real PyTorch code generation.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://heytensor.com/tools/cosine-lr-schedule-visualizer">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
 <div class="container">
   <h1>📈 Cosine LR Schedule Visualizer</h1>
   <div class="subhead">heytensor.com — interactive schedule builder with PyTorch codegen</div>
@@ -310,10 +145,10 @@
         </div>
         <!-- quick table -->
         <div class="table-wrap">
-          <table id="lrTable">
+          <div class="table-scroll"><table id="lrTable">
             <thead><tr><th>Step</th><th>LR</th></tr></thead>
             <tbody id="lrTableBody"></tbody>
-          </table>
+          </table></div>
         </div>
       </div>
       <!-- right: chart + tooltip -->
@@ -329,7 +164,13 @@
     </div>
   </div>
 
-  <footer>© 2025 heytensor.com</footer>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>

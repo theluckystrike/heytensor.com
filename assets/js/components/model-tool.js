@@ -12,7 +12,20 @@
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  /* Some fields are divisors or geometry, so 0 is not a legal value.
+     in_ch / groups with groups === 0 produced NaN, which rendered to the
+     reader as "NaN" params and "NaN B" model size. Clamp on entry, and
+     never print a non-finite number. */
+  var MIN_ONE = { groups: true, k: true };
+
+  function clampField(f, raw) {
+    var v = parseInt(raw, 10);
+    if (!isFinite(v)) v = f.default;
+    return Math.max(MIN_ONE[f.key] ? 1 : 0, v);
+  }
+
   function formatNum(n) {
+    if (!isFinite(n)) return '\u2014';
     if (n >= 1e9) return (n / 1e9).toFixed(2) + 'B';
     if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
     if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
@@ -20,6 +33,7 @@
   }
 
   function formatBytes(bytes) {
+    if (!isFinite(bytes)) return '\u2014';
     if (bytes >= 1e9) return (bytes / 1e9).toFixed(2) + ' GB';
     if (bytes >= 1e6) return (bytes / 1e6).toFixed(1) + ' MB';
     if (bytes >= 1e3) return (bytes / 1e3).toFixed(1) + ' KB';
@@ -234,7 +248,7 @@
           inp.placeholder = f.label;
           inp.style.maxWidth = '90px';
           inp.addEventListener('change', function () {
-            layer.fields[f.key] = parseInt(this.value, 10) || 0;
+            layer.fields[f.key] = clampField(f, this.value);
             renderLayers();
           });
           row.appendChild(inp);

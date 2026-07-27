@@ -39,281 +39,42 @@
     ]
   }
   </script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      background: #0a0a0a;
-      color: #e5e5e5;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1rem;
-    }
-    .container {
-      max-width: 1100px;
-      width: 100%;
-    }
-    header {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-    }
-    .breadcrumb {
-      display: flex;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-      color: #8a8a8a;
-    }
-    .breadcrumb a {
-      color: #6ab0f3;
-      text-decoration: none;
-    }
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #c084fc, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .subhead {
-      color: #a0a0a0;
-      font-size: 1rem;
-      border-left: 3px solid #60a5fa;
-      padding-left: 1rem;
-      margin-top: 0.25rem;
-    }
-    .tool-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-    @media (max-width: 720px) {
-      .tool-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .card {
-      background: #141414;
-      border-radius: 20px;
-      padding: 1.5rem;
-      border: 1px solid #2a2a2a;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-    }
-    .card h2 {
-      font-size: 1.2rem;
-      font-weight: 500;
-      margin-bottom: 1rem;
-      color: #d0d0d0;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    textarea {
-      width: 100%;
-      background: #0f0f0f;
-      border: 1px solid #333;
-      border-radius: 14px;
-      padding: 1rem;
-      color: #f0f0f0;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.9rem;
-      resize: vertical;
-      min-height: 120px;
-      transition: 0.2s;
-    }
-    textarea:focus {
-      outline: none;
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.25);
-    }
-    .input-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin: 1rem 0 0.5rem;
-    }
-    .btn {
-      background: #1e1e1e;
-      border: 1px solid #333;
-      padding: 0.6rem 1.4rem;
-      border-radius: 40px;
-      font-weight: 500;
-      color: #ddd;
-      cursor: pointer;
-      transition: 0.2s;
-      font-size: 0.9rem;
-    }
-    .btn-primary {
-      background: #2563eb;
-      border-color: #2563eb;
-      color: white;
-    }
-    .btn-primary:hover {
-      background: #3b82f6;
-      border-color: #3b82f6;
-    }
-    .btn-outline {
-      background: transparent;
-      border-color: #444;
-    }
-    .btn-outline:hover {
-      border-color: #888;
-      background: #1a1a1a;
-    }
-    .filter-box {
-      margin-top: 0.75rem;
-    }
-    .filter-box input {
-      width: 100%;
-      background: #0f0f0f;
-      border: 1px solid #2a2a2a;
-      border-radius: 40px;
-      padding: 0.7rem 1.2rem;
-      color: #eee;
-      font-size: 0.9rem;
-    }
-    .filter-box input::placeholder {
-      color: #666;
-    }
-    .result-panel {
-      background: #101010;
-      border-radius: 18px;
-      padding: 1.5rem;
-      border: 1px solid #2c2c2c;
-      min-height: 240px;
-    }
-    .result-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    .error-badge {
-      background: #2d1b1b;
-      color: #f87171;
-      padding: 0.25rem 1rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      border: 1px solid #5f2e2e;
-    }
-    .error-type {
-      font-weight: 600;
-      color: #facc15;
-    }
-    .fix-card {
-      background: #1a1a1a;
-      border-radius: 16px;
-      padding: 1.2rem;
-      margin: 1rem 0;
-      border-left: 4px solid #34d399;
-    }
-    .fix-card .label {
-      color: #9ca3af;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-    .fix-card .one-liner {
-      font-size: 1.1rem;
-      font-weight: 500;
-      color: #e2e8f0;
-      margin: 0.25rem 0 0.5rem;
-    }
-    .detail-text {
-      color: #b0b0b0;
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-    .code-block {
-      background: #0d0d0d;
-      border-radius: 14px;
-      padding: 1rem;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.85rem;
-      border: 1px solid #2a2a2a;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      word-break: break-word;
-      color: #c5e0ff;
-      margin: 1rem 0 0.25rem;
-    }
-    .error-list {
-      margin-top: 1.5rem;
-      max-height: 260px;
-      overflow-y: auto;
-      padding-right: 0.5rem;
-    }
-    .error-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    .error-list::-webkit-scrollbar-track {
-      background: #111;
-    }
-    .error-list::-webkit-scrollbar-thumb {
-      background: #333;
-      border-radius: 10px;
-    }
-    .error-item {
-      padding: 0.6rem 0.8rem;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.1s;
-      border-bottom: 1px solid #1f1f1f;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .error-item:hover {
-      background: #1f1f1f;
-    }
-    .error-item .name {
-      color: #b3d0ff;
-    }
-    .error-item .tag {
-      font-size: 0.7rem;
-      background: #2b2b2b;
-      padding: 0.2rem 0.7rem;
-      border-radius: 40px;
-      color: #aaa;
-    }
-    .footer-note {
-      margin-top: 3rem;
-      text-align: center;
-      color: #5a5a5a;
-      font-size: 0.85rem;
-      border-top: 1px solid #1f1f1f;
-      padding-top: 2rem;
-    }
-    .highlight {
-      color: #fbbf24;
-    }
-  </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
 <div class="container">
-  <header>
-    <div class="breadcrumb">
+<div class="breadcrumb">
       <a href="https://heytensor.com/">Home</a> <span>/</span>
       <a href="https://heytensor.com/tools">Tools</a> <span>/</span>
       <span>CUDA Error Decoder</span>
     </div>
     <h1>CUDA Error Decoder</h1>
     <div class="subhead">Paste any GPU error &amp; get instant cause + fix + code example. 30+ errors indexed.</div>
+
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
   </header>
 
   <div class="tool-grid">
@@ -608,5 +369,12 @@
 <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:600;font-size:1.05rem;text-decoration:none">BeLikeNative.com</a>
 <p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
 </div>
+<footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 </body>
 </html>

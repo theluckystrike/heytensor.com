@@ -41,44 +41,34 @@
     ]
   }
   </script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0a0a0a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; display: flex; justify-content: center; padding: 2rem 1rem; min-height: 100vh; }
-    .container { max-width: 1100px; width: 100%; }
-    h1 { font-size: 2.2rem; font-weight: 600; margin-bottom: 0.25rem; color: #f0f0f0; letter-spacing: -0.02em; }
-    .subhead { color: #a0a0a0; margin-bottom: 2rem; border-bottom: 1px solid #2a2a2a; padding-bottom: 0.75rem; }
-    .card { background: #111; border: 1px solid #2a2a2a; border-radius: 20px; padding: 1.8rem; margin-bottom: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .form-group { margin-bottom: 1.2rem; }
-    label { display: block; font-size: 0.85rem; font-weight: 500; color: #bbb; margin-bottom: 0.3rem; text-transform: uppercase; letter-spacing: 0.03em; }
-    input, select { width: 100%; padding: 0.7rem 0.9rem; background: #1e1e1e; border: 1px solid #333; border-radius: 12px; color: #f0f0f0; font-size: 1rem; transition: border 0.2s; }
-    input:focus, select:focus { outline: none; border-color: #7c8aff; }
-    input[type="number"] { -moz-appearance: textfield; }
-    input[type="number"]::-webkit-inner-spin-button { opacity: 0.5; }
-    .inline-toggle { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-    .inline-toggle label { margin-bottom: 0; text-transform: none; font-weight: 400; }
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #333; border-radius: 24px; transition: 0.3s; }
-    .slider:before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #ccc; border-radius: 50%; transition: 0.3s; }
-    input:checked + .slider { background: #7c8aff; }
-    input:checked + .slider:before { transform: translateX(20px); background: white; }
-    .results { background: #0d0d0d; border-radius: 18px; padding: 1.5rem; border: 1px solid #2a2a2a; }
-    .result-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #1e1e1e; }
-    .result-row:last-child { border-bottom: none; }
-    .result-label { color: #aaa; }
-    .result-value { font-weight: 600; color: #f0f0f0; font-variant-numeric: tabular-nums; }
-    .total-vram { font-size: 1.6rem; font-weight: 700; color: #b0c4ff; letter-spacing: -0.01em; }
-    .gpu-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
-    .gpu-badge { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 40px; padding: 0.4rem 1rem; font-size: 0.85rem; color: #ccc; }
-    .gpu-badge.fit { border-color: #4caf93; background: #1f2f2a; color: #b0f0d0; }
-    .gpu-badge.nofit { border-color: #5a3a3a; background: #2a1a1a; color: #e08080; }
-    .footnote { color: #666; font-size: 0.8rem; margin-top: 1rem; }
-    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } .card { padding: 1.2rem; } }
-  </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
 <div class="container">
   <h1>PyTorch Memory Calculator</h1>
   <div class="subhead">Estimate GPU VRAM usage for training — model, gradient, optimizer, activations</div>
@@ -353,5 +343,12 @@
 <a href="https://www.belikenative.com?ref=satellite" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:600;font-size:1.05rem;text-decoration:none">BeLikeNative.com</a>
 <p style="margin:6px 0 0;color:#cbd5e1;font-size:0.9rem">The #1 AI writing tool for freelancers — perfect grammar in any language, instantly.</p>
 </div>
+<footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 </body>
 </html>

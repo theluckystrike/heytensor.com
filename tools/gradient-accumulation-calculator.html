@@ -43,78 +43,34 @@
   ]
 }
 </script>
-<style>
-:root{
-  --bg:#0d1117;--panel:#161b22;--panel2:#1c2430;--border:#2d3748;
-  --accent:#f5a623;--accent2:#ffce6e;--text:#e6edf3;--muted:#9aa6b2;
-  --good:#3fb950;--bad:#f85149;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
-  line-height:1.6;
-}
-nav{
-  display:flex;gap:1.2rem;padding:1rem 1.4rem;border-bottom:1px solid var(--border);
-  background:var(--panel);flex-wrap:wrap;align-items:center;
-}
-nav a{color:var(--accent);text-decoration:none;font-weight:600;font-size:.95rem}
-nav a:hover{text-decoration:underline}
-main{max-width:880px;margin:0 auto;padding:1.6rem 1.2rem 3rem}
-h1{font-size:1.85rem;line-height:1.2;margin:.6rem 0 .4rem}
-h2{font-size:1.3rem;margin:2rem 0 .6rem;border-left:3px solid var(--accent);padding-left:.6rem}
-.intro{color:var(--muted);font-size:1.05rem;margin-bottom:1.4rem}
-section#tool{
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  padding:1.4rem;margin:1rem 0 1.6rem;
-}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
-.field{display:flex;flex-direction:column;gap:.35rem}
-label{font-size:.85rem;color:var(--muted);font-weight:600}
-input[type=number],select{
-  background:var(--panel2);border:1px solid var(--border);color:var(--text);
-  border-radius:8px;padding:.6rem .7rem;font-size:1rem;width:100%;
-}
-input:focus,select:focus{outline:none;border-color:var(--accent)}
-.checkrow{display:flex;align-items:center;gap:.5rem;margin-top:.8rem}
-.checkrow input{width:18px;height:18px;accent-color:var(--accent)}
-.checkrow label{color:var(--text)}
-.out{margin-top:1.4rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.9rem}
-.card{
-  background:var(--panel2);border:1px solid var(--border);border-radius:10px;
-  padding:.9rem 1rem;text-align:center;
-}
-.card .v{font-size:1.7rem;font-weight:700;color:var(--accent2)}
-.card .l{font-size:.78rem;color:var(--muted);margin-top:.2rem}
-.note{margin-top:1rem;padding:.8rem 1rem;border-radius:8px;font-size:.92rem}
-.note.ok{background:rgba(63,185,80,.12);border:1px solid var(--good);color:#9be5a8}
-.note.warn{background:rgba(248,81,73,.12);border:1px solid var(--bad);color:#ffb3ad}
-.formula{
-  background:var(--panel2);border:1px solid var(--border);border-radius:8px;
-  padding:.8rem 1rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:.9rem;overflow-x:auto;color:var(--accent2);margin:.8rem 0;
-}
-p{margin:.7rem 0}
-.related a{
-  display:inline-block;background:var(--panel);border:1px solid var(--border);
-  color:var(--accent);text-decoration:none;padding:.5rem .9rem;border-radius:8px;
-  margin:.3rem .4rem .3rem 0;font-weight:600;font-size:.92rem;
-}
-.related a:hover{border-color:var(--accent)}
-footer{
-  border-top:1px solid var(--border);padding:1.4rem;text-align:center;
-  color:var(--muted);font-size:.9rem;
-}
-footer a{color:var(--accent);text-decoration:none;margin:0 .5rem}
-@media(max-width:480px){h1{font-size:1.5rem}.card .v{font-size:1.4rem}}
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
-<nav>
-  <a href="/">heytensor.com</a>
-  <a href="/tools/">All Tools</a>
-</nav>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+<main class="wrap">
 <main>
 <h1>Gradient Accumulation Calculator for PyTorch Training</h1>
 <p class="intro">Match a target (effective) batch size on limited GPU memory. Enter your micro-batch, GPU count, and the batch size you want to simulate — the tool returns the accumulation steps and the real effective batch live.</p>
@@ -165,13 +121,14 @@ footer a{color:var(--accent);text-decoration:none;margin:0 .5rem}
 </section>
 </main>
 
-<footer>
-  <div>
-    <a href="/">heytensor.com</a>
-    <a href="/tools/">All Tools</a>
-  </div>
-  <p>© 2026 heytensor.com — PyTorch tensor &amp; training calculators</p>
-</footer>
+</main>
+<footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 
 <script>
 (function(){

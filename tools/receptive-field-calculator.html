@@ -35,133 +35,34 @@
   ]
 }
 </script>
-<style>
-  :root {
-    --bg: #0d1117;
-    --panel: #161b22;
-    --panel2: #1c2230;
-    --border: #2d3748;
-    --text: #e6edf3;
-    --muted: #9aa7b5;
-    --accent: #58c4dc;
-    --accent2: #7ee787;
-    --warn: #f0a868;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-  }
-  nav {
-    display: flex;
-    gap: 1.2rem;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    background: var(--panel);
-  }
-  nav a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: .95rem; }
-  nav a:hover { text-decoration: underline; }
-  main { max-width: 920px; margin: 0 auto; padding: 1.5rem; }
-  h1 { font-size: 1.7rem; line-height: 1.25; margin: .6rem 0 .4rem; }
-  h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: .35rem; }
-  .intro { color: var(--muted); font-size: 1.02rem; }
-  section#tool {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.2rem;
-    margin-top: 1.2rem;
-  }
-  .controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1rem; }
-  .field { display: flex; flex-direction: column; gap: .3rem; }
-  .field label { font-size: .8rem; color: var(--muted); font-weight: 600; }
-  input, select {
-    background: var(--panel2);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: .5rem .6rem;
-    font-size: .95rem;
-    font-family: inherit;
-  }
-  input[type=number] { width: 90px; }
-  input:focus, select:focus { outline: none; border-color: var(--accent); }
-  button {
-    background: var(--accent);
-    color: #06222a;
-    border: none;
-    border-radius: 8px;
-    padding: .55rem .9rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: .9rem;
-  }
-  button.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
-  button:hover { filter: brightness(1.08); }
-  table { width: 100%; border-collapse: collapse; margin-top: .6rem; font-size: .9rem; }
-  th, td { text-align: center; padding: .5rem .4rem; border-bottom: 1px solid var(--border); }
-  th { color: var(--muted); font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; }
-  td input { width: 64px; }
-  .remove { background: transparent; color: var(--warn); border: none; cursor: pointer; font-size: 1.1rem; padding: 0 .4rem; }
-  .summary { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1rem; }
-  .stat {
-    flex: 1 1 130px;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: .8rem;
-    text-align: center;
-  }
-  .stat .v { font-size: 1.7rem; font-weight: 700; color: var(--accent2); }
-  .stat .l { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
-  .formula {
-    background: var(--panel2);
-    border-left: 3px solid var(--accent);
-    border-radius: 6px;
-    padding: .7rem .9rem;
-    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-    font-size: .88rem;
-    overflow-x: auto;
-    color: #cfe8ee;
-  }
-  p, li { color: #d4dce4; }
-  .relgrid { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: .6rem; }
-  .relgrid a {
-    flex: 1 1 200px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: .8rem 1rem;
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .relgrid a:hover { border-color: var(--accent); }
-  footer {
-    border-top: 1px solid var(--border);
-    margin-top: 2.5rem;
-    padding: 1.5rem;
-    text-align: center;
-    color: var(--muted);
-    font-size: .9rem;
-  }
-  footer a { color: var(--accent); text-decoration: none; margin: 0 .6rem; }
-  @media (max-width: 520px) {
-    h1 { font-size: 1.4rem; }
-    td input { width: 52px; }
-    th, td { padding: .4rem .2rem; font-size: .82rem; }
-  }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
-<nav>
-  <a href="/">heytensor.com</a>
-  <a href="/tools/">All Tools</a>
-</nav>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+<main class="wrap">
 <main>
   <h1>Receptive Field Calculator for Stacked CNN Layers</h1>
   <p class="intro">Add your Conv2d and MaxPool2d layers below to compute the effective receptive field, feature jump, and start offset at every stage of a PyTorch convolutional network. Output updates live as you edit.</p>
@@ -179,7 +80,7 @@
       <button id="resetBtn" class="secondary" type="button">Reset to demo</button>
     </div>
 
-    <table>
+    <div class="table-scroll"><table>
       <thead>
         <tr>
           <th>#</th><th>Type</th><th>Kernel</th><th>Stride</th><th>Padding</th><th>Dilation</th>
@@ -187,7 +88,7 @@
         </tr>
       </thead>
       <tbody id="rows"></tbody>
-    </table>
+    </table></div>
 
     <div class="summary">
       <div class="stat"><div class="v" id="sRF">—</div><div class="l">Receptive field (px)</div></div>
@@ -214,14 +115,14 @@ s_out  = s_in + ((k_eff &minus; 1)/2 &minus; P) &times; j_in</div>
   </div>
 </main>
 
-<footer>
-  <div>
-    <a href="/">Home</a> ·
-    <a href="/tools/">All Tools</a> ·
-    <a href="/tools/conv2d-calculator">Conv2d Calculator</a>
-  </div>
-  <p>© 2026 heytensor.com — PyTorch tensor and CNN math tools.</p>
-</footer>
+</main>
+<footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 
 <script>
 (function () {

@@ -24,190 +24,34 @@
       }
     }
     </script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #0a0e27;
-            color: #e0e6ed;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: #00d4aa;
-            text-align: center;
-        }
-        .subtitle {
-            text-align: center;
-            color: #8892b0;
-            margin-bottom: 40px;
-            font-size: 0.95rem;
-        }
-        .controls {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-        .control-group {
-            margin-bottom: 25px;
-        }
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #00d4aa;
-            font-size: 0.95rem;
-        }
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        input[type="range"] {
-            flex: 1;
-            height: 6px;
-            border-radius: 3px;
-            background: #1f2937;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #00d4aa;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
-        }
-        input[type="range"]::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #00d4aa;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 0 10px rgba(0, 212, 170, 0.4);
-        }
-        .value-display {
-            min-width: 100px;
-            text-align: right;
-            font-weight: 600;
-            color: #00d4aa;
-            font-size: 1.05rem;
-        }
-        .select-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        select {
-            padding: 10px 12px;
-            background: #1f2937;
-            color: #e0e6ed;
-            border: 1px solid #374151;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            cursor: pointer;
-        }
-        select:hover {
-            border-color: #00d4aa;
-        }
-        select:focus {
-            outline: none;
-            border-color: #00d4aa;
-            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
-        }
-        .results {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 20px;
-        }
-        .result-card {
-            background: #0f172a;
-            border-left: 3px solid #00d4aa;
-            padding: 18px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-        }
-        .result-label {
-            color: #8892b0;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-        .result-value {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #00d4aa;
-        }
-        .result-subtext {
-            color: #6b7280;
-            font-size: 0.85rem;
-            margin-top: 8px;
-        }
-        .memory-breakdown {
-            background: #0f172a;
-            border: 1px solid #374151;
-            border-radius: 6px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .memory-breakdown h3 {
-            color: #00d4aa;
-            margin-bottom: 15px;
-            font-size: 1rem;
-        }
-        .memory-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #1f2937;
-            font-size: 0.95rem;
-        }
-        .memory-item:last-child {
-            border-bottom: none;
-        }
-        .memory-item-value {
-            color: #00d4aa;
-            font-weight: 600;
-        }
-        .recommendation {
-            background: rgba(0, 212, 170, 0.1);
-            border-left: 3px solid #00d4aa;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
-            font-size: 0.95rem;
-            color: #d1fae5;
-        }
-        footer {
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.85rem;
-            margin-top: 40px;
-            padding: 20px 0;
-            border-top: 1px solid #1f2937;
-        }
-    </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
+<header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
+  </header>
     <div class="container">
         <h1>Batch Size Optimizer</h1>
         <p class="subtitle">Calculate optimal batch size, memory usage, and gradient accumulation strategy</p>
@@ -291,9 +135,13 @@
         </div>
     </div>
 
-    <footer>
-        © 2026 heytensor.com — ML Engineering Tools
-    </footer>
+    <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>

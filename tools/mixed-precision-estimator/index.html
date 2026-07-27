@@ -32,198 +32,42 @@
     ]
   }
   </script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      background: #0f172a;
-      color: #e2e8f0;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      padding: 1.5rem 1rem;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .container {
-      max-width: 1200px;
-      width: 100%;
-    }
-    header {
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    header h1 {
-      font-size: 1.9rem;
-      font-weight: 600;
-      background: linear-gradient(145deg, #38bdf8, #2dd4bf);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -0.02em;
-    }
-    header p {
-      color: #94a3b8;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-    }
-    .card {
-      background: #1e293b;
-      border-radius: 24px;
-      padding: 1.8rem 1.5rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 20px 35px -8px rgba(0,0,0,0.6);
-      border: 1px solid #334155;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.8rem;
-    }
-    .input-group {
-      margin-bottom: 1.4rem;
-    }
-    .input-group label {
-      display: block;
-      font-weight: 500;
-      margin-bottom: 0.4rem;
-      color: #cbd5e1;
-      font-size: 0.9rem;
-    }
-    .input-group input, .input-group select {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      color: #f1f5f9;
-      font-size: 1rem;
-      transition: 0.2s;
-    }
-    .input-group input:focus, .input-group select:focus {
-      outline: 2px solid #38bdf8;
-      border-color: transparent;
-    }
-    .input-group input[type="number"] {
-      -moz-appearance: textfield;
-    }
-    .input-group .hint {
-      font-size: 0.75rem;
-      color: #64748b;
-      margin-top: 0.2rem;
-    }
-    .results-panel {
-      background: #0f172a;
-      border-radius: 20px;
-      padding: 1.5rem;
-      border: 1px solid #2d3a4e;
-    }
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.6rem 0;
-      border-bottom: 1px solid #1e2a3a;
-    }
-    .stat-row:last-child {
-      border-bottom: none;
-    }
-    .stat-label {
-      color: #94a3b8;
-    }
-    .stat-value {
-      font-weight: 600;
-      color: #e2e8f0;
-    }
-    .stat-value.accent {
-      color: #38bdf8;
-    }
-    .stat-value.saving {
-      color: #2dd4bf;
-    }
-    .stat-value.speed {
-      color: #facc15;
-    }
-    .divider {
-      margin: 1rem 0;
-      border-top: 1px dashed #334155;
-    }
-    .table-wrap {
-      overflow-x: auto;
-      margin-top: 1.5rem;
-      border-radius: 16px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-      min-width: 600px;
-    }
-    th {
-      background: #1e293b;
-      color: #94a3b8;
-      font-weight: 500;
-      padding: 0.8rem 0.5rem;
-      text-align: center;
-    }
-    td {
-      padding: 0.7rem 0.5rem;
-      text-align: center;
-      border-bottom: 1px solid #1e2a3a;
-    }
-    td:first-child {
-      text-align: left;
-      font-weight: 500;
-      color: #cbd5e1;
-    }
-    .code-block {
-      background: #0b1120;
-      padding: 1.2rem;
-      border-radius: 18px;
-      font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 0.85rem;
-      border: 1px solid #2d3a4e;
-      overflow-x: auto;
-      margin-top: 1.5rem;
-      color: #a5b4fc;
-    }
-    .code-block .keyword { color: #38bdf8; }
-    .code-block .comment { color: #64748b; }
-    .footer {
-      text-align: center;
-      color: #475569;
-      margin-top: 2.5rem;
-      font-size: 0.9rem;
-      border-top: 1px solid #1e293b;
-      padding-top: 1.5rem;
-    }
-    @media (max-width: 700px) {
-      .grid-2 {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      header h1 {
-        font-size: 1.5rem;
-      }
-      .card {
-        padding: 1.2rem;
-      }
-    }
-  </style>
 
     <meta property="og:title" content="Mixed Precision Training Estimator — FP16/BF16 Memory &">
     <meta property="og:description" content="Interactive tool to estimate VRAM, memory savings, and speedup for FP16, BF16, TF32 mixed precision vs FP32 baseline. Includes optimizer states...">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://heytensor.com/tools/mixed-precision-estimator">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2241192243363112" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
 </head>
 <body>
 <div class="container">
-  <header>
-    <h1>⚡ Mixed Precision Estimator</h1>
+<h1>⚡ Mixed Precision Estimator</h1>
     <p>FP16 / BF16 / TF32 — memory & speed vs FP32 baseline</p>
+
+  <header>
+    <div class="container header-inner">
+      <a href="/" class="logo">Hey<span>Tensor</span></a>
+      <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+      <nav>
+        <a href="/">Calculator</a>
+        <a href="/tools/" class="active">Tools</a>
+        <a href="/answers/">Answers</a>
+        <a href="/research/">Research</a>
+        <a href="/guides/">Guides</a>
+        <a href="/about.html">About</a>
+        <a href="/blog/">Blog</a>
+        <div class="nav-right">
+          <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+          <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+        </div>
+      </nav>
+    </div>
   </header>
 
   <div class="card">
@@ -280,14 +124,14 @@
 
     <!-- comparison table across all modes -->
     <div class="table-wrap">
-      <table id="comparisonTable">
+      <div class="table-scroll"><table id="comparisonTable">
         <thead>
           <tr><th>Mode</th><th>Model</th><th>Optimizer</th><th>Activations</th><th>Total VRAM</th><th>Speedup</th><th>Savings</th></tr>
         </thead>
         <tbody id="tableBody">
           <!-- filled by JS -->
         </tbody>
-      </table>
+      </table></div>
     </div>
 
     <!-- code snippet -->
@@ -493,9 +337,13 @@
   })();
 </script>
 
-    <footer style="text-align:center;padding:2rem 1rem;margin-top:2rem;border-top:1px solid #334155;color:#94a3b8;font-size:0.85rem;">
-        <p>&copy; 2025 heytensor.com &mdash; Free online tool. No data stored.</p>
-    </footer>
+    <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">Zovo Tools</div>
+      <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+      <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+    </div>
+  </footer>
 <div style="margin:20px auto;max-width:728px;text-align:center">
 <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2241192243363112" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
