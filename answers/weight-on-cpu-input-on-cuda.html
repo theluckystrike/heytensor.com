@@ -4,8 +4,8 @@
  <meta charset="UTF-8">
  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>PyTorch Model on GPU but Input on CPU: Error Fix</title>
- <meta name="description" content="Move both model and data to the same device with .to(device) to fix the PyTorch model-on-GPU input-on-CPU RuntimeError. Copy-paste fix plus 3 real-world scenarios.">
+ <title>PyTorch Model on GPU but Input on CPU: RuntimeError Fix</title>
+ <meta name="description" content="Fix the PyTorch error when the model is on GPU but the input is on CPU. Move both with .to(device): copy-paste fix, 3 real scenarios, and a debugger.">
  <meta name="robots" content="index, follow">
  <link rel="canonical" href="https://heytensor.com/answers/weight-on-cpu-input-on-cuda.html">
  <meta property="og:type" content="article">
@@ -60,8 +60,8 @@
  <a href="/about.html">About</a>
  <a href="/blog/">Blog</a>
  <div class="nav-right">
- <a href="https://zovo.one/pricing?utm_source=heytensor.com&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
- <a href="https://zovo.one/tools" class="nav-zovo">Zovo Tools</a>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-weight-on-cpu-input-on-cuda" class="nav-zovo">Zovo Tools</a>
  </div>
  </nav>
  </div>
@@ -74,7 +74,7 @@
 
  <article>
  <h1>How to Fix "weight is on CPU but input is on CUDA" in PyTorch</h1>
- <p class="byline" style="color:var(--text-dim);font-size:0.85rem;margin:0.25rem 0 1rem;">By <a href="https://zovo.one" rel="author" style="color:var(--text-dim);">Michael Lip</a>, builder of HeyTensor · Verified against the PyTorch docs and forums · Updated July 16, 2026</p>
+ <p class="byline" style="color:var(--text-dim);font-size:0.85rem;margin:0.25rem 0 1rem;">By <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-weight-on-cpu-input-on-cuda" rel="author" style="color:var(--text-dim);">Michael Lip</a>, builder of HeyTensor · Verified against the PyTorch docs and forums · Updated July 16, 2026</p>
  <p class="qas" data-keyword="pytorch model moved to gpu but input is on cpu error fix">Fix the PyTorch device mismatch by calling .to(device) on both the model and every input tensor so weights and data share the same GPU or CPU.</p>
 
  <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
@@ -268,8 +268,8 @@ print(f"requires_grad: {tensor.requires_grad}")</code></pre>
  <div class="footer-inner">
  <div class="footer-brand">Zovo Tools</div>
  <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
- <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
- <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-weight-on-cpu-input-on-cuda">Zovo</a> &middot; 47/500 founding spots</div>
  </div>
  </footer>
 
@@ -295,7 +295,7 @@ print(f"requires_grad: {tensor.requires_grad}")</code></pre>
  <a href="https://krzen.com">Krzen, Image Tools</a>
  <a href="https://lochbot.com">LochBot, Security</a>
  <a href="https://lockml.com">LockML, ML Security</a>
- <a href="https://ml0x.com">ML0X, ML Basics</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-weight-on-cpu-input-on-cuda">ML0X, ML Basics</a>
  <a href="https://ml3x.com">ML3X, Matrix Math</a>
  <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
  <a href="https://recipetool.net">RecipeTool, Cooking</a>
@@ -311,7 +311,7 @@ print(f"requires_grad: {tensor.requires_grad}")</code></pre>
  <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
  <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
  <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
- <a href="https://zovo.one" rel="nofollow">Zovo, AI Dev Tools</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-weight-on-cpu-input-on-cuda" rel="nofollow">Zovo, AI Dev Tools</a>
  </div>
 </div>
  <script src="/assets/js/share.js"></script>
