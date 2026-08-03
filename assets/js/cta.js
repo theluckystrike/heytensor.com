@@ -13,6 +13,9 @@
  *           data-source="heytensor-shapes"
  *           data-placement="inline"></script>
  *
+ * data-medium and data-campaign are optional and default to "cta" / "microtools".
+ * They become utm_medium and utm_campaign; utm_source comes from data-source.
+ *
  * Behaviour that matters:
  *   - Hides itself if the visitor already owns a licence for the named tool. Nobody should
  *     be sold something they have already bought.
@@ -38,7 +41,9 @@
     text: self.getAttribute('data-text') || '',
     action: self.getAttribute('data-action') || 'Take a look',
     placement: self.getAttribute('data-placement') || 'inline',
-    source: self.getAttribute('data-source') || 'sitecta'
+    source: self.getAttribute('data-source') || 'sitecta',
+    medium: self.getAttribute('data-medium') || 'cta',
+    campaign: self.getAttribute('data-campaign') || 'microtools'
   };
   if (!cfg.href || !cfg.text) return;
 
@@ -67,16 +72,24 @@
     } catch (e) { return false; }
   }
 
-  /* The upstream kit assembled the href from pathname + search + hash, which
-     silently drops the origin. That is harmless for an in-site link and fatal
-     for an off-site one: the Gumroad URL would resolve against heytensor.com
-     and 404. Keep relative for same-origin, absolute otherwise. */
+  /* Two things this has to get right.
+     1. The upstream kit assembled the href from pathname + search + hash, which
+        silently drops the origin. Harmless for an in-site link, fatal for an
+        off-site one: the Gumroad URL would resolve against heytensor.com and
+        404. u.href keeps it absolute.
+     2. Gumroad only records a source when all three of utm_source, utm_medium
+        and utm_campaign are present on the landing URL. The src parameter alone
+        is read only by the sale-ping webhook, and none is registered, so it goes
+        nowhere. rel="noopener noreferrer" also empties document.referrer, which
+        leaves UTM as the only channel that can attribute a sale. */
   function trackedHref() {
     try {
       var u = new URL(cfg.href, location.href);
+      u.searchParams.set('utm_source', cfg.source);
+      u.searchParams.set('utm_medium', cfg.medium);
+      u.searchParams.set('utm_campaign', cfg.campaign);
       u.searchParams.set('src', cfg.source);
-      if (u.origin === location.origin) return u.pathname + u.search + u.hash;
-      return u.toString();
+      return u.href;
     } catch (e) { return cfg.href; }
   }
 
