@@ -98,16 +98,23 @@
     var s = document.createElement('style');
     s.id = 'mt-cta-style';
     s.textContent = [
-      '.mt-cta{--c-bg:#f4f6f8;--c-fg:#14161a;--c-mut:#5c636e;--c-line:#e0e4e9;--c-acc:#1c6ef2;',
+      /* Inherit the host page's own tokens where they exist. HeyTensor is dark
+         unconditionally and declares no light mode, so keying off
+         prefers-color-scheme would drop a white box onto a black page for every
+         visitor whose OS is in light mode. The fallbacks keep this component
+         portable to a site that has no such variables. */
+      '.mt-cta{--c-bg:var(--bg-card,#f4f6f8);--c-fg:var(--text,#14161a);',
+      '--c-mut:var(--text-dim,#5c636e);--c-line:var(--border-strong,#e0e4e9);',
+      '--c-acc:var(--accent,#1c6ef2);',
       'font:inherit;background:var(--c-bg);color:var(--c-fg);border:1px solid var(--c-line);',
       'border-radius:10px;padding:.85rem 1rem;margin:1.75rem 0;display:flex;gap:.9rem;',
       'align-items:center;flex-wrap:wrap;line-height:1.5}',
-      '@media(prefers-color-scheme:dark){.mt-cta{--c-bg:#171b21;--c-fg:#eef1f5;--c-mut:#98a1ad;',
-      '--c-line:#2a2f37;--c-acc:#4d8dff}}',
       '.mt-cta-t{flex:1 1 16rem;min-width:0;font-size:.9375rem}',
       '.mt-cta-a{font-weight:600;color:var(--c-acc);text-decoration:none;white-space:nowrap;',
       'border:1px solid var(--c-acc);border-radius:7px;padding:.42rem .85rem;font-size:.875rem}',
-      '.mt-cta-a:hover{background:var(--c-acc);color:#fff}',
+      /* White on the host accent is unreadable when that accent is amber.
+         Fill with the page background instead, which is dark here. */
+      '.mt-cta-a:hover{background:var(--c-acc);color:var(--bg,#fff)}',
       '.mt-cta-a:focus-visible{outline:2px solid var(--c-acc);outline-offset:2px}',
       '.mt-cta-x{background:none;border:0;color:var(--c-mut);font:inherit;font-size:1.05rem;',
       'line-height:1;cursor:pointer;padding:.3rem .35rem;border-radius:5px}',
