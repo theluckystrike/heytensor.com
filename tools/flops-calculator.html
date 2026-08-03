@@ -59,11 +59,11 @@
  </section>
 
  <div id="tool-container" data-component="model-tool" data-config='{"tool":"flops"}'></div>
- <script src="/assets/js/cta.js"
+ <script src="/assets/js/cta.js?v=2"
          data-mt-cta
          data-tool="gpu-memory-for-training-and-inference"
          data-href="https://theluckystrike.gumroad.com/l/gpu-memory-for-training-and-inference"
-         data-text="This calculator gives you the compute cost. Memory is the other half, and usually the half that stops a run: GPU memory for training and inference explains which term dominates it, and what to change when the model will not fit."
+         data-text="Compute is rarely what stops the run. A 7B model fine-tuned under AMP and AdamW needs 117.3 GiB before a single activation, so 24 GiB was never going to fit, whatever the batch size."
          data-action="Read it - $9.99"
          data-source="heytensor-memory"
          data-placement="inline"></script>

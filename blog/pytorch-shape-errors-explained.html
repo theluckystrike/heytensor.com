@@ -244,11 +244,11 @@ criterion = nn.BCEWithLogitsLoss()</code></pre>
 
  <p>Most shape errors come from three places: the transition from convolutional to linear layers (forgetting to flatten or using wrong in_features), mismatched skip connections in ResNets, and incorrect hidden state handling in RNNs. Build your architectures incrementally and verify shapes as you go.</p>
 
- <script src="/assets/js/cta.js"
+ <script src="/assets/js/cta.js?v=2"
          data-mt-cta
          data-tool="reading-pytorch-shape-errors"
          data-href="https://theluckystrike.gumroad.com/l/reading-pytorch-shape-errors"
-         data-text="The fix on this page is specific to one error. Reading and fixing PyTorch shape errors covers the general method, so the next mismatch takes minutes rather than an afternoon."
+         data-text="The errors that stop your run are the cheap ones. A (32,1) prediction against a (32,) label broadcasts to a 32x32 loss matrix, trains, and costs you a day. 33 pages on reading both kinds."
          data-action="Read it - $9.99"
          data-source="heytensor-shapes"
          data-placement="inline"></script>
