@@ -376,7 +376,7 @@ ${relatedHtml}
       <div class="footer-brand">Zovo Tools</div>
       <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
       <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; lifetime access, one payment</div>
     </div>
   </footer>
 
@@ -655,7 +655,7 @@ ${relatedHtml}
       <div class="footer-brand">Zovo Tools</div>
       <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
       <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; lifetime access, one payment</div>
     </div>
   </footer>
 
@@ -1210,7 +1210,7 @@ ${relatedHtml}
       <div class="footer-brand">Zovo Tools</div>
       <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
       <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; lifetime access, one payment</div>
     </div>
   </footer>
 
@@ -1324,7 +1324,7 @@ ${links}
       <div class="footer-brand">Zovo Tools</div>
       <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
       <a href="https://zovo.one/pricing?utm_source=heytensor.com&utm_medium=satellite&utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
-      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; 47/500 founding spots</div>
+      <div class="footer-copy">&copy; 2026 <a href="https://zovo.one">Zovo</a> &middot; lifetime access, one payment</div>
     </div>
   </footer>
 
