@@ -25,7 +25,10 @@
  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
  <link rel="stylesheet" href="/assets/style.css">
  <link rel="stylesheet" href="/assets/tools.css">
- <link rel="stylesheet" href="/assets/tool-page.css">
+ <link rel="stylesheet" href="/assets/tool-page.css?v=2026-08-07">  <!-- versioned because the CDN holds assets for max-age 14400 and this page
+       depends on rules added to that file on 2026-08-07 (.result, the dl styles
+       and the width cap). Without the query the new HTML renders against four
+       hour old CSS. -->
  <script type="application/ld+json">
  {"@context":"https://schema.org","@graph":[
   {"@type":"WebPage","@id":"https://heytensor.com/tools/llm-model-size-calculator.html","url":"https://heytensor.com/tools/llm-model-size-calculator.html","name":"LLM model size calculator","isPartOf":{"@type":"WebSite","name":"HeyTensor","url":"https://heytensor.com/"},"breadcrumb":{"@id":"https://heytensor.com/tools/llm-model-size-calculator.html#breadcrumb"}},
