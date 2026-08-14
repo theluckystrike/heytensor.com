@@ -40,6 +40,24 @@
   {"@type":"Article","headline":"LLM model size calculator","description":"Size a checkpoint from the stored parameter count its repo reports, with measured GGUF file sizes for the quantized builds.","datePublished":"2026-08-06","dateModified":"2026-08-06","inLanguage":"en","mainEntityOfPage":{"@id":"https://heytensor.com/tools/llm-model-size-calculator.html"},"author":{"@id":"https://zovo.one#michael-lip"},"publisher":{"@type":"Organization","name":"HeyTensor","url":"https://heytensor.com/"}},
   {"@type":"Person","@id":"https://zovo.one#michael-lip","name":"Michael Lip","url":"https://zovo.one","description":"Builds heytensor.com and the Zovo Tools network of free, privacy-first developer utilities."}]}
  </script>
+<style>
+ /* Scoped to this page. Only fills gaps the shared sheets leave. */
+ .hero.tool-hero { text-align: center; }
+ .hero.tool-hero p { margin-left: auto; margin-right: auto; }
+ .card-note { background: var(--bg-card); border: 1px solid var(--border);
+   border-radius: var(--radius-lg); padding: 22px 26px; margin: 34px 0; }
+ .card-note h2 { margin-top: 0; padding-top: 0; border-top: 0; font-size: 1.05rem; }
+ .card-note ul { margin-bottom: 0; }
+ .wrap table { margin: 20px 0 26px; }
+ .wrap td, .wrap th { padding: 11px 14px; }
+ .wrap .faq-section { margin-top: 40px; }
+ /* On a phone the repo names broke over four lines and rows grew to 92px tall. Both tables are
+    already inside the shared .table-scroll helper, so they only needed their cells kept on one
+    line. The nowrap has to reach the code element too, since a parent nowrap does not bind it. */
+ @media (max-width: 720px) {
+  .wrap table td, .wrap table th, .wrap table code { white-space: nowrap; }
+ }
+</style>
 </head>
 <body>
 <header>
@@ -62,18 +80,20 @@
  </div>
  </header>
 
-<main class="wrap">
+<main class="container wrap">
  <nav class="breadcrumb" aria-label="Breadcrumb">
-  <a href="/">HeyTensor</a> <span aria-hidden="true">&rsaquo;</span> <a href="/tools/">Tools</a> <span aria-hidden="true">&rsaquo;</span> <span>LLM model size calculator</span>
+  <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>LLM model size calculator</span>
  </nav>
 
+ <section class="hero tool-hero">
  <h1>LLM model size calculator</h1>
- <p class="intro">Two repos wear the same 7B label and ship different files. The Hub tensor census counts <a href="https://huggingface.co/api/models/mistralai/Mistral-7B-Instruct-v0.3?expand[]=safetensors">7,248,023,552</a> stored parameters in <code>mistralai/Mistral-7B-Instruct-v0.3</code> and <a href="https://huggingface.co/api/models/tiiuae/falcon-7b?expand[]=safetensors">7,217,189,760</a> in <code>tiiuae/falcon-7b</code>. Neither one is seven billion.</p>
- <p class="byline">By <a href="https://zovo.one" rel="author">Michael Lip</a> &middot; verified 6 August 2026</p>
+ <p>Two repos wear the same 7B label and ship different files. Size a checkpoint from the count its repo actually stores.</p>
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a> &middot; verified 6 August 2026</p>
+ </section>
 
  <section id="tool" class="card">
   <h2>Size a checkpoint</h2>
-  <p>Pick a repo, pick a format. The stored option multiplies the census count by the bytes that repo's own dtype uses. The GGUF options report a measured file where this data set has one, and say so plainly when it does not.</p>
+  <p>Pick a repo and a format. Stored formats multiply the census count by that repo's own dtype width, and the GGUF options report a measured file size where one exists.</p>
   <div class="grid">
    <div class="field">
     <label for="ht-model">Model repo</label>
@@ -93,7 +113,8 @@
  </section>
 
  <h2>What eleven repos actually store</h2>
- <p>Stored parameters from the Hub tensor census, with the dtype the census reports for each repo. The last two columns come from the exact count, so you can see how far the friendly label sits from the file.</p>
+ <p>The census counts <a href="https://huggingface.co/api/models/mistralai/Mistral-7B-Instruct-v0.3?expand[]=safetensors">7,248,023,552</a> stored parameters in <code>mistralai/Mistral-7B-Instruct-v0.3</code> and <a href="https://huggingface.co/api/models/tiiuae/falcon-7b?expand[]=safetensors">7,217,189,760</a> in <code>tiiuae/falcon-7b</code>. Neither is seven billion.</p>
+ <p>Every row below is the Hub tensor census, with the dtype it reports for that repo. The last two columns come from the exact count, so you can see how far the friendly label sits from the file.</p>
  <div class="table-scroll">
  <table>
   <thead><tr><th>Repo</th><th>Stored parameters</th><th>dtype</th><th>Rounds to</th><th>Stored size</th></tr></thead>
@@ -147,19 +168,29 @@ print(stored, stored * bytes_per_param)</code></pre>
  <p>I maintain the shape calculators on heytensor.com, which compute output shapes in the browser and never send an architecture, an error string or a parameter to a server. Same rule here.</p>
  <p>The model list, the census counts and the GGUF sizes ship with the page, and the arithmetic happens on your machine.</p>
 
+ <section class="faq-section">
  <h2>Questions people actually ask</h2>
- <dl>
-  <dt>Does parameter count times two bytes give the download size?</dt>
-  <dd>For a BF16 checkpoint it lines up. Qwen2.5-7B-Instruct declares <a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/config.json">torch_dtype bfloat16</a>, and its <a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/model.safetensors.index.json">shard index total_size</a> is what the census count times two reproduces. A full clone still pulls tokenizer files, the index and the README on top of the tensors.</dd>
-  <dt>Why is a Q4_K_M file bigger than four bits per weight?</dt>
-  <dd>Hugging Face puts Q4_K at "resulting in 4.5 bits-per-weight" (<a href="https://huggingface.co/docs/hub/en/gguf">Hub docs</a>), and the k-quants pull request keeps half of the attention.wv and feed_forward.w2 tensors at Q6_K (<a href="https://github.com/ggml-org/llama.cpp/pull/1684">pull request</a>). The measured builds land above both. The calculator divides measured bytes by the census count so you see the real width.</dd>
-  <dt>Do mixture-of-experts models download smaller because only some experts run?</dt>
-  <dd>No. The census counts <a href="https://huggingface.co/api/models/Qwen/Qwen3-30B-A3B?expand[]=safetensors">30,532,122,624</a> stored parameters for Qwen3-30B-A3B, and the card puts it at 30.5B total with 3.3B activated per token (<a href="https://huggingface.co/Qwen/Qwen3-30B-A3B">model card</a>). Disk holds the stored count. Activation describes what runs per token.</dd>
-  <dt>Will this tell me whether a model fits my GPU?</dt>
-  <dd>No. Weights are one line of the budget, and the KV cache, activations and framework overhead sit on top, so a weights-only headroom number is the quickest route to an out-of-memory error. The <a href="/tools/memory-calculator.html">GPU memory calculator</a> covers the rest.</dd>
- </dl>
+ <details>
+ <summary>Does parameter count times two bytes give the download size?</summary>
+ <p class="qas">For a BF16 checkpoint it lines up. Qwen2.5-7B-Instruct declares <a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/config.json">torch_dtype bfloat16</a>, and its <a href="https://huggingface.co/Qwen/Qwen2.5-7B-Instruct/resolve/main/model.safetensors.index.json">shard index total_size</a> is what the census count times two reproduces. A full clone still pulls tokenizer files, the index and the README on top of the tensors.</p>
+ </details>
+ <details>
+ <summary>Why is a Q4_K_M file bigger than four bits per weight?</summary>
+ <p class="qas">Hugging Face puts Q4_K at "resulting in 4.5 bits-per-weight" (<a href="https://huggingface.co/docs/hub/en/gguf">Hub docs</a>), and the k-quants pull request keeps half of the attention.wv and feed_forward.w2 tensors at Q6_K (<a href="https://github.com/ggml-org/llama.cpp/pull/1684">pull request</a>). The measured builds land above both. The calculator divides measured bytes by the census count so you see the real width.</p>
+ </details>
+ <details>
+ <summary>Do mixture-of-experts models download smaller because only some experts run?</summary>
+ <p class="qas">No. The census counts <a href="https://huggingface.co/api/models/Qwen/Qwen3-30B-A3B?expand[]=safetensors">30,532,122,624</a> stored parameters for Qwen3-30B-A3B, and the card puts it at 30.5B total with 3.3B activated per token (<a href="https://huggingface.co/Qwen/Qwen3-30B-A3B">model card</a>). Disk holds the stored count. Activation describes what runs per token.</p>
+ </details>
+ <details>
+ <summary>Will this tell me whether a model fits my GPU?</summary>
+ <p class="qas">No. Weights are one line of the budget, and the KV cache, activations and framework overhead sit on top, so a weights-only headroom number is the quickest route to an out-of-memory error. The <a href="/tools/memory-calculator.html">GPU memory calculator</a> covers the rest.</p>
+ </details>
+</section>
 
- <section class="note-block">
+ <div class="last-updated"><time datetime="2026-08-06">Last updated: August 6, 2026</time></div>
+
+ <section class="note-block card-note">
   <h2>Before you trust these numbers</h2>
   <p>All calculations are deterministic math running in your browser and do not constitute model performance guarantees.</p>
   <p>Every figure states the dtype it was measured or computed in. Do not assume float32 unless the page says so.</p>
@@ -183,6 +214,37 @@ print(stored, stored * bytes_per_param)</code></pre>
  <div class="footer-copy">© 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=tools-llm-model-size-calculator">Zovo</a> · lifetime access, one payment</div>
  </div>
 </footer>
+
+<nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=tools-memory-calculator">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
 
 <script type="application/json" id="ht-data">{"models":[{"id":"microsoft/phi-2","dtype":"F16","params":"2779683840"},{"id":"microsoft/Phi-3.5-mini-instruct","dtype":"BF16","params":"3821079552","gguf":"phi35"},{"id":"Qwen/Qwen3-4B","dtype":"BF16","params":"4022468096"},{"id":"Qwen/Qwen3-8B","dtype":"BF16","params":"8190735360"},{"id":"Qwen/Qwen3-14B","dtype":"BF16","params":"14768307200"},{"id":"Qwen/Qwen3-32B","dtype":"BF16","params":"32762123264"},{"id":"mistralai/Mistral-7B-Instruct-v0.3","dtype":"BF16","params":"7248023552","gguf":"mistral"},{"id":"tiiuae/falcon-7b","dtype":"BF16","params":"7217189760"},{"id":"Qwen/Qwen2.5-7B-Instruct","dtype":"BF16","params":"7615616512","gguf":"qwen25"},{"id":"Qwen/Qwen3-30B-A3B","dtype":"BF16","params":"30532122624"},{"id":"allenai/OLMoE-1B-7B-0924","dtype":"BF16","params":"6919161856"}],"gguf":{"qwen25":{"repo":"bartowski/Qwen2.5-7B-Instruct-GGUF","src":"https://huggingface.co/api/models/bartowski/Qwen2.5-7B-Instruct-GGUF/tree/main?recursive=true","builds":{"Q4_K_M":"4683074240","Q5_K_M":"5444831936","Q6_K":"6254199488","Q8_0":"8098525888"}},"phi35":{"repo":"bartowski/Phi-3.5-mini-instruct-GGUF","src":"https://huggingface.co/api/models/bartowski/Phi-3.5-mini-instruct-GGUF/tree/main?recursive=true","builds":{"Q4_K_M":"2393232672","Q5_K_M":"2815276320","Q6_K":"3135853344","Q8_0":"4061222688"}},"mistral":{"repo":"bartowski/Mistral-7B-Instruct-v0.3-GGUF","src":"https://huggingface.co/api/models/bartowski/Mistral-7B-Instruct-v0.3-GGUF/tree/main?recursive=true","builds":{"Q4_K_M":"4372812000","Q5_K_M":"5136175328","Q6_K":"5947248864","Q8_0":"7702565088"}}}}</script>
 <script>(function(){var D=JSON.parse(document.getElementById('ht-data').textContent);function n(v){return Number(String(v).replace(/[^0-9]/g,''))||0}function fmt(x){return Math.round(x).toLocaleString('en-US')}function gib(b){return (b/1073741824).toFixed(2)}function gb(b){return (b/1e9).toFixed(2)}function bpp(d){return parseInt(String(d).replace(/[^0-9]/g,''),10)/8}function esc(s){return String(s).replace(/[&<>]/g,function(c){return c==='&'?'&amp;':c==='<'?'&lt;':'&gt;'})}var M=D.models.map(function(m){m.p=n(m.params);return m}),K={};M.forEach(function(m){if(m.gguf){K[m.gguf]=m}});var Q=['Q4_K_M','Q5_K_M','Q6_K','Q8_0'];var ms=document.getElementById('ht-model'),fs=document.getElementById('ht-format'),ci=document.getElementById('ht-custom'),out=document.getElementById('ht-out');M.forEach(function(m){var o=document.createElement('option');o.value=m.id;o.textContent=m.id;ms.appendChild(o)});var c=document.createElement('option');c.value='custom';c.textContent='Custom parameter count';ms.appendChild(c);var s=document.createElement('option');s.value='stored';s.textContent='As stored, F16 or BF16';fs.appendChild(s);Q.forEach(function(q){var o=document.createElement('option');o.value=q;o.textContent='GGUF '+q;fs.appendChild(o)});Array.prototype.forEach.call(document.querySelectorAll('tr[data-params]'),function(tr){var p=n(tr.getAttribute('data-params')),db=tr.getAttribute('data-bytes'),b=db?n(db):p*bpp(tr.getAttribute('data-dtype')||'BF16'),r=tr.querySelector('.c-rnd'),z=tr.querySelector('.c-size'),g=tr.querySelector('.c-gib'),w=tr.querySelector('.c-bpw');if(!p){return}if(r){r.textContent=(p/1e9).toFixed(1)+'B'}if(z){z.textContent=gib(b)+' GiB'}if(g){g.textContent=gib(b)+' GiB'}if(w){w.textContent=(b*8/p).toFixed(3)}});function ratios(q){var a=[];Object.keys(D.gguf).forEach(function(k){var m=K[k];if(!m){return}var b=n(D.gguf[k].builds[q]);if(!b||!m.p){return}a.push({id:m.id,r:b*8/m.p})});return a.sort(function(x,y){return x.r-y.r})}function render(){var id=ms.value,f=fs.value,m=null,p=0,name='';if(id==='custom'){p=n(ci.value);name='your custom count'}else{m=M.filter(function(x){return x.id===id})[0];p=m?m.p:0;name=m?m.id:''}if(!p){out.innerHTML='<p>Type a parameter count, digits only, to size a checkpoint.</p>';return}var dt=m?m.dtype:'BF16';if(f==='stored'){var b=p*bpp(dt);out.innerHTML='<span class="ht-big">'+gib(b)+' GiB</span><p>'+esc(name)+' stored at '+dt+' comes to '+fmt(b)+' bytes, '+gb(b)+' GB on a decimal drive. Census count times '+bpp(dt)+' bytes per '+dt+' parameter'+(m?'':', the F16 and BF16 case')+'.</p>';return}var G=m&&m.gguf?D.gguf[m.gguf]:null;if(G&&G.builds[f]){var fb=n(G.builds[f]);out.innerHTML='<span class="ht-big">'+gib(fb)+' GiB</span><p>Measured '+esc(f)+' build of '+esc(name)+' is '+fmt(fb)+' bytes, '+gb(fb)+' GB, listed in <a href="'+G.src+'">'+esc(G.repo)+'</a>. Against the census count that works out at '+(fb*8/p).toFixed(3)+' effective bits per weight.</p>';return}var R=ratios(f);if(!R.length){out.innerHTML='<p>No measured '+esc(f)+' build in this data set.</p>';return}var lo=R[0],hi=R[R.length-1];out.innerHTML='<span class="ht-big">'+gib(p*lo.r/8)+' to '+gib(p*hi.r/8)+' GiB</span><p>No measured '+esc(f)+' file for '+esc(name)+' in this data set. The range applies the effective bits per weight measured on the builds in the table below, low end from '+esc(lo.id)+' at '+lo.r.toFixed(3)+' bits per weight, high end from '+esc(hi.id)+' at '+hi.r.toFixed(3)+'. A repo nobody has measured can land outside it.</p>'}ms.addEventListener('change',render);fs.addEventListener('change',render);ci.addEventListener('input',render);render()})();</script>
