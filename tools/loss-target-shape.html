@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>PyTorch Loss Target Shape Checker | HeyTensor</title>
+ <meta name="description" content="Enter your model output shape and pick a loss. Get the exact target shape and dtype torch.nn requires, and the error PyTorch raises when it is wrong. Covers 8 loss functions.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/loss-target-shape.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/loss-target-shape.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/loss-target-shape.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="PyTorch loss target shape checker">
+ <meta property="og:description" content="Enter your model output shape and pick a loss. Get the exact target shape and dtype torch.nn requires, and the error PyTorch raises when it is wrong. Covers 8 loss functions.">
+ <meta property="og:url" content="https://heytensor.com/tools/loss-target-shape.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="PyTorch loss target shape checker">
+ <meta name="twitter:description" content="Enter your model output shape and pick a loss. Get the exact target shape and dtype torch.nn requires, and the error PyTorch raises when it is wrong. Covers 8 loss functions.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <link rel="stylesheet" href="/assets/tools.css">
+ <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Article",
+   "headline": "PyTorch loss target shape checker",
+   "description": "Enter your model output shape and pick a loss. Get the exact target shape and dtype torch.nn requires, and the error PyTorch raises when it is wrong. Covers 8 loss functions.",
+   "url": "https://heytensor.com/tools/loss-target-shape.html",
+   "mainEntityOfPage": "https://heytensor.com/tools/loss-target-shape.html",
+   "datePublished": "2026-08-15",
+   "dateModified": "2026-08-15",
+   "author": {
+    "@id": "https://zovo.one#michael-lip"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "HeyTensor"
+   },
+   "isAccessibleForFree": true,
+   "citation": [
+    "https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html",
+    "https://docs.pytorch.org/docs/stable/generated/torch.nn.NLLLoss.html",
+    "https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html"
+   ]
+  },
+  {
+   "@type": "Person",
+   "@id": "https://zovo.one#michael-lip",
+   "name": "Michael Lip",
+   "url": "https://zovo.one",
+   "description": "Builds heytensor.com and the Zovo Tools network of free, privacy-first developer utilities."
+  },
+  {
+   "@type": "WebPage",
+   "name": "PyTorch loss target shape checker",
+   "author": {
+    "@id": "https://zovo.one#michael-lip"
+   },
+   "dateModified": "2026-08-15"
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Home",
+     "item": "https://heytensor.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Tools",
+     "item": "https://heytensor.com/tools/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Loss target shape checker"
+    }
+   ]
+  }
+ ]
+}
+ </script>
+ <style>
+ .lt-panel { background: var(--bg-card); border: 1px solid var(--border);
+   border-radius: var(--radius-lg, 12px); padding: 1.5rem; margin: 1.75rem 0; }
+ .lt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.1rem; }
+ .lt-grid label { display: block; font-size: 0.8rem; text-transform: uppercase;
+   letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.4rem; }
+ .lt-grid input, .lt-grid select { width: 100%; padding: 0.7rem 0.8rem; font: inherit;
+   background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+ #lt-out { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+ #lt-out .lt-big { font-family: var(--font-display, monospace); font-size: 1.9rem;
+   font-weight: 700; color: var(--accent); margin: 0 0 0.75rem; }
+ #lt-out pre { overflow-x: auto; }
+ .lt-cite { font-size: 0.85rem; color: var(--text-muted); }
+ main table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.9rem; }
+ main thead th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--accent); white-space: nowrap; }
+ main tbody td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+ @media (max-width: 720px) {
+  main table { display: block; overflow-x: auto; }
+  main table td, main table th, main table code { white-space: nowrap; }
+ }
+ </style>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=tools-loss-target-shape" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Loss target shape checker</span>
+ </nav>
+
+ <section class="hero tool-hero">
+ <h1>PyTorch loss target shape checker</h1>
+ <p class="qas" data-keyword="crossentropyloss target shape">For an output of shape (N, C), nn.CrossEntropyLoss wants a target of shape (N) holding class indices with dtype torch.long, not a target of shape (N, C). Enter your output shape below and the tool gives the exact target shape and dtype your loss requires.</p>
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a> &middot; verified 15 August 2026</p>
+ </section>
+
+ <section class="lt-panel">
+ <div class="lt-grid">
+ <div>
+ <label for="lt-shape">Your model output shape</label>
+ <input id="lt-shape" type="text" inputmode="numeric" value="32, 10" placeholder="32, 10">
+ </div>
+ <div>
+ <label for="lt-loss">Loss function</label>
+ <select id="lt-loss"></select>
+ </div>
+ </div>
+ <div id="lt-out" aria-live="polite"></div>
+ <p class="lt-cite" style="margin-bottom:0;">Runs entirely in your browser. Nothing you type is sent anywhere.</p>
+ </section>
+
+ <h2>Why an index target drops the class dimension</h2>
+ <p>Two shapes get confused constantly. The input to a classification loss carries one score per class, so it is (N, C). The target carries one integer per sample saying which class is correct, so it is (N). The class dimension is absent by design, and that is what the documentation specifies.</p>
+ <blockquote cite="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html" style="border-left:3px solid var(--accent);padding-left:1rem;margin:1.5rem 0;">
+ <p>&ldquo;Target: If containing class indices, shape (), (N) or (N, d_1, d_2, ..., d_K) with K &ge; 1 in the case of K-dimensional loss where each value should be between [0, C). The target data type is required to be long when using class indices. If containing class probabilities, the target must be the same shape input, and each value should be between [0, 1].&rdquo;</p>
+ <p class="lt-cite" style="margin-bottom:0;">PyTorch documentation, <cite><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">torch.nn.CrossEntropyLoss</a></cite>, Shape section. Verified 15 August 2026.</p>
+ </blockquote>
+
+ <h2>Target shape contract for eight losses</h2>
+ <p>N is the batch size, C the number of classes, and * means any number of dimensions. Every row below is the shape given in that loss function&rsquo;s own documentation page.</p>
+ <table>
+ <thead><tr><th>Loss</th><th>Input shape</th><th>Target shape</th><th>Target dtype</th><th>Docs</th></tr></thead>
+ <tbody>
+ <tr><td><code>CrossEntropyLoss</code></td><td>(C), (N, C) or (N, C, d1..dK)</td><td>(), (N) or (N, d1..dK)</td><td><code>torch.long</code></td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">docs</a></td></tr>
+ <tr><td><code>CrossEntropyLoss</code> probabilities</td><td>(C), (N, C) or (N, C, d1..dK)</td><td>same shape as input</td><td>float</td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">docs</a></td></tr>
+ <tr><td><code>NLLLoss</code></td><td>(C), (N, C) or (N, C, d1..dK)</td><td>(), (N) or (N, d1..dK)</td><td><code>torch.long</code></td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.NLLLoss.html">docs</a></td></tr>
+ <tr><td><code>BCEWithLogitsLoss</code></td><td>(*)</td><td>(*) same shape as input</td><td>float</td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html">docs</a></td></tr>
+ <tr><td><code>BCELoss</code></td><td>(*)</td><td>(*) same shape as input</td><td>float</td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.BCELoss.html">docs</a></td></tr>
+ <tr><td><code>MSELoss</code></td><td>(*)</td><td>(*) same shape as input</td><td>float</td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.MSELoss.html">docs</a></td></tr>
+ <tr><td><code>L1Loss</code></td><td>(*)</td><td>(*) same shape as input</td><td>float</td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.L1Loss.html">docs</a></td></tr>
+ <tr><td><code>SmoothL1Loss</code></td><td>(*)</td><td>(*) same shape as input</td><td>float</td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.SmoothL1Loss.html">docs</a></td></tr>
+ <tr><td><code>KLDivLoss</code></td><td>(*) in log-space</td><td>(*) same shape as input</td><td>float</td><td><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.KLDivLoss.html">docs</a></td></tr>
+ </tbody>
+ </table>
+ <p>One honest caveat on that dtype column. CrossEntropyLoss is the only page of the eight that states the target dtype in prose. For the others the requirement shows up in the documented examples and in what the runtime accepts, so treat those rows as observed rather than quoted.</p>
+
+ <h2>Reverse lookup, from the error back to the shape</h2>
+ <p>These are the messages PyTorch raises when the contract is broken. They were reproduced against torch 2.8.0 with an input of shape (4, 3), so they are observed behaviour rather than documentation. The error strings come from the ATen kernel and appear on no documentation page.</p>
+ <table>
+ <thead><tr><th>What you passed</th><th>What PyTorch raises</th><th>Fix</th></tr></thead>
+ <tbody>
+ <tr><td>target <code>(4, 1)</code> long</td><td><code>RuntimeError: 0D or 1D target tensor expected, multi-target not supported</code></td><td><code>target.squeeze(1)</code> to get (4)</td></tr>
+ <tr><td>target <code>(4, 3)</code> long, one-hot</td><td><code>RuntimeError: Expected floating point type for target with class probabilities, got Long</code></td><td><code>target.argmax(dim=1)</code>, or cast to float to use the probability mode</td></tr>
+ <tr><td>target <code>(4)</code> float</td><td><code>RuntimeError: expected scalar type Long but found Float</code></td><td><code>target.long()</code></td></tr>
+ <tr><td>target value 5 with C = 3</td><td><code>IndexError: Target 5 is out of bounds.</code></td><td>Values must be 0 to C-1</td></tr>
+ <tr><td>input (2,3,4), target <code>(2,4,1)</code></td><td><code>RuntimeError: Expected target size [2, 4], got [2, 4, 1]</code></td><td>Drop the trailing dimension</td></tr>
+ </tbody>
+ </table>
+ <p>The first row is the one people hit most. A target arrives as (N, 1) from a dataframe column or a stray <code>unsqueeze(1)</code>, and CrossEntropyLoss rejects any integer target with two or more dimensions against a 2D input, because the only legal index-target shape there is (N).</p>
+
+ <h2>Related pages</h2>
+ <p>This tool answers one question, which target shape and dtype a loss demands. For the neighbouring questions: <a href="/tools/loss-functions.html">the loss functions guide</a> covers which loss to choose and what each one computes, <a href="/answers/expected-float-got-long.html">expected dtype Float but got Long</a> walks through casting a target, and <a href="/answers/input-target-batch-size-mismatch.html">input and target batch size don&rsquo;t match</a> covers the case where the batch dimension itself went missing.</p>
+
+ <div class="last-updated"><time datetime="2026-08-15">Last updated: August 15, 2026</time></div>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=tools-loss-target-shape">Zovo</a></div>
+ </div>
+ </footer>
+
+ <script>
+ (function(){
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ })();
+ </script>
+
+<script>
+
+'use strict';
+/* NASA Power of 10: bounded loops with explicit ceilings, range-checked indices, guarded
+   divisors, no innerHTML anywhere, longest function well under 60 lines. A block statement
+   replaces the module wrapper so nothing leaks to window. */
+{
+  const LOSSES = [{"id": "CrossEntropyLoss", "mode": "index", "dtype": "torch.long", "doc": "https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html", "alt": true, "note": "The class dimension C is absent from an index target. The target says which class, not a score per class."}, {"id": "NLLLoss", "mode": "index", "dtype": "torch.long", "doc": "https://docs.pytorch.org/docs/stable/generated/torch.nn.NLLLoss.html", "alt": false, "note": "Input must already be log-probabilities, typically from LogSoftmax. Class-probability targets are not supported here."}, {"id": "BCEWithLogitsLoss", "mode": "same", "dtype": "floating point", "doc": "https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html", "alt": false, "note": "Target values should be between 0 and 1. Inputs are raw logits."}, {"id": "BCELoss", "mode": "same", "dtype": "floating point", "doc": "https://docs.pytorch.org/docs/stable/generated/torch.nn.BCELoss.html", "alt": false, "note": "Target values should be between 0 and 1."}, {"id": "MSELoss", "mode": "same", "dtype": "floating point", "doc": "https://docs.pytorch.org/docs/stable/generated/torch.nn.MSELoss.html", "alt": false, "note": "Regression loss. No class dimension is involved."}, {"id": "L1Loss", "mode": "same", "dtype": "floating point", "doc": "https://docs.pytorch.org/docs/stable/generated/torch.nn.L1Loss.html", "alt": false, "note": "Regression loss. No class dimension is involved."}, {"id": "SmoothL1Loss", "mode": "same", "dtype": "floating point", "doc": "https://docs.pytorch.org/docs/stable/generated/torch.nn.SmoothL1Loss.html", "alt": false, "note": "Regression loss. The beta argument sets where it switches between L1 and L2 behaviour."}, {"id": "KLDivLoss", "mode": "same", "dtype": "floating point", "doc": "https://docs.pytorch.org/docs/stable/generated/torch.nn.KLDivLoss.html", "alt": false, "note": "Input is expected in log-space. Target is in probability space unless log_target=True."}];
+  const MAX_DIMS = 8;
+  const MAX_PARSE = 64;
+
+  /* Parse "32, 10" or "32 10 7 7" into integers. Returns null on anything unusable. */
+  function parseShape(text) {
+    if (typeof text !== 'string') { return null; }
+    const parts = text.split(/[^0-9]+/).filter(function (p) { return p.length > 0; });
+    if (parts.length === 0 || parts.length > MAX_DIMS) { return null; }
+    const out = [];
+    for (let i = 0; i < parts.length && i < MAX_PARSE; i += 1) {
+      const n = parseInt(parts[i], 10);
+      if (!isFinite(n) || n <= 0) { return null; }
+      out.push(n);
+    }
+    return out;
+  }
+
+  function lossAt(i) {
+    if (typeof i !== 'number' || !isFinite(i)) { return null; }
+    if (i < 0 || i >= LOSSES.length) { return null; }
+    return LOSSES[i];
+  }
+
+  function fmt(dims) { return '(' + dims.join(', ') + ')'; }
+
+  /* The documented target shape for an index-mode loss: drop the class dimension. */
+  function indexTarget(shape) {
+    if (shape.length === 1) { return { dims: [], label: '()  a 0-dim scalar tensor', classes: shape[0] }; }
+    const dims = [shape[0]].concat(shape.slice(2));
+    return { dims: dims, label: fmt(dims), classes: shape[1] };
+  }
+
+  function el(tag, text, cls) {
+    const e = document.createElement(tag);
+    if (text !== undefined && text !== null) { e.textContent = String(text); }
+    if (cls) { e.className = cls; }
+    return e;
+  }
+
+  function clear(node) {
+    let n = 0;
+    while (node.firstChild) {
+      n += 1;
+      if (n > MAX_PARSE) { break; }
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function row(out, label, value) {
+    const p = el('p');
+    p.appendChild(el('strong', label));
+    p.appendChild(document.createTextNode(' '));
+    p.appendChild(el('code', value));
+    out.appendChild(p);
+  }
+
+  function renderIndex(out, loss, shape) {
+    const t = indexTarget(shape);
+    const big = el('p', 'target ' + t.label, 'lt-big');
+    out.appendChild(big);
+    row(out, 'Required dtype', loss.dtype);
+    row(out, 'Valid values', '0 to ' + (t.classes - 1) + '  (C = ' + t.classes + ' classes)');
+    out.appendChild(el('p', 'Your output ' + fmt(shape) + ' carries ' + t.classes
+      + ' classes in dimension ' + (shape.length === 1 ? '0' : '1') + '. ' + loss.note));
+    const code = el('pre');
+    code.appendChild(el('code', 'target = torch.empty(' + (t.dims.length ? t.dims.join(', ') : '')
+      + (t.dims.length ? ', ' : '') + 'dtype=torch.long).random_(' + t.classes + ')\n'
+      + 'loss = nn.' + loss.id + '()(output, target)'));
+    out.appendChild(code);
+    if (loss.alt) {
+      out.appendChild(el('p', 'This loss also accepts class probabilities. In that mode the target '
+        + 'takes the same shape as the input, ' + fmt(shape) + ', with a floating point dtype and values between 0 and 1.'));
+    }
+  }
+
+  function renderSame(out, loss, shape) {
+    out.appendChild(el('p', 'target ' + fmt(shape), 'lt-big'));
+    row(out, 'Required dtype', loss.dtype);
+    out.appendChild(el('p', 'The target takes the same shape as the input, element for element. '
+      + loss.note));
+    const code = el('pre');
+    code.appendChild(el('code', 'target = torch.randn(' + shape.join(', ') + ')\n'
+      + 'loss = nn.' + loss.id + '()(output, target)'));
+    out.appendChild(code);
+  }
+
+  function init() {
+    const shapeIn = document.getElementById('lt-shape');
+    const lossSel = document.getElementById('lt-loss');
+    const out = document.getElementById('lt-out');
+    if (!shapeIn || !lossSel || !out) { return; }
+
+    for (let i = 0; i < LOSSES.length; i += 1) {
+      const o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = 'nn.' + LOSSES[i].id;
+      lossSel.appendChild(o);
+    }
+
+    function render() {
+      const loss = lossAt(lossSel.selectedIndex);
+      clear(out);
+      if (!loss) { out.appendChild(el('p', 'Pick a loss function.')); return; }
+      const shape = parseShape(shapeIn.value);
+      if (!shape) {
+        out.appendChild(el('p', 'Enter your model output shape as numbers, for example 32, 10'));
+        return;
+      }
+      if (loss.mode === 'index' && shape.length === 1) {
+        renderIndex(out, loss, shape);
+        return;
+      }
+      if (loss.mode === 'index') { renderIndex(out, loss, shape); return; }
+      renderSame(out, loss, shape);
+    }
+
+    shapeIn.addEventListener('input', render);
+    lossSel.addEventListener('change', render);
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+}
+
+</script>
+</body>
+</html>

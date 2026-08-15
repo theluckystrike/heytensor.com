@@ -105,7 +105,8 @@
   <url><loc>https://heytensor.com/tools/layernorm-calculator.html</loc></url>
   <url><loc>https://heytensor.com/tools/learning-rate-finder.html</loc></url>
   <url><loc>https://heytensor.com/tools/linear-layer-calculator.html</loc></url>
-  <url><loc>https://heytensor.com/tools/loss-functions.html</loc></url>
+  <url><loc>https://heytensor.com/tools/loss-target-shape.html</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://heytensor.com/tools/loss-functions.html</loc></url>
   <url><loc>https://heytensor.com/tools/lstm-shape-calculator.html</loc></url>
   <url><loc>https://heytensor.com/tools/mat1-mat2-shapes.html</loc></url>
   <url><loc>https://heytensor.com/tools/maxpool2d-calculator.html</loc></url>

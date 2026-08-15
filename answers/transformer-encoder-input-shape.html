@@ -68,8 +68,29 @@
  <h1>What Input Shape Does TransformerEncoder Expect?</h1>
 
  <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
- <p style="margin:0;line-height:1.7;">TransformerEncoder expects (seq_len, batch, d_model) by default, or (batch, seq_len, d_model) with <code>batch_first=True</code>. Output shape matches input shape.</p>
+ <p style="margin:0;line-height:1.7;">nn.TransformerEncoder expects <code>src</code> of shape (S, N, E), that is (seq_len, batch, d_model), because <code>batch_first</code> defaults to <code>False</code>. Set <code>batch_first=True</code> on the <code>nn.TransformerEncoderLayer</code> and it expects (N, S, E), that is (batch, seq_len, d_model). Unbatched input is (S, E). S is the source sequence length, N the batch size, E is d_model. The output shape always matches the input shape.</p>
  </div>
+
+ 
+ <blockquote cite="https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html" style="border-left:3px solid var(--accent);padding-left:1rem;margin:1.5rem 0;">
+ <p>&ldquo;batch_first (bool) &ndash; If True, then the input and output tensors are provided as (batch, seq, feature). Default: False (seq, batch, feature).&rdquo;</p>
+ <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0;">PyTorch documentation, <cite><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html">torch.nn.TransformerEncoderLayer</a></cite>. Verified 15 August 2026.</p>
+ </blockquote>
+
+ <h2>What batch_first defaults to in nn.TransformerEncoderLayer</h2>
+ <p class="qas" data-keyword="torch.nn.transformerencoderlayer batch_first default"><code>batch_first</code> defaults to <code>False</code> in <code>torch.nn.TransformerEncoderLayer</code>, so PyTorch expects sequence-first tensors of shape (S, N, E) unless you pass <code>batch_first=True</code> to the layer constructor. One detail the signature makes easy to miss. <code>batch_first</code> belongs to <code>nn.TransformerEncoderLayer</code>, not to <code>nn.TransformerEncoder</code>. The stack inherits whatever the layer was built with.</p>
+
+ <table>
+ <caption>Expected tensor shapes, from the torch.nn.Transformer Shape section</caption>
+ <thead><tr><th>Argument</th><th>batch_first=False (default)</th><th>batch_first=True</th><th>Unbatched</th></tr></thead>
+ <tbody>
+ <tr><td>src</td><td>(S, N, E)</td><td>(N, S, E)</td><td>(S, E)</td></tr>
+ <tr><td>output</td><td>(S, N, E)</td><td>(N, S, E)</td><td>(S, E)</td></tr>
+ <tr><td>src_mask</td><td>(S, S)</td><td>(S, S)</td><td>(S, S)</td></tr>
+ <tr><td>src_key_padding_mask</td><td>(N, S)</td><td>(N, S)</td><td>(S)</td></tr>
+ </tbody>
+ </table>
+ <p>Shapes above come from the <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.Transformer.html">torch.nn.Transformer</a> Shape section, which both <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoder.html">nn.TransformerEncoder</a> and <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html">nn.TransformerEncoderLayer</a> defer to.</p>
 
  <h2>Default Mode (seq_len first)</h2>
  <pre><code>import torch
@@ -110,6 +131,7 @@ output = encoder(x,
  <h2>Common Mistake</h2>
  <pre><code># ERROR: batch_first mismatch
 encoder_layer = nn.TransformerEncoderLayer(d_model=512, nhead=8)
+encoder = nn.TransformerEncoder(encoder_layer, num_layers=6)
 # Default: batch_first=False, expects (seq_len, batch, d_model)
 x = torch.randn(32, 100, 512) # This is (batch, seq_len, d_model)
 output = encoder(x) # WRONG! Will silently produce bad results

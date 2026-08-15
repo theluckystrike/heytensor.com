@@ -125,9 +125,25 @@
 
  <section class="hero tool-hero">
  <h1>ConvTranspose2d Output Size Calculator</h1>
- <p class="qas" data-keyword="pytorch convtranspose2d output size formula">PyTorch ConvTranspose2d output size is H_out = (H_in-1)*stride - 2*padding + dilation*(kernel_size-1) + output_padding + 1, the inverse of Conv2d.</p>
+ <p class="qas" data-keyword="pytorch convtranspose2d output size formula">For a PyTorch <code>nn.ConvTranspose2d</code> layer the output size is H_out = (H_in - 1) &times; stride[0] - 2 &times; padding[0] + dilation[0] &times; (kernel_size[0] - 1) + output_padding[0] + 1, and W_out follows the same formula with index [1]. This is the inverse of Conv2d, and it is the formula given in the <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html">official PyTorch documentation for torch.nn.ConvTranspose2d</a>.</p>
  <p>Calculate the output size of a PyTorch ConvTranspose2d (transposed convolution) layer. Enter input shape, kernel, stride, padding, and output_padding for exact results.</p>
  <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
+ </section>
+
+ <section class="docs-quote">
+ <h2>PyTorch ConvTranspose2d output size formula, from the official docs</h2>
+ <p>The Shape section of the <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html">torch.nn.ConvTranspose2d documentation</a> states the output size as:</p>
+ <blockquote cite="https://docs.pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html">
+ <p><code>H_out = (H_in - 1) &times; stride[0] - 2 &times; padding[0] + dilation[0] &times; (kernel_size[0] - 1) + output_padding[0] + 1</code></p>
+ <p><code>W_out = (W_in - 1) &times; stride[1] - 2 &times; padding[1] + dilation[1] &times; (kernel_size[1] - 1) + output_padding[1] + 1</code></p>
+ <p class="cite-line">PyTorch documentation, <cite><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html">torch.nn.ConvTranspose2d</a></cite>, Shape section. Verified 15 August 2026.</p>
+ </blockquote>
+
+ <h3>Worked example, 7&times;7 to 14&times;14</h3>
+ <p>With <code>nn.ConvTranspose2d(64, 32, kernel_size=3, stride=2, padding=1, output_padding=1)</code> and an input of <code>[1, 64, 7, 7]</code>:</p>
+ <p><code>H_out = (7 - 1) &times; 2 - 2 &times; 1 + 1 &times; (3 - 1) + 1 + 1 = 12 - 2 + 2 + 1 + 1 = 14</code></p>
+ <p>The output tensor is <code>[1, 32, 14, 14]</code>. The 7&times;7 feature map doubles to 14&times;14.</p>
+ <p>Two parameter sets double the resolution exactly for any input size. <code>kernel_size=4, stride=2, padding=1, output_padding=0</code> gives H_out = 2 &times; H_in, and <code>kernel_size=3, stride=2, padding=1, output_padding=1</code> does the same. Both are standard in DCGAN generators and U-Net decoders. The docs require output_padding to be strictly smaller than either stride or dilation.</p>
  </section>
 
  <div id="tool-container"
