@@ -81,6 +81,13 @@
  <p style="margin:0;line-height:1.7;">The error <code>weight is on CPU but input is on CUDA</code> means PyTorch requires all tensors in an operation to be on the same device. If you move your input data to GPU with .cuda() but forget to move the model, the model weights remain on CPU while the input is on CUDA. This device mismatch causes the error.</p>
  </div>
 
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/shape-mismatch.html"><strong>PyTorch Error Debugger</strong></a>. Paste the full error and get the device and shape mismatch broken down line by line.</p>
+ </div>
+ </aside>
+
  <section id="device-debugger" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg,12px);padding:1.25rem 1.5rem;margin:1.5rem 0;">
  <h2 style="margin-top:0;">Device Mismatch Debugger</h2>
  <p style="color:var(--text-dim);font-size:0.9rem;margin-top:0;">Paste your PyTorch <code>RuntimeError</code> and get the exact one-line fix. Everything runs in your browser; nothing is sent to a server.</p>

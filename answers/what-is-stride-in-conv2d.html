@@ -71,6 +71,13 @@
  <p style="margin:0;line-height:1.7;">Stride controls how far the kernel moves between positions. stride=2 halves the output size. stride=1 (default) keeps the size with proper padding.</p>
  </div>
 
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/conv2d-calculator.html"><strong>Conv2d Output Size Calculator</strong></a>. Change stride and watch the output height and width respond.</p>
+ </div>
+ </aside>
+
  <h2>How Stride Affects Output Size</h2>
  <pre><code>output_size = floor((input - kernel + 2*padding) / stride) + 1</code></pre>
  <pre><code># 224x224 input, kernel=3, padding=1

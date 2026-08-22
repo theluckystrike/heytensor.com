@@ -71,6 +71,13 @@
  <p style="margin:0;line-height:1.7;">Use <code>.reshape()</code> instead of <code>.view()</code>, or call <code>.contiguous().view()</code>. This happens when the tensor is not stored contiguously in memory after operations like transpose or permute.</p>
  </div>
 
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/view-size-not-compatible.html"><strong>view size not compatible Debugger</strong></a>. Enter your shape and stride to see whether view works or you need reshape.</p>
+ </div>
+ </aside>
+
  <h2>The Error</h2>
  <pre><code>RuntimeError: view size is not compatible with input tensor's size and stride
 (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.</code></pre>

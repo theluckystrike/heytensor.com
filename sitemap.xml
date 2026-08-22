@@ -119,13 +119,11 @@
   <url><loc>https://heytensor.com/tools/shape-mismatch.html</loc></url>
   <url><loc>https://heytensor.com/tools/view-size-not-compatible.html</loc></url>
   <url>
-    <loc>https://heytensor.com/tools/cuda-error-decoder-fix-gpu-errors-fast</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/pytorch-memory-calculator-estimate-gpu-vram-usage</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -137,25 +135,21 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/dataloader-throughput-calculator</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/distributed-training-cost-calculator</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/mixed-precision-estimator</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/model-quantization-estimator</loc>
     <lastmod>2026-06-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -167,7 +161,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/model-pruning-calculator/</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -185,13 +178,11 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/regularization-strength-tuner/</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/activation-function-playground/</loc>
     <lastmod>2026-06-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -203,25 +194,21 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/gradient-checkpointing-calculator/</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/learning-rate-scheduler/</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/mixed-precision-speedup-estimator/</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://heytensor.com/tools/neural-network-parameter-counter/</loc>
     <lastmod>2026-06-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

@@ -72,6 +72,13 @@
  <p style="margin:0;line-height:1.7;">Conv2d expects (batch, channels, H, W) &mdash; 4 dimensions. Your input is missing the batch dimension. Fix: add <code>x = x.unsqueeze(0)</code> or check your DataLoader.</p>
  </div>
 
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/conv2d-calculator.html"><strong>Conv2d Output Size Calculator</strong></a>. Enter your batch, channels, height, and width to confirm the 4D shape Conv2d wants.</p>
+ </div>
+ </aside>
+
  <h2>The Error</h2>
  <pre><code>RuntimeError: Expected 4-dimensional input for 4-dimensional weight [64, 3, 3, 3],
 but got 3-dimensional input of size [3, 224, 224] instead</code></pre>

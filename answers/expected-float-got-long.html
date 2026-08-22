@@ -72,6 +72,13 @@
  <p style="margin:0;line-height:1.7;">The error <code>expected dtype Float but got dtype Long</code> means pyTorch operations like loss functions, matrix multiplications, and neural network layers expect float tensors. When you pass integer (Long) tensors, PyTorch raises this error because it does not auto-cast between these types.</p>
  </div>
 
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/loss-target-shape.html"><strong>Loss Target Shape Checker</strong></a>. Look up the exact target shape and dtype each PyTorch loss function expects.</p>
+ </div>
+ </aside>
+
  <h2>What Causes This Error</h2>
  <p>PyTorch operations like loss functions, matrix multiplications, and neural network layers expect float tensors. When you pass integer (Long) tensors, PyTorch raises this error because it does not auto-cast between these types.</p>
 

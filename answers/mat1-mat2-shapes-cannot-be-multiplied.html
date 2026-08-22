@@ -71,6 +71,13 @@
  <p style="margin:0;line-height:1.7;">This error means your Linear layer's in_features doesn't match the input tensor's last dimension. Fix: add <code>print(x.shape)</code> before the layer, then set <code>nn.Linear(actual_last_dim, out_features)</code>.</p>
  </div>
 
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/mat1-mat2-shapes.html"><strong>mat1 and mat2 Shape Debugger</strong></a>. Enter both shapes and see which dimension has to change for the matmul to work.</p>
+ </div>
+ </aside>
+
  <h2>Understanding the Error</h2>
  <p>The full error looks like:</p>
  <pre><code>RuntimeError: mat1 and mat2 shapes cannot be multiplied (32x2048 and 512x10)</code></pre>

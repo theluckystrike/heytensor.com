@@ -71,6 +71,13 @@
  <p style="margin:0;line-height:1.7;">nn.TransformerEncoder expects <code>src</code> of shape (S, N, E), that is (seq_len, batch, d_model), because <code>batch_first</code> defaults to <code>False</code>. Set <code>batch_first=True</code> on the <code>nn.TransformerEncoderLayer</code> and it expects (N, S, E), that is (batch, seq_len, d_model). Unbatched input is (S, E). S is the source sequence length, N the batch size, E is d_model. The output shape always matches the input shape.</p>
  </div>
 
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/multihead-attention-calculator.html"><strong>MultiHead Attention Shape Calculator</strong></a>. Check your own d_model, head count, and sequence length against the shapes above.</p>
+ </div>
+ </aside>
+
  
  <blockquote cite="https://docs.pytorch.org/docs/stable/generated/torch.nn.TransformerEncoderLayer.html" style="border-left:3px solid var(--accent);padding-left:1rem;margin:1.5rem 0;">
  <p>&ldquo;batch_first (bool) &ndash; If True, then the input and output tensors are provided as (batch, seq, feature). Default: False (seq, batch, feature).&rdquo;</p>

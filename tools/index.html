@@ -148,6 +148,21 @@
  <p>Validate reshape operations and infer missing dimensions with -1.</p>
  <span class="tool-tag">Shape Calculator</span>
  </a>
+ <a href="/tools/receptive-field-calculator.html" class="tool-card">
+ <h3>CNN Receptive Field Calculator</h3>
+ <p>Track receptive field, jump, and start offset across stacked Conv and Pool layers.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/patch-embedding-calculator.html" class="tool-card">
+ <h3>ViT Patch Embedding Calculator</h3>
+ <p>Patch count, sequence length, and embedding tensor shape for Vision Transformers.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
+ <a href="/tools/tensor-stride-calculator.html" class="tool-card">
+ <h3>Tensor Stride Calculator</h3>
+ <p>Compute contiguous strides and storage offsets to see how PyTorch lays tensors out in memory.</p>
+ <span class="tool-tag">Shape Calculator</span>
+ </a>
  </div>
 
  <h2 class="tools-section-title">Error Debuggers</h2>
@@ -248,6 +263,36 @@
  <h3>Model Optimization Calculator</h3>
  <p>Estimate size reduction, speedup, and accuracy impact of FP16, INT8, INT4 quantization and pruning.</p>
  <span class="tool-tag">Model Tool</span>
+ </a>
+ <a href="/tools/kv-cache-calculator.html" class="tool-card">
+ <h3>KV Cache Memory Calculator</h3>
+ <p>Estimate transformer KV cache VRAM from layers, heads, head dim, sequence length, batch, and dtype.</p>
+ <span class="tool-tag">Model Tool</span>
+ </a>
+ </div>
+
+
+ <h2 class="tools-section-title">Training Setup</h2>
+ <div class="tools-grid">
+ <a href="/tools/gradient-accumulation-calculator.html" class="tool-card">
+ <h3>Gradient Accumulation Calculator</h3>
+ <p>Work out effective batch size and accumulation steps from micro-batch, GPU count, and target batch.</p>
+ <span class="tool-tag">Training Tool</span>
+ </a>
+ <a href="/tools/weight-decay-scheduler.html" class="tool-card">
+ <h3>Weight Decay Scheduler</h3>
+ <p>Visualize constant, linear, cosine, and step decay schedules, with the final and average decay values.</p>
+ <span class="tool-tag">Training Tool</span>
+ </a>
+ <a href="/tools/training-time-estimator-how-long-will-your-model-take.html" class="tool-card">
+ <h3>Training Time Estimator</h3>
+ <p>Estimate training wall clock and cloud cost, single GPU against multi-GPU with scaling efficiency.</p>
+ <span class="tool-tag">Training Tool</span>
+ </a>
+ <a href="/tools/data-augmentation-planner/" class="tool-card">
+ <h3>Data Augmentation Planner</h3>
+ <p>Pick augmentation techniques for vision or text and see the effective dataset multiplier and time cost.</p>
+ <span class="tool-tag">Training Tool</span>
  </a>
  </div>
 
