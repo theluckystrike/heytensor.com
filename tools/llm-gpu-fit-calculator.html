@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Will This LLM Fit on Your GPU</title>
+<meta name="description" content="Check whether a model fits in your GPU VRAM at a given context length. Weights use measured GGUF bits per weight, not the nominal 4-bit assumption, and the KV cache is computed from each model's real config.">
+<link rel="canonical" href="https://heytensor.com/tools/llm-gpu-fit-calculator">
+<meta property="og:title" content="Will This LLM Fit on Your GPU">
+<meta property="og:description" content="Check whether a model fits in your GPU VRAM at a given context length. Weights use measured GGUF bits per weight, not the nominal 4-bit assumption, and the KV cache is computed from each model's real config.">
+<meta property="og:url" content="https://heytensor.com/tools/llm-gpu-fit-calculator">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "Will This LLM Fit on Your GPU",
+   "description": "Check whether a model fits in your GPU VRAM at a given context length. Weights use measured GGUF bits per weight, not the nominal 4-bit assumption, and the KV cache is computed from each model's real config.",
+   "url": "https://heytensor.com/tools/llm-gpu-fit-calculator",
+   "applicationCategory": "UtilitiesApplication",
+   "operatingSystem": "Any",
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+   "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools/" },
+    { "@type": "ListItem", "position": 3, "name": "Will This LLM Fit on Your GPU", "item": "https://heytensor.com/tools/llm-gpu-fit-calculator" }
+   ]
+  }
+ ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
+<style>
+.verdict{border-radius:10px;padding:1rem 1.25rem;margin:1rem 0;border:1px solid var(--border);}
+.verdict .vtag{font-family:'JetBrains Mono',monospace;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+.verdict .vmain{font-size:1.35rem;font-weight:700;margin:.3rem 0 .2rem;}
+.verdict.fit{border-color:#2f8f5b;background:rgba(47,143,91,.10);}
+.verdict.fit .vtag{color:#3fae72;}
+.verdict.tight{border-color:#b8862a;background:rgba(184,134,42,.10);}
+.verdict.tight .vtag{color:#d6a045;}
+.verdict.no{border-color:#a4463e;background:rgba(164,70,62,.10);}
+.verdict.no .vtag{color:#dc7d74;}
+.bkd{width:100%;border-collapse:collapse;margin:.75rem 0;font-size:.95rem;}
+.bkd td{padding:.4rem .5rem;border-bottom:1px solid var(--border);}
+.bkd td:last-child{text-align:right;font-family:'JetBrains Mono',monospace;}
+.bkd tr:last-child td{border-bottom:none;font-weight:700;}
+.meter{height:22px;background:rgba(127,127,127,.18);border-radius:5px;overflow:hidden;display:flex;margin:.5rem 0;}
+.meter span{display:block;height:100%;}
+.meter .w{background:#4f8ecc;} .meter .k{background:#d6a045;} .meter .o{background:#8a8f98;}
+.legend{font-size:.8rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle;font-style:normal;}
+</style>
+</head>
+<body>
+<header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=tools-llm-gpu-fit" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+<div class="wrap">
+<h1>Will This LLM Fit on Your GPU</h1>
+<p class="intro">Pick a model, a quantization and a card, and get a straight answer with the arithmetic shown. Weight size uses <strong>measured</strong> bits per weight taken from 66 real GGUF files, not the nominal 4-bit figure most calculators assume, and the KV cache comes from each model's own published config rather than a rule of thumb.</p>
+
+<section id="tool">
+ <div class="grid">
+ <div class="field">
+ <label for="model">Model</label>
+ <select id="model">
+ <option value="0">Qwen2.5 0.5B</option>
+ <option value="1">Qwen2.5 1.5B</option>
+ <option value="2">SmolLM2 1.7B</option>
+ <option value="3">Qwen2.5 3B</option>
+ <option value="4">Phi-3 mini 3.8B</option>
+ <option value="5">Mistral 7B v0.3</option>
+ <option value="6">OLMo 2 7B</option>
+ <option value="7">Qwen2.5 7B</option>
+ <option value="8">DeepSeek-R1 Distill Qwen 7B</option>
+ <option value="9">DeepSeek-R1 Distill Llama 8B</option>
+ <option value="10">Llama 3.1 8B</option>
+ <option value="11">Qwen3 8B</option>
+ <option value="12">Mistral NeMo 12B</option>
+ <option value="13">Phi-3 medium 14B</option>
+ <option value="14">Phi-4 14B</option>
+ <option value="15">Qwen3 14B</option>
+ <option value="16">Qwen2.5 14B</option>
+ <option value="17">DeepSeek-R1 Distill Qwen 14B</option>
+ <option value="18">Qwen3 32B</option>
+ <option value="19">Qwen2.5 32B</option>
+ <option value="20">DeepSeek-R1 Distill Qwen 32B</option>
+ <option value="21">Llama 3.1 70B</option>
+ <option value="22">Qwen2.5 72B</option>
+ </select>
+ <div class="hint" id="mhint"></div>
+ </div>
+ <div class="field">
+ <label for="quant">Weight format</label>
+ <select id="quant">
+ <option value="0">FP16 / BF16 (16.000 bits/weight)</option>
+ <option value="1">Q8_0 (8.508 bits/weight)</option>
+ <option value="2">Q6_K (6.571 bits/weight)</option>
+ <option value="3">Q5_K_M (5.723 bits/weight)</option>
+ <option value="4" selected>Q4_K_M (4.914 bits/weight)</option>
+ <option value="5">IQ4_XS (4.412 bits/weight)</option>
+ <option value="6">Q3_K_M (4.003 bits/weight)</option>
+ </select>
+ <div class="hint">Bits per weight are measured file sizes, see the table below.</div>
+ </div>
+ <div class="field">
+ <label for="gpu">GPU</label>
+ <select id="gpu">
+ <option value="0">RTX 3080 10GB</option>
+ <option value="1">RTX 3060 12GB</option>
+ <option value="2">T4 16GB</option>
+ <option value="3">RTX 4060 Ti 16GB</option>
+ <option value="4">RTX 4070 Ti SUPER 16GB</option>
+ <option value="5">RTX 4080 SUPER 16GB</option>
+ <option value="6">L4 24GB</option>
+ <option value="7">RTX 3090 24GB</option>
+ <option value="8" selected>RTX 4090 24GB</option>
+ <option value="9">RTX 5090 32GB</option>
+ <option value="10">A100 40GB</option>
+ <option value="11">L40S 48GB</option>
+ <option value="12">A100 80GB</option>
+ <option value="13">H100 80GB</option>
+ <option value="14">H200 141GB</option>
+ </select>
+ <div class="hint" id="ghint"></div>
+ </div>
+ <div class="field">
+ <label for="ctx">Context length (tokens)</label>
+ <input id="ctx" type="number" min="128" step="128" value="8192">
+ </div>
+ <div class="field">
+ <label for="batch">Concurrent sequences</label>
+ <input id="batch" type="number" min="1" value="1">
+ </div>
+ <div class="field">
+ <label for="kvbits">KV cache format</label>
+ <select id="kvbits">
+ <option value="2" selected>FP16 (2 bytes)</option>
+ <option value="1">Q8_0 (1 byte)</option>
+ </select>
+ </div>
+ <div class="field">
+ <label for="ovh">Runtime overhead allowance (GiB)</label>
+ <input id="ovh" type="number" min="0" step="0.1" value="1.0">
+ <div class="hint">CUDA context, compute buffers, fragmentation. An allowance you set, not a measurement.</div>
+ </div>
+ </div>
+
+ <div id="verdict" class="verdict"><div class="vtag" id="vtag"></div><div class="vmain" id="vmain"></div><div id="vsub"></div></div>
+
+ <div class="meter"><span class="w" id="mw"></span><span class="k" id="mk"></span><span class="o" id="mo"></span></div>
+ <div class="legend"><i class="w" style="background:#4f8ecc"></i>weights &nbsp; <i class="k" style="background:#d6a045"></i>KV cache &nbsp; <i class="o" style="background:#8a8f98"></i>overhead</div>
+
+ <table class="bkd">
+ <tr><td>Weights</td><td id="rw">, </td></tr>
+ <tr><td>KV cache at your context and batch</td><td id="rk">, </td></tr>
+ <tr><td>Runtime overhead allowance</td><td id="ro">, </td></tr>
+ <tr><td>Total required</td><td id="rt">, </td></tr>
+ </table>
+ <p class="hint" id="advice"></p>
+</section>
+
+<h2>Why the nominal bit count is the wrong number</h2>
+<p>A quantized checkpoint is not uniformly quantized. In the GGUF K-quant formats the attention and feed-forward weights carry the named precision, but embeddings, output projections and some per-layer tensors are kept wider, and every block stores scale and minimum values alongside its packed weights. The name tells you the dominant block type. It does not tell you the file size.</p>
+<p>Measuring 66 published GGUF files across 11 models gives the real figure. Each file size below came from the <code>x-linked-size</code> header on the Hugging Face download URL, and each parameter count from the corresponding repository's safetensors index, both fetched on 22 August 2026.</p>
+
+<div class="table-scroll"><table>
+<caption>Measured effective bits per weight, 66 GGUF files, 11 models</caption>
+<tr><th>Format</th><th>Nominal</th><th>Measured mean</th><th>Observed range</th><th>Over nominal</th></tr>
+<tr><td>Q3_K_M</td><td>3.0</td><td><strong>4.003</strong></td><td>3.888 to 4.271</td><td>+33.4%</td></tr>
+<tr><td>IQ4_XS</td><td>4.0</td><td><strong>4.412</strong></td><td>4.318 to 4.642</td><td>+10.3%</td></tr>
+<tr><td>Q4_K_M</td><td>4.0</td><td><strong>4.914</strong></td><td>4.826 to 5.110</td><td>+22.8%</td></tr>
+<tr><td>Q5_K_M</td><td>5.0</td><td><strong>5.723</strong></td><td>5.669 to 5.830</td><td>+14.5%</td></tr>
+<tr><td>Q6_K</td><td>6.0</td><td><strong>6.571</strong></td><td>6.564 to 6.596</td><td>+9.5%</td></tr>
+<tr><td>Q8_0</td><td>8.0</td><td><strong>8.508</strong></td><td>8.502 to 8.533</td><td>+6.3%</td></tr>
+</table></div>
+
+<p>Q4_K_M, the most downloaded format on Hugging Face, measures <strong>4.914 bits per weight</strong> rather than 4. Q3_K_M is worse in relative terms at <strong>4.003</strong> against a nominal 3, a 33 percent overshoot, because the tensors held at higher precision are a larger share of a smaller total. Size a 32B model at a nominal 4 bits and you predict 16.0 GiB of weights. The real Q4_K_M file is 18.49 GiB. On a 24 GB card that gap is most of your context budget.</p>
+
+<div class="table-scroll"><table>
+<caption>Q4_K_M measured, every model in the sample</caption>
+<tr><th>Model</th><th>Parameters</th><th>File size</th><th>Bits per weight</th></tr>
+<tr><td>Qwen2.5-1.5B-Instruct</td><td>1,543,714,304</td><td>0.92 GiB</td><td>5.110</td></tr>
+<tr><td>Qwen2.5-3B-Instruct</td><td>3,085,938,688</td><td>1.80 GiB</td><td>5.003</td></tr>
+<tr><td>Mistral-7B-Instruct-v0.3</td><td>7,248,023,552</td><td>4.07 GiB</td><td>4.826</td></tr>
+<tr><td>Qwen2.5-7B-Instruct</td><td>7,615,616,512</td><td>4.36 GiB</td><td>4.919</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-7B</td><td>7,615,616,512</td><td>4.36 GiB</td><td>4.919</td></tr>
+<tr><td>Meta-Llama-3.1-8B-Instruct</td><td>8,030,261,248</td><td>4.58 GiB</td><td>4.902</td></tr>
+<tr><td>phi-4</td><td>14,659,507,200</td><td>8.43 GiB</td><td>4.940</td></tr>
+<tr><td>Qwen2.5-14B-Instruct</td><td>14,770,033,664</td><td>8.37 GiB</td><td>4.868</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-14B</td><td>14,770,033,664</td><td>8.37 GiB</td><td>4.868</td></tr>
+<tr><td>Qwen2.5-32B-Instruct</td><td>32,763,876,352</td><td>18.49 GiB</td><td>4.847</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-32B</td><td>32,763,876,352</td><td>18.49 GiB</td><td>4.847</td></tr>
+</table></div>
+
+<p>Applying the mean back to each model reproduces its real file size closely: the predicted weight size lands within 2 percent of the measured file for 10 of the 11 models, and the largest error in the set is 3.8 percent on the smallest model, where the fixed-precision tensors weigh most. That is the accuracy you should expect from the weights term here. The KV cache term is exact arithmetic on published config values, and the overhead term is your own allowance.</p>
+
+<h2>How the calculator works</h2>
+<p>Three terms are added. Two are computed, one is an allowance you control.</p>
+<div class="formula">weights = parameters &times; measured_bits_per_weight / 8</div>
+<p>Parameter counts come from each repository's own safetensors metadata, so they are the counts the checkpoint actually stores rather than the rounded name. Qwen2.5 7B stores 7,615,616,512 parameters, not 7,000,000,000.</p>
+<div class="formula">kv_cache = 2 &times; layers &times; kv_heads &times; head_dim &times; context &times; batch &times; kv_bytes</div>
+<p>The leading 2 covers the key and the value tensor. The term that matters most here is <code>kv_heads</code>, not the attention head count: a grouped-query model with 8 KV heads behind 32 attention heads uses a quarter of the cache a multi-head model of the same width would. Every value is read from the model's published config, which is why the answer changes so much between architectures that look similar on paper. For a deeper treatment of this term on its own, see the <a href="/tools/kv-cache-calculator.html">KV cache calculator</a>.</p>
+<p>The third term is runtime overhead: the CUDA context, the compute buffers the framework allocates for the forward pass, and allocator fragmentation. It depends on your runtime, your driver and your batching, so this page does not pretend to measure it. It is a field you set, defaulting to 1 GiB, and the verdict tells you how much slack you have so you can judge whether that default is generous enough for your setup.</p>
+<p>The verdict treats anything above 95 percent of card capacity as too tight to trust, because a card at 99 percent occupancy fails the moment a prompt runs long or the allocator fragments.</p>
+
+<h2>GPU capacities used</h2>
+<p>Every capacity below was confirmed against the manufacturer's own specification page on 22 August 2026. Two commonly requested cards, the RTX A6000 and the V100, are absent because their stated capacity could not be confirmed from a fetchable primary source, and a number that cannot be checked does not belong in a calculator that people size hardware with.</p>
+<div class="table-scroll"><table>
+<tr><th>GPU</th><th>VRAM</th><th>Source</th></tr>
+<tr><td>RTX 3080 10GB</td><td>10 GB</td><td><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3080-3080ti/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>RTX 3060 12GB</td><td>12 GB</td><td><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3060-3060ti/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>T4 16GB</td><td>16 GB</td><td><a href="https://www.nvidia.com/en-us/data-center/tesla-t4/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>RTX 4060 Ti 16GB</td><td>16 GB</td><td><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4060-4060ti/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>RTX 4070 Ti SUPER 16GB</td><td>16 GB</td><td><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>RTX 4080 SUPER 16GB</td><td>16 GB</td><td><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4080-family/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>L4 24GB</td><td>24 GB</td><td><a href="https://www.nvidia.com/en-us/data-center/l4/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>RTX 3090 24GB</td><td>24 GB</td><td><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3090-3090ti/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>RTX 4090 24GB</td><td>24 GB</td><td><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>RTX 5090 32GB</td><td>32 GB</td><td><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>A100 40GB</td><td>40 GB</td><td><a href="https://www.nvidia.com/en-us/data-center/a100/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>L40S 48GB</td><td>48 GB</td><td><a href="https://www.nvidia.com/en-us/data-center/l40s/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>A100 80GB</td><td>80 GB</td><td><a href="https://www.nvidia.com/en-us/data-center/a100/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>H100 80GB</td><td>80 GB</td><td><a href="https://www.nvidia.com/en-us/data-center/h100/" rel="nofollow">NVIDIA spec page</a></td></tr>
+<tr><td>H200 141GB</td><td>141 GB</td><td><a href="https://www.nvidia.com/en-us/data-center/h200/" rel="nofollow">NVIDIA spec page</a></td></tr>
+</table></div>
+<p>Capacity is the physical figure. Your display output, desktop compositor and any other process take a share before your model loads, so treat the fit verdict as an upper bound on a card you are also using to drive a monitor.</p>
+
+<h2>What this calculator does not model</h2>
+<p>It sizes single-GPU inference. It does not model training, which adds gradients and optimizer state and is usually several times the weight size, and for that the <a href="/tools/memory-calculator.html">GPU memory calculator for training</a> is the right page. It does not model tensor parallelism across several cards, CPU offload, or the paged attention schemes that let some servers exceed these figures by trading latency. Speculative decoding and draft models add a second set of weights this page does not count.</p>
+
+<section class="related">
+<h2>Related Tools</h2>
+<a href="/tools/kv-cache-calculator.html">KV Cache Calculator</a>
+<a href="/tools/llm-model-size-calculator.html">LLM Model Size Calculator</a>
+<a href="/tools/memory-calculator.html">GPU Memory Calculator for Training</a>
+<a href="/tools/model-optimization-calculator.html">Model Optimization Calculator</a>
+</section>
+</div>
+
+<footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
+
+<script>
+(function(){
+ var MODELS=[{"n":"Qwen2.5 0.5B","id":"Qwen/Qwen2.5-0.5B","p":494032768,"L":24,"kv":2,"hd":64,"mp":32768,"h":896},{"n":"Qwen2.5 1.5B","id":"Qwen/Qwen2.5-1.5B","p":1543714304,"L":28,"kv":2,"hd":128,"mp":131072,"h":1536},{"n":"SmolLM2 1.7B","id":"HuggingFaceTB/SmolLM2-1.7B","p":1711376384,"L":24,"kv":32,"hd":64,"mp":8192,"h":2048},{"n":"Qwen2.5 3B","id":"Qwen/Qwen2.5-3B","p":3085938688,"L":36,"kv":2,"hd":128,"mp":32768,"h":2048},{"n":"Phi-3 mini 3.8B","id":"microsoft/Phi-3-mini-4k-instruct","p":3821079552,"L":32,"kv":32,"hd":96,"mp":4096,"h":3072},{"n":"Mistral 7B v0.3","id":"mistralai/Mistral-7B-v0.3","p":7248023552,"L":32,"kv":8,"hd":128,"mp":32768,"h":4096},{"n":"OLMo 2 7B","id":"allenai/OLMo-2-1124-7B","p":7298617344,"L":32,"kv":32,"hd":128,"mp":4096,"h":4096},{"n":"Qwen2.5 7B","id":"Qwen/Qwen2.5-7B","p":7615616512,"L":28,"kv":4,"hd":128,"mp":131072,"h":3584},{"n":"DeepSeek-R1 Distill Qwen 7B","id":"deepseek-ai/DeepSeek-R1-Distill-Qwen-7B","p":7615616512,"L":28,"kv":4,"hd":128,"mp":131072,"h":3584},{"n":"DeepSeek-R1 Distill Llama 8B","id":"deepseek-ai/DeepSeek-R1-Distill-Llama-8B","p":8030261248,"L":32,"kv":8,"hd":128,"mp":131072,"h":4096},{"n":"Llama 3.1 8B","id":"NousResearch/Meta-Llama-3.1-8B","p":8030261248,"L":32,"kv":8,"hd":128,"mp":131072,"h":4096},{"n":"Qwen3 8B","id":"Qwen/Qwen3-8B","p":8190735360,"L":36,"kv":8,"hd":128,"mp":40960,"h":4096},{"n":"Mistral NeMo 12B","id":"mistralai/Mistral-Nemo-Base-2407","p":12247782400,"L":40,"kv":8,"hd":128,"mp":131072,"h":5120},{"n":"Phi-3 medium 14B","id":"microsoft/Phi-3-medium-4k-instruct","p":13960238080,"L":40,"kv":10,"hd":128,"mp":4096,"h":5120},{"n":"Phi-4 14B","id":"microsoft/phi-4","p":14659507200,"L":40,"kv":10,"hd":128,"mp":16384,"h":5120},{"n":"Qwen3 14B","id":"Qwen/Qwen3-14B","p":14768307200,"L":40,"kv":8,"hd":128,"mp":40960,"h":5120},{"n":"Qwen2.5 14B","id":"Qwen/Qwen2.5-14B","p":14770033664,"L":48,"kv":8,"hd":128,"mp":131072,"h":5120},{"n":"DeepSeek-R1 Distill Qwen 14B","id":"deepseek-ai/DeepSeek-R1-Distill-Qwen-14B","p":14770033664,"L":48,"kv":8,"hd":128,"mp":131072,"h":5120},{"n":"Qwen3 32B","id":"Qwen/Qwen3-32B","p":32762123264,"L":64,"kv":8,"hd":128,"mp":40960,"h":5120},{"n":"Qwen2.5 32B","id":"Qwen/Qwen2.5-32B","p":32763876352,"L":64,"kv":8,"hd":128,"mp":131072,"h":5120},{"n":"DeepSeek-R1 Distill Qwen 32B","id":"deepseek-ai/DeepSeek-R1-Distill-Qwen-32B","p":32763876352,"L":64,"kv":8,"hd":128,"mp":131072,"h":5120},{"n":"Llama 3.1 70B","id":"NousResearch/Meta-Llama-3.1-70B","p":70553706496,"L":80,"kv":8,"hd":128,"mp":131072,"h":8192},{"n":"Qwen2.5 72B","id":"Qwen/Qwen2.5-72B","p":72706203648,"L":80,"kv":8,"hd":128,"mp":131072,"h":8192}];
+ var GPUS=[{"n":"RTX 3080 10GB","gb":10,"u":"https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3080-3080ti/"},{"n":"RTX 3060 12GB","gb":12,"u":"https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3060-3060ti/"},{"n":"T4 16GB","gb":16,"u":"https://www.nvidia.com/en-us/data-center/tesla-t4/"},{"n":"RTX 4060 Ti 16GB","gb":16,"u":"https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4060-4060ti/"},{"n":"RTX 4070 Ti SUPER 16GB","gb":16,"u":"https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/"},{"n":"RTX 4080 SUPER 16GB","gb":16,"u":"https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4080-family/"},{"n":"L4 24GB","gb":24,"u":"https://www.nvidia.com/en-us/data-center/l4/"},{"n":"RTX 3090 24GB","gb":24,"u":"https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3090-3090ti/"},{"n":"RTX 4090 24GB","gb":24,"u":"https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4090/"},{"n":"RTX 5090 32GB","gb":32,"u":"https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5090/"},{"n":"A100 40GB","gb":40,"u":"https://www.nvidia.com/en-us/data-center/a100/"},{"n":"L40S 48GB","gb":48,"u":"https://www.nvidia.com/en-us/data-center/l40s/"},{"n":"A100 80GB","gb":80,"u":"https://www.nvidia.com/en-us/data-center/a100/"},{"n":"H100 80GB","gb":80,"u":"https://www.nvidia.com/en-us/data-center/h100/"},{"n":"H200 141GB","gb":141,"u":"https://www.nvidia.com/en-us/data-center/h200/"}];
+ var QUANTS=[{"n":"FP16 / BF16","b":16.0,"k":"exact"},{"n":"Q8_0","b":8.508,"k":"measured"},{"n":"Q6_K","b":6.571,"k":"measured"},{"n":"Q5_K_M","b":5.723,"k":"measured"},{"n":"Q4_K_M","b":4.914,"k":"measured"},{"n":"IQ4_XS","b":4.412,"k":"measured"},{"n":"Q3_K_M","b":4.003,"k":"measured"}];
+ var GIB=1073741824;
+ function $(id){return document.getElementById(id);}
+ var el={model:$('model'),quant:$('quant'),gpu:$('gpu'),ctx:$('ctx'),batch:$('batch'),kvbits:$('kvbits'),ovh:$('ovh')};
+ function num(x,min){var v=parseFloat(x.value);return (isFinite(v)&&v>=min)?v:min;}
+ function gib(b){return b/GIB;}
+ function fmt(g){return (g>=100?g.toFixed(0):g>=10?g.toFixed(1):g.toFixed(2))+' GiB';}
+
+ function compute(){
+  var m=MODELS[parseInt(el.model.value,10)]||MODELS[0];
+  var q=QUANTS[parseInt(el.quant.value,10)]||QUANTS[0];
+  var g=GPUS[parseInt(el.gpu.value,10)]||GPUS[0];
+  var ctx=num(el.ctx,128), B=num(el.batch,1), kvb=parseFloat(el.kvbits.value), ovh=num(el.ovh,0);
+
+  var wBytes=m.p*q.b/8;
+  var kvBytes=2*m.L*m.kv*m.hd*ctx*B*kvb;
+  var wG=gib(wBytes), kG=gib(kvBytes), oG=ovh;
+  var total=wG+kG+oG;
+  var cap=g.gb*1e9/GIB;                       // vendor GB is decimal, VRAM reports in GiB
+  var pct=total/cap;
+
+  $('rw').textContent=fmt(wG);
+  $('rk').textContent=fmt(kG);
+  $('ro').textContent=fmt(oG);
+  $('rt').textContent=fmt(total)+' of '+fmt(cap)+'  ('+(pct*100).toFixed(0)+'%)';
+
+  var mw=$('mw'),mk=$('mk'),mo=$('mo');
+  var scale=Math.max(total,cap);
+  mw.style.width=(wG/scale*100)+'%'; mk.style.width=(kG/scale*100)+'%'; mo.style.width=(oG/scale*100)+'%';
+
+  var v=$('verdict'),tag=$('vtag'),main=$('vmain'),sub=$('vsub');
+  v.className='verdict '+(pct<=0.95?(pct<=0.85?'fit':'tight'):'no');
+  if(pct<=0.85){
+   tag.textContent='Fits';
+   main.textContent=m.n+' at '+q.n+' fits on '+g.n;
+   sub.textContent='Uses '+fmt(total)+' of '+fmt(cap)+', leaving '+fmt(cap-total)+' spare.';
+  } else if(pct<=0.95){
+   tag.textContent='Tight';
+   main.textContent=m.n+' at '+q.n+' only just fits on '+g.n;
+   sub.textContent='Uses '+fmt(total)+' of '+fmt(cap)+', leaving '+fmt(cap-total)+'. Expect trouble if a prompt runs long.';
+  } else {
+   tag.textContent='Does not fit';
+   main.textContent=m.n+' at '+q.n+' does not fit on '+g.n;
+   sub.textContent='Needs '+fmt(total)+' against '+fmt(cap)+', short by '+fmt(total-cap)+'.';
+  }
+
+  // what to change
+  var tips=[];
+  if(pct>0.95){
+   var freeForKv=cap-wG-oG;
+   if(freeForKv>0){
+    var maxCtx=Math.floor(freeForKv*GIB/(2*m.L*m.kv*m.hd*B*kvb)/128)*128;
+    if(maxCtx>=128) tips.push('At this weight format the longest context that fits is about '+maxCtx.toLocaleString()+' tokens at batch '+B+'.');
+    else tips.push('The weights alone leave no room for a usable cache on this card.');
+   } else {
+    tips.push('The weights alone exceed this card, so no context length helps. Drop to a smaller format or a smaller model.');
+   }
+   for(var i=parseInt(el.quant.value,10)+1;i<QUANTS.length;i++){
+    var t=gib(m.p*QUANTS[i].b/8)+kG+oG;
+    if(t<=cap*0.95){tips.push('Switching to '+QUANTS[i].n+' brings the total to '+fmt(t)+', which fits.');break;}
+   }
+   if(kvb>1) tips.push('An 8-bit KV cache would halve the cache term to '+fmt(kG/2)+'.');
+  } else {
+   var spare=cap*0.95-wG-oG;
+   var ctxMax=Math.floor(spare*GIB/(2*m.L*m.kv*m.hd*B*kvb)/128)*128;
+   if(ctxMax>ctx) tips.push('You have room to raise context to roughly '+ctxMax.toLocaleString()+' tokens at batch '+B+'.');
+   if(m.mp&&ctx>m.mp) tips.push('Note: '+ctx.toLocaleString()+' exceeds this model\u2019s trained context of '+m.mp.toLocaleString()+' tokens.');
+  }
+  $('advice').textContent=tips.join(' ');
+
+  $('mhint').textContent=m.p.toLocaleString()+' parameters, '+m.L+' layers, '+m.kv+' KV heads, head dim '+m.hd+
+    (m.mp?', trained context '+m.mp.toLocaleString():'');
+  $('ghint').textContent=g.gb+' GB advertised, '+fmt(cap)+' as the driver reports it.';
+ }
+ Object.keys(el).forEach(function(k){
+  el[k].addEventListener('input',compute); el[k].addEventListener('change',compute);
+ });
+ var d=MODELS.map(function(m,i){return m.n==='Qwen2.5 7B'?i:-1;}).filter(function(i){return i>=0;})[0];
+ if(d>=0) el.model.value=d;
+ compute();
+})();
+</script>
+</body>
+</html>

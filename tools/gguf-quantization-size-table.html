@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GGUF Quantization Sizes, Measured</title>
+<meta name="description" content="Real file sizes for 66 GGUF checkpoints across 11 models and 6 quantization formats, with the effective bits per weight each one actually achieves against its nominal name.">
+<link rel="canonical" href="https://heytensor.com/tools/gguf-quantization-size-table">
+<meta property="og:title" content="GGUF Quantization Sizes, Measured">
+<meta property="og:description" content="Real file sizes for 66 GGUF checkpoints across 11 models and 6 quantization formats, with the effective bits per weight each one actually achieves against its nominal name.">
+<meta property="og:url" content="https://heytensor.com/tools/gguf-quantization-size-table">
+<meta property="og:type" content="article">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Dataset",
+   "name": "GGUF Quantization Sizes, Measured",
+   "description": "Real file sizes for 66 GGUF checkpoints across 11 models and 6 quantization formats, with the effective bits per weight each one actually achieves against its nominal name.",
+   "url": "https://heytensor.com/tools/gguf-quantization-size-table",
+   "license": "https://creativecommons.org/licenses/by/4.0/",
+   "creator": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
+   "dateModified": "2026-08-22",
+   "variableMeasured": [
+    { "@type": "PropertyValue", "name": "file size in bytes" },
+    { "@type": "PropertyValue", "name": "effective bits per weight" }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://heytensor.com/tools/" },
+    { "@type": "ListItem", "position": 3, "name": "GGUF Quantization Sizes, Measured", "item": "https://heytensor.com/tools/gguf-quantization-size-table" }
+   ]
+  }
+ ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/tools.css">
+<link rel="stylesheet" href="/assets/tool-page.css">
+</head>
+<body>
+<header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/" class="active">Tools</a>
+ <a href="/answers/">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=tools-gguf-sizes" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+<div class="wrap">
+<h1>GGUF Quantization Sizes, Measured</h1>
+<p class="intro">Every figure on this page is a real file size. 66 GGUF checkpoints across 11 models and 6 formats were measured by reading the <code>x-linked-size</code> header on each file's Hugging Face download URL, then divided by the parameter count the model's own safetensors index reports. No format delivers the bit width its name implies.</p>
+
+<h2>What each format actually costs</h2>
+<p>A GGUF file is not uniformly quantized. The K-quant formats apply the named block type to most attention and feed-forward weights, but token embeddings and the output projection are commonly held wider, and every quantized block carries scale and minimum values alongside its packed data. The name describes the dominant block. The file size is what you have to fit on the card.</p>
+
+<div class="table-scroll"><table>
+<caption>Measured effective bits per weight, 66 files, 11 models</caption>
+<tr><th>Format</th><th>Nominal bits</th><th>Measured mean</th><th>Min</th><th>Max</th><th>Over nominal</th><th>Size vs FP16</th></tr>
+<tr><td><code>Q3_K_M</code></td><td>3.0</td><td><strong>4.003</strong></td><td>3.888</td><td>4.271</td><td>+33.4%</td><td>25%</td></tr>
+<tr><td><code>IQ4_XS</code></td><td>4.0</td><td><strong>4.412</strong></td><td>4.318</td><td>4.642</td><td>+10.3%</td><td>28%</td></tr>
+<tr><td><code>Q4_K_M</code></td><td>4.0</td><td><strong>4.914</strong></td><td>4.826</td><td>5.110</td><td>+22.8%</td><td>31%</td></tr>
+<tr><td><code>Q5_K_M</code></td><td>5.0</td><td><strong>5.723</strong></td><td>5.669</td><td>5.830</td><td>+14.5%</td><td>36%</td></tr>
+<tr><td><code>Q6_K</code></td><td>6.0</td><td><strong>6.571</strong></td><td>6.564</td><td>6.596</td><td>+9.5%</td><td>41%</td></tr>
+<tr><td><code>Q8_0</code></td><td>8.0</td><td><strong>8.508</strong></td><td>8.502</td><td>8.533</td><td>+6.3%</td><td>53%</td></tr>
+</table></div>
+
+<p>The headline is <code>Q4_K_M</code>, the most widely distributed format on Hugging Face, at <strong>4.914 bits per weight</strong> rather than 4. The relative overshoot is worst at the low end: <code>Q3_K_M</code> measures <strong>4.003 bits</strong> against a nominal 3, a 33 percent overshoot, and in practice it lands almost exactly where a nominal 4-bit format is supposed to. If you are choosing <code>Q3_K_M</code> over <code>Q4_K_M</code> to save memory, the real saving is 19 percent, not the 25 percent the names suggest.</p>
+
+<h2>Compression is smaller than advertised</h2>
+<p>Stated against FP16, every format saves less than its name promises. The gap is the part that ends up on your GPU.</p>
+
+<div class="table-scroll"><table>
+<caption>Saving against FP16, promised by the name against measured</caption>
+<tr><th>Format</th><th>Implied saving</th><th>Measured saving</th><th>Shortfall</th></tr>
+<tr><td><code>Q3_K_M</code></td><td>81%</td><td>75%</td><td>6 pt</td></tr>
+<tr><td><code>IQ4_XS</code></td><td>75%</td><td>72%</td><td>3 pt</td></tr>
+<tr><td><code>Q4_K_M</code></td><td>75%</td><td>69%</td><td>6 pt</td></tr>
+<tr><td><code>Q5_K_M</code></td><td>69%</td><td>64%</td><td>5 pt</td></tr>
+<tr><td><code>Q6_K</code></td><td>62%</td><td>59%</td><td>4 pt</td></tr>
+<tr><td><code>Q8_0</code></td><td>50%</td><td>47%</td><td>3 pt</td></tr>
+</table></div>
+
+<h2>Effective bits per weight, every model measured</h2>
+<p>The spread across models is real and it is systematic. Small models overshoot most, because the tensors kept at higher precision, chiefly the embedding and output matrices, are a larger fraction of a smaller parameter count. A 1.5B model and a 32B model quantized to the same nominal format do not land on the same bits per weight.</p>
+
+<div class="table-scroll"><table>
+<caption>Effective bits per weight by model and format</caption>
+<tr><th>Model</th><th>Parameters</th><th>Q3_K_M</th><th>IQ4_XS</th><th>Q4_K_M</th><th>Q5_K_M</th><th>Q6_K</th><th>Q8_0</th></tr>
+<tr><td>Qwen2.5-1.5B-Instruct</td><td>1.54B</td><td>4.271</td><td>4.642</td><td>5.110</td><td>5.830</td><td>6.596</td><td>8.533</td></tr>
+<tr><td>Qwen2.5-3B-Instruct</td><td>3.09B</td><td>4.123</td><td>4.508</td><td>5.003</td><td>5.768</td><td>6.580</td><td>8.517</td></tr>
+<tr><td>Mistral-7B-Instruct-v0.3</td><td>7.25B</td><td>3.888</td><td>4.318</td><td>4.826</td><td>5.669</td><td>6.564</td><td>8.502</td></tr>
+<tr><td>Qwen2.5-7B-Instruct</td><td>7.62B</td><td>4.001</td><td>4.431</td><td>4.919</td><td>5.720</td><td>6.570</td><td>8.507</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-7B</td><td>7.62B</td><td>4.001</td><td>4.431</td><td>4.919</td><td>5.720</td><td>6.570</td><td>8.507</td></tr>
+<tr><td>Meta-Llama-3.1-8B-Instruct</td><td>8.03B</td><td>4.004</td><td>4.431</td><td>4.902</td><td>5.711</td><td>6.571</td><td>8.509</td></tr>
+<tr><td>phi-4</td><td>14.66B</td><td>4.018</td><td>4.334</td><td>4.940</td><td>5.787</td><td>6.565</td><td>8.503</td></tr>
+<tr><td>Qwen2.5-14B-Instruct</td><td>14.77B</td><td>3.975</td><td>4.398</td><td>4.868</td><td>5.692</td><td>6.567</td><td>8.505</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-14B</td><td>14.77B</td><td>3.975</td><td>4.398</td><td>4.868</td><td>5.692</td><td>6.567</td><td>8.505</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-32B</td><td>32.76B</td><td>3.891</td><td>4.320</td><td>4.847</td><td>5.680</td><td>6.565</td><td>8.502</td></tr>
+<tr><td>Qwen2.5-32B-Instruct</td><td>32.76B</td><td>3.891</td><td>4.320</td><td>4.847</td><td>5.680</td><td>6.565</td><td>8.502</td></tr>
+</table></div>
+
+<h2>File sizes in GiB</h2>
+<p>The same measurements expressed as the number you compare against card capacity. A 24 GB card reports 22.35 GiB, so read these against that rather than against the advertised figure.</p>
+
+<div class="table-scroll"><table>
+<caption>Measured file size in GiB by model and format</caption>
+<tr><th>Model</th><th>Q3_K_M</th><th>IQ4_XS</th><th>Q4_K_M</th><th>Q5_K_M</th><th>Q6_K</th><th>Q8_0</th></tr>
+<tr><td>Qwen2.5-1.5B-Instruct</td><td>0.77</td><td>0.83</td><td>0.92</td><td>1.05</td><td>1.19</td><td>1.53</td></tr>
+<tr><td>Qwen2.5-3B-Instruct</td><td>1.48</td><td>1.62</td><td>1.80</td><td>2.07</td><td>2.36</td><td>3.06</td></tr>
+<tr><td>Mistral-7B-Instruct-v0.3</td><td>3.28</td><td>3.64</td><td>4.07</td><td>4.78</td><td>5.54</td><td>7.17</td></tr>
+<tr><td>Qwen2.5-7B-Instruct</td><td>3.55</td><td>3.93</td><td>4.36</td><td>5.07</td><td>5.82</td><td>7.54</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-7B</td><td>3.55</td><td>3.93</td><td>4.36</td><td>5.07</td><td>5.82</td><td>7.54</td></tr>
+<tr><td>Meta-Llama-3.1-8B-Instruct</td><td>3.74</td><td>4.14</td><td>4.58</td><td>5.34</td><td>6.14</td><td>7.95</td></tr>
+<tr><td>phi-4</td><td>6.86</td><td>7.40</td><td>8.43</td><td>9.88</td><td>11.20</td><td>14.51</td></tr>
+<tr><td>Qwen2.5-14B-Instruct</td><td>6.84</td><td>7.56</td><td>8.37</td><td>9.79</td><td>11.29</td><td>14.62</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-14B</td><td>6.84</td><td>7.56</td><td>8.37</td><td>9.79</td><td>11.29</td><td>14.62</td></tr>
+<tr><td>DeepSeek-R1-Distill-Qwen-32B</td><td>14.84</td><td>16.48</td><td>18.49</td><td>21.66</td><td>25.04</td><td>32.43</td></tr>
+<tr><td>Qwen2.5-32B-Instruct</td><td>14.84</td><td>16.48</td><td>18.49</td><td>21.66</td><td>25.04</td><td>32.43</td></tr>
+</table></div>
+
+<p>Two rows are worth dwelling on. <code>Qwen2.5-32B-Instruct</code> at <code>Q4_K_M</code> is 18.49 GiB. Sized at a nominal 4 bits you would predict 15.25 GiB and conclude it leaves plenty of room on a 24 GB card. It does not: after the KV cache and runtime overhead it does not fit at any useful context length. To check that for your own combination, use the <a href="/tools/llm-gpu-fit-calculator.html">GPU fit calculator</a>, which uses these measured figures directly.</p>
+
+<h2>How this was measured</h2>
+<p>File sizes come from an HTTP HEAD request against each file's <code>resolve/main</code> URL on Hugging Face, reading the <code>x-linked-size</code> response header. That header reports the size of the object the LFS pointer resolves to, so it is the real download size without transferring the file. Parameter counts come from the <code>safetensors.total</code> field of the Hugging Face model API for the corresponding unquantized repository, which is derived from the tensor shapes in the checkpoint index rather than from the model's name.</p>
+<p>Effective bits per weight is then file bytes times 8, divided by parameter count. All measurements were taken on 22 August 2026 from the <code>bartowski</code> GGUF repositories, which publish a consistent quantization matrix across models and are the most downloaded source for these formats. Quantization is deterministic given the same source checkpoint and llama.cpp version, so these figures are stable, but a repository requantized with a newer llama.cpp can shift slightly.</p>
+<p>One caveat worth stating plainly. The models measured here are dense transformers in the 1.5B to 32B range. Mixture-of-experts checkpoints distribute parameters differently and were not sampled, so do not carry these ratios across to them. Vision and audio towers were also excluded.</p>
+
+<section class="related">
+<h2>Related Tools</h2>
+<a href="/tools/llm-gpu-fit-calculator.html">Will This LLM Fit on Your GPU</a>
+<a href="/tools/llm-model-size-calculator.html">LLM Model Size Calculator</a>
+<a href="/tools/kv-cache-calculator.html">KV Cache Calculator</a>
+<a href="/tools/model-optimization-calculator.html">Model Optimization Calculator</a>
+</section>
+</div>
+
+<footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ </div>
+ </footer>
+</body>
+</html>
