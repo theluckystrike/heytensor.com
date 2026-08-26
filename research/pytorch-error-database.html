@@ -421,7 +421,7 @@ for inputs, targets in dataloader:
   outputs = model(inputs)
   assert outputs.shape[0] == targets.shape[0]
   loss = criterion(outputs, targets)</code></pre>
- <div class="error-prevention">Prevention: Always verify your DataLoader's collate function preserves batch alignment. Print shapes at the beginning of your training loop during debugging.</div>
+ <div class="error-prevention">Prevention: Always verify your DataLoader's collate function preserves batch alignment. Print shapes at the beginning of your training loop during debugging. Related: <a href="/answers/0d-or-1d-target-tensor-expected.html">0D or 1D target tensor expected</a>, the error you get when the batch sizes agree but the target has an extra dimension.</div>
  <div class="error-so">SO: Commonly reported across classification tasks &middot; 30K+ combined views</div>
  </div>
 
@@ -578,7 +578,7 @@ loss = F.cross_entropy(output, targets)
 # Fix option 2: one-hot encode targets
 targets_onehot = F.one_hot(targets, num_classes=10).float()
 loss = F.mse_loss(output, targets_onehot)</code></pre>
- <div class="error-prevention">Prevention: Use <a href="/tools/loss-functions.html">HeyTensor's Loss Functions Reference</a> to check which loss functions accept which target formats.</div>
+ <div class="error-prevention">Prevention: Use <a href="/tools/loss-functions.html">HeyTensor's Loss Functions Reference</a> to check which loss functions accept which target formats, or run your own pair through the <a href="/answers/0d-or-1d-target-tensor-expected.html">target tensor shape checker</a>.</div>
  <div class="error-so">SO: Common when switching between loss functions &middot; 18K+ combined views</div>
  </div>
 
@@ -1546,6 +1546,10 @@ result = torch.where(mask, a, b.float())</code></pre>
  <a href="/tools/memory-calculator.html" class="related-card">
  <h3>Memory Calculator</h3>
  <p>Estimate GPU memory requirements to prevent CUDA out-of-memory errors.</p>
+ </a>
+ <a href="/answers/0d-or-1d-target-tensor-expected.html" class="related-card">
+ <h3>0D or 1D Target Tensor Expected</h3>
+ <p>Check any output and target shape pair against five losses and get the exact error PyTorch raises.</p>
  </a>
  <a href="/research/most-common-pytorch-errors.html" class="related-card">
  <h3>Most Common Errors (Top 20)</h3>

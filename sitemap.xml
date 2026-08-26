@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://heytensor.com/about.html</loc></url>
+  <url><loc>https://heytensor.com/answers/0d-or-1d-target-tensor-expected.html</loc></url>
   <url><loc>https://heytensor.com/answers/batch-norm-input-shape.html</loc></url>
   <url><loc>https://heytensor.com/answers/cannot-broadcast-tensors.html</loc></url>
   <url><loc>https://heytensor.com/answers/conv2d-output-112x112-kernel-3-stride-2.html</loc></url>

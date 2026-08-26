@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Fix "0D or 1D Target Tensor Expected" in PyTorch | HeyTensor</title>
+ <meta name="description" content="RuntimeError: 0D or 1D target tensor expected, multi-target not supported means your CrossEntropyLoss target is 2D. Enter your output and target shapes to get the exact error and the fix.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/0d-or-1d-target-tensor-expected.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/answers/0d-or-1d-target-tensor-expected.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/answers/0d-or-1d-target-tensor-expected.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: 0D or 1D target tensor expected, multi-target not supported">
+ <meta property="og:description" content="Your CrossEntropyLoss target has 2 or more dimensions. Check any output and target shape pair against five PyTorch losses and get the exact error string.">
+ <meta property="og:url" content="https://heytensor.com/answers/0d-or-1d-target-tensor-expected.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: 0D or 1D target tensor expected in PyTorch">
+ <meta name="twitter:description" content="Your CrossEntropyLoss target is 2D where 1D is expected. Free target shape checker with the exact fix.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "PyTorch target tensor shape checker",
+   "url": "https://heytensor.com/answers/0d-or-1d-target-tensor-expected.html",
+   "applicationCategory": "DeveloperApplication",
+   "operatingSystem": "Any",
+   "browserRequirements": "Requires JavaScript",
+   "description": "Enter a model output shape, a target shape, a target dtype and a loss function. The tool reports whether the combination is valid and names the exact PyTorch error it raises.",
+   "isAccessibleForFree": true,
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+   "author": { "@id": "https://zovo.one#michael-lip" },
+   "publisher": { "@type": "Organization", "name": "HeyTensor" }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://zovo.one#michael-lip",
+   "name": "Michael Lip",
+   "url": "https://zovo.one",
+   "description": "Builds heytensor.com and the Zovo Tools network of free, privacy-first developer utilities."
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "What does \"0D or 1D target tensor expected, multi-target not supported\" mean in PyTorch?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "It means your target tensor has 2 or more dimensions where nn.CrossEntropyLoss or nn.NLLLoss expects 0 or 1. For a model output of shape (N, C) the class index target must be shape (N), one integer per sample. A target of shape (N, 1) is the usual cause. Fix it with target = target.squeeze()."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Why does CrossEntropyLoss accept a target with the same shape as the input but NLLLoss does not?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Since PyTorch 1.10 nn.CrossEntropyLoss has two target modes. If the target shape is different from the input shape it reads class indices. If the target shape equals the input shape it reads class probabilities and requires a floating point dtype. nn.NLLLoss has only the class index mode, so passing it a same-shape 2D target raises 0D or 1D target tensor expected, multi-target not supported."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does the same error appear for a 4D segmentation output?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. For an input of shape (N, C, H, W) with a target of shape (N, 1, H, W), PyTorch 2.8.0 raises a different message: only batches of spatial targets supported (3D tensors) but got targets of dimension: 4. The 0D or 1D message is raised only when the input has 1 or 2 dimensions."
+     }
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Answers", "item": "https://heytensor.com/answers/" },
+    { "@type": "ListItem", "position": 3, "name": "0D or 1D target tensor expected" }
+   ]
+  }
+ ]
+}
+ </script>
+ <style>
+ .tt-panel { background: var(--bg-card); border: 1px solid var(--border);
+   border-radius: var(--radius, 12px); padding: 1.5rem; margin: 1.75rem 0; }
+ .tt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.1rem; }
+ .tt-grid label { display: block; font-size: 0.78rem; text-transform: uppercase;
+   letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.4rem; }
+ .tt-grid input, .tt-grid select { width: 100%; padding: 0.7rem 0.8rem; font: inherit;
+   background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+ #tt-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; }
+ .tt-preset { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.75rem; cursor: pointer;
+   background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; }
+ .tt-preset:hover { color: var(--accent); border-color: var(--accent); }
+ #tt-result { margin-top: 1.4rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+ #tt-result .tt-verdict { font-family: var(--font-display, monospace); font-size: 1.7rem;
+   font-weight: 700; margin: 0 0 0.3rem; }
+ .tt-ok { color: #16a34a; }
+ .tt-warn { color: #d97706; }
+ .tt-error { color: #dc2626; }
+ #tt-result .tt-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 1rem; }
+ #tt-result pre { overflow-x: auto; }
+ #tt-result pre.tt-err code { color: #dc2626; }
+ .tt-note { font-size: 0.85rem; color: var(--text-muted); }
+ main table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+ main thead th { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 2px solid var(--accent); white-space: nowrap; }
+ main tbody td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+ .tt-scroll { overflow-x: auto; }
+ @media (max-width: 720px) { .tt-scroll table td, .tt-scroll table th { white-space: nowrap; } }
+ </style>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-0d-or-1d-target-tensor-expected" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container" style="max-width:760px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>0D or 1D target tensor expected</span>
+ </nav>
+
+ <article>
+ <h1>How to Fix "0D or 1D Target Tensor Expected, Multi-Target Not Supported"</h1>
+ <p class="qas" data-keyword="runtimeerror 0d or 1d target tensor expected">Your target tensor has 2 or more dimensions where PyTorch wants 0 or 1. For a model output of shape (N, C), <code>nn.CrossEntropyLoss</code> needs a target of shape (N) holding one class index per sample. A target of shape (N, 1) raises this error. Fix it with <code>target = target.squeeze()</code>.</p>
+
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">The class dimension belongs to the input, never to an index target. Output (32, 10) pairs with target (32), not (32, 1) and not (32, 10).</p>
+ </div>
+
+ <h2>Check your own shapes</h2>
+ <p>Enter the shape your model returns, the shape of your labels, the dtype of those labels, and the loss you call. The tool names the exact error PyTorch raises, or confirms the pair is valid. Every rule below was checked against torch 2.8.0 on CPU, and the error strings are copied from the real exceptions.</p>
+
+ <section class="tt-panel">
+ <div class="tt-grid">
+ <div>
+ <label for="tt-out">Model output shape</label>
+ <input id="tt-out" type="text" inputmode="numeric" value="32, 10" placeholder="32, 10">
+ </div>
+ <div>
+ <label for="tt-tgt">Target shape</label>
+ <input id="tt-tgt" type="text" inputmode="numeric" value="32, 1" placeholder="32">
+ </div>
+ <div>
+ <label for="tt-dtype">Target dtype</label>
+ <select id="tt-dtype"></select>
+ </div>
+ <div>
+ <label for="tt-loss">Loss function</label>
+ <select id="tt-loss"></select>
+ </div>
+ </div>
+ <div id="tt-presets" aria-label="Common cases"></div>
+ <div id="tt-result" aria-live="polite"></div>
+ <p class="tt-note" style="margin-bottom:0;">Runs entirely in your browser. Nothing you type is sent anywhere. The tool assumes a float32 model output. Leave the target box empty to mean a 0-dim scalar target.</p>
+ </section>
+
+ <h2>The error</h2>
+ <pre><code>RuntimeError: 0D or 1D target tensor expected, multi-target not supported</code></pre>
+ <p>This message comes from the ATen kernel behind <code>nll_loss</code>, which both <code>nn.NLLLoss</code> and <code>nn.CrossEntropyLoss</code> call. It appears on no PyTorch documentation page, which is why searching for it turns up forum threads instead of an answer.</p>
+ <p>The check is narrow. It fires only when the input has 1 or 2 dimensions and the target has 2 or more. A 4-dimensional segmentation output raises a different message, and the tool above tells you which one.</p>
+
+ <h2>Cause 1, the target is (N, 1) instead of (N)</h2>
+ <p>This is the common case. A label column arrives from a dataframe, or a stray <code>unsqueeze(1)</code> survives from an earlier experiment, and the batch dimension gains a companion.</p>
+ <pre><code>output = model(x)              # (32, 10)
+target = labels.unsqueeze(1)   # (32, 1)  wrong
+loss = nn.CrossEntropyLoss()(output, target)
+# RuntimeError: 0D or 1D target tensor expected, multi-target not supported
+
+target = target.squeeze()      # (32)  correct
+loss = nn.CrossEntropyLoss()(output, target)</code></pre>
+ <p>Use <code>squeeze()</code> when the extra dimension is size 1. Use <code>reshape(-1)</code> when you want to flatten whatever arrived.</p>
+
+ <h2>Cause 2, one-hot labels with NLLLoss</h2>
+ <p>People one-hot encode labels because other frameworks want them that way. <code>nn.NLLLoss</code> has only one target mode, class indices, so a one-hot target of shape (N, C) raises the same error.</p>
+ <pre><code>target = F.one_hot(labels, num_classes=10)   # (32, 10)
+loss = nn.NLLLoss()(log_probs, target)
+# RuntimeError: 0D or 1D target tensor expected, multi-target not supported
+
+loss = nn.NLLLoss()(log_probs, labels)       # (32) long</code></pre>
+ <p><code>nn.CrossEntropyLoss</code> behaves differently here, and that difference confuses people. Read on.</p>
+
+ <h2>Cause 3, the two target conventions of CrossEntropyLoss</h2>
+ <p>Since PyTorch 1.10, <code>nn.CrossEntropyLoss</code> has two target modes and picks between them by comparing shapes.</p>
+ <ul>
+ <li><strong>Class indices.</strong> The target shape differs from the input shape. For input (N, C) the target is (N), dtype <code>torch.long</code>, values in [0, C).</li>
+ <li><strong>Class probabilities.</strong> The target shape equals the input shape. The target must be floating point, and each value should be in [0, 1]. This is the mode for soft labels and label smoothing.</li>
+ </ul>
+ <p>The shape comparison happens first, so a one-hot <code>torch.long</code> target of shape (32, 10) never reaches the 0D or 1D check. It is routed to the probability branch and rejected on dtype instead:</p>
+ <pre><code>RuntimeError: Expected floating point type for target with class probabilities, got Long</code></pre>
+ <p>That is a useful signal. If you see the dtype message you passed a same-shape target. If you see the 0D or 1D message you passed a target that is neither the index shape nor the input shape.</p>
+
+ <h2>Cause 4, the target is float when it should be long</h2>
+ <p>Get the shape right and the next check is dtype. Class index targets must be int64.</p>
+ <pre><code>RuntimeError: expected scalar type Long but found Float
+RuntimeError: expected scalar type Long but found Int   # int32 labels
+
+target = target.long()</code></pre>
+ <p>On CUDA the same mistake surfaces as <code>"nll_loss_forward_reduce_cuda_kernel_2d_index" not implemented for 'Float'</code>. Same cause, different kernel.</p>
+
+ <h2>What PyTorch 2.8.0 actually raises</h2>
+ <p>Every row below was produced by running the pair through the loss on torch 2.8.0, CPU, and copying the exception. The model output is float32 in all rows. The tool at the top of this page reproduces all of them.</p>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Loss</th><th>Output</th><th>Target</th><th>dtype</th><th>Result</th></tr></thead>
+ <tbody>
+ <tr><td>CrossEntropyLoss</td><td>(32, 10)</td><td>(32)</td><td>long</td><td>Valid</td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(32, 10)</td><td>(32, 1)</td><td>long</td><td><code>RuntimeError: 0D or 1D target tensor expected, multi-target not supported</code></td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(32, 10)</td><td>(32, 10)</td><td>long</td><td><code>RuntimeError: Expected floating point type for target with class probabilities, got Long</code></td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(32, 10)</td><td>(32, 10)</td><td>float32</td><td>Valid, class probability mode</td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(32, 10)</td><td>(32)</td><td>float32</td><td><code>RuntimeError: expected scalar type Long but found Float</code></td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(32, 10)</td><td>(16)</td><td>long</td><td><code>ValueError: Expected input batch_size (32) to match target batch_size (16).</code></td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(10)</td><td>()</td><td>long</td><td>Valid, unbatched</td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(10)</td><td>(1)</td><td>long</td><td><code>RuntimeError: size mismatch (got input: [10], target: [1])</code></td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(4, 3, 8, 8)</td><td>(4, 8, 8)</td><td>long</td><td>Valid, K-dimensional</td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(4, 3, 8, 8)</td><td>(4, 8, 8, 1)</td><td>long</td><td><code>RuntimeError: only batches of spatial targets supported (3D tensors) but got targets of dimension: 4</code></td></tr>
+ <tr><td>CrossEntropyLoss</td><td>(2, 3, 4)</td><td>(2, 4, 1)</td><td>long</td><td><code>RuntimeError: Expected target size [2, 4], got [2, 4, 1]</code></td></tr>
+ <tr><td>NLLLoss</td><td>(32, 10)</td><td>(32, 10)</td><td>float32</td><td><code>RuntimeError: 0D or 1D target tensor expected, multi-target not supported</code></td></tr>
+ <tr><td>BCELoss</td><td>(32, 1)</td><td>(32)</td><td>float32</td><td><code>ValueError: Using a target size (torch.Size([32])) that is different to the input size (torch.Size([32, 1])) is deprecated. Please ensure they have the same size.</code></td></tr>
+ <tr><td>BCEWithLogitsLoss</td><td>(32, 1)</td><td>(32)</td><td>float32</td><td><code>ValueError: Target size (torch.Size([32])) must be the same as input size (torch.Size([32, 1]))</code></td></tr>
+ <tr><td>BCEWithLogitsLoss</td><td>(32, 1)</td><td>(32, 1)</td><td>long</td><td><code>RuntimeError: result type Float can't be cast to the desired output type Long</code></td></tr>
+ <tr><td>MSELoss</td><td>(32, 1)</td><td>(32)</td><td>float32</td><td>Runs. Warns about broadcasting and returns a wrong number.</td></tr>
+ <tr><td>MSELoss</td><td>(32, 10)</td><td>(32)</td><td>float32</td><td><code>RuntimeError: The size of tensor a (10) must match the size of tensor b (32) at non-singleton dimension 1</code></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="tt-note">Two of these are worth a second look. The batch size mismatch is a <code>ValueError</code>, not a <code>RuntimeError</code>, so an <code>except RuntimeError</code> block will not catch it. And the 4-dimensional size mismatch message in torch 2.8.0 is missing its closing parenthesis, which is a real quirk of the source string rather than a typo here.</p>
+
+ <h2>The trap that raises nothing</h2>
+ <p>The MSELoss row above is the dangerous one. An output of (32, 1) against a target of (32) does not raise. PyTorch broadcasts the pair to (32, 32), computes a mean over 1024 numbers instead of 32, and prints a warning that is easy to miss in a busy training log.</p>
+ <pre><code>UserWarning: Using a target size (torch.Size([32])) that is different to the input size
+(torch.Size([32, 1])). This will likely lead to incorrect results due to broadcasting.
+Please ensure they have the same size.</code></pre>
+ <p>Your loss curve still moves, so nothing looks broken. Set <code>output = output.squeeze(1)</code> or <code>target = target.view(32, 1)</code> and the number becomes correct.</p>
+
+ <h2>Quick reference</h2>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Loss</th><th>Target shape for input (N, C)</th><th>Target dtype</th></tr></thead>
+ <tbody>
+ <tr><td><code>nn.CrossEntropyLoss</code> indices</td><td>(N)</td><td><code>torch.long</code></td></tr>
+ <tr><td><code>nn.CrossEntropyLoss</code> probabilities</td><td>(N, C)</td><td>floating point</td></tr>
+ <tr><td><code>nn.NLLLoss</code></td><td>(N)</td><td><code>torch.long</code></td></tr>
+ <tr><td><code>nn.BCELoss</code></td><td>same as input, exactly</td><td><code>torch.float32</code>, input in [0, 1]</td></tr>
+ <tr><td><code>nn.BCEWithLogitsLoss</code></td><td>same as input, exactly</td><td>floating point, input is raw logits</td></tr>
+ <tr><td><code>nn.MSELoss</code></td><td>same as input, or it broadcasts</td><td>floating point for <code>.backward()</code></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p>The documented shape contract for the first three lives in the PyTorch reference: <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.CrossEntropyLoss.html">torch.nn.CrossEntropyLoss</a> and <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.NLLLoss.html">torch.nn.NLLLoss</a>. The error strings are not documented anywhere, so treat those as observed behaviour on torch 2.8.0.</p>
+
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/tools/loss-target-shape.html" class="related-card">Which target shape does my loss function want?</a>
+ <a href="/answers/input-target-batch-size-mismatch.html" class="related-card">How to fix "Expected input batch_size to match target batch_size"?</a>
+ <a href="/answers/expected-float-got-long.html" class="related-card">How to fix "expected scalar type Float but found Long"?</a>
+ <a href="/answers/runtime-error-expected-scalar-type-float.html" class="related-card">RuntimeError: expected scalar type Float</a>
+ <a href="/tools/loss-functions.html" class="related-card">Which PyTorch loss function should I use?</a>
+ <a href="/research/pytorch-error-database.html" class="related-card">The PyTorch error database, 52 errors</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/loss-target-shape.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Loss Target Shape Checker</a>
+ </div>
+
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a>. Behaviour verified against torch 2.8.0 on 26 August 2026.</p>
+ <div class="last-updated"><time datetime="2026-08-26">Last updated: August 26, 2026</time></div>
+ </article>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-0d-or-1d-target-tensor-expected">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-0d-or-1d-target-tensor-expected">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-0d-or-1d-target-tensor-expected" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+
+ <script>
+ (function(){
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
+
+<script>
+'use strict';
+/* Block scope so nothing leaks to window. */
+{
+/* NASA Power of 10: bounded loops with explicit ceilings, range-checked indices,
+   no innerHTML, every function under 60 lines, two or more checks per function. */
+const TT = (function () {
+  var MAX_DIMS = 8;
+  var DTYPES = {
+    'long':    { name: 'Long',   floating: false, py: 'torch.long' },
+    'int32':   { name: 'Int',    floating: false, py: 'torch.int32' },
+    'float32': { name: 'Float',  floating: true,  py: 'torch.float32' },
+    'float64': { name: 'Double', floating: true,  py: 'torch.float64' }
+  };
+
+  function parseShape(text) {
+    if (typeof text !== 'string') { return null; }
+    var parts = text.split(/[^0-9]+/).filter(function (p) { return p.length > 0; });
+    if (parts.length === 0) { return []; }
+    if (parts.length > MAX_DIMS) { return null; }
+    var out = [];
+    for (var i = 0; i < parts.length && i < MAX_DIMS; i += 1) {
+      var n = parseInt(parts[i], 10);
+      if (!isFinite(n) || n <= 0) { return null; }
+      out.push(n);
+    }
+    return out;
+  }
+
+  function eqShape(a, b) {
+    if (!a || !b || a.length !== b.length) { return false; }
+    for (var i = 0; i < a.length && i < MAX_DIMS; i += 1) {
+      if (a[i] !== b[i]) { return false; }
+    }
+    return true;
+  }
+
+  function fmt(d) { return d.length ? '(' + d.join(', ') + ')' : '()'; }
+  function sz(d) { return '[' + d.join(', ') + ']'; }
+  function tsz(d) { return 'torch.Size([' + d.join(', ') + '])'; }
+
+  function bad(err, why, fix, code) {
+    return { level: 'error', err: err, why: why, fix: fix, code: code || '' };
+  }
+  function good(why, code) { return { level: 'ok', err: '', why: why, fix: '', code: code || '' }; }
+  function warn(err, why, fix, code) {
+    return { level: 'warn', err: err, why: why, fix: fix, code: code || '' };
+  }
+
+  /* Broadcast per NumPy rules, right aligned. PyTorch reports the highest
+     indexed dimension that fails, so scan from the trailing dimension down. */
+  function broadcastFail(a, b) {
+    var n = Math.max(a.length, b.length);
+    if (n > MAX_DIMS) { return null; }
+    for (var i = n - 1; i >= 0; i -= 1) {
+      var ai = a.length - (n - i);
+      var bi = b.length - (n - i);
+      var av = (ai >= 0 && ai < a.length) ? a[ai] : 1;
+      var bv = (bi >= 0 && bi < b.length) ? b[bi] : 1;
+      if (av !== bv && av !== 1 && bv !== 1) { return { a: av, b: bv, dim: i }; }
+    }
+    return null;
+  }
+
+  function indexTargetFor(inp) {
+    if (inp.length === 1) { return []; }
+    return [inp[0]].concat(inp.slice(2));
+  }
+
+  /* The class index path shared by CrossEntropyLoss and NLLLoss. Mirrors the
+     check order in aten/src/ATen/native/LossNLL.cpp for torch 2.8.0. */
+  function indexPath(inp, tgt, dt, loss) {
+    var want = indexTargetFor(inp);
+    var wantTxt = 'a target of shape ' + fmt(want) + ' with dtype torch.long';
+    if (inp.length < 1) {
+      return bad('RuntimeError: Expected 1 or more dimensions (got 0)',
+        'A class index loss needs an input with at least a class dimension.',
+        'Give the input at least one dimension, for example (C) unbatched or (N, C) batched.');
+    }
+    var tb = tgt.length ? tgt[0] : 0;
+    if (inp.length !== 1 && inp[0] !== tb) {
+      return bad('ValueError: Expected input batch_size (' + inp[0] + ') to match target batch_size (' + tb + ').',
+        'Dimension 0 is the batch on both tensors. Yours are ' + inp[0] + ' and ' + tb + '.'
+        + (tgt.length === 0 ? ' A 0-dim target reports a batch size of 0 here.' : ''),
+        'Fix the DataLoader pairing, or stop reshaping in a way that changes dimension 0. You need ' + wantTxt + '.');
+    }
+    if (inp.length === 1 || inp.length === 2) {
+      if (tgt.length > 1) {
+        return bad('RuntimeError: 0D or 1D target tensor expected, multi-target not supported',
+          'nn.' + loss + ' takes ONE class index per sample, so the index target is 1-dim for a ' + fmt(inp)
+          + ' input. Yours has ' + tgt.length + ' dimensions. The class dimension belongs to the input only.',
+          'Collapse the trailing dimension: target = target.squeeze() gives ' + fmt(want) + '.',
+          'target = target.squeeze()' + (tgt.length > 2 ? '  # or target.reshape(-1)' : '')
+          + '\nloss = nn.' + loss + '()(output, target)');
+      }
+      var noBatchDim = (inp.length === 1 && tgt.length === 0);
+      if (!noBatchDim && inp[0] !== tgt[0]) {
+        return bad('RuntimeError: size mismatch (got input: ' + sz(inp) + ', target: ' + sz(tgt) + ')',
+          'An unbatched ' + fmt(inp) + ' input wants a 0-dim scalar target, not ' + fmt(tgt) + '.',
+          'Use target = torch.tensor(class_index) with no dimensions, or add a batch dimension to the input.',
+          'target = torch.tensor(3)  # 0-dim\nloss = nn.' + loss + '()(output, target)');
+      }
+    } else if (inp.length === 4) {
+      if (tgt.length !== 3) {
+        return bad('RuntimeError: only batches of spatial targets supported (3D tensors) but got targets of dimension: ' + tgt.length,
+          'For a 4-dim input (N, C, H, W) the index target is 3-dim (N, H, W). Yours has ' + tgt.length + '.',
+          'Reshape the target to ' + fmt(want) + '. A common cause is a stray channel dimension on a segmentation mask.',
+          'target = target.squeeze(1).long()  # (N, 1, H, W) -> (N, H, W)\nloss = nn.' + loss + '()(output, target)');
+      }
+      if (!(inp[0] === tgt[0] && inp[2] === tgt[1] && inp[3] === tgt[2])) {
+        return bad('RuntimeError: size mismatch (got input: ' + sz(inp) + ' , target: ' + sz(tgt),
+          'The target must match the input on N, H and W. Expected ' + fmt(want) + ', got ' + fmt(tgt) + '.',
+          'Resize the mask to the logits resolution, or upsample the logits to the mask resolution.');
+      }
+    } else {
+      if (!eqShape(tgt.slice(1), inp.slice(2))) {
+        return bad('RuntimeError: Expected target size ' + sz(want) + ', got ' + sz(tgt),
+          'For a K-dimensional loss the target drops the class dimension and keeps everything else.',
+          'Reshape the target to ' + fmt(want) + '.',
+          'target = target.reshape(' + want.join(', ') + ').long()\nloss = nn.' + loss + '()(output, target)');
+      }
+    }
+    if (dt !== 'long') {
+      return bad('RuntimeError: expected scalar type Long but found ' + DTYPES[dt].name,
+        'The shape is right. Class index targets must be int64, and yours is ' + DTYPES[dt].py + '.',
+        'Cast it: target = target.long().',
+        'target = target.long()\nloss = nn.' + loss + '()(output, target)');
+    }
+    return good('Valid. nn.' + loss + ' reads ' + fmt(tgt) + ' as class indices for the ' + fmt(inp)
+      + ' input, one index per sample, values in [0, ' + (inp.length === 1 ? inp[0] : inp[1]) + ').',
+      'loss = nn.' + loss + '()(output, target)  # target dtype torch.long');
+  }
+
+  function crossEntropy(inp, tgt, dt) {
+    if (eqShape(inp, tgt)) {
+      if (!DTYPES[dt].floating) {
+        return bad('RuntimeError: Expected floating point type for target with class probabilities, got ' + DTYPES[dt].name,
+          'The two shapes are identical, so PyTorch takes the target as class PROBABILITIES, and that mode needs a float target. Yours is ' + DTYPES[dt].py + '.',
+          'If it is one-hot, convert to indices with target.argmax(dim=' + (inp.length === 1 ? '0' : '1')
+          + '), which gives ' + fmt(indexTargetFor(inp)) + '. If you really want soft labels, call target.float().',
+          'target = target.argmax(dim=' + (inp.length === 1 ? '0' : '1') + ')  # one-hot -> class indices\n'
+          + 'loss = nn.CrossEntropyLoss()(output, target)');
+      }
+      return good('Valid, in class-probability mode. Since PyTorch 1.10 nn.CrossEntropyLoss accepts a float target of the same shape as the input, so this is soft labels, not class indices.',
+        'loss = nn.CrossEntropyLoss()(output, target)  # soft labels, target sums to 1 per row');
+    }
+    return indexPath(inp, tgt, dt, 'CrossEntropyLoss');
+  }
+
+  function nll(inp, tgt, dt) { return indexPath(inp, tgt, dt, 'NLLLoss'); }
+
+  function bce(inp, tgt, dt) {
+    if (!eqShape(inp, tgt)) {
+      return bad('ValueError: Using a target size (' + tsz(tgt) + ') that is different to the input size (' + tsz(inp) + ') is deprecated. Please ensure they have the same size.',
+        'nn.BCELoss compares element to element, so the target shape must equal the input shape exactly. No broadcasting is allowed.',
+        'Reshape the target to ' + fmt(inp) + ', for example target = target.view(' + inp.join(', ') + ').float().',
+        'target = target.view(' + inp.join(', ') + ').float()\nloss = nn.BCELoss()(output, target)');
+    }
+    if (dt !== 'float32') {
+      return bad('RuntimeError: Found dtype ' + DTYPES[dt].name + ' but expected Float',
+        'nn.BCELoss needs the target dtype to match the float32 input. Yours is ' + DTYPES[dt].py + '.',
+        'Cast it: target = target.float().',
+        'target = target.float()\nloss = nn.BCELoss()(output, target)');
+    }
+    return good('Shapes and dtype are valid. One runtime condition is left that a shape checker cannot see: nn.BCELoss requires every INPUT value to be in [0, 1]. Feed it raw logits and it raises RuntimeError: all elements of input should be between 0 and 1. Target values must also be in [0, 1].',
+      'output = torch.sigmoid(logits)   # BCELoss needs probabilities\nloss = nn.BCELoss()(output, target)\n# or skip the sigmoid and use nn.BCEWithLogitsLoss()');
+  }
+
+  function bcewl(inp, tgt, dt) {
+    if (!eqShape(inp, tgt)) {
+      return bad('ValueError: Target size (' + tsz(tgt) + ') must be the same as input size (' + tsz(inp) + ')',
+        'nn.BCEWithLogitsLoss compares element to element, so the target shape must equal the input shape exactly.',
+        'Reshape the target to ' + fmt(inp) + ', for example target = target.view(' + inp.join(', ') + ').float(). If you have class indices for a multi-class problem, you want nn.CrossEntropyLoss instead.',
+        'target = target.view(' + inp.join(', ') + ').float()\nloss = nn.BCEWithLogitsLoss()(logits, target)');
+    }
+    if (!DTYPES[dt].floating) {
+      return bad("RuntimeError: result type Float can't be cast to the desired output type " + DTYPES[dt].name,
+        'The target must be floating point. Yours is ' + DTYPES[dt].py + '.',
+        'Cast it: target = target.float().',
+        'target = target.float()\nloss = nn.BCEWithLogitsLoss()(logits, target)');
+    }
+    return good('Valid. nn.BCEWithLogitsLoss takes raw logits, applies the sigmoid internally in a numerically stable way, and needs a float target of the same shape with values in [0, 1].',
+      'loss = nn.BCEWithLogitsLoss()(logits, target)  # no sigmoid on the output');
+  }
+
+  function mse(inp, tgt, dt) {
+    if (eqShape(inp, tgt)) {
+      if (!DTYPES[dt].floating) {
+        return warn('RuntimeError: Found dtype ' + DTYPES[dt].name + ' but expected Float  (raised by .backward(), not by the forward pass)',
+          'The shapes match, so the forward pass returns a value. The integer target only breaks training when the gradient is computed.',
+          'Cast it: target = target.float().',
+          'target = target.float()\nloss = nn.MSELoss()(output, target)\nloss.backward()');
+      }
+      return good('Valid. nn.MSELoss is elementwise and both tensors are ' + fmt(inp) + '.',
+        'loss = nn.MSELoss()(output, target)');
+    }
+    var f = broadcastFail(inp, tgt);
+    if (f) {
+      return bad('RuntimeError: The size of tensor a (' + f.a + ') must match the size of tensor b (' + f.b + ') at non-singleton dimension ' + f.dim,
+        'The shapes differ and cannot broadcast. ' + fmt(inp) + ' against ' + fmt(tgt) + ' collides at aligned dimension ' + f.dim + '.',
+        'Reshape the target to ' + fmt(inp) + '. If these are class indices you want nn.CrossEntropyLoss, not nn.MSELoss.',
+        'target = target.view(' + inp.join(', ') + ').float()\nloss = nn.MSELoss()(output, target)');
+    }
+    return warn('UserWarning: Using a target size (' + tsz(tgt) + ') that is different to the input size (' + tsz(inp) + '). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.',
+      'This does NOT raise. The shapes broadcast, so PyTorch computes a loss over the broadcast result and only warns. That silent broadcast is the bug people chase for hours.',
+      'Make the shapes equal. target = target.view(' + inp.join(', ') + ') if the element count matches, or output = output.squeeze() if the model added a trailing 1.',
+      'target = target.view(' + inp.join(', ') + ')\nloss = nn.MSELoss()(output, target)');
+  }
+
+  var LOSSES = [
+    { id: 'CrossEntropyLoss', fn: crossEntropy },
+    { id: 'NLLLoss', fn: nll },
+    { id: 'BCELoss', fn: bce },
+    { id: 'BCEWithLogitsLoss', fn: bcewl },
+    { id: 'MSELoss', fn: mse }
+  ];
+
+  function evaluate(inp, tgt, dt, lossId) {
+    if (!inp || !tgt || !DTYPES[dt]) { return null; }
+    if (inp.length > MAX_DIMS || tgt.length > MAX_DIMS) { return null; }
+    for (var i = 0; i < LOSSES.length; i += 1) {
+      if (LOSSES[i].id === lossId) { return LOSSES[i].fn(inp, tgt, dt); }
+    }
+    return null;
+  }
+
+  return { parseShape: parseShape, evaluate: evaluate, LOSSES: LOSSES, DTYPES: DTYPES, fmt: fmt };
+})();
+
+
+  /* ---- UI ---- */
+  const PRESETS = [
+    { label: '(N, C) vs (N, 1)', o: '32, 10', t: '32, 1', d: 'long', l: 'CrossEntropyLoss' },
+    { label: 'one-hot target', o: '32, 10', t: '32, 10', d: 'long', l: 'CrossEntropyLoss' },
+    { label: 'float labels', o: '32, 10', t: '32', d: 'float32', l: 'CrossEntropyLoss' },
+    { label: 'segmentation mask', o: '4, 3, 256, 256', t: '4, 1, 256, 256', d: 'long', l: 'CrossEntropyLoss' },
+    { label: 'unbatched (C,)', o: '10', t: '1', d: 'long', l: 'CrossEntropyLoss' },
+    { label: 'silent MSE broadcast', o: '32, 1', t: '32', d: 'float32', l: 'MSELoss' }
+  ];
+
+  function el(tag, text, cls) {
+    const e = document.createElement(tag);
+    if (typeof text === 'string' || typeof text === 'number') { e.textContent = String(text); }
+    if (cls) { e.className = cls; }
+    return e;
+  }
+
+  function clearNode(node) {
+    let n = 0;
+    while (node.firstChild) {
+      n += 1;
+      if (n > 64) { break; }
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function block(parent, label, text) {
+    if (!text) { return; }
+    const p = el('p');
+    p.appendChild(el('strong', label + ' '));
+    p.appendChild(document.createTextNode(text));
+    parent.appendChild(p);
+  }
+
+  function render() {
+    const oIn = document.getElementById('tt-out');
+    const tIn = document.getElementById('tt-tgt');
+    const dSel = document.getElementById('tt-dtype');
+    const lSel = document.getElementById('tt-loss');
+    const box = document.getElementById('tt-result');
+    if (!oIn || !tIn || !dSel || !lSel || !box) { return; }
+    clearNode(box);
+
+    const inp = TT.parseShape(oIn.value);
+    const tgt = TT.parseShape(tIn.value);
+    if (inp === null || tgt === null || inp.length === 0) {
+      box.appendChild(el('p', 'Enter shapes as numbers, for example 32, 10 for the output and 32 for the target. '
+        + 'Leave the target box empty to mean a 0-dim scalar.'));
+      return;
+    }
+    const v = TT.evaluate(inp, tgt, dSel.value, lSel.value);
+    if (!v) { box.appendChild(el('p', 'Pick a loss function.')); return; }
+
+    const headline = v.level === 'ok' ? 'Valid'
+      : (v.level === 'warn' ? 'Runs, but it is wrong' : 'This raises');
+    const h = el('p', headline, 'tt-verdict tt-' + v.level);
+    box.appendChild(h);
+    box.appendChild(el('p', 'nn.' + lSel.value + '  with output ' + TT.fmt(inp)
+      + ' and target ' + TT.fmt(tgt) + ' ' + TT.DTYPES[dSel.value].py, 'tt-sub'));
+
+    if (v.err) {
+      const pre = el('pre', null, 'tt-err');
+      pre.appendChild(el('code', v.err));
+      box.appendChild(pre);
+    }
+    block(box, 'Why.', v.why);
+    block(box, 'Fix.', v.fix);
+    if (v.code) {
+      const pre2 = el('pre');
+      pre2.appendChild(el('code', v.code));
+      box.appendChild(pre2);
+    }
+  }
+
+  function init() {
+    const dSel = document.getElementById('tt-dtype');
+    const lSel = document.getElementById('tt-loss');
+    const oIn = document.getElementById('tt-out');
+    const tIn = document.getElementById('tt-tgt');
+    const row = document.getElementById('tt-presets');
+    if (!dSel || !lSel || !oIn || !tIn) { return; }
+
+    const dkeys = ['long', 'int32', 'float32', 'float64'];
+    for (let i = 0; i < dkeys.length; i += 1) {
+      const o = document.createElement('option');
+      o.value = dkeys[i];
+      o.textContent = TT.DTYPES[dkeys[i]].py;
+      dSel.appendChild(o);
+    }
+    for (let j = 0; j < TT.LOSSES.length; j += 1) {
+      const o2 = document.createElement('option');
+      o2.value = TT.LOSSES[j].id;
+      o2.textContent = 'nn.' + TT.LOSSES[j].id;
+      lSel.appendChild(o2);
+    }
+    dSel.value = 'long';
+    lSel.value = 'CrossEntropyLoss';
+    if (row) {
+      for (let k = 0; k < PRESETS.length; k += 1) {
+        const p = PRESETS[k];
+        const b = el('button', p.label, 'tt-preset');
+        b.type = 'button';
+        b.addEventListener('click', function () {
+          oIn.value = p.o; tIn.value = p.t; dSel.value = p.d; lSel.value = p.l; render();
+        });
+        row.appendChild(b);
+      }
+    }
+    oIn.addEventListener('input', render);
+    tIn.addEventListener('input', render);
+    dSel.addEventListener('change', render);
+    lSel.addEventListener('change', render);
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}
+</script>
+</body>
+</html>

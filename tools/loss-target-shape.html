@@ -200,7 +200,7 @@
  <p>The first row is the one people hit most. A target arrives as (N, 1) from a dataframe column or a stray <code>unsqueeze(1)</code>, and CrossEntropyLoss rejects any integer target with two or more dimensions against a 2D input, because the only legal index-target shape there is (N).</p>
 
  <h2>Related pages</h2>
- <p>This tool answers one question, which target shape and dtype a loss demands. For the neighbouring questions: <a href="/tools/loss-functions.html">the loss functions guide</a> covers which loss to choose and what each one computes, <a href="/answers/expected-float-got-long.html">expected dtype Float but got Long</a> walks through casting a target, and <a href="/answers/input-target-batch-size-mismatch.html">input and target batch size don&rsquo;t match</a> covers the case where the batch dimension itself went missing.</p>
+ <p>This tool answers one question, which target shape and dtype a loss demands. For the neighbouring questions: <a href="/tools/loss-functions.html">the loss functions guide</a> covers which loss to choose and what each one computes, <a href="/answers/expected-float-got-long.html">expected dtype Float but got Long</a> walks through casting a target, and <a href="/answers/input-target-batch-size-mismatch.html">input and target batch size don&rsquo;t match</a> covers the case where the batch dimension itself went missing, and <a href="/answers/0d-or-1d-target-tensor-expected.html">0D or 1D target tensor expected</a> validates a shape pair you already have and names the error it raises.</p>
 
  <div class="last-updated"><time datetime="2026-08-15">Last updated: August 15, 2026</time></div>
  </main>
