@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Causal Attention Mask Lab for PyTorch | HeyTensor</title>
+ <meta name="description" content="Build and inspect causal, offset, and sliding-window attention masks. Get exact allowed and blocked counts plus copyable PyTorch and JSON output.">
+ <meta name="robots" content="noindex, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/causal-attention-mask-lab.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/causal-attention-mask-lab.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/causal-attention-mask-lab.html">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="Causal Attention Mask Lab for PyTorch">
+ <meta property="og:description" content="Visualize causal and local attention masks, verify exact counts, and copy equivalent PyTorch code.">
+ <meta property="og:url" content="https://heytensor.com/tools/causal-attention-mask-lab.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Causal Attention Mask Lab for PyTorch | HeyTensor">
+ <meta name="twitter:description" content="Visualize exact causal and local attention masks and copy equivalent PyTorch code.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <link rel="stylesheet" href="/assets/tools.css">
+ <link rel="stylesheet" href="/assets/tool-page.css">
+ <script type="application/ld+json">
+ {"@context":"https://schema.org","@graph":[{"@type":"WebApplication","name":"Causal Attention Mask Lab","url":"https://heytensor.com/tools/causal-attention-mask-lab.html","description":"Build and inspect causal, offset, and sliding-window attention masks with exact cell counts.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"},"datePublished":"2026-08-30","dateModified":"2026-08-30"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Causal Attention Mask Lab","item":"https://heytensor.com/tools/causal-attention-mask-lab.html"}]}]}
+ </script>
+ <style>
+  main > .breadcrumb { display:block; position:static; background:transparent; border:0; }
+  .lab-layout { display:grid; grid-template-columns:minmax(0, 0.9fr) minmax(0, 1.1fr); gap:24px; align-items:start; }
+  .lab-panel { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:24px; }
+  .lab-panel h2 { font-family:var(--font-display); font-size:1rem; margin:0 0 18px; }
+  .input-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:16px; }
+  .field .hint { margin:0; }
+  .mode-set { border:0; padding:0; margin:22px 0 0; }
+  .mode-set legend { font-size:.82rem; font-weight:600; color:var(--text-dim); margin-bottom:9px; }
+  .segmented { display:flex; flex-wrap:wrap; gap:8px; }
+  .segmented label { display:flex; align-items:center; gap:8px; padding:9px 12px; background:var(--bg); border:1px solid var(--border-strong); border-radius:6px; cursor:pointer; }
+  .segmented input { width:auto !important; margin:0; accent-color:var(--accent); }
+  .error { min-height:1.5em; margin:12px 0 0 !important; color:#f87171 !important; font-weight:600; font-size:.82rem; }
+  .metric-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; margin-top:20px; }
+  .metric { background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:15px; min-width:0; }
+  .metric-label { color:var(--text-dim); font-size:.7rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
+  .metric-value { color:var(--accent); font-family:var(--font-display); font-size:clamp(1rem, 3vw, 1.35rem); font-weight:700; margin-top:5px; overflow-wrap:anywhere; }
+  .metric-detail { color:var(--text-muted); font-size:.72rem; margin-top:3px; }
+  .preview-head { display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:12px; }
+  .preview-head h2 { margin-bottom:3px; }
+  .preview-label { color:var(--text-dim); font-size:.78rem; line-height:1.45; }
+  .legend { display:flex; flex-wrap:wrap; gap:10px; color:var(--text-dim); font-size:.72rem; }
+  .legend-item { display:flex; align-items:center; gap:5px; }
+  .swatch { width:12px; height:12px; border-radius:2px; border:1px solid var(--border-strong); }
+  .swatch.allowed { background:var(--accent); }
+  .swatch.blocked { background:var(--bg); }
+  .matrix-scroll { overflow:auto; max-width:100%; padding-bottom:5px; }
+  .matrix { display:grid; width:max-content; gap:2px; font-family:var(--font-display); font-size:9px; line-height:1; }
+  .matrix-cell, .matrix-axis { width:25px; height:25px; display:flex; align-items:center; justify-content:center; border-radius:3px; }
+  .matrix-axis { color:var(--text-muted); font-size:9px; }
+  .matrix-cell { border:1px solid var(--border); }
+  .matrix-cell.allowed { color:#062e2a; background:var(--accent); border-color:var(--accent); font-weight:700; }
+  .matrix-cell.blocked { color:var(--text-muted); background:var(--bg); }
+  .axis-corner { color:var(--text-dim); font-weight:700; }
+  .empty-preview { min-height:180px; display:grid; place-items:center; text-align:center; color:var(--text-muted); border:1px dashed var(--border-strong); border-radius:var(--radius); padding:24px; }
+  .outputs { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:18px; margin-top:26px; }
+  .output-card { min-width:0; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+  .output-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 15px; border-bottom:1px solid var(--border); }
+  .output-head h2 { font-family:var(--font-display); font-size:.9rem; margin:0; }
+  .copy-button, .fixture-button { border:1px solid var(--border-strong); border-radius:6px; background:var(--bg-elev); color:var(--text); font:600 .76rem var(--font-body); padding:7px 10px; cursor:pointer; }
+  .copy-button:hover, .fixture-button:hover { border-color:var(--accent); color:var(--accent); }
+  .copy-button:focus-visible, .fixture-button:focus-visible { outline:3px solid var(--accent-soft); outline-offset:2px; }
+  .output-card pre { margin:0; padding:16px; min-height:250px; max-height:420px; overflow:auto; background:var(--bg); color:var(--text-dim); font:500 .76rem/1.65 var(--font-display); white-space:pre; }
+  .fixtures { margin-top:42px; }
+  .fixtures > h2 { margin-bottom:8px; }
+  .fixture-grid { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; margin-top:18px; }
+  .fixture { display:flex; flex-direction:column; gap:9px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .fixture-name { color:var(--text); font-weight:700; font-size:.86rem; }
+  .fixture-case { color:var(--text-dim); font:500 .74rem/1.55 var(--font-display); }
+  .fixture-result { font-size:.72rem; font-weight:700; color:var(--accent); }
+  .fixture-button { margin-top:auto; align-self:flex-start; }
+  .definition { margin-top:38px; }
+  .definition code { color:var(--text); }
+  .privacy-note { color:var(--text-muted); font-size:.78rem; }
+  @media (max-width:900px) {
+   .lab-layout { grid-template-columns:1fr; }
+   .fixture-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width:640px) {
+   .lab-panel { padding:18px; }
+   .input-grid, .metric-grid, .outputs, .fixture-grid { grid-template-columns:1fr; }
+   .preview-head { display:block; }
+   .legend { margin-top:10px; }
+   .metric-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+   .metric:last-child { grid-column:1 / -1; }
+  }
+ </style>
+</head>
+<body>
+ <header>
+  <div class="container header-inner">
+   <a href="/" class="logo">Hey<span>Tensor</span></a>
+   <button class="mobile-toggle" aria-label="Menu" aria-expanded="false">&#9776;</button>
+   <nav>
+    <a href="/">Calculator</a>
+    <a href="/tools/" class="active">Tools</a>
+    <a href="/answers/">Answers</a>
+    <a href="/research/">Research</a>
+    <a href="/guides/">Guides</a>
+    <a href="/about.html">About</a>
+    <a href="/blog/">Blog</a>
+    <div class="nav-right">
+     <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank" rel="noopener">Go Pro &#10022;</a>
+     <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=causal-mask-lab" class="nav-zovo">Zovo Tools</a>
+    </div>
+   </nav>
+  </div>
+ </header>
+
+ <main class="wrap">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Causal Attention Mask Lab</span></nav>
+  <h1>Causal Attention Mask Lab</h1>
+  <p class="intro">See exactly which key positions each query can attend to. Shift the causal boundary, add a sliding window, switch PyTorch mask representations, and copy code backed by exact full-matrix counts.</p>
+
+  <div class="lab-layout">
+   <section class="lab-panel" aria-labelledby="controls-title">
+    <h2 id="controls-title">Mask configuration</h2>
+    <div class="input-grid">
+     <div class="field">
+      <label for="sequence-length">Sequence length</label>
+      <input id="sequence-length" type="number" min="1" max="4096" step="1" value="4" inputmode="numeric" aria-describedby="sequence-hint form-error">
+      <div class="hint" id="sequence-hint">Whole number from 1 to 4,096.</div>
+     </div>
+     <div class="field">
+      <label for="causal-offset">Causal offset</label>
+      <input id="causal-offset" type="number" min="-4096" max="4096" step="1" value="0" inputmode="numeric" aria-describedby="offset-hint form-error">
+      <div class="hint" id="offset-hint">Positive reveals future keys; negative delays access.</div>
+     </div>
+     <div class="field">
+      <label for="local-window">Local window</label>
+      <input id="local-window" type="number" min="0" max="4096" step="1" value="0" inputmode="numeric" aria-describedby="window-hint form-error">
+      <div class="hint" id="window-hint">0 means no window limit.</div>
+     </div>
+    </div>
+    <fieldset class="mode-set">
+     <legend>Mask representation</legend>
+     <div class="segmented">
+      <label><input type="radio" name="mask-mode" value="boolean" checked> Boolean <code>true/false</code></label>
+      <label><input type="radio" name="mask-mode" value="additive"> Additive <code>0/−∞</code></label>
+     </div>
+    </fieldset>
+    <p class="error" id="form-error" role="alert" aria-live="polite"></p>
+
+    <div class="metric-grid" aria-live="polite" aria-atomic="true">
+     <div class="metric">
+      <div class="metric-label">Allowed</div>
+      <div class="metric-value" id="allowed-count">10</div>
+      <div class="metric-detail" id="allowed-percent">62.5%</div>
+     </div>
+     <div class="metric">
+      <div class="metric-label">Blocked</div>
+      <div class="metric-value" id="blocked-count">6</div>
+      <div class="metric-detail" id="blocked-percent">37.5%</div>
+     </div>
+     <div class="metric">
+      <div class="metric-label">Total cells</div>
+      <div class="metric-value" id="total-count">16</div>
+      <div class="metric-detail">Exact full matrix</div>
+     </div>
+    </div>
+   </section>
+
+   <section class="lab-panel" aria-labelledby="preview-title">
+    <div class="preview-head">
+     <div>
+      <h2 id="preview-title">Visual preview</h2>
+      <div class="preview-label" id="preview-label">Preview: complete 4 × 4 mask. Rows are queries; columns are keys.</div>
+     </div>
+     <div class="legend" aria-label="Preview legend">
+      <span class="legend-item"><span class="swatch allowed"></span><span id="allowed-legend">true · allowed</span></span>
+      <span class="legend-item"><span class="swatch blocked"></span><span id="blocked-legend">false · blocked</span></span>
+     </div>
+    </div>
+    <div class="matrix-scroll">
+     <div class="matrix" id="matrix" role="img" aria-label="Four by four causal attention mask preview"></div>
+    </div>
+    <p class="privacy-note">Preview rendering is capped at 24 × 24. Counts always cover the requested full sequence.</p>
+   </section>
+  </div>
+
+  <section class="outputs" aria-label="Copyable mask output">
+   <div class="output-card">
+    <div class="output-head">
+     <h2>PyTorch</h2>
+     <button type="button" class="copy-button" data-copy="pytorch-output">Copy code</button>
+    </div>
+    <pre id="pytorch-output" tabindex="0"></pre>
+   </div>
+   <div class="output-card">
+    <div class="output-head">
+     <h2>JSON</h2>
+     <button type="button" class="copy-button" data-copy="json-output">Copy JSON</button>
+    </div>
+    <pre id="json-output" tabindex="0"></pre>
+   </div>
+  </section>
+  <p class="privacy-note" id="copy-status" aria-live="polite">Everything runs locally in your browser. Nothing is uploaded.</p>
+
+  <section class="fixtures" aria-labelledby="fixtures-title">
+   <h2 id="fixtures-title">Verified fixtures</h2>
+   <p>These deterministic cases run in your browser against the same validation, counting, and preview logic used above.</p>
+   <div class="fixture-grid" id="fixture-grid"></div>
+  </section>
+
+  <section class="definition">
+   <h2>Mask rule and PyTorch semantics</h2>
+   <p>For query row <code>q</code> and key column <code>k</code>, this lab allows a cell when <code>k ≤ q + offset</code>. If the local window is nonzero, it also requires <code>k ≥ q + offset − window + 1</code>. Both rules are intersected with valid sequence positions. Offset 0 and no local window produce the familiar lower-triangular causal mask.</p>
+   <p>PyTorch scaled dot-product attention treats <code>true</code> in a boolean attention mask as allowed. An additive mask expresses the same rule with <code>0</code> at allowed cells and negative infinity at blocked cells. See the official <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html" target="_blank" rel="noopener">PyTorch <code>scaled_dot_product_attention</code> documentation</a> for the API's mask behavior. Pass either generated mask as <code>attn_mask</code>; do not also set <code>is_causal=True</code>.</p>
+
+   <h2>How to read the preview</h2>
+   <p>Each row represents one query position and each column represents one key position. An allowed cell means that query can use the corresponding key when attention weights are computed. A blocked cell receives no probability mass after masking. Moving the offset changes the diagonal boundary. Adding a local window keeps the causal boundary but removes keys that fall too far behind it, producing a diagonal band instead of a full lower triangle.</p>
+   <p>The preview is deliberately bounded so a long sequence cannot create an unresponsive page. When the requested sequence exceeds the preview limit, the lab renders the leading square only. The allowed, blocked, and total counters still describe the full requested matrix because they are calculated row by row with exact integer arithmetic, independently of the rendered cells.</p>
+
+   <h2>Boolean versus additive masks</h2>
+   <p>The two exports encode the same allowed-cell predicate. Boolean mode is easier to inspect because every cell is explicitly true or false. Additive mode is useful when an attention implementation expects a bias tensor: allowed positions add zero while blocked positions add negative infinity before softmax. Dtype, device, batch, and head broadcasting remain the caller's responsibility; the generated snippet demonstrates the mask rule rather than guessing those runtime details.</p>
+
+   <h2>Method and limitations</h2>
+   <p>This utility is a deterministic mask constructor, not a runtime benchmark. It does not predict kernel choice, memory use, latency, or numerical behavior. Framework behavior can change by version, so verify the generated shape and mask convention against the linked primary documentation for the version you run. The fixtures exercise the same validation and counting functions as the interactive controls, including an invalid input and a truncated-preview case.</p>
+  </section>
+  <section class="related-tools">
+   <h2>Related Tools</h2>
+   <div class="related-grid">
+    <a href="/tools/attention-memory-ledger.html" class="related-card"><h3>Attention Memory Ledger</h3><p>Audit residual, Q/K/V, score, and output tensor bytes.</p></a>
+    <a href="/tools/multihead-attention-calculator.html" class="related-card"><h3>MultiHead Attention Calculator</h3><p>Verify output shapes and head dimensions.</p></a>
+    <a href="/guides/transformer-architecture-visual-guide.html" class="related-card"><h3>Transformer Architecture Guide</h3><p>Follow attention from projections through output.</p></a>
+   </div>
+  </section>
+  <div class="last-updated"><time datetime="2026-08-30">Last updated: August 30, 2026</time></div>
+ </main>
+
+ <footer class="site-footer">
+  <div class="footer-inner">
+   <div class="footer-brand">Zovo Tools</div>
+   <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+   <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+  </div>
+ </footer>
+
+ <script>
+ (function () {
+  'use strict';
+
+  var PREVIEW_LIMIT = 24;
+  var sequenceInput = document.getElementById('sequence-length');
+  var offsetInput = document.getElementById('causal-offset');
+  var windowInput = document.getElementById('local-window');
+  var formError = document.getElementById('form-error');
+  var matrix = document.getElementById('matrix');
+  var previewLabel = document.getElementById('preview-label');
+  var allowedCount = document.getElementById('allowed-count');
+  var blockedCount = document.getElementById('blocked-count');
+  var totalCount = document.getElementById('total-count');
+  var allowedPercent = document.getElementById('allowed-percent');
+  var blockedPercent = document.getElementById('blocked-percent');
+  var allowedLegend = document.getElementById('allowed-legend');
+  var blockedLegend = document.getElementById('blocked-legend');
+  var pytorchOutput = document.getElementById('pytorch-output');
+  var jsonOutput = document.getElementById('json-output');
+  var copyStatus = document.getElementById('copy-status');
+
+  function strictInteger(raw) {
+   var text = String(raw).trim();
+   if (!/^-?\d+$/.test(text)) return null;
+   var value = Number(text);
+   return Number.isSafeInteger(value) ? value : null;
+  }
+
+  function validateValues(sequenceRaw, offsetRaw, windowRaw) {
+   var n = strictInteger(sequenceRaw);
+   var offset = strictInteger(offsetRaw);
+   var windowSize = strictInteger(windowRaw);
+   if (n === null || n < 1 || n > 4096) {
+    return { error: 'Sequence length must be a whole number from 1 to 4,096.', field: 'sequence' };
+   }
+   if (offset === null || offset < -4096 || offset > 4096) {
+    return { error: 'Causal offset must be a whole number from −4,096 to 4,096.', field: 'offset' };
+   }
+   if (windowSize === null || windowSize < 0 || windowSize > 4096) {
+    return { error: 'Local window must be a whole number from 0 to 4,096.', field: 'window' };
+   }
+   return { n: n, offset: offset, windowSize: windowSize };
+  }
+
+  function isAllowed(query, key, params) {
+   var boundary = query + params.offset;
+   if (key > boundary) return false;
+   return params.windowSize === 0 || key >= boundary - params.windowSize + 1;
+  }
+
+  function calculateCounts(params) {
+   var allowed = 0n;
+   for (var query = 0; query < params.n; query += 1) {
+    var upper = Math.min(params.n - 1, query + params.offset);
+    var lower = params.windowSize === 0 ? 0 : Math.max(0, query + params.offset - params.windowSize + 1);
+    if (upper >= lower) allowed += BigInt(upper - lower + 1);
+   }
+   var nBig = BigInt(params.n);
+   var total = nBig * nBig;
+   return { allowed: allowed, blocked: total - allowed, total: total };
+  }
+
+  function commaBigInt(value) {
+   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function ratioPercent(part, total) {
+   if (total === 0n) return '0.0%';
+   var tenths = (part * 1000n + total / 2n) / total;
+   return (tenths / 10n).toString() + '.' + (tenths % 10n).toString() + '%';
+  }
+
+  function currentMode() {
+   var checked = document.querySelector('input[name="mask-mode"]:checked');
+   return checked ? checked.value : 'boolean';
+  }
+
+  function clearInvalidState() {
+   sequenceInput.removeAttribute('aria-invalid');
+   offsetInput.removeAttribute('aria-invalid');
+   windowInput.removeAttribute('aria-invalid');
+  }
+
+  function applyInvalidState(result) {
+   clearInvalidState();
+   if (result.field === 'sequence') sequenceInput.setAttribute('aria-invalid', 'true');
+   if (result.field === 'offset') offsetInput.setAttribute('aria-invalid', 'true');
+   if (result.field === 'window') windowInput.setAttribute('aria-invalid', 'true');
+  }
+
+  function previewMatrix(params, mode) {
+   var size = Math.min(params.n, PREVIEW_LIMIT);
+   var rows = [];
+   for (var query = 0; query < size; query += 1) {
+    var row = [];
+    for (var key = 0; key < size; key += 1) {
+     var allowed = isAllowed(query, key, params);
+     row.push(mode === 'boolean' ? allowed : (allowed ? 0 : '-Infinity'));
+    }
+    rows.push(row);
+   }
+   return rows;
+  }
+
+  function renderPreview(params, mode) {
+   var size = Math.min(params.n, PREVIEW_LIMIT);
+   matrix.replaceChildren();
+   matrix.style.gridTemplateColumns = 'repeat(' + (size + 1) + ', 25px)';
+   matrix.setAttribute('aria-label', size + ' by ' + size + ' preview of a ' + params.n + ' by ' + params.n + ' causal attention mask');
+
+   var corner = document.createElement('span');
+   corner.className = 'matrix-axis axis-corner';
+   corner.textContent = 'q\\k';
+   corner.setAttribute('aria-hidden', 'true');
+   matrix.appendChild(corner);
+   for (var key = 0; key < size; key += 1) {
+    var keyLabel = document.createElement('span');
+    keyLabel.className = 'matrix-axis';
+    keyLabel.textContent = String(key);
+    keyLabel.setAttribute('aria-hidden', 'true');
+    matrix.appendChild(keyLabel);
+   }
+   for (var query = 0; query < size; query += 1) {
+    var queryLabel = document.createElement('span');
+    queryLabel.className = 'matrix-axis';
+    queryLabel.textContent = String(query);
+    queryLabel.setAttribute('aria-hidden', 'true');
+    matrix.appendChild(queryLabel);
+    for (key = 0; key < size; key += 1) {
+     var allowed = isAllowed(query, key, params);
+     var cell = document.createElement('span');
+     cell.className = 'matrix-cell ' + (allowed ? 'allowed' : 'blocked');
+     cell.textContent = mode === 'boolean' ? (allowed ? 'T' : 'F') : (allowed ? '0' : '−∞');
+     cell.title = 'query ' + query + ', key ' + key + ': ' + (allowed ? 'allowed' : 'blocked');
+     cell.setAttribute('aria-hidden', 'true');
+     matrix.appendChild(cell);
+    }
+   }
+
+   if (params.n > PREVIEW_LIMIT) {
+    previewLabel.textContent = 'Preview limit: first 24 × 24 cells of the full ' + params.n.toLocaleString('en-US') + ' × ' + params.n.toLocaleString('en-US') + ' mask. Rows are queries; columns are keys.';
+   } else {
+    previewLabel.textContent = 'Preview: complete ' + params.n + ' × ' + params.n + ' mask. Rows are queries; columns are keys.';
+   }
+   allowedLegend.textContent = mode === 'boolean' ? 'true · allowed' : '0 · allowed';
+   blockedLegend.textContent = mode === 'boolean' ? 'false · blocked' : '−∞ · blocked';
+  }
+
+  function pytorchText(params, mode) {
+   var lines = [
+    'import torch',
+    'import torch.nn.functional as F',
+    '',
+    'sequence_length = ' + params.n,
+    'causal_offset = ' + params.offset,
+    'local_window = ' + params.windowSize + '  # 0 disables the window',
+    '',
+    'q_pos = torch.arange(sequence_length)[:, None]',
+    'k_pos = torch.arange(sequence_length)[None, :]',
+    'allowed = k_pos <= q_pos + causal_offset'
+   ];
+   if (params.windowSize > 0) {
+    lines.push('allowed &= k_pos >= q_pos + causal_offset - local_window + 1');
+   }
+   if (mode === 'boolean') {
+    lines.push('attn_mask = allowed  # True participates in attention');
+   } else {
+    lines.push('attn_mask = torch.where(');
+    lines.push('    allowed,');
+    lines.push('    torch.tensor(0.0),');
+    lines.push('    torch.tensor(float("-inf")),');
+    lines.push(')');
+   }
+   lines.push('');
+   lines.push('# q, k, v shapes: (..., sequence_length, head_dim)');
+   lines.push('output = F.scaled_dot_product_attention(');
+   lines.push('    q, k, v, attn_mask=attn_mask, is_causal=False');
+   lines.push(')');
+   return lines.join('\n');
+  }
+
+  function jsonText(params, mode, counts) {
+   var payload = {
+    schema: 'heytensor.attention-mask/v1',
+    sequenceLength: params.n,
+    causalOffset: params.offset,
+    localWindow: params.windowSize === 0 ? null : params.windowSize,
+    mode: mode,
+    allowedCount: counts.allowed.toString(),
+    blockedCount: counts.blocked.toString(),
+    totalCount: counts.total.toString(),
+    preview: {
+     rows: Math.min(params.n, PREVIEW_LIMIT),
+     columns: Math.min(params.n, PREVIEW_LIMIT),
+     truncated: params.n > PREVIEW_LIMIT,
+     values: previewMatrix(params, mode)
+    }
+   };
+   return JSON.stringify(payload, null, 2);
+  }
+
+  function renderInvalid(result) {
+   applyInvalidState(result);
+   formError.textContent = result.error;
+   allowedCount.textContent = '—';
+   blockedCount.textContent = '—';
+   totalCount.textContent = '—';
+   allowedPercent.textContent = 'Fix the input';
+   blockedPercent.textContent = 'Fix the input';
+   matrix.replaceChildren();
+   var message = document.createElement('div');
+   message.className = 'empty-preview';
+   message.textContent = result.error + ' Enter a valid value to restore the preview.';
+   matrix.appendChild(message);
+   matrix.style.gridTemplateColumns = '1fr';
+   matrix.setAttribute('aria-label', 'Mask preview unavailable: ' + result.error);
+   previewLabel.textContent = 'Preview unavailable until every input is valid.';
+   pytorchOutput.textContent = '# ' + result.error;
+   jsonOutput.textContent = JSON.stringify({ error: result.error }, null, 2);
+  }
+
+  function update() {
+   var params = validateValues(sequenceInput.value, offsetInput.value, windowInput.value);
+   if (params.error) {
+    renderInvalid(params);
+    return;
+   }
+   clearInvalidState();
+   formError.textContent = '';
+   var mode = currentMode();
+   var counts = calculateCounts(params);
+   allowedCount.textContent = commaBigInt(counts.allowed);
+   blockedCount.textContent = commaBigInt(counts.blocked);
+   totalCount.textContent = commaBigInt(counts.total);
+   allowedPercent.textContent = ratioPercent(counts.allowed, counts.total);
+   blockedPercent.textContent = ratioPercent(counts.blocked, counts.total);
+   renderPreview(params, mode);
+   pytorchOutput.textContent = pytorchText(params, mode);
+   jsonOutput.textContent = jsonText(params, mode, counts);
+  }
+
+  function copyOutput(button) {
+   var target = document.getElementById(button.getAttribute('data-copy'));
+   if (!target) return;
+   var label = button.textContent;
+   function succeeded() {
+    button.textContent = 'Copied';
+    copyStatus.textContent = 'Copied ' + (target === pytorchOutput ? 'PyTorch code' : 'JSON') + ' to the clipboard.';
+    window.setTimeout(function () { button.textContent = label; }, 1400);
+   }
+   function fallback() {
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(target);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    copyStatus.textContent = 'Clipboard access was unavailable. The output is selected for manual copy.';
+   }
+   if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(target.textContent).then(succeeded, fallback);
+   } else {
+    fallback();
+   }
+  }
+
+  var fixtures = [
+   { name: '4 × 4 triangle', values: ['4', '0', '0'], mode: 'boolean', expected: '10 allowed · 6 blocked', test: function (result) { return !result.error && result.counts.allowed === 10n && result.counts.blocked === 6n; } },
+   { name: 'Local window', values: ['4', '0', '2'], mode: 'boolean', expected: 'window 2 · 7 allowed · 9 blocked', test: function (result) { return !result.error && result.counts.allowed === 7n && result.counts.blocked === 9n; } },
+   { name: 'Invalid length', values: ['0', '0', '0'], mode: 'boolean', expected: 'length 0 · validation error', test: function (result) { return result.error === 'Sequence length must be a whole number from 1 to 4,096.'; } },
+   { name: 'Preview limit', values: ['64', '0', '0'], mode: 'additive', expected: '64 × 64 counts · 24 × 24 preview', test: function (result) { return !result.error && result.counts.allowed === 2080n && Math.min(result.params.n, PREVIEW_LIMIT) === 24; } }
+  ];
+
+  function evaluateFixture(fixture) {
+   var params = validateValues(fixture.values[0], fixture.values[1], fixture.values[2]);
+   if (params.error) return { error: params.error };
+   return { params: params, counts: calculateCounts(params) };
+  }
+
+  function selectMode(mode) {
+   var radio = document.querySelector('input[name="mask-mode"][value="' + mode + '"]');
+   if (radio) radio.checked = true;
+  }
+
+  function renderFixtures() {
+   var grid = document.getElementById('fixture-grid');
+   fixtures.forEach(function (fixture) {
+    var card = document.createElement('article');
+    card.className = 'fixture';
+    var name = document.createElement('div');
+    name.className = 'fixture-name';
+    name.textContent = fixture.name;
+    var expected = document.createElement('div');
+    expected.className = 'fixture-case';
+    expected.textContent = fixture.expected;
+    var evaluation = evaluateFixture(fixture);
+    var result = document.createElement('div');
+    result.className = 'fixture-result';
+    result.textContent = fixture.test(evaluation) ? 'PASS' : 'FAIL';
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'fixture-button';
+    button.textContent = 'Load fixture';
+    button.addEventListener('click', function () {
+     sequenceInput.value = fixture.values[0];
+     offsetInput.value = fixture.values[1];
+     windowInput.value = fixture.values[2];
+     selectMode(fixture.mode);
+     update();
+     sequenceInput.focus();
+    });
+    card.appendChild(name);
+    card.appendChild(expected);
+    card.appendChild(result);
+    card.appendChild(button);
+    grid.appendChild(card);
+   });
+  }
+
+  [sequenceInput, offsetInput, windowInput].forEach(function (input) {
+   input.addEventListener('input', update);
+   input.addEventListener('change', update);
+  });
+  document.querySelectorAll('input[name="mask-mode"]').forEach(function (radio) {
+   radio.addEventListener('change', update);
+  });
+  document.querySelectorAll('.copy-button').forEach(function (button) {
+   button.addEventListener('click', function () { copyOutput(button); });
+  });
+
+  var menuButton = document.querySelector('.mobile-toggle');
+  var navigation = document.querySelector('header nav');
+  if (menuButton && navigation) {
+   menuButton.addEventListener('click', function () {
+    var expanded = menuButton.getAttribute('aria-expanded') === 'true';
+    menuButton.setAttribute('aria-expanded', String(!expanded));
+    navigation.classList.toggle('open', !expanded);
+   });
+  }
+
+  renderFixtures();
+  update();
+ }());
+ </script>
+</body>
+</html>

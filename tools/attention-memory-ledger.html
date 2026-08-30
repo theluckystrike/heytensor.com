@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>QKV Activation Memory Calculator and Ledger | HeyTensor</title>
+ <meta name="description" content="Audit transformer attention tensor memory in bytes, MiB, and GiB. Compare materialized-score and fused-attention ledgers with exact integer arithmetic.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/tools/attention-memory-ledger.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/attention-memory-ledger.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/attention-memory-ledger.html">
+ <meta property="og:type" content="website">
+ <meta property="og:title" content="QKV Activation Memory Calculator and Ledger | HeyTensor">
+ <meta property="og:description" content="Inspect the conceptual tensors behind attention memory, isolate the sequence-squared score matrix, and compare two context lengths.">
+ <meta property="og:url" content="https://heytensor.com/tools/attention-memory-ledger.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="QKV Activation Memory Calculator and Ledger | HeyTensor">
+ <meta name="twitter:description" content="An inspectable, BigInt-safe tensor ledger for materialized and fused attention memory.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <link rel="stylesheet" href="/assets/tools.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "QKV Activation Memory Calculator and Ledger",
+  "url": "https://heytensor.com/tools/attention-memory-ledger.html",
+  "description": "Audit conceptual attention tensors with exact integer byte arithmetic and compare materialized-score and fused-attention ledgers.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "browserRequirements": "Requires JavaScript and BigInt support",
+  "author": { "@type": "Person", "name": "Michael Lip", "url": "https://zovo.one" },
+  "datePublished": "2026-08-30",
+  "dateModified": "2026-08-30"
+ }
+ </script>
+ <script type="application/ld+json">
+ {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"Attention Memory Ledger Calculator","item":"https://heytensor.com/tools/attention-memory-ledger.html"}]}
+ </script>
+ <style>
+  :root {
+   --ledger-panel: #111720;
+   --ledger-border: #273142;
+   --ledger-accent: #8be9fd;
+   --ledger-violet: #bd93f9;
+   --ledger-green: #50fa7b;
+   --ledger-warn: #ffcf66;
+   --ledger-danger: #ff7b86;
+  }
+  main > .breadcrumb { display: block; position: static; background: transparent; border: 0; }
+  .ledger-shell { max-width: 1120px; margin: 0 auto 3rem; }
+  .release-note { display: inline-flex; gap: .45rem; align-items: center; padding: .35rem .7rem; border: 1px solid var(--ledger-border); border-radius: 999px; color: var(--text-muted); font-size: .8rem; }
+  .release-dot { width: .48rem; height: .48rem; border-radius: 50%; background: var(--ledger-green); box-shadow: 0 0 0 4px rgba(80,250,123,.1); }
+  .calculator-panel { background: var(--ledger-panel); border: 1px solid var(--ledger-border); border-radius: 16px; padding: clamp(1rem, 3vw, 2rem); box-shadow: 0 20px 70px rgba(0,0,0,.18); }
+  .input-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+  .input-heading h2 { margin: 0; }
+  .privacy-note { color: var(--text-muted); font-size: .82rem; }
+  .input-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+  .field { display: flex; flex-direction: column; gap: .4rem; }
+  .field label { font-weight: 600; font-size: .9rem; }
+  .field input, .field select { width: 100%; box-sizing: border-box; border: 1px solid #344054; border-radius: 8px; padding: .72rem .78rem; background: #0b1017; color: var(--text); font: 500 .95rem 'JetBrains Mono', monospace; }
+  .field input:focus, .field select:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--ledger-accent); outline-offset: 2px; }
+  .field-note { color: var(--text-muted); font-size: .76rem; line-height: 1.35; }
+  .error-box { margin: 1rem 0 0; padding: .85rem 1rem; border: 1px solid rgba(255,123,134,.55); border-radius: 8px; background: rgba(255,123,134,.08); color: #ffd7da; }
+  .error-box[hidden] { display: none; }
+  .quadratic-strip { margin: 1.25rem 0; padding: 1rem; border-left: 3px solid var(--ledger-violet); background: rgba(189,147,249,.07); border-radius: 0 10px 10px 0; }
+  .quadratic-strip strong { color: var(--ledger-violet); }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .scenario { min-width: 0; border: 1px solid var(--ledger-border); border-radius: 12px; overflow: hidden; background: #0c121a; }
+  .scenario-head { padding: 1rem; border-bottom: 1px solid var(--ledger-border); }
+  .scenario-head h3 { margin: 0 0 .25rem; }
+  .scenario-head p { margin: 0; color: var(--text-muted); font-size: .84rem; }
+  .table-wrap { overflow-x: auto; }
+  .ledger-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+  .ledger-table th, .ledger-table td { padding: .72rem .8rem; border-bottom: 1px solid var(--ledger-border); vertical-align: top; text-align: left; }
+  .ledger-table th { color: var(--text-muted); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; }
+  .ledger-table td:nth-child(2) { font-family: 'JetBrains Mono', monospace; color: #c5cfdb; white-space: nowrap; }
+  .ledger-table td:last-child { font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+  .ledger-table tr.total-row td { background: rgba(139,233,253,.045); font-weight: 700; color: var(--ledger-accent); }
+  .ledger-table tr.fused-row td { background: rgba(80,250,123,.04); font-weight: 700; color: var(--ledger-green); }
+  .memory-value { display: block; }
+  .memory-sub { display: block; margin-top: .17rem; color: var(--text-muted); font-size: .72rem; font-weight: 400; }
+  .delta-panel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.25rem 0 0; }
+  .metric { padding: 1rem; border: 1px solid var(--ledger-border); border-radius: 10px; background: #0c121a; }
+  .metric-label { display: block; color: var(--text-muted); font-size: .76rem; }
+  .metric-value { display: block; margin-top: .3rem; font: 600 .94rem 'JetBrains Mono', monospace; overflow-wrap: anywhere; }
+  .warning { margin: 1.1rem 0 0; padding: .9rem 1rem; border: 1px solid rgba(255,207,102,.4); border-radius: 8px; background: rgba(255,207,102,.06); color: #ffe9b5; line-height: 1.55; }
+  .actions { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1rem; align-items: center; }
+  .ledger-button { appearance: none; border: 0; border-radius: 8px; padding: .72rem 1rem; background: var(--ledger-accent); color: #071016; font: 700 .88rem 'DM Sans', sans-serif; cursor: pointer; }
+  .ledger-button:hover { filter: brightness(1.08); }
+  .copy-status { color: var(--text-muted); font-size: .82rem; min-height: 1.2em; }
+  .content-section { max-width: 860px; margin: 2.5rem auto; line-height: 1.75; }
+  .content-section h2 { margin-top: 2.4rem; }
+  .formula-block { overflow-x: auto; margin: .9rem 0; padding: 1rem; border: 1px solid var(--ledger-border); border-radius: 10px; background: #0c121a; color: #dce8f5; font: .88rem/1.8 'JetBrains Mono', monospace; }
+  .scope-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .scope-card { border: 1px solid var(--ledger-border); border-radius: 10px; padding: 1rem; background: rgba(17,23,32,.7); }
+  .scope-card h3 { margin-top: 0; }
+  .scope-card ul { margin-bottom: 0; padding-left: 1.25rem; }
+  .fixture-section { max-width: 960px; margin: 2.75rem auto; }
+  .fixture-summary { color: var(--text-muted); }
+  .fixture-table { width: 100%; border-collapse: collapse; border: 1px solid var(--ledger-border); background: var(--ledger-panel); }
+  .fixture-table th, .fixture-table td { padding: .8rem; border-bottom: 1px solid var(--ledger-border); text-align: left; vertical-align: top; }
+  .fixture-table th { color: var(--text-muted); font-size: .78rem; }
+  .fixture-table td:nth-child(2), .fixture-table td:nth-child(3) { font-family: 'JetBrains Mono', monospace; font-size: .78rem; }
+  .fixture-pass { color: var(--ledger-green); font-weight: 700; }
+  .fixture-fail { color: var(--ledger-danger); font-weight: 700; }
+  .sources-list li { margin-bottom: .8rem; }
+  .author-box { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: center; margin: 2.5rem auto; max-width: 860px; border: 1px solid var(--ledger-border); border-radius: 12px; padding: 1.25rem; background: rgba(17,23,32,.7); }
+  .author-mark { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: linear-gradient(135deg,var(--ledger-accent),var(--ledger-violet)); color: #081018; font-weight: 800; }
+  .author-box h2 { margin: 0 0 .25rem; font-size: 1rem; }
+  .author-box p { margin: 0; color: var(--text-muted); line-height: 1.55; }
+  @media (max-width: 900px) {
+   .input-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+   .scenario-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+   .input-grid, .delta-panel, .scope-grid { grid-template-columns: 1fr; }
+   .input-heading { display: block; }
+   .privacy-note { display: block; margin-top: .4rem; }
+   .calculator-panel { padding: 1rem; border-radius: 12px; }
+   .ledger-table th, .ledger-table td { padding: .65rem; }
+   .author-box { grid-template-columns: 1fr; }
+  }
+ </style>
+</head>
+<body>
+ <header>
+  <div class="container header-inner">
+   <a href="/" class="logo">Hey<span>Tensor</span></a>
+   <button class="mobile-toggle" aria-label="Menu" aria-expanded="false">&#9776;</button>
+   <nav>
+    <a href="/">Calculator</a>
+    <a href="/tools/" class="active">Tools</a>
+    <a href="/answers/">Answers</a>
+    <a href="/research/">Research</a>
+    <a href="/guides/">Guides</a>
+    <a href="/about.html">About</a>
+    <a href="/blog/">Blog</a>
+    <div class="nav-right">
+     <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank" rel="noopener">Go Pro &#10022;</a>
+     <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=tools-attention-memory-ledger" class="nav-zovo">Zovo Tools</a>
+    </div>
+   </nav>
+  </div>
+ </header>
+
+ <main class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+   <a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>Attention Memory Ledger</span>
+  </nav>
+
+  <section class="hero tool-hero">
+   <p class="release-note"><span class="release-dot" aria-hidden="true"></span>Validated utility release</p>
+   <h1>QKV Activation Memory Calculator and Tensor Ledger</h1>
+   <p class="qas" data-keyword="qkv activation memory calculator">Account for the conceptual tensors in transformer attention, line by line. Isolate the quadratic score matrix, compare two sequence lengths, and audit every subtotal in exact integer bytes.</p>
+   <p style="font-size:.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a> · calculator runs entirely in your browser</p>
+  </section>
+
+  <div class="ledger-shell">
+   <section class="calculator-panel" aria-labelledby="calculator-title">
+    <div class="input-heading">
+     <h2 id="calculator-title">Tensor dimensions</h2>
+     <span class="privacy-note">No inputs leave this page.</span>
+    </div>
+    <div class="input-grid">
+     <div class="field">
+      <label for="batch">Micro-batch size</label>
+      <input id="batch" name="batch" type="text" inputmode="numeric" pattern="[0-9]+" value="2" aria-describedby="batch-note">
+      <span class="field-note" id="batch-note">Samples processed per layer pass.</span>
+     </div>
+     <div class="field">
+      <label for="sequence">Sequence length A</label>
+      <input id="sequence" name="sequence" type="text" inputmode="numeric" pattern="[0-9]+" value="2048" aria-describedby="sequence-note">
+      <span class="field-note" id="sequence-note">Baseline token count.</span>
+     </div>
+     <div class="field">
+      <label for="compare-sequence">Sequence length B</label>
+      <input id="compare-sequence" name="compare-sequence" type="text" inputmode="numeric" pattern="[0-9]+" value="8192" aria-describedby="compare-note">
+      <span class="field-note" id="compare-note">Comparison token count.</span>
+     </div>
+     <div class="field">
+      <label for="hidden">Hidden size</label>
+      <input id="hidden" name="hidden" type="text" inputmode="numeric" pattern="[0-9]+" value="4096" aria-describedby="hidden-note">
+      <span class="field-note" id="hidden-note">Must divide evenly across heads.</span>
+     </div>
+     <div class="field">
+      <label for="heads">Attention heads</label>
+      <input id="heads" name="heads" type="text" inputmode="numeric" pattern="[0-9]+" value="32">
+     </div>
+     <div class="field">
+      <label for="layers">Transformer layers</label>
+      <input id="layers" name="layers" type="text" inputmode="numeric" pattern="[0-9]+" value="32">
+     </div>
+     <div class="field">
+      <label for="precision">Scalar precision</label>
+      <select id="precision" name="precision">
+       <option value="1">8-bit scalar (1 byte)</option>
+       <option value="2" selected>FP16 / BF16 (2 bytes)</option>
+       <option value="4">FP32 (4 bytes)</option>
+       <option value="8">FP64 (8 bytes)</option>
+      </select>
+     </div>
+     <div class="field">
+      <label>Per-head dimension</label>
+      <output id="head-dimension" class="mono" aria-live="polite">128</output>
+      <span class="field-note">hidden size ÷ heads</span>
+     </div>
+    </div>
+
+    <div id="calculator-error" class="error-box" role="alert" hidden></div>
+    <div id="results" aria-live="polite">
+     <div class="quadratic-strip">
+      <span class="mono">Quadratic term.</span>
+      <span class="mono">score elements = batch × heads × sequence²</span>.
+      Moving from <span id="sequence-a-label">2,048</span> to <span id="sequence-b-label">8,192</span> tokens multiplies score-matrix elements by <strong id="score-ratio">16×</strong>.
+     </div>
+
+     <div class="scenario-grid">
+      <section class="scenario" aria-labelledby="scenario-a-title">
+       <div class="scenario-head">
+        <h3 id="scenario-a-title">Scenario A · baseline</h3>
+        <p id="scenario-a-meta">2,048 tokens · 2-byte scalars</p>
+       </div>
+       <div class="table-wrap">
+        <table class="ledger-table">
+         <thead><tr><th scope="col">Tensor / subtotal</th><th scope="col">Elements</th><th scope="col">Exact memory</th></tr></thead>
+         <tbody id="ledger-a"></tbody>
+        </table>
+       </div>
+      </section>
+
+      <section class="scenario" aria-labelledby="scenario-b-title">
+       <div class="scenario-head">
+        <h3 id="scenario-b-title">Scenario B · comparison</h3>
+        <p id="scenario-b-meta">8,192 tokens · 2-byte scalars</p>
+       </div>
+       <div class="table-wrap">
+        <table class="ledger-table">
+         <thead><tr><th scope="col">Tensor / subtotal</th><th scope="col">Elements</th><th scope="col">Exact memory</th></tr></thead>
+         <tbody id="ledger-b"></tbody>
+        </table>
+       </div>
+      </section>
+     </div>
+
+     <div class="delta-panel" aria-label="Scenario comparison">
+      <div class="metric"><span class="metric-label">Materialized all-layer change</span><span class="metric-value" id="materialized-delta">Pending</span></div>
+      <div class="metric"><span class="metric-label">Fused all-layer change</span><span class="metric-value" id="fused-delta">Pending</span></div>
+      <div class="metric"><span class="metric-label">Score matrix share in B</span><span class="metric-value" id="score-share">Pending</span></div>
+     </div>
+
+     <p class="warning">Scope warning. “Fused” here omits only the conceptually materialized attention-score matrix. Framework kernels may save, tile, or recompute other tensors. This ledger is not a promise of peak VRAM; measure your actual workload with the chosen framework, hardware, and kernel.</p>
+     <div class="actions">
+      <button type="button" id="copy-summary" class="ledger-button">Copy calculation summary</button>
+      <span id="copy-status" class="copy-status" role="status" aria-live="polite"></span>
+     </div>
+    </div>
+   </section>
+  </div>
+
+  <section class="content-section">
+   <h2>What this ledger counts</h2>
+   <p>This calculator deliberately exposes a small conceptual ledger instead of producing an opaque “training VRAM” number. For each layer it counts the residual-stream input, the three query/key/value projection outputs, the attention output, and, only in the materialized path, the full query-key score matrix. It then multiplies each per-layer subtotal by the layer count to show an all-layer upper-bound ledger.</p>
+
+   <div class="formula-block" aria-label="Attention memory formulas">
+residual elements = batch × sequence × hidden<br>
+Q/K/V elements = 3 × batch × sequence × hidden<br>
+score elements = batch × heads × sequence × sequence<br>
+attention output elements = batch × sequence × hidden<br>
+bytes = elements × bytes per scalar<br>
+materialized subtotal = residual + Q/K/V + score + output<br>
+fused comparison = materialized subtotal − score
+   </div>
+
+   <p>The <span class="mono">sequence × sequence</span> factor is the important nonlinear term. With every other input fixed, doubling the sequence length doubles the residual, Q/K/V, and output tensors, but quadruples a materialized score matrix. The two-scenario view makes that difference directly inspectable.</p>
+
+   <h2>Worked example</h2>
+   <p id="worked-example">The live calculator is computing this example from Scenario A.</p>
+
+   <h2>Assumptions and limitations</h2>
+   <div class="scope-grid">
+    <div class="scope-card">
+     <h3>Included</h3>
+     <ul>
+      <li>One residual-stream input per layer</li>
+      <li>Separate Q, K, and V projection outputs</li>
+      <li>Conceptual full attention-score matrix</li>
+      <li>One attention output per layer</li>
+      <li>An all-layer upper bound for these tensors</li>
+     </ul>
+    </div>
+    <div class="scope-card">
+     <h3>Not included</h3>
+     <ul>
+      <li>Model weights, gradients, and optimizer state</li>
+      <li>CUDA workspace, allocator fragmentation, or caches</li>
+      <li>MLP activations, masks, dropout, logits, or loss</li>
+      <li>Kernel-specific saved tensors and recomputation</li>
+      <li>Runtime, throughput, or hardware availability</li>
+     </ul>
+    </div>
+   </div>
+   <p>All displayed byte values come from JavaScript <code>BigInt</code> multiplication. Inputs must be positive decimal integers, hidden size must be divisible by head count, and a scenario is rejected when any displayed allocation exceeds the documented ledger ceiling of <span class="mono">2<sup>63</sup> − 1 bytes</span>. That ceiling is a deliberate guardrail, not an estimate of available GPU memory.</p>
+
+   <h2>Methodology and primary sources</h2>
+   <p>The tensor dimensions follow PyTorch’s documented batch, sequence, embedding, and head semantics. The full score term follows the reference scaled dot-product attention expression, where query is multiplied by the transpose of key before softmax. The fused comparison is motivated by exact attention implementations designed to avoid materializing that full intermediate in high-bandwidth memory; it does not imitate any single kernel’s internal allocations.</p>
+   <ol class="sources-list">
+    <li><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html">PyTorch: scaled dot product attention</a>, reference score expression and fused implementation notes.</li>
+    <li><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.MultiheadAttention.html">PyTorch: MultiheadAttention</a>, batch, sequence, embedding, and head dimensions.</li>
+    <li><a href="https://docs.pytorch.org/docs/stable/checkpoint.html">PyTorch: activation checkpointing</a>, recomputation tradeoffs and implementation caveats.</li>
+    <li><a href="https://arxiv.org/abs/2205.14135">Dao et al.: FlashAttention</a>, primary paper on IO-aware exact attention.</li>
+   </ol>
+  </section>
+
+  <section class="fixture-section" aria-labelledby="fixtures-title">
+   <h2 id="fixtures-title">Executable browser fixtures</h2>
+   <p class="fixture-summary" id="fixture-summary" role="status" aria-live="polite">Running five independent checks…</p>
+   <div class="table-wrap">
+    <table class="fixture-table">
+     <thead><tr><th scope="col">Fixture</th><th scope="col">Expected</th><th scope="col">Observed</th><th scope="col">Status</th></tr></thead>
+     <tbody id="fixture-results"></tbody>
+    </table>
+   </div>
+   <noscript><p class="error-box">JavaScript is required to calculate the ledger and run its validation fixtures.</p></noscript>
+  </section>
+
+  <section class="related-tools">
+   <h2>Related Tools</h2>
+   <div class="related-grid">
+   <a href="/tools/multihead-attention-calculator.html" class="related-card"><h3>MultiHead Attention Shape Calculator</h3><p>Verify attention output and per-head dimensions.</p></a>
+    <a href="/tools/causal-attention-mask-lab.html" class="related-card"><h3>Causal Attention Mask Lab</h3><p>Inspect causal, offset, and local-window mask cells.</p></a>
+    <a href="/tools/attention-head-dimension-calculator/" class="related-card"><h3>Attention Head Dimension Calculator</h3><p>Compare head dimensions, parameters, and KV variants.</p></a>
+    <a href="/tools/kv-cache-calculator.html" class="related-card"><h3>LLM KV Cache Calculator</h3><p>Estimate autoregressive key-value cache memory.</p></a>
+    <a href="/tools/pytorch-memory-calculator-estimate-gpu-vram-usage.html" class="related-card"><h3>PyTorch Memory Calculator</h3><p>Estimate broader model and training memory categories.</p></a>
+   </div>
+  </section>
+
+  <aside class="author-box" aria-labelledby="author-title">
+   <div class="author-mark" aria-hidden="true">ML</div>
+   <div><h2 id="author-title">Built and reviewed by Michael Lip</h2><p>Michael builds HeyTensor’s browser-based PyTorch and deep-learning utilities. This page uses deterministic local arithmetic and cites primary framework documentation so each result can be audited.</p></div>
+  </aside>
+
+  <div class="last-updated"><time datetime="2026-08-30">Last updated: August 30, 2026</time></div>
+ </main>
+
+ <footer class="site-footer">
+  <div class="footer-inner">
+   <div class="footer-brand">Zovo Tools</div>
+   <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+   <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever →</a>
+   <div class="footer-copy">© 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=tools-attention-memory-ledger">Zovo</a> · lifetime access, one payment</div>
+  </div>
+ </footer>
+
+ <script src="/assets/js/app.js"></script>
+ <script>
+ (function () {
+  'use strict';
+
+  var MAX_LEDGER_BYTES = (1n << 63n) - 1n;
+  var MIB = 1024n * 1024n;
+  var GIB = MIB * 1024n;
+  var fieldIds = ['batch', 'sequence', 'compare-sequence', 'hidden', 'heads', 'layers', 'precision'];
+  var fields = {};
+  fieldIds.forEach(function (id) { fields[id] = document.getElementById(id); });
+  var errorBox = document.getElementById('calculator-error');
+  var results = document.getElementById('results');
+  var summaryText = '';
+
+  function comma(value) {
+   var raw = value.toString();
+   var sign = raw.charAt(0) === '-' ? '-' : '';
+   var digits = sign ? raw.slice(1) : raw;
+   return sign + digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function fixedRatio(numerator, denominator, decimals) {
+   var scale = 10n ** BigInt(decimals);
+   var rounded = (numerator * scale + denominator / 2n) / denominator;
+   var raw = rounded.toString().padStart(decimals + 1, '0');
+   if (decimals === 0) return raw;
+   return raw.slice(0, -decimals) + '.' + raw.slice(-decimals);
+  }
+
+  function memoryParts(bytes) {
+   return {
+    bytes: comma(bytes) + ' bytes',
+    units: fixedRatio(bytes, MIB, 3) + ' MiB · ' + fixedRatio(bytes, GIB, 3) + ' GiB'
+   };
+  }
+
+  function parsePositiveInteger(raw, label) {
+   var value = String(raw).trim();
+   if (!/^[0-9]+$/.test(value)) throw new Error(label + ' must be a positive whole number.');
+   var parsed = BigInt(value);
+   if (parsed <= 0n) throw new Error(label + ' must be greater than zero.');
+   return parsed;
+  }
+
+  function checkedBytes(elements, bytesPerScalar, label) {
+   var bytes = elements * bytesPerScalar;
+   if (bytes > MAX_LEDGER_BYTES) {
+    throw new Error(label + ' exceeds the 2^63 − 1 byte ledger safety limit. Reduce one or more dimensions.');
+   }
+   return bytes;
+  }
+
+  function calculate(config) {
+   var batch = parsePositiveInteger(config.batch, 'Micro-batch size');
+   var sequence = parsePositiveInteger(config.sequence, 'Sequence length');
+   var hidden = parsePositiveInteger(config.hidden, 'Hidden size');
+   var heads = parsePositiveInteger(config.heads, 'Attention heads');
+   var layers = parsePositiveInteger(config.layers, 'Transformer layers');
+   var scalarBytes = parsePositiveInteger(config.scalarBytes, 'Scalar byte width');
+   if (hidden % heads !== 0n) throw new Error('Hidden size must be divisible by the attention head count.');
+
+   var residualElements = batch * sequence * hidden;
+   var qkvElements = 3n * residualElements;
+   var scoreElements = batch * heads * sequence * sequence;
+   var outputElements = residualElements;
+   var materializedElements = residualElements + qkvElements + scoreElements + outputElements;
+   var fusedElements = residualElements + qkvElements + outputElements;
+
+   var rows = [
+    { key: 'residual', label: 'Residual-stream input', elements: residualElements },
+    { key: 'qkv', label: 'Q/K/V projection outputs', elements: qkvElements },
+    { key: 'score', label: 'Attention-score matrix', elements: scoreElements },
+    { key: 'output', label: 'Attention output', elements: outputElements },
+    { key: 'materialized', label: 'Per-layer materialized subtotal', elements: materializedElements, className: 'total-row' },
+    { key: 'fused', label: 'Per-layer fused comparison', elements: fusedElements, className: 'fused-row' },
+    { key: 'allMaterialized', label: 'All-layer materialized upper bound', elements: materializedElements * layers, className: 'total-row' },
+    { key: 'allFused', label: 'All-layer fused upper bound', elements: fusedElements * layers, className: 'fused-row' }
+   ];
+   rows.forEach(function (row) { row.bytes = checkedBytes(row.elements, scalarBytes, row.label); });
+   return {
+    batch: batch,
+    sequence: sequence,
+    hidden: hidden,
+    heads: heads,
+    layers: layers,
+    scalarBytes: scalarBytes,
+    headDimension: hidden / heads,
+    rows: rows,
+    scoreElements: scoreElements,
+    scoreBytes: rows[2].bytes,
+    materializedBytes: rows[4].bytes,
+    fusedBytes: rows[5].bytes,
+    allMaterializedBytes: rows[6].bytes,
+    allFusedBytes: rows[7].bytes
+   };
+  }
+
+  function appendCell(row, value) {
+   var cell = document.createElement('td');
+   cell.textContent = value;
+   row.appendChild(cell);
+   return cell;
+  }
+
+  function renderLedger(target, ledger) {
+   target.replaceChildren();
+   ledger.rows.forEach(function (item) {
+    var row = document.createElement('tr');
+    if (item.className) row.className = item.className;
+    appendCell(row, item.label);
+    appendCell(row, comma(item.elements));
+    var memoryCell = document.createElement('td');
+    var parts = memoryParts(item.bytes);
+    var byteLine = document.createElement('span');
+    byteLine.className = 'memory-value';
+    byteLine.textContent = parts.bytes;
+    var unitsLine = document.createElement('span');
+    unitsLine.className = 'memory-sub';
+    unitsLine.textContent = parts.units;
+    memoryCell.append(byteLine, unitsLine);
+    row.appendChild(memoryCell);
+    target.appendChild(row);
+   });
+  }
+
+  function ratioLabel(numerator, denominator) {
+   return fixedRatio(numerator, denominator, 2).replace(/\.00$/, '') + '×';
+  }
+
+  function deltaLabel(a, b) {
+   var direction = b >= a ? 'increase' : 'decrease';
+   var difference = b >= a ? b - a : a - b;
+   var parts = memoryParts(difference);
+   return parts.bytes + ' · ' + parts.units + ' ' + direction + ' (' + ratioLabel(b, a) + ')';
+  }
+
+  function configFromFields(sequenceField) {
+   return {
+    batch: fields.batch.value,
+    sequence: sequenceField.value,
+    hidden: fields.hidden.value,
+    heads: fields.heads.value,
+    layers: fields.layers.value,
+    scalarBytes: fields.precision.value
+   };
+  }
+
+  function buildSummary(a, b) {
+   function line(name, value) {
+    var parts = memoryParts(value);
+    return name + ': ' + parts.bytes + ' · ' + parts.units;
+   }
+   return [
+    'HeyTensor Attention Memory Ledger',
+    'Inputs: micro-batch ' + a.batch + ', hidden ' + a.hidden + ', heads ' + a.heads + ', layers ' + a.layers + ', scalar width ' + a.scalarBytes + ' bytes',
+    'Scenario A: ' + a.sequence + ' tokens',
+    line('A score matrix per layer', a.scoreBytes),
+    line('A materialized subtotal per layer', a.materializedBytes),
+    line('A materialized all-layer upper bound', a.allMaterializedBytes),
+    line('A fused all-layer upper bound', a.allFusedBytes),
+    'Scenario B: ' + b.sequence + ' tokens',
+    line('B score matrix per layer', b.scoreBytes),
+    line('B materialized subtotal per layer', b.materializedBytes),
+    line('B materialized all-layer upper bound', b.allMaterializedBytes),
+    line('B fused all-layer upper bound', b.allFusedBytes),
+    'Formula: score elements = batch × heads × sequence²; fused comparison omits only that score matrix.',
+    'Warning: conceptual tensor ledger, not measured framework peak VRAM.',
+    'https://heytensor.com/tools/attention-memory-ledger.html'
+   ].join('\n');
+  }
+
+  function update() {
+   try {
+    var a = calculate(configFromFields(fields.sequence));
+    var b = calculate(configFromFields(fields['compare-sequence']));
+    errorBox.hidden = true;
+    errorBox.textContent = '';
+    results.hidden = false;
+    document.getElementById('head-dimension').textContent = comma(a.headDimension);
+    document.getElementById('sequence-a-label').textContent = comma(a.sequence);
+    document.getElementById('sequence-b-label').textContent = comma(b.sequence);
+    document.getElementById('score-ratio').textContent = ratioLabel(b.scoreElements, a.scoreElements);
+    document.getElementById('scenario-a-meta').textContent = comma(a.sequence) + ' tokens · ' + a.scalarBytes + '-byte scalars';
+    document.getElementById('scenario-b-meta').textContent = comma(b.sequence) + ' tokens · ' + b.scalarBytes + '-byte scalars';
+    renderLedger(document.getElementById('ledger-a'), a);
+    renderLedger(document.getElementById('ledger-b'), b);
+    document.getElementById('materialized-delta').textContent = deltaLabel(a.allMaterializedBytes, b.allMaterializedBytes);
+    document.getElementById('fused-delta').textContent = deltaLabel(a.allFusedBytes, b.allFusedBytes);
+    document.getElementById('score-share').textContent = fixedRatio(b.scoreBytes * 100n, b.materializedBytes, 2) + '% of per-layer subtotal';
+    document.getElementById('worked-example').textContent = 'For micro-batch ' + comma(a.batch)
+     + ', sequence length ' + comma(a.sequence) + ', hidden size ' + comma(a.hidden)
+     + ', ' + comma(a.heads) + ' heads, ' + comma(a.layers) + ' layers, and '
+     + comma(a.scalarBytes) + '-byte scalars, the residual input contains '
+     + comma(a.rows[0].elements) + ' elements (' + memoryParts(a.rows[0].bytes).bytes
+     + '). Q/K/V contains ' + comma(a.rows[1].elements) + ' elements ('
+     + memoryParts(a.rows[1].bytes).bytes + '), while the score matrix contains '
+     + comma(a.scoreElements) + ' elements (' + memoryParts(a.scoreBytes).bytes + ').';
+    summaryText = buildSummary(a, b);
+   } catch (error) {
+    results.hidden = true;
+    errorBox.hidden = false;
+    errorBox.textContent = error.message;
+    document.getElementById('head-dimension').textContent = '—';
+    summaryText = '';
+   }
+  }
+
+  function fallbackCopy(text) {
+   var area = document.createElement('textarea');
+   area.value = text;
+   area.setAttribute('readonly', '');
+   area.style.position = 'fixed';
+   area.style.opacity = '0';
+   document.body.appendChild(area);
+   area.select();
+   var copied = document.execCommand('copy');
+   area.remove();
+   if (!copied) throw new Error('Copy command was not accepted.');
+  }
+
+  document.getElementById('copy-summary').addEventListener('click', function () {
+   var status = document.getElementById('copy-status');
+   if (!summaryText) {
+    status.textContent = 'Fix the highlighted input before copying.';
+    return;
+   }
+   var copyPromise = navigator.clipboard && navigator.clipboard.writeText
+    ? navigator.clipboard.writeText(summaryText)
+    : Promise.resolve().then(function () { fallbackCopy(summaryText); });
+   copyPromise.then(function () {
+    status.textContent = 'Calculation summary copied.';
+   }).catch(function () {
+    try {
+     fallbackCopy(summaryText);
+     status.textContent = 'Calculation summary copied.';
+    } catch (error) {
+     status.textContent = 'Copy was blocked by the browser. Select and copy from the page instead.';
+    }
+   });
+  });
+
+  fieldIds.forEach(function (id) {
+   fields[id].addEventListener('input', update);
+   fields[id].addEventListener('change', update);
+  });
+
+  function runFixtures() {
+   var fixtureBody = document.getElementById('fixture-results');
+   var fixtures = [
+    {
+     name: 'Ordinary configuration',
+     expected: 'All 8 ledger rows match independent byte constants',
+     execute: function () {
+      var result = calculate({ batch: '2', sequence: '1024', hidden: '4096', heads: '32', layers: '24', scalarBytes: '2' });
+      var expectedBytes = [16777216n, 50331648n, 134217728n, 16777216n, 218103808n, 83886080n, 5234491392n, 2013265920n];
+      var matched = result.rows.filter(function (row, index) { return row.bytes === expectedBytes[index]; }).length;
+      return { pass: matched === expectedBytes.length, observed: matched + ' of ' + expectedBytes.length + ' independently derived rows matched' };
+     }
+    },
+    {
+     name: 'Long-context quadratic case',
+     expected: '8,192-token score is 16× the 2,048-token score',
+     execute: function () {
+      var shortCase = calculate({ batch: '1', sequence: '2048', hidden: '4096', heads: '32', layers: '32', scalarBytes: '2' });
+      var longCase = calculate({ batch: '1', sequence: '8192', hidden: '4096', heads: '32', layers: '32', scalarBytes: '2' });
+      var pass = longCase.scoreBytes === shortCase.scoreBytes * 16n;
+      return { pass: pass, observed: 'Observed score ratio = ' + ratioLabel(longCase.scoreBytes, shortCase.scoreBytes) };
+     }
+    },
+    {
+     name: 'Hidden-size divisibility failure',
+     expected: 'Visible validation error',
+     execute: function () {
+      try {
+       calculate({ batch: '1', sequence: '1024', hidden: '4100', heads: '32', layers: '24', scalarBytes: '2' });
+       return { pass: false, observed: 'No error returned' };
+      } catch (error) {
+       return { pass: /divisible/.test(error.message), observed: error.message };
+      }
+     }
+    },
+    {
+     name: 'Non-positive input failure',
+     expected: 'Visible validation error',
+     execute: function () {
+      try {
+       calculate({ batch: '0', sequence: '1024', hidden: '4096', heads: '32', layers: '24', scalarBytes: '2' });
+       return { pass: false, observed: 'No error returned' };
+      } catch (error) {
+       return { pass: /greater than zero/.test(error.message), observed: error.message };
+      }
+     }
+    },
+    {
+     name: 'Overflow guard',
+     expected: 'Reject allocation above 2^63 − 1 bytes',
+     execute: function () {
+      try {
+       calculate({ batch: '1000000000', sequence: '1000000000', hidden: '4096', heads: '32', layers: '32', scalarBytes: '8' });
+       return { pass: false, observed: 'No error returned' };
+      } catch (error) {
+       return { pass: /safety limit/.test(error.message), observed: error.message };
+      }
+     }
+    }
+   ];
+   var passed = 0;
+   fixtureBody.replaceChildren();
+   fixtures.forEach(function (fixture) {
+    var outcome;
+    try {
+     outcome = fixture.execute();
+    } catch (error) {
+     outcome = { pass: false, observed: 'Unexpected fixture error: ' + error.message };
+    }
+    if (outcome.pass) passed += 1;
+    var row = document.createElement('tr');
+    appendCell(row, fixture.name);
+    appendCell(row, fixture.expected);
+    appendCell(row, outcome.observed);
+    var statusCell = appendCell(row, outcome.pass ? 'PASS' : 'FAIL');
+    statusCell.className = outcome.pass ? 'fixture-pass' : 'fixture-fail';
+    fixtureBody.appendChild(row);
+   });
+   var summary = document.getElementById('fixture-summary');
+   summary.textContent = passed + ' of ' + fixtures.length + ' fixtures passed in this browser.';
+   summary.className = 'fixture-summary ' + (passed === fixtures.length ? 'fixture-pass' : 'fixture-fail');
+  }
+
+  update();
+  runFixtures();
+ }());
+ </script>
+</body>
+</html>
