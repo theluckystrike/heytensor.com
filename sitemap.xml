@@ -2,6 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://heytensor.com/about.html</loc></url>
   <url><loc>https://heytensor.com/answers/0d-or-1d-target-tensor-expected.html</loc></url>
+  <url><loc>https://heytensor.com/answers/batchnorm1d-expected-2d-or-3d-input-got-4d.html</loc></url>
+  <url><loc>https://heytensor.com/answers/bcewithlogitsloss-target-size-must-be-same-as-input-size.html</loc></url>
+  <url><loc>https://heytensor.com/answers/element-0-of-tensors-does-not-require-grad.html</loc></url>
+  <url><loc>https://heytensor.com/answers/input-type-double-and-bias-type-float-should-be-the-same.html</loc></url>
+  <url><loc>https://heytensor.com/answers/one-of-the-differentiated-tensors-does-not-require-grad.html</loc></url>
+  <url><loc>https://heytensor.com/answers/trying-to-backward-through-the-graph-a-second-time.html</loc></url>
   <url><loc>https://heytensor.com/answers/batch-norm-input-shape.html</loc></url>
   <url><loc>https://heytensor.com/answers/cannot-broadcast-tensors.html</loc></url>
   <url><loc>https://heytensor.com/answers/conv2d-output-112x112-kernel-3-stride-2.html</loc></url>

@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Fix "Input type (double) and bias type (float)" | HeyTensor</title>
+ <meta name="description" content="Input type (double) and bias type (float) should be the same means a float64 NumPy tensor met float32 weights. Check your dtype pair and get the fix.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/input-type-double-and-bias-type-float-should-be-the-same.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/answers/input-type-double-and-bias-type-float-should-be-the-same.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/answers/input-type-double-and-bias-type-float-should-be-the-same.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: Input type (double) and bias type (float) should be the same">
+ <meta property="og:description" content="A float64 tensor from NumPy met float32 weights. Pick your input dtype, origin, layer, weight dtype and device to see the exact PyTorch error and the fix.">
+ <meta property="og:url" content="https://heytensor.com/answers/input-type-double-and-bias-type-float-should-be-the-same.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: Input type (double) and bias type (float) should be the same">
+ <meta name="twitter:description" content="Your NumPy float64 tensor met float32 weights. Free dtype mismatch checker with the exact error string and fix.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "PyTorch input and weight dtype mismatch checker",
+   "url": "https://heytensor.com/answers/input-type-double-and-bias-type-float-should-be-the-same.html",
+   "applicationCategory": "DeveloperApplication",
+   "operatingSystem": "Any",
+   "browserRequirements": "Requires JavaScript",
+   "description": "Pick an input dtype, how the tensor was created, a layer, the weight dtype and a device. The tool reports whether the forward call is valid and names the exact PyTorch error it raises.",
+   "isAccessibleForFree": true,
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+   "author": { "@id": "https://zovo.one#michael-lip" },
+   "publisher": { "@type": "Organization", "name": "HeyTensor" }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://zovo.one#michael-lip",
+   "name": "Michael Lip",
+   "url": "https://zovo.one",
+   "description": "Builds heytensor.com and the Zovo Tools network of free, privacy-first developer utilities."
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "What does \"Input type (double) and bias type (float) should be the same\" mean in PyTorch?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Your input tensor is float64 (double) and the convolution layer's parameters are float32 (float). PyTorch convolutions refuse to mix dtypes. The float64 tensor almost always came from a NumPy array, because NumPy defaults to float64 and torch.from_numpy keeps that dtype. Cast the input with x = x.float() or convert the array with a.astype(np.float32) before torch.from_numpy."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Why does nn.Linear say \"mat1 and mat2 must have the same dtype, but got Double and Float\" for the same mistake?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Different kernels write different messages for the same dtype mismatch. Convolutions with a bias check input against bias and print the Input type message. nn.Linear and F.linear run a matrix multiply, and on torch 2.8.0 CPU that kernel prints mat1 and mat2 must have the same dtype. Normalization layers print mixed dtype (CPU). The cause and the fix are identical: make the input dtype match the weight dtype."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does torch.set_default_dtype(torch.float64) fix a float64 input from NumPy?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "It changes what PyTorch creates, not what NumPy hands over. On torch 2.8.0, after torch.set_default_dtype(torch.float64), torch.tensor(1.5), torch.randn and new nn.Linear weights become float64, but torch.from_numpy still keeps the array's own dtype. A float64 array then matches the float64 model, while a float32 array raises mat1 and mat2 must have the same dtype, but got Float and Double."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does the error \"expected torch.FloatTensor but got numpy.float64\" exist in torch 2.8.0?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not with that wording. On torch 2.8.0 the closest message is TypeError: new(): data must be a sequence (got numpy.float64), raised by torch.FloatTensor(np.float64(1.5)). The phrase expected dtype torch.float32 for the weight argument also does not occur verbatim. Both searches lead to the same fix: make the input dtype match the weight dtype."
+     }
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Answers", "item": "https://heytensor.com/answers/" },
+    { "@type": "ListItem", "position": 3, "name": "Input type (double) and bias type (float)" }
+   ]
+  }
+ ]
+}
+ </script>
+ <style>
+ .tt-panel { background: var(--bg-card); border: 1px solid var(--border);
+   border-radius: var(--radius, 12px); padding: 1.5rem; margin: 1.75rem 0; }
+ .tt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.1rem; }
+ .tt-grid label { display: block; font-size: 0.78rem; text-transform: uppercase;
+   letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.4rem; }
+ .tt-grid input, .tt-grid select { width: 100%; padding: 0.7rem 0.8rem; font: inherit;
+   background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+ #tt-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; }
+ .tt-preset { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.75rem; cursor: pointer;
+   background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; }
+ .tt-preset:hover { color: var(--accent); border-color: var(--accent); }
+ #tt-result { margin-top: 1.4rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+ #tt-result .tt-verdict { font-family: var(--font-display, monospace); font-size: 1.7rem;
+   font-weight: 700; margin: 0 0 0.3rem; }
+ .tt-ok { color: #16a34a; }
+ .tt-warn { color: #d97706; }
+ .tt-error { color: #dc2626; }
+ #tt-result .tt-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 1rem; }
+ #tt-result pre { overflow-x: auto; }
+ #tt-result pre.tt-err code { color: #dc2626; }
+ .tt-note { font-size: 0.85rem; color: var(--text-muted); }
+ main table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+ main thead th { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 2px solid var(--accent); white-space: nowrap; }
+ main tbody td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+ .tt-scroll { overflow-x: auto; }
+ @media (max-width: 720px) { .tt-scroll table td, .tt-scroll table th { white-space: nowrap; } }
+ </style>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-input-type-double-and-bias-type-float-should-be-the-same" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container" style="max-width:760px;">
+
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Input type (double) and bias type (float)</span>
+ </nav>
+
+ <article>
+ <h1>How to Fix "Input type (double) and bias type (float) should be the same"</h1>
+ <p class="qas" data-keyword="input type (double) and bias type (float) should be the same">Your input tensor is float64 and the layer's parameters are float32. The float64 almost always came from NumPy: <code>np.random.rand</code> and <code>np.array([1.5])</code> produce float64, and <code>torch.from_numpy</code> keeps that dtype, while <code>nn.Conv2d</code> and <code>nn.Linear</code> are created in float32. Fix it with <code>x = x.float()</code> before the forward call, or convert at the source with <code>a.astype(np.float32)</code>.</p>
+
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">Two libraries, two defaults. NumPy makes float64 unless told otherwise. PyTorch makes float32 unless told otherwise. Every message on this page is the point where those defaults meet inside a kernel.</p>
+ </div>
+
+ <h2>Check your combination</h2>
+ <p>Pick the dtype of your input, how you built it, the layer it goes into, the dtype of that layer's weights and the device. The tool prints the exact exception torch 2.8.0 raises, or says Valid. Every combination it can output was run on torch 2.8.0, CPU and Apple MPS, and the strings are copied from the real exceptions.</p>
+
+ <section class="tt-panel">
+ <div class="tt-grid">
+ <div>
+ <label for="tt-dtype">Input dtype</label>
+ <select id="tt-dtype"></select>
+ </div>
+ <div>
+ <label for="tt-origin">Input origin</label>
+ <select id="tt-origin"></select>
+ </div>
+ <div>
+ <label for="tt-layer">Layer</label>
+ <select id="tt-layer"></select>
+ </div>
+ <div>
+ <label for="tt-wdtype">Weight dtype</label>
+ <select id="tt-wdtype"></select>
+ </div>
+ <div>
+ <label for="tt-device">Device</label>
+ <select id="tt-device"></select>
+ </div>
+ </div>
+ <div id="tt-presets" aria-label="Common cases"></div>
+ <div id="tt-result" aria-live="polite"></div>
+ <p class="tt-note" style="margin-bottom:0;">Runs entirely in your browser. Nothing you type is sent anywhere. The np.astype origin always produces float32, whatever the dtype box says, because that is what the cast does.</p>
+ </section>
+
+ <h2>The error and its two siblings</h2>
+ <pre><code>RuntimeError: Input type (double) and bias type (float) should be the same</code></pre>
+ <p>One cause, three message families. Which one you see depends on which kernel catches the mismatch first.</p>
+ <ul>
+ <li><strong>Convolution.</strong> <code>nn.Conv1d</code>, <code>nn.Conv2d</code> and <code>nn.Conv3d</code> check the input against the bias before doing any work, and name both in the message. Drop the bias with <code>bias=False</code> and the check disappears, so the CPU kernel raises instead with <code>expected scalar type Double but found Float</code>.</li>
+ <li><strong>Matrix multiply.</strong> <code>nn.Linear</code>, <code>F.linear</code> and <code>x @ w</code> land in <code>addmm</code> or <code>mm</code>. With a bias present the message is <code>mat1 and mat2 must have the same dtype, but got Double and Float</code>. Without a bias it is <code>expected m1 and m2 to have the same dtype, but got: double != float</code>. Same check, different spelling.</li>
+ <li><strong>Normalization and loss weights.</strong> <code>nn.LayerNorm</code> and <code>nn.BatchNorm1d</code> with float64 affine parameters raise <code>mixed dtype (CPU): expect parameter to have scalar type of Float</code>. A float64 class weight passed to <code>F.cross_entropy</code> raises <code>expected scalar type Float but found Double</code>.</li>
+ </ul>
+ <p>Elementwise operations do not raise at all. <code>float64_tensor * float32_tensor</code> promotes to float64 and carries on. That silence is why the mismatch travels through a preprocessing pipeline unnoticed and only surfaces at the first layer with weights.</p>
+
+ <h2>Where the float64 comes from</h2>
+ <p>Run these four lines and the whole page makes sense.</p>
+ <pre><code>np.array([1.5]).dtype                       # float64
+torch.from_numpy(np.random.rand(2)).dtype   # torch.float64
+torch.tensor(1.5).dtype                     # torch.float32
+torch.get_default_dtype()                   # torch.float32</code></pre>
+ <p>The PyTorch reference for <a href="https://docs.pytorch.org/docs/stable/generated/torch.from_numpy.html">torch.from_numpy</a> says the returned tensor and the array share the same memory, and it lists <code>numpy.float64</code> first among the accepted dtypes. Sharing memory means there is no conversion step where a dtype could change. A float64 array becomes a float64 tensor, full stop. <code>torch.tensor(np_array)</code> copies instead of sharing, but it also reads the dtype from the array, so it produces float64 too.</p>
+ <p>The trap then compounds. A <code>TensorDataset</code> built from <code>torch.from_numpy</code> arrays yields float64 batches through a <code>DataLoader</code>, because collation stacks tensors without touching their dtype. Your training loop receives float64, your model was created in float32, and the first <code>nn.Conv2d</code> raises. On torch 2.8.0 the batch from such a loader reports <code>torch.float64</code> for the features and <code>torch.int64</code> for integer labels.</p>
+ <p>Other sources of float64 tensors: <code>pandas</code> columns via <code>.values</code>, <code>scipy</code> outputs, image arrays after a division by 255 in NumPy, and <code>np.mean</code> or <code>np.linspace</code> results. All of them go through the same door.</p>
+
+ <h2>Fix 1, cast the tensor</h2>
+ <pre><code>x = torch.from_numpy(a)        # torch.float64
+out = model(x.float())         # works, output float32</code></pre>
+ <p><code>.float()</code> is shorthand for <code>.to(torch.float32)</code>. Put it where the tensor is created rather than at every call site, or add it inside the <code>Dataset.__getitem__</code> so batches leave the loader in the right dtype. If your model can run in more than one precision, the safest spelling is <code>x.to(model.weight.dtype)</code> or <code>x.to(next(model.parameters()).dtype)</code>, which follows the weights wherever they go.</p>
+
+ <h2>Fix 2, convert the array at the source</h2>
+ <pre><code>a = np.random.rand(1, 3, 8, 8).astype(np.float32)
+x = torch.from_numpy(a)        # torch.float32, still shares memory
+out = model(x)                 # works</code></pre>
+ <p>This is the better fix for data pipelines because it halves the memory the arrays occupy and keeps the zero-copy property of <code>torch.from_numpy</code>. <code>torch.tensor(a, dtype=torch.float32)</code> and <code>torch.as_tensor(a, dtype=torch.float32)</code> also produce float32 and were verified to run through <code>nn.Linear</code> without error.</p>
+
+ <h2>Fix 3, run the model in float64</h2>
+ <pre><code>model = model.double()
+out = model(torch.from_numpy(a))   # works, output float64</code></pre>
+ <p>Choose this only when you need double precision for numerical reasons, for example in scientific code that compares against a NumPy reference. Float64 doubles the memory of every parameter, activation and gradient, and consumer GPUs execute float64 arithmetic far slower than float32. Apple MPS does not execute it at all, which the last section covers.</p>
+
+ <h2>Fix 4, torch.set_default_dtype does less than you think</h2>
+ <p>The <a href="https://docs.pytorch.org/docs/stable/generated/torch.set_default_dtype.html">torch.set_default_dtype</a> reference says the default dtype is used to infer the dtype of tensors constructed from Python floats, and that <code>set_default_dtype(torch.float64)</code> exists to facilitate NumPy-like type inference. Read that literally. It governs what PyTorch creates. It says nothing about arrays that NumPy already created.</p>
+ <p>Measured on torch 2.8.0 after <code>torch.set_default_dtype(torch.float64)</code>:</p>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Setup</th><th>Result</th></tr></thead>
+ <tbody>
+ <tr><td><code>torch.tensor(1.5).dtype</code></td><td>torch.float64</td></tr>
+ <tr><td><code>torch.randn(2).dtype</code></td><td>torch.float64</td></tr>
+ <tr><td><code>nn.Linear(3, 5).weight.dtype</code></td><td>torch.float64</td></tr>
+ <tr><td><code>torch.from_numpy(float64 array).dtype</code></td><td>torch.float64</td></tr>
+ <tr><td><code>torch.from_numpy(float32 array).dtype</code></td><td>torch.float32, unchanged</td></tr>
+ <tr><td><code>torch.tensor(float32 array).dtype</code></td><td>torch.float32, unchanged</td></tr>
+ <tr><td><code>nn.Linear</code> on a from_numpy float32 array</td><td><code>RuntimeError: mat1 and mat2 must have the same dtype, but got Float and Double</code></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p>So the call does make a float64 model match a float64 NumPy array, but only because the model moved, not the array. Flip the array to float32 and the same error returns with the words swapped. It is a global switch that changes every tensor you create afterwards, so treat it as a last resort.</p>
+
+ <h2>Messages you searched for that torch 2.8.0 does not raise</h2>
+ <p>Two phrasings bring people to this page and neither occurs verbatim in torch 2.8.0.</p>
+ <p>"expected torch.FloatTensor but got numpy.float64". The closest real message is raised by the legacy constructor when handed a NumPy scalar: <code>torch.FloatTensor(np.float64(1.5))</code> gives <code>TypeError: new(): data must be a sequence (got numpy.float64)</code>. Handed a float64 array instead, <code>torch.FloatTensor(np.random.rand(2))</code> does not raise and returns float32. If you have the FloatTensor wording in an old traceback, the modern equivalent is the conv or matmul message above.</p>
+ <p>"expected dtype torch.float32 for the 'weight' argument but got dtype torch.float64". Also absent from 2.8.0. A float64 weight given to <code>F.cross_entropy</code> raises <code>expected scalar type Float but found Double</code>, and a float64 affine weight in <code>layer_norm</code> raises the mixed dtype message. The fix is the same in every case: <code>weight = weight.float()</code>.</p>
+
+ <h2>What torch 2.8.0 actually raises</h2>
+ <p>Every row was produced on torch 2.8.0, CPU, Python 3.9.6, arm64, with NumPy 1.26.4, and the exception text was copied without edits.</p>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Setup</th><th>Result</th></tr></thead>
+ <tbody>
+ <tr><td><code>nn.Conv2d(3, 8, 3)</code> on <code>torch.from_numpy(np.random.rand(1, 3, 8, 8))</code></td><td><code>RuntimeError: Input type (double) and bias type (float) should be the same</code></td></tr>
+ <tr><td><code>nn.Conv3d(3, 8, 3)</code> on a from_numpy float64 input</td><td><code>RuntimeError: Input type (double) and bias type (float) should be the same</code></td></tr>
+ <tr><td><code>nn.Conv2d(3, 8, 3, bias=False)</code> on a float64 input</td><td><code>RuntimeError: expected scalar type Double but found Float</code></td></tr>
+ <tr><td><code>nn.Conv2d(3, 8, 3).half()</code> on a float64 input</td><td><code>RuntimeError: Input type (double) and bias type (c10::Half) should be the same</code></td></tr>
+ <tr><td><code>nn.Conv2d(3, 8, 3).double()</code> on a float32 input</td><td><code>RuntimeError: Input type (float) and bias type (double) should be the same</code></td></tr>
+ <tr><td><code>nn.Conv2d(3, 8, 3)</code> on a from_numpy int64 input</td><td><code>RuntimeError: Input type (long long) and bias type (float) should be the same</code></td></tr>
+ <tr><td><code>nn.Linear(3, 5)</code> on <code>torch.from_numpy(np.random.rand(4, 3))</code></td><td><code>RuntimeError: mat1 and mat2 must have the same dtype, but got Double and Float</code></td></tr>
+ <tr><td><code>nn.Linear(3, 5)</code> on <code>torch.tensor(np.random.rand(4, 3))</code></td><td><code>RuntimeError: mat1 and mat2 must have the same dtype, but got Double and Float</code></td></tr>
+ <tr><td><code>nn.Linear(3, 5)</code> on a from_numpy int64 input</td><td><code>RuntimeError: mat1 and mat2 must have the same dtype, but got Long and Float</code></td></tr>
+ <tr><td><code>F.linear(x64, w32, b32)</code></td><td><code>RuntimeError: mat1 and mat2 must have the same dtype, but got Double and Float</code></td></tr>
+ <tr><td><code>F.linear(x64, w32)</code>, no bias</td><td><code>RuntimeError: expected m1 and m2 to have the same dtype, but got: double != float</code></td></tr>
+ <tr><td><code>x64 @ w32</code></td><td><code>RuntimeError: expected m1 and m2 to have the same dtype, but got: double != float</code></td></tr>
+ <tr><td><code>x64 * w32</code> elementwise</td><td>No error, result is torch.float64</td></tr>
+ <tr><td><code>nn.LayerNorm(3).double()</code> on a float32 input</td><td><code>RuntimeError: mixed dtype (CPU): expect parameter to have scalar type of Float</code></td></tr>
+ <tr><td><code>nn.LayerNorm(3)</code> on a float64 input</td><td><code>RuntimeError: mixed dtype (CPU): all inputs must share same datatype.</code></td></tr>
+ <tr><td><code>nn.LayerNorm(3)</code> on a float16 or bfloat16 input</td><td>No error, output keeps the input dtype</td></tr>
+ <tr><td><code>nn.BatchNorm1d(3).double()</code> on a float32 input</td><td><code>RuntimeError: mixed dtype (CPU): expect parameter to have scalar type of Float</code></td></tr>
+ <tr><td><code>F.cross_entropy(logits, target, weight=float64_weight)</code></td><td><code>RuntimeError: expected scalar type Float but found Double</code></td></tr>
+ <tr><td><code>torch.randn(2, 3, dtype=torch.int64)</code></td><td><code>NotImplementedError: "normal_kernel_cpu" not implemented for 'Long'</code></td></tr>
+ <tr><td><code>torch.FloatTensor(np.float64(1.5))</code></td><td><code>TypeError: new(): data must be a sequence (got numpy.float64)</code></td></tr>
+ <tr><td><code>model(x.float())</code>, <code>a.astype(np.float32)</code>, <code>model.double()</code></td><td>No error</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="tt-note">The int64 rows matter for anyone feeding integer pixel arrays or token ids straight into a conv or linear layer. PyTorch reports the C type name, <code>long long</code>, in the conv message and the scalar name, <code>Long</code>, in the matmul message. Both mean torch.int64, and <code>x.float()</code> fixes both, unless the layer you wanted was <code>nn.Embedding</code>, which takes int64 by design.</p>
+
+ <h2>Apple MPS behaves differently</h2>
+ <p>On an Apple Silicon machine the mismatch usually never reaches the layer, because the MPS backend has no float64 at all. Moving the tensor raises first:</p>
+ <pre><code>TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.</code></pre>
+ <p>The same <code>TypeError</code> fires on <code>model.double().to("mps")</code>, so Fix 3 is unavailable on MPS. Fix 1 and Fix 2 both work.</p>
+ <p>Three more MPS results from the same run, all with float32 and float16 tensors that did reach the device:</p>
+ <ul>
+ <li><code>nn.Conv2d</code> with a bias prints the same message as CPU: <code>Input type (float) and bias type (c10::Half) should be the same</code>. With <code>bias=False</code> the wording changes to <code>Input type (MPSFloatType) and weight type (MPSHalfType) should be the same</code>.</li>
+ <li><code>nn.Linear</code> and <code>F.linear</code> with a float32 input and float16 weight do not raise a Python exception. The process aborts with a Metal assertion, <code>Destination NDArray and Accumulator NDArray cannot have different datatype in MPSNDArrayMatrixMultiplication</code>, and the interpreter dies with signal 6. No <code>try</code> block catches it. An int64 input raises a normal <code>RuntimeError: MPS device does not support linear for non-float inputs</code>.</li>
+ <li><code>nn.LayerNorm</code> on MPS accepted every float32, float16 and bfloat16 pairing without error. An int64 input raises <code>RuntimeError: Failed to create function state object for: layer_norm_single_row_long</code>.</li>
+ </ul>
+ <p>The abort is the one to remember. If a training script on a Mac exits with no traceback right after you enabled half precision, this is the likely cause, and the fix is still to make the input dtype match the weight dtype.</p>
+
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/runtime-error-expected-scalar-type-float.html" class="related-card">How to fix "expected scalar type Float"?</a>
+ <a href="/answers/expected-float-got-long.html" class="related-card">How to fix "expected dtype Float but got dtype Long"?</a>
+ <a href="/answers/mat1-mat2-shapes-cannot-be-multiplied.html" class="related-card">How to fix "mat1 and mat2 shapes cannot be multiplied"?</a>
+ <a href="/answers/weight-on-cpu-input-on-cuda.html" class="related-card">How to fix "weight is on CPU but input is on CUDA"?</a>
+ <a href="/tools/shape-mismatch.html" class="related-card">PyTorch shape mismatch error debugger</a>
+ <a href="/research/pytorch-error-database.html" class="related-card">The PyTorch error database, 52 errors</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/shape-mismatch.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Shape Mismatch Debugger</a>
+ </div>
+
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a>. Behaviour verified against torch 2.8.0 on 6 September 2026.</p>
+ <div class="last-updated"><time datetime="2026-09-06">Last updated: September 6, 2026</time></div>
+ </article>
+
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-input-type-double-and-bias-type-float-should-be-the-same">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+<a href="https://mcp.zovo.one">MCP servers for Claude</a>
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-input-type-double-and-bias-type-float-should-be-the-same">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-input-type-double-and-bias-type-float-should-be-the-same" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+
+ <script>
+ (function(){
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
+
+<script>
+'use strict';
+/* Block scope so nothing leaks to window. */
+{
+/* NASA Power of 10: bounded loops with explicit ceilings, range-checked indices,
+   no innerHTML, every function under 60 lines, two or more checks per function. */
+/* TT-BEGIN */
+const TT = (function () {
+  var MAX_OPTS = 8;
+  var DTYPES = {
+    'float32':  { py: 'torch.float32', c: 'float',         s: 'Float',    mps: 'MPSFloatType',    np: 'np.float32', floating: true },
+    'float64':  { py: 'torch.float64', c: 'double',        s: 'Double',   mps: '',                np: 'np.float64', floating: true },
+    'float16':  { py: 'torch.float16', c: 'c10::Half',     s: 'Half',     mps: 'MPSHalfType',     np: 'np.float16', floating: true },
+    'bfloat16': { py: 'torch.bfloat16', c: 'c10::BFloat16', s: 'BFloat16', mps: 'MPSBFloat16Type', np: '',           floating: true },
+    'int64':    { py: 'torch.int64',   c: 'long long',     s: 'Long',     mps: 'MPSLongType',     np: 'np.int64',   floating: false }
+  };
+  var WDTYPES = ['float32', 'float64', 'float16'];
+  var ORIGINS = {
+    'randn':      { label: 'torch.randn(...)', numpy: false },
+    'from_numpy': { label: 'torch.from_numpy(a)', numpy: true },
+    'tensor_np':  { label: 'torch.tensor(a)  # a is a numpy array', numpy: true },
+    'astype':     { label: 'torch.from_numpy(a.astype(np.float32))', numpy: true }
+  };
+  var LAYERS = {
+    'conv':       { label: 'nn.Conv2d(3, 4, 3)', call: 'nn.Conv2d(3, 4, 3)' },
+    'conv_nb':    { label: 'nn.Conv2d(3, 4, 3, bias=False)', call: 'nn.Conv2d(3, 4, 3, bias=False)' },
+    'linear':     { label: 'nn.Linear(3, 5)', call: 'nn.Linear(3, 5)' },
+    'flinear':    { label: 'F.linear(x, weight, bias)', call: 'F.linear(x, weight, bias)' },
+    'layernorm':  { label: 'nn.LayerNorm(3)', call: 'nn.LayerNorm(3)' }
+  };
+  var DEVICES = ['cpu', 'mps'];
+  var MPS_F64 = "TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.";
+  var MPS_ABORT = "failed assertion `Destination NDArray and Accumulator NDArray cannot have different datatype in MPSNDArrayMatrixMultiplication'";
+
+  function bad(err, why, fix, code) {
+    return { level: 'error', err: err, why: why, fix: fix, code: code || '' };
+  }
+  function good(why, code) { return { level: 'ok', err: '', why: why, fix: '', code: code || '' }; }
+
+  /* The dtype the layer actually sees. astype(np.float32) forces float32. */
+  function effectiveDtype(dt, origin) {
+    if (!DTYPES[dt] || !ORIGINS[origin]) { return null; }
+    if (origin === 'astype') { return 'float32'; }
+    return dt;
+  }
+
+  /* How the fixed input is spelled for each origin. */
+  function castCode(origin, target) {
+    var t = DTYPES[target];
+    if (!t || !ORIGINS[origin]) { return ''; }
+    if (origin === 'from_numpy') {
+      return 'x = torch.from_numpy(a.astype(' + (t.np || 'np.float32') + '))  # or torch.from_numpy(a).to(' + t.py + ')';
+    }
+    if (origin === 'tensor_np') { return 'x = torch.tensor(a, dtype=' + t.py + ')'; }
+    if (origin === 'astype') { return 'x = torch.from_numpy(a.astype(np.float32))  # already float32'; }
+    return 'x = x.to(' + t.py + ')' + (target === 'float32' ? '  # or x.float()' : '');
+  }
+
+  function fixText(eff, wdt, origin, layer) {
+    var call = LAYERS[layer] ? LAYERS[layer].call : '';
+    var text = 'Make both sides the same dtype. Cast the input to ' + DTYPES[wdt].py
+      + ', or move the layer to ' + DTYPES[eff].py + ' with model.to(' + DTYPES[eff].py + ').';
+    if (eff === 'int64') {
+      text = 'An integer tensor cannot feed a float layer. Cast the input to ' + DTYPES[wdt].py
+        + '. If these are token ids, the layer you want is nn.Embedding, which takes int64 by design.';
+    }
+    var code = castCode(origin, wdt) + '\nout = ' + call + (layer === 'flinear' ? '' : '(x)');
+    return { fix: text, code: code };
+  }
+
+  function originGate(dt, origin) {
+    if (origin === 'randn' && dt === 'int64') {
+      return bad('NotImplementedError: "normal_kernel_cpu" not implemented for \'Long\'',
+        'torch.randn cannot produce an integer tensor, so this input never gets built.',
+        'Use torch.randint(0, 5, shape) for an integer tensor, or drop dtype=torch.int64 and take the float32 default.',
+        'x = torch.randint(0, 5, (2, 3))');
+    }
+    if (ORIGINS[origin].numpy && dt === 'bfloat16') {
+      return { level: 'warn', err: '',
+        why: 'NumPy 1.26.4 has no bfloat16 dtype (np.bfloat16 is not an attribute), so torch.from_numpy and torch.tensor cannot produce a bfloat16 tensor from an array.',
+        fix: 'Build the tensor as float32 from the array, then cast: torch.from_numpy(a.astype(np.float32)).to(torch.bfloat16).',
+        code: 'x = torch.from_numpy(a.astype(np.float32)).to(torch.bfloat16)' };
+    }
+    return null;
+  }
+
+  function mpsGate(eff, wdt) {
+    if (eff === 'float64') {
+      return bad(MPS_F64, 'The MPS backend has no float64 at all. The error fires on x.to("mps"), before the layer runs.',
+        'Convert the input to float32 before moving it. On MPS this is the only option, model.double() raises the same TypeError.',
+        'x = torch.from_numpy(a.astype(np.float32)).to("mps")');
+    }
+    if (wdt === 'float64') {
+      return bad(MPS_F64, 'The MPS backend has no float64 at all. The error fires on model.to("mps") because the parameters are float64.',
+        'Keep the model in float32: model.float().to("mps"). Fix 3 on this page is unavailable on MPS.',
+        'model = model.float().to("mps")');
+    }
+    return null;
+  }
+
+  function convRule(eff, wdt, hasBias, device) {
+    var i = DTYPES[eff], w = DTYPES[wdt];
+    if (hasBias) {
+      return 'RuntimeError: Input type (' + i.c + ') and bias type (' + w.c + ') should be the same';
+    }
+    if (device === 'mps') {
+      return 'RuntimeError: Input type (' + i.mps + ') and weight type (' + w.mps + ') should be the same';
+    }
+    return 'RuntimeError: expected scalar type ' + i.s + ' but found ' + w.s;
+  }
+
+  function matmulRule(eff, wdt, device) {
+    if (device === 'mps') {
+      if (eff === 'int64') { return 'RuntimeError: MPS device does not support linear for non-float inputs'; }
+      return MPS_ABORT;
+    }
+    return 'RuntimeError: mat1 and mat2 must have the same dtype, but got ' + DTYPES[eff].s + ' and ' + DTYPES[wdt].s;
+  }
+
+  /* torch 2.8.0 CPU layer_norm: a float32 parameter accepts float16 and bfloat16
+     input (mixed precision path); anything else must match exactly. */
+  function layerNormRule(eff, wdt, device) {
+    if (device === 'mps') {
+      if (eff === 'int64') { return 'RuntimeError: Failed to create function state object for: layer_norm_single_row_long'; }
+      return '';
+    }
+    if (eff === wdt) { return ''; }
+    if (wdt === 'float32') {
+      if (eff === 'float16' || eff === 'bfloat16') { return ''; }
+      return 'RuntimeError: mixed dtype (CPU): all inputs must share same datatype.';
+    }
+    return 'RuntimeError: mixed dtype (CPU): expect parameter to have scalar type of Float';
+  }
+
+  function ruleFor(layer, eff, wdt, device) {
+    if (layer === 'conv') { return convRule(eff, wdt, true, device); }
+    if (layer === 'conv_nb') { return convRule(eff, wdt, false, device); }
+    if (layer === 'linear' || layer === 'flinear') { return matmulRule(eff, wdt, device); }
+    if (layer === 'layernorm') { return layerNormRule(eff, wdt, device); }
+    return null;
+  }
+
+  function whyFor(layer, eff, wdt, err) {
+    var i = DTYPES[eff].py, w = DTYPES[wdt].py;
+    var lead = 'The input is ' + i + ' and the parameters are ' + w + '. ';
+    if (err === MPS_ABORT) {
+      return lead + 'On MPS the matrix multiply does not raise a Python exception. The process aborts with this Metal assertion and signal 6, and no try block catches it.';
+    }
+    if (layer === 'conv') { return lead + 'Convolutions check the input against the bias before running and name both dtypes.'; }
+    if (layer === 'conv_nb') { return lead + 'Without a bias the front-door check is skipped and the kernel itself rejects the pair.'; }
+    if (layer === 'layernorm') { return lead + 'layer_norm on CPU accepts a float32 parameter with a float16 or bfloat16 input, and nothing else mixed.'; }
+    return lead + 'The matrix multiply behind nn.Linear and F.linear refuses mixed dtypes.';
+  }
+
+  function evaluate(dt, origin, layer, wdt, device) {
+    if (!DTYPES[dt] || !ORIGINS[origin] || !LAYERS[layer]) { return null; }
+    if (WDTYPES.indexOf(wdt) < 0 || DEVICES.indexOf(device) < 0) { return null; }
+    var gate = originGate(dt, origin);
+    if (gate) { return gate; }
+    var eff = effectiveDtype(dt, origin);
+    if (device === 'mps') {
+      var m = mpsGate(eff, wdt);
+      if (m) { return m; }
+    }
+    var err = (eff === wdt) ? '' : ruleFor(layer, eff, wdt, device);
+    if (err === null) { return null; }
+    if (err === '') {
+      var note = (eff !== wdt) ? ' torch 2.8.0 runs this pair as mixed precision and returns ' + DTYPES[eff].py + '.' : '';
+      return good('Valid. Input ' + DTYPES[eff].py + ' meets ' + DTYPES[wdt].py + ' parameters in ' + LAYERS[layer].call
+        + (eff === wdt ? ', same dtype on both sides.' : '.') + note,
+        castCode(origin, eff) + '\nout = ' + LAYERS[layer].call + (layer === 'flinear' ? '' : '(x)'));
+    }
+    var f = fixText(eff, wdt, origin, layer);
+    return bad(err, whyFor(layer, eff, wdt, err), f.fix, f.code);
+  }
+
+  return { evaluate: evaluate, effectiveDtype: effectiveDtype, DTYPES: DTYPES, WDTYPES: WDTYPES,
+    ORIGINS: ORIGINS, LAYERS: LAYERS, DEVICES: DEVICES, MAX_OPTS: MAX_OPTS };
+})();
+/* TT-END */
+
+  /* ---- UI ---- */
+  const PRESETS = [
+    { label: 'numpy into Conv2d', d: 'float64', o: 'from_numpy', l: 'conv', w: 'float32', v: 'cpu' },
+    { label: 'numpy into Linear', d: 'float64', o: 'tensor_np', l: 'linear', w: 'float32', v: 'cpu' },
+    { label: 'bias=False', d: 'float64', o: 'from_numpy', l: 'conv_nb', w: 'float32', v: 'cpu' },
+    { label: 'half model', d: 'float64', o: 'from_numpy', l: 'conv', w: 'float16', v: 'cpu' },
+    { label: 'int pixels', d: 'int64', o: 'from_numpy', l: 'conv', w: 'float32', v: 'cpu' },
+    { label: 'astype fix', d: 'float64', o: 'astype', l: 'conv', w: 'float32', v: 'cpu' },
+    { label: 'float64 on MPS', d: 'float64', o: 'from_numpy', l: 'linear', w: 'float32', v: 'mps' },
+    { label: 'MPS half Linear', d: 'float32', o: 'randn', l: 'linear', w: 'float16', v: 'mps' }
+  ];
+
+  function el(tag, text, cls) {
+    const e = document.createElement(tag);
+    if (typeof text === 'string' || typeof text === 'number') { e.textContent = String(text); }
+    if (cls) { e.className = cls; }
+    return e;
+  }
+
+  function clearNode(node) {
+    let n = 0;
+    while (node.firstChild) {
+      n += 1;
+      if (n > 64) { break; }
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function block(parent, label, text) {
+    if (!text) { return; }
+    const p = el('p');
+    p.appendChild(el('strong', label + ' '));
+    p.appendChild(document.createTextNode(text));
+    parent.appendChild(p);
+  }
+
+  function fill(sel, keys, labelFn) {
+    if (!sel || !keys) { return; }
+    for (let i = 0; i < keys.length && i < TT.MAX_OPTS; i += 1) {
+      const o = document.createElement('option');
+      o.value = keys[i];
+      o.textContent = labelFn(keys[i]);
+      sel.appendChild(o);
+    }
+  }
+
+  function readSel(id) {
+    const s = document.getElementById(id);
+    return s ? s.value : '';
+  }
+
+  function render() {
+    const box = document.getElementById('tt-result');
+    if (!box) { return; }
+    clearNode(box);
+    const dt = readSel('tt-dtype'), origin = readSel('tt-origin'), layer = readSel('tt-layer');
+    const wdt = readSel('tt-wdtype'), device = readSel('tt-device');
+    const v = TT.evaluate(dt, origin, layer, wdt, device);
+    if (!v) { box.appendChild(el('p', 'Pick a value in every box.')); return; }
+
+    const headline = v.level === 'ok' ? 'Valid'
+      : (v.level === 'warn' ? 'This tensor cannot be built' : (v.err.indexOf('failed assertion') === 0 ? 'The process aborts' : 'This raises'));
+    box.appendChild(el('p', headline, 'tt-verdict tt-' + v.level));
+    const eff = TT.effectiveDtype(dt, origin) || dt;
+    box.appendChild(el('p', TT.LAYERS[layer].call + '  with input ' + TT.DTYPES[eff].py + ' from ' + TT.ORIGINS[origin].label
+      + ', parameters ' + TT.DTYPES[wdt].py + ', device ' + device, 'tt-sub'));
+
+    if (v.err) {
+      const pre = el('pre', null, 'tt-err');
+      pre.appendChild(el('code', v.err));
+      box.appendChild(pre);
+    }
+    block(box, 'Why.', v.why);
+    block(box, 'Fix.', v.fix);
+    if (v.code) {
+      const pre2 = el('pre');
+      pre2.appendChild(el('code', v.code));
+      box.appendChild(pre2);
+    }
+  }
+
+  function init() {
+    const dSel = document.getElementById('tt-dtype');
+    const oSel = document.getElementById('tt-origin');
+    const lSel = document.getElementById('tt-layer');
+    const wSel = document.getElementById('tt-wdtype');
+    const vSel = document.getElementById('tt-device');
+    const row = document.getElementById('tt-presets');
+    if (!dSel || !oSel || !lSel || !wSel || !vSel) { return; }
+
+    fill(dSel, Object.keys(TT.DTYPES), function (k) { return TT.DTYPES[k].py; });
+    fill(oSel, Object.keys(TT.ORIGINS), function (k) { return TT.ORIGINS[k].label; });
+    fill(lSel, Object.keys(TT.LAYERS), function (k) { return TT.LAYERS[k].label; });
+    fill(wSel, TT.WDTYPES, function (k) { return TT.DTYPES[k].py; });
+    fill(vSel, TT.DEVICES, function (k) { return k; });
+    dSel.value = 'float64'; oSel.value = 'from_numpy'; lSel.value = 'conv'; wSel.value = 'float32'; vSel.value = 'cpu';
+
+    if (row) {
+      for (let k = 0; k < PRESETS.length && k < TT.MAX_OPTS; k += 1) {
+        const p = PRESETS[k];
+        const b = el('button', p.label, 'tt-preset');
+        b.type = 'button';
+        b.addEventListener('click', function () {
+          dSel.value = p.d; oSel.value = p.o; lSel.value = p.l; wSel.value = p.w; vSel.value = p.v; render();
+        });
+        row.appendChild(b);
+      }
+    }
+    const sels = [dSel, oSel, lSel, wSel, vSel];
+    for (let s = 0; s < sels.length && s < TT.MAX_OPTS; s += 1) { sels[s].addEventListener('change', render); }
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}
+</script>
+</body>
+</html>

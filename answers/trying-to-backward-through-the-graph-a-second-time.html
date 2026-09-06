@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Fix "backward through the graph a second time" | HeyTensor</title>
+ <meta name="description" content="RuntimeError: Trying to backward through the graph a second time means an earlier backward freed the saved tensors. Pick your loop pattern to get the fix.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/trying-to-backward-through-the-graph-a-second-time.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/answers/trying-to-backward-through-the-graph-a-second-time.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/answers/trying-to-backward-through-the-graph-a-second-time.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: Trying to backward through the graph a second time">
+ <meta property="og:description" content="The saved tensors of your graph were freed by the first backward call. Four reproduced causes, four verified fixes, and a decision tool that names the exact error.">
+ <meta property="og:url" content="https://heytensor.com/answers/trying-to-backward-through-the-graph-a-second-time.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: Trying to backward through the graph a second time in PyTorch">
+ <meta name="twitter:description" content="Backward twice, an undetached hidden state, two losses on one forward pass, or a GAN without detach. Free checker with the exact fix.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "PyTorch backward graph checker",
+   "url": "https://heytensor.com/answers/trying-to-backward-through-the-graph-a-second-time.html",
+   "applicationCategory": "DeveloperApplication",
+   "operatingSystem": "Any",
+   "browserRequirements": "Requires JavaScript",
+   "description": "Pick how many times backward runs on one graph, whether retain_graph is set, whether carried state is detached and whether losses are summed. The tool reports whether the loop is valid and names the exact PyTorch error it raises.",
+   "isAccessibleForFree": true,
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+   "author": { "@id": "https://zovo.one#michael-lip" },
+   "publisher": { "@type": "Organization", "name": "HeyTensor" }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://zovo.one#michael-lip",
+   "name": "Michael Lip",
+   "url": "https://zovo.one",
+   "description": "Builds heytensor.com and the Zovo Tools network of free, privacy-first developer utilities."
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "What does \"Trying to backward through the graph a second time\" mean in PyTorch?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The first call to .backward() or torch.autograd.grad() freed the tensors autograd saved during the forward pass. A second backward through any part of that graph finds them gone and raises RuntimeError. The usual causes are calling backward twice on one loss, carrying an RNN hidden state across steps without detach, backpropagating two losses that share a forward pass one after the other, and a GAN discriminator loss computed on generator output without detach."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Should I fix it with retain_graph=True?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Only when you genuinely need two backward passes through one graph. On torch 2.8.0 a graph with two 16 MB saved intermediates kept all 32 MB alive after backward with retain_graph=True and freed all of it without. In a loop with carried state the graph depth grew by one every step (4, 5, 6, 7). Summing the losses or detaching the carried state removes the second backward instead of paying for it."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Why does my RNN raise this on the second training step?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "The hidden state returned by step one still carries step one's graph. Step two builds on it, so step two's backward walks back into step one's graph, whose saved tensors were freed by step one's backward. Call h = h.detach() after each optimizer step so the next step starts from a plain tensor."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does torch.autograd.grad raise the same error?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. On torch 2.8.0 calling torch.autograd.grad twice on the same loss raises the identical message, and so does autograd.grad followed by backward. Passing retain_graph=True or create_graph=True to the first call makes the second call succeed."
+     }
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Answers", "item": "https://heytensor.com/answers/" },
+    { "@type": "ListItem", "position": 3, "name": "Trying to backward through the graph a second time" }
+   ]
+  }
+ ]
+}
+ </script>
+ <style>
+ .tt-panel { background: var(--bg-card); border: 1px solid var(--border);
+   border-radius: var(--radius, 12px); padding: 1.5rem; margin: 1.75rem 0; }
+ .tt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.1rem; }
+ .tt-grid label { display: block; font-size: 0.78rem; text-transform: uppercase;
+   letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.4rem; }
+ .tt-grid input, .tt-grid select { width: 100%; padding: 0.7rem 0.8rem; font: inherit;
+   background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+ #tt-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; }
+ .tt-preset { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.75rem; cursor: pointer;
+   background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; }
+ .tt-preset:hover { color: var(--accent); border-color: var(--accent); }
+ #tt-result { margin-top: 1.4rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+ #tt-result .tt-verdict { font-family: var(--font-display, monospace); font-size: 1.7rem;
+   font-weight: 700; margin: 0 0 0.3rem; }
+ .tt-ok { color: #16a34a; }
+ .tt-warn { color: #d97706; }
+ .tt-error { color: #dc2626; }
+ #tt-result .tt-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 1rem; }
+ #tt-result pre { overflow-x: auto; white-space: pre-wrap; }
+ #tt-result pre.tt-err code { color: #dc2626; }
+ .tt-note { font-size: 0.85rem; color: var(--text-muted); }
+ main table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+ main thead th { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 2px solid var(--accent); white-space: nowrap; }
+ main tbody td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+ .tt-scroll { overflow-x: auto; }
+ @media (max-width: 720px) { .tt-scroll table td, .tt-scroll table th { white-space: nowrap; } }
+ </style>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-trying-to-backward-through-the-graph-a-second-time" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container" style="max-width:760px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Trying to backward through the graph a second time</span>
+ </nav>
+
+ <article>
+ <h1>How to Fix "Trying to backward through the graph a second time"</h1>
+ <p class="qas" data-keyword="runtimeerror trying to backward through the graph a second time">Your first <code>.backward()</code> freed the tensors autograd saved during the forward pass, and a second backward walked into the same graph and found them gone. The fix depends on why there was a second walk. Sum the losses and call backward once, detach any state you carry between steps, or set <code>retain_graph=True</code> when you truly need two passes.</p>
+
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">A graph is single use by default. Anything that reaches back into it after backward, whether a second loss, a carried hidden state, or a read of <code>grad_fn._saved_result</code>, raises the same message.</p>
+ </div>
+
+ <h2>Check your training loop</h2>
+ <p>Answer four questions about the loop that fails. The tool reports whether torch 2.8.0 raises, prints the exact exception text, and shows the fix that matches your case. Every path was run on CPU and the strings are copied from the real exceptions.</p>
+
+ <section class="tt-panel">
+ <div class="tt-grid">
+ <div>
+ <label for="tt-calls">backward or autograd.grad calls on one graph</label>
+ <select id="tt-calls"></select>
+ </div>
+ <div>
+ <label for="tt-retain">retain_graph=True on the first call</label>
+ <select id="tt-retain"></select>
+ </div>
+ <div>
+ <label for="tt-detach">State carried across steps</label>
+ <select id="tt-detach"></select>
+ </div>
+ <div>
+ <label for="tt-summed">Losses summed before backward</label>
+ <select id="tt-summed"></select>
+ </div>
+ </div>
+ <div id="tt-presets" aria-label="Common cases"></div>
+ <div id="tt-result" aria-live="polite"></div>
+ <p class="tt-note" style="margin-bottom:0;">Runs entirely in your browser. Nothing you select is sent anywhere. "One graph" means one forward pass, so an RNN step that reuses last step's hidden state counts as the same graph.</p>
+ </section>
+
+ <h2>The error</h2>
+ <pre><code>RuntimeError: Trying to backward through the graph a second time (or directly access saved tensors after they have already been freed). Saved intermediate values of the graph are freed when you call .backward() or autograd.grad(). Specify retain_graph=True if you need to backward through the graph a second time or if you need to access saved tensors after calling backward.</code></pre>
+ <p>The message is long because it describes two triggers. During the forward pass every differentiable op saves what its backward formula needs, such as the output of <code>exp</code> or the inputs of <code>mul</code>. The first backward consumes those saved tensors and, unless told otherwise, releases them. The graph structure survives, so a second backward starts fine and fails the moment it needs a released value.</p>
+ <p>The PyTorch reference for <a href="https://docs.pytorch.org/docs/stable/generated/torch.Tensor.backward.html">torch.Tensor.backward</a> defines the switch: with <code>retain_graph=False</code> "the graph used to compute the grads will be freed", with <code>True</code> "it will be retained", and the default <code>None</code> means the value "is inferred from create_graph". The same page adds that "in nearly all cases setting this option to True is not needed and often can be worked around in a much more efficient way". The four causes below are those cases.</p>
+
+ <h2>Cause 1, backward called twice on the same loss</h2>
+ <p>The plain version. Two calls, one graph, no retain.</p>
+ <pre><code>x = torch.tensor([1.0, 2.0, 3.0], requires_grad=True)
+loss = (x * x).sum()
+loss.backward()
+loss.backward()   # raises
+
+loss.backward(retain_graph=True)
+loss.backward()   # runs, x.grad is tensor([ 4.,  8., 12.])</code></pre>
+ <p>Notice the number. Gradients accumulate, so the second pass doubled <code>x.grad</code> from <code>[2, 4, 6]</code>. If you see this pattern in your own code it usually means a helper function calls backward and the caller does too. Remove one of them.</p>
+
+ <h2>Cause 2, a hidden state carried across steps without detach</h2>
+ <p>This is the RNN version and the one that surprises people, because each step calls backward exactly once. The hidden state returned by step one still points at step one's graph. Step two multiplies it again, so step two's loss depends on step one's saved tensors, which step one's backward freed.</p>
+ <pre><code>w = torch.tensor(0.5, requires_grad=True)
+h = torch.tensor(1.0)
+for step in range(4):
+    h = h * w
+    loss = (h - 0.1) ** 2
+    loss.backward()        # raises on step 2
+    h = h.detach()         # add this line and it runs</code></pre>
+ <p>The detach is the correct fix. Truncated backpropagation through time is exactly this pattern, and it keeps every step's graph the same size. In the reproduction the graph depth measured from the loss was 4 on every step after detaching. With <code>retain_graph=True</code> and no detach the loop also runs, but the depth climbed 4, 5, 6, 7, one node per step, because each backward walks the entire history. Recomputing the forward pass from scratch on every step is a third working option when the sequence is short.</p>
+
+ <h2>Cause 3, two losses that share a forward pass</h2>
+ <p>An auxiliary head, a regulariser on features, a contrastive term. All of them reuse a tensor from the main forward pass. Backpropagating them one after the other fails on the second call.</p>
+ <pre><code>feat = x.exp()
+l1 = feat.sum()
+l2 = (feat * feat).sum()
+
+l1.backward()
+l2.backward()          # raises, feat's graph is gone
+
+(l1 + l2).backward()   # x.grad tensor([ 17.4964, 116.5854, 826.9431])</code></pre>
+ <p>Summing before backward gives the same gradient as <code>l1.backward(retain_graph=True)</code> followed by <code>l2.backward()</code>, which the reproduction confirmed to four decimals, and it walks the graph once instead of twice. Weighted sums work the same way. Sum the losses, then call backward once. Calling backward twice on the summed loss puts you back at cause 1.</p>
+
+ <h2>Cause 4, the GAN pattern</h2>
+ <p>The discriminator loss is computed on the generator's output. When that output is not detached, the discriminator's backward runs all the way into the generator and frees its saved tensors. The generator loss then needs them.</p>
+ <pre><code>fake = G(z)
+d_loss = criterion(D(fake), zeros)          # should be D(fake.detach())
+d_loss.backward()
+g_loss = criterion(D(fake), ones)
+g_loss.backward()                            # raises</code></pre>
+ <p>Using <code>D(fake.detach())</code> for the discriminator loss cuts the graph at the generator boundary. The generator's saved tensors survive, <code>g_loss.backward()</code> runs, and <code>G.weight.grad</code> is populated. That is also the intended behaviour, because the discriminator update should not push gradient into the generator.</p>
+
+ <h2>The "directly access saved tensors" variant</h2>
+ <p>The parenthetical in the message is real and was checked. After backward, reading a saved tensor through the private <code>grad_fn</code> attributes raises the identical text, with the same "Trying to backward through the graph a second time" prefix even though no backward was attempted.</p>
+ <pre><code>y = x.exp()
+loss = y.sum()
+loss.backward()
+y.grad_fn._saved_result     # raises the same RuntimeError</code></pre>
+ <p>The same happened for <code>_saved_self</code> on a multiplication, both when the saved operand was a leaf and when it was an intermediate. Before backward the read works and returns the tensor. You will hit this path from custom autograd tooling, from debugging hooks, or from a library that inspects the graph after an optimizer step.</p>
+
+ <h2>torch.autograd.grad behaves the same</h2>
+ <p><code>torch.autograd.grad(loss, x)</code> also frees the graph. Calling it twice raises the same error, and so does <code>autograd.grad</code> followed by <code>loss.backward()</code>. Two settings make the second call succeed: <code>retain_graph=True</code>, or <code>create_graph=True</code>, which retains the graph implicitly because higher order derivatives need it. Both returned <code>tensor([ 3., 12., 27.])</code> on the second call for a cubic loss.</p>
+
+ <h2>What retain_graph=True actually keeps</h2>
+ <p>The docs call it inefficient. The reproduction put a number on it. A forward pass of two chained <code>exp</code> calls on a 2048 by 2048 float32 tensor makes autograd save two intermediates of 16 MB each. A pack hook attached a weak reference to every saved tensor, and after backward the count of survivors was read.</p>
+ <pre><code>retain_graph=False: autograd saved 2 tensors (32 MB total); after backward 0 still alive holding 0 MB
+retain_graph=True:  autograd saved 2 tensors (32 MB total); after backward 2 still alive holding 32 MB</code></pre>
+ <p>So on this graph the flag holds 32 MB until the loss tensor itself is dropped, and on a real network it holds every activation the backward formulas need. Process RSS was also sampled, and it did not shrink after either backward on macOS because the allocator keeps freed pages, so the weak reference count is the measurement to trust. On CUDA the retained tensors show up directly in <code>torch.cuda.memory_allocated()</code>, which is why this flag so often precedes an out of memory error in a loop.</p>
+
+ <h2>What torch 2.8.0 actually raises</h2>
+ <p>Every row below was produced by one reproduction script on torch 2.8.0, CPU, and the exception text was copied without edits. The tool at the top of the page reproduces the rows that a training loop can reach.</p>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Setup</th><th>Result</th></tr></thead>
+ <tbody>
+ <tr><td>One loss, one <code>backward()</code></td><td>Valid, <code>x.grad</code> is <code>tensor([2., 4., 6.])</code></td></tr>
+ <tr><td>Same loss, <code>backward()</code> twice</td><td><code>RuntimeError: Trying to backward through the graph a second time (or directly access saved tensors after they have already been freed). Saved intermediate values of the graph are freed when you call .backward() or autograd.grad(). Specify retain_graph=True if you need to backward through the graph a second time or if you need to access saved tensors after calling backward.</code></td></tr>
+ <tr><td><code>backward(retain_graph=True)</code>, then <code>backward()</code></td><td>Valid, <code>x.grad</code> is <code>tensor([ 4.,  8., 12.])</code></td></tr>
+ <tr><td>Hidden state carried across 4 steps, no detach, one backward per step</td><td>Same <code>RuntimeError</code>, raised on step 2</td></tr>
+ <tr><td>Hidden state detached after each step</td><td>Valid, graph depth per step [4, 4, 4, 4]</td></tr>
+ <tr><td>No detach, <code>retain_graph=True</code> every step</td><td>Valid, graph depth per step [4, 5, 6, 7]</td></tr>
+ <tr><td>Forward pass recomputed from scratch each step</td><td>Valid, <code>w.grad</code> is <code>tensor(1.1000)</code></td></tr>
+ <tr><td>Two losses on one <code>feat</code>, backward one after the other</td><td>Same <code>RuntimeError</code></td></tr>
+ <tr><td>Two losses, first call <code>retain_graph=True</code></td><td>Valid, <code>x.grad</code> is <code>tensor([ 17.4964, 116.5854, 826.9431])</code></td></tr>
+ <tr><td>Two losses summed, one backward</td><td>Valid, identical <code>x.grad</code></td></tr>
+ <tr><td>Summed loss, backward called twice</td><td>Same <code>RuntimeError</code></td></tr>
+ <tr><td>GAN, discriminator loss on <code>fake</code> without detach</td><td>Same <code>RuntimeError</code>, on <code>g_loss.backward()</code></td></tr>
+ <tr><td>GAN, discriminator loss on <code>fake.detach()</code></td><td>Valid, <code>G.weight.grad</code> populated</td></tr>
+ <tr><td>Read <code>y.grad_fn._saved_result</code> after backward</td><td>Same <code>RuntimeError</code></td></tr>
+ <tr><td>Read <code>y.grad_fn._saved_result</code> before backward</td><td>Valid, returns <code>tensor([2.7183, 7.3891], grad_fn=&lt;ExpBackward0&gt;)</code></td></tr>
+ <tr><td><code>torch.autograd.grad</code> twice</td><td>Same <code>RuntimeError</code></td></tr>
+ <tr><td><code>torch.autograd.grad</code> with <code>retain_graph=True</code>, then again</td><td>Valid, <code>tensor([ 3., 12., 27.])</code></td></tr>
+ <tr><td><code>torch.autograd.grad</code> with <code>create_graph=True</code>, then again</td><td>Valid, <code>tensor([ 3., 12., 27.])</code></td></tr>
+ <tr><td><code>torch.autograd.grad</code>, then <code>backward()</code></td><td>Same <code>RuntimeError</code></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="tt-note">One string covers every failing row. Nothing in the message tells you which of the four causes you hit, which is why the traceback line matters more than the text. Look at which backward call raised, then look at what tensor it shares with the previous one.</p>
+
+ <h2>How common this is</h2>
+ <p>This error sits at <a href="/research/most-common-pytorch-errors.html#e10">number 10 of 25</a> in the HeyTensor ranking of PyTorch errors, tagged as roughly a fifth of all gradient errors. The <a href="/research/most-common-pytorch-errors.html">ranking's methodology</a> combines Stack Overflow question frequency, view counts and votes collected through the SO API in April 2026, weighted 50, 30 and 20 percent. It is the only entry in the top ten that has nothing to do with shapes, dtypes or devices. It is purely a control flow mistake, which is why a decision tool fits it better than a shape calculator.</p>
+
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/one-of-the-differentiated-tensors-does-not-require-grad.html" class="related-card">Fix "One of the differentiated Tensors does not require grad"</a>
+ <a href="/answers/element-0-of-tensors-does-not-require-grad.html" class="related-card">Fix "element 0 of tensors does not require grad and does not have a grad_fn"</a>
+ <a href="/answers/gradient-is-none-fix.html" class="related-card">Why is my gradient None after backward?</a>
+ <a href="/answers/variable-modified-for-gradient.html" class="related-card">How to fix "a variable needed for gradient computation has been modified by an inplace operation"?</a>
+ <a href="/answers/lstm-output-shape-bidirectional.html" class="related-card">What is the output shape of a bidirectional LSTM?</a>
+ <a href="/research/most-common-pytorch-errors.html" class="related-card">The 25 most common PyTorch errors, ranked</a>
+ <a href="/research/pytorch-error-database.html" class="related-card">The PyTorch error database, 52 errors</a>
+ <a href="/tools/cuda-out-of-memory.html" class="related-card">CUDA out of memory fixer</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/research/most-common-pytorch-errors.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">See the full error ranking</a>
+ </div>
+
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a>. Behaviour verified against torch 2.8.0 on 6 September 2026.</p>
+ <div class="last-updated"><time datetime="2026-09-06">Last updated: September 6, 2026</time></div>
+ </article>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-trying-to-backward-through-the-graph-a-second-time">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+<a href="https://mcp.zovo.one">MCP servers for Claude</a>
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-trying-to-backward-through-the-graph-a-second-time">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-trying-to-backward-through-the-graph-a-second-time" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+
+ <script>
+ (function(){
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
+
+<script>
+'use strict';
+/* Block scope so nothing leaks to window. */
+{
+/* NASA Power of 10: bounded loops with explicit ceilings, range-checked inputs,
+   no innerHTML, every function under 60 lines, two or more checks per function. */
+const TT = (function () {
+  var MAX_OPTS = 8;
+  var ERR = 'RuntimeError: Trying to backward through the graph a second time (or directly access saved tensors after they have already been freed). Saved intermediate values of the graph are freed when you call .backward() or autograd.grad(). Specify retain_graph=True if you need to backward through the graph a second time or if you need to access saved tensors after calling backward.';
+  var CALLS = [
+    { id: '1', label: '1' },
+    { id: '2', label: '2' }
+  ];
+  var YESNO = [
+    { id: 'no', label: 'No' },
+    { id: 'yes', label: 'Yes' }
+  ];
+  var DETACH = [
+    { id: 'yes', label: 'None, or detached with .detach()' },
+    { id: 'no', label: 'Carried without detach' }
+  ];
+
+  function has(list, id) {
+    if (!list || typeof id !== 'string') { return false; }
+    for (var i = 0; i < list.length && i < MAX_OPTS; i += 1) {
+      if (list[i].id === id) { return true; }
+    }
+    return false;
+  }
+
+  function bad(why, fix, code, row) {
+    return { level: 'error', verdict: 'This raises', err: ERR, why: why, fix: fix, code: code, row: row };
+  }
+  function good(why, fix, code, row) {
+    return { level: 'ok', verdict: 'Valid', err: '', why: why, fix: fix, code: code, row: row };
+  }
+  function warn(why, fix, code, row) {
+    return { level: 'warn', verdict: 'Valid', err: '', why: why, fix: fix, code: code, row: row };
+  }
+
+  /* Carried state ties every step to the previous step's graph, so the
+     "calls" and "summed" answers cannot rescue it. Mirrors evidence rows
+     "rnn hidden state carried, no detach" and "rnn no detach, retain_graph=True". */
+  function carriedState(retain) {
+    if (retain === 'yes') {
+      return warn('It runs, because retain_graph=True keeps every earlier step alive. In the reproduction the graph depth grew 4, 5, 6, 7 across four steps, so each backward walks the whole history and memory grows with it.',
+        'Detach the carried state after each optimizer step instead. That is truncated backpropagation through time and keeps every step the same size.',
+        'h = h.detach()   # after optimizer.step()',
+        'rnn no detach, retain_graph=True every step');
+    }
+    return bad('The hidden state returned by step one still points at step one\'s graph. Step two builds on it, so step two\'s backward reaches saved tensors that step one\'s backward freed.',
+      'Call .detach() on the carried state at the end of each step so the next step starts from a plain tensor.',
+      'for step in range(steps):\n    h = h * w\n    loss = (h - 0.1) ** 2\n    loss.backward()\n    h = h.detach()',
+      'rnn hidden state carried, no detach');
+  }
+
+  function oneCall(summed) {
+    if (summed === 'yes') {
+      return good('One forward pass, the losses summed, one backward. Autograd walks the graph once and frees it. This is the recommended shape for auxiliary losses.',
+        'Nothing to change.',
+        '(l1 + l2).backward()',
+        'two losses summed, one backward');
+    }
+    return good('One forward pass, one backward, nothing carried over. The graph is freed after the call and nothing reaches back into it.',
+      'Nothing to change.',
+      'loss = (x * x).sum()\nloss.backward()',
+      'single backward');
+  }
+
+  function twoCalls(retain, summed) {
+    if (retain === 'yes') {
+      return good('The first call keeps the saved tensors, so the second walk finds them. Gradients accumulate across both calls, and the saved intermediates stay in memory until the loss tensor is dropped. On a 2048 by 2048 graph that was 32 MB.',
+        'If the two calls are two losses, sum them and call backward once. Keep retain_graph=True only when you genuinely need two separate passes.',
+        'l1.backward(retain_graph=True)\nl2.backward()\n\n# same gradient, one walk:\n(l1 + l2).backward()',
+        'two losses, first with retain_graph=True');
+    }
+    if (summed === 'yes') {
+      return bad('The losses are summed, but backward is still called twice on the sum. The first call freed the graph and the second call found it gone.',
+        'Remove the second call. One backward on the summed loss produces the full gradient.',
+        'total = l1 + l2\ntotal.backward()   # once',
+        'summed loss, backward called twice');
+    }
+    return bad('The first call freed the saved tensors of the shared forward pass. The second call needs them. This is the same failure for backward twice on one loss, two losses on one feature tensor, and a GAN discriminator loss on undetached generator output.',
+      'Sum the losses before a single backward. For a GAN, feed the discriminator fake.detach() so its backward stops at the generator boundary. Use retain_graph=True only if the two passes must stay separate.',
+      '(l1 + l2).backward()\n\n# GAN:\nd_loss = criterion(D(fake.detach()), zeros)',
+      'backward twice same graph');
+  }
+
+  function decide(calls, retain, detach, summed) {
+    if (!has(CALLS, calls) || !has(YESNO, retain)) { return null; }
+    if (!has(DETACH, detach) || !has(YESNO, summed)) { return null; }
+    if (detach === 'no') { return carriedState(retain); }
+    if (calls === '1') { return oneCall(summed); }
+    return twoCalls(retain, summed);
+  }
+
+  return { decide: decide, ERR: ERR, CALLS: CALLS, YESNO: YESNO, DETACH: DETACH };
+})();
+
+
+  /* ---- UI ---- */
+  const PRESETS = [
+    { label: 'backward twice', c: '2', r: 'no', d: 'yes', s: 'no' },
+    { label: 'RNN state, no detach', c: '1', r: 'no', d: 'no', s: 'no' },
+    { label: 'two losses, one forward', c: '2', r: 'no', d: 'yes', s: 'no' },
+    { label: 'losses summed', c: '1', r: 'no', d: 'yes', s: 'yes' },
+    { label: 'retain_graph=True', c: '2', r: 'yes', d: 'yes', s: 'no' },
+    { label: 'RNN state detached', c: '1', r: 'no', d: 'yes', s: 'no' }
+  ];
+  const MAX_PRESETS = 16;
+
+  function el(tag, text, cls) {
+    const e = document.createElement(tag);
+    if (typeof text === 'string' || typeof text === 'number') { e.textContent = String(text); }
+    if (cls) { e.className = cls; }
+    return e;
+  }
+
+  function clearNode(node) {
+    let n = 0;
+    while (node.firstChild) {
+      n += 1;
+      if (n > 64) { break; }
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function block(parent, label, text) {
+    if (!text) { return; }
+    const p = el('p');
+    p.appendChild(el('strong', label + ' '));
+    p.appendChild(document.createTextNode(text));
+    parent.appendChild(p);
+  }
+
+  function fill(sel, opts) {
+    if (!sel || !opts) { return; }
+    for (let i = 0; i < opts.length && i < 8; i += 1) {
+      const o = document.createElement('option');
+      o.value = opts[i].id;
+      o.textContent = opts[i].label;
+      sel.appendChild(o);
+    }
+  }
+
+  function labelOf(opts, id) {
+    for (let i = 0; i < opts.length && i < 8; i += 1) {
+      if (opts[i].id === id) { return opts[i].label; }
+    }
+    return '';
+  }
+
+  function render() {
+    const cSel = document.getElementById('tt-calls');
+    const rSel = document.getElementById('tt-retain');
+    const dSel = document.getElementById('tt-detach');
+    const sSel = document.getElementById('tt-summed');
+    const box = document.getElementById('tt-result');
+    if (!cSel || !rSel || !dSel || !sSel || !box) { return; }
+    clearNode(box);
+
+    const v = TT.decide(cSel.value, rSel.value, dSel.value, sSel.value);
+    if (!v) { box.appendChild(el('p', 'Pick an answer for each question.')); return; }
+
+    box.appendChild(el('p', v.verdict, 'tt-verdict tt-' + v.level));
+    box.appendChild(el('p', cSel.value + ' call' + (cSel.value === '1' ? '' : 's')
+      + ', retain_graph ' + labelOf(TT.YESNO, rSel.value).toLowerCase()
+      + ', state ' + labelOf(TT.DETACH, dSel.value).toLowerCase()
+      + ', summed ' + labelOf(TT.YESNO, sSel.value).toLowerCase()
+      + '. Evidence row: ' + v.row, 'tt-sub'));
+
+    if (v.err) {
+      const pre = el('pre', null, 'tt-err');
+      pre.appendChild(el('code', v.err));
+      box.appendChild(pre);
+    }
+    block(box, 'Why.', v.why);
+    block(box, 'Fix.', v.fix);
+    if (v.code) {
+      const pre2 = el('pre');
+      pre2.appendChild(el('code', v.code));
+      box.appendChild(pre2);
+    }
+  }
+
+  function init() {
+    const cSel = document.getElementById('tt-calls');
+    const rSel = document.getElementById('tt-retain');
+    const dSel = document.getElementById('tt-detach');
+    const sSel = document.getElementById('tt-summed');
+    const row = document.getElementById('tt-presets');
+    if (!cSel || !rSel || !dSel || !sSel) { return; }
+
+    fill(cSel, TT.CALLS);
+    fill(rSel, TT.YESNO);
+    fill(dSel, TT.DETACH);
+    fill(sSel, TT.YESNO);
+    cSel.value = '2';
+    rSel.value = 'no';
+    dSel.value = 'yes';
+    sSel.value = 'no';
+    if (row) {
+      for (let k = 0; k < PRESETS.length && k < MAX_PRESETS; k += 1) {
+        const p = PRESETS[k];
+        const b = el('button', p.label, 'tt-preset');
+        b.type = 'button';
+        b.addEventListener('click', function () {
+          cSel.value = p.c; rSel.value = p.r; dSel.value = p.d; sSel.value = p.s; render();
+        });
+        row.appendChild(b);
+      }
+    }
+    cSel.addEventListener('change', render);
+    rSel.addEventListener('change', render);
+    dSel.addEventListener('change', render);
+    sSel.addEventListener('change', render);
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}
+</script>
+</body>
+</html>

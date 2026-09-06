@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Fix "differentiated Tensors does not require grad" | HeyTensor</title>
+ <meta name="description" content="RuntimeError: One of the differentiated Tensors does not require grad means an autograd.grad input has requires_grad=False. Set it before the forward pass.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/one-of-the-differentiated-tensors-does-not-require-grad.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/answers/one-of-the-differentiated-tensors-does-not-require-grad.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/answers/one-of-the-differentiated-tensors-does-not-require-grad.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: One of the differentiated Tensors does not require grad">
+ <meta property="og:description" content="torch.autograd.grad was handed an input tensor with requires_grad=False. Pick your setup in the checker and get the exact torch 2.8.0 error and the fix.">
+ <meta property="og:url" content="https://heytensor.com/answers/one-of-the-differentiated-tensors-does-not-require-grad.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: One of the differentiated Tensors does not require grad">
+ <meta name="twitter:description" content="Your torch.autograd.grad input has requires_grad=False. Free autograd decision checker with the exact fix.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "PyTorch autograd.grad input checker",
+   "url": "https://heytensor.com/answers/one-of-the-differentiated-tensors-does-not-require-grad.html",
+   "applicationCategory": "DeveloperApplication",
+   "operatingSystem": "Any",
+   "browserRequirements": "Requires JavaScript",
+   "description": "Pick whether your input tensor requires grad, whether the output was computed under no_grad, whether the input feeds the output, the allow_unused flag and the call you make. The tool names the exact PyTorch 2.8.0 error or confirms the combination is valid.",
+   "isAccessibleForFree": true,
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+   "author": { "@id": "https://zovo.one#michael-lip" },
+   "publisher": { "@type": "Organization", "name": "HeyTensor" }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://zovo.one#michael-lip",
+   "name": "Michael Lip",
+   "url": "https://zovo.one",
+   "description": "Builds heytensor.com and the Zovo Tools network of free, privacy-first developer utilities."
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "What does \"One of the differentiated Tensors does not require grad\" mean in PyTorch?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "torch.autograd.grad received an inputs tensor whose requires_grad is False. The output has a graph, but the tensor you asked to differentiate with respect to was never marked as needing a gradient. Call x.requires_grad_(True) before the forward pass that produces the output."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Why does setting requires_grad after the forward pass not fix it?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Autograd records the graph during the forward pass. If x had requires_grad=False at that moment, no edge from x was recorded. Setting requires_grad_(True) afterwards makes x eligible, but the existing output does not use it, so torch 2.8.0 raises a different error: One of the differentiated Tensors appears to not have been used in the graph. Set allow_unused=True if this is the desired behavior. Rerun the forward pass after setting the flag."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "How is it different from \"element 0 of tensors does not require grad and does not have a grad_fn\"?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "That message is about the output, not the input. It fires when the tensor you differentiate has no grad_fn, for example because it was computed under torch.no_grad(), was detached, or came from a model whose parameters are all frozen while the input also has requires_grad=False. The differentiated Tensors message fires when the output is fine but an inputs entry has requires_grad=False."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does .backward() raise the same error?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No. loss.backward() takes no inputs argument, so it never checks your input tensor. With a plain input it runs and leaves x.grad as None. Only torch.autograd.grad, which is handed an explicit inputs list, raises One of the differentiated Tensors does not require grad."
+     }
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Answers", "item": "https://heytensor.com/answers/" },
+    { "@type": "ListItem", "position": 3, "name": "One of the differentiated Tensors does not require grad" }
+   ]
+  }
+ ]
+}
+ </script>
+ <style>
+ .tt-panel { background: var(--bg-card); border: 1px solid var(--border);
+   border-radius: var(--radius, 12px); padding: 1.5rem; margin: 1.75rem 0; }
+ .tt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.1rem; }
+ .tt-grid label { display: block; font-size: 0.78rem; text-transform: uppercase;
+   letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.4rem; }
+ .tt-grid input, .tt-grid select { width: 100%; padding: 0.7rem 0.8rem; font: inherit;
+   background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+ #tt-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; }
+ .tt-preset { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.75rem; cursor: pointer;
+   background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; }
+ .tt-preset:hover { color: var(--accent); border-color: var(--accent); }
+ #tt-result { margin-top: 1.4rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+ #tt-result .tt-verdict { font-family: var(--font-display, monospace); font-size: 1.7rem;
+   font-weight: 700; margin: 0 0 0.3rem; }
+ .tt-ok { color: #16a34a; }
+ .tt-warn { color: #d97706; }
+ .tt-error { color: #dc2626; }
+ #tt-result .tt-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 1rem; }
+ #tt-result pre { overflow-x: auto; }
+ #tt-result pre.tt-err code { color: #dc2626; }
+ .tt-note { font-size: 0.85rem; color: var(--text-muted); }
+ main table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+ main thead th { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 2px solid var(--accent); white-space: nowrap; }
+ main tbody td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+ .tt-scroll { overflow-x: auto; }
+ @media (max-width: 720px) { .tt-scroll table td, .tt-scroll table th { white-space: nowrap; } }
+ </style>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-one-of-the-differentiated-tensors-does-not-require-grad" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container" style="max-width:760px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>One of the differentiated Tensors does not require grad</span>
+ </nav>
+
+ <article>
+ <h1>How to Fix "One of the differentiated Tensors does not require grad"</h1>
+ <p class="qas" data-keyword="runtimeerror one of the differentiated tensors does not require grad">You called <code>torch.autograd.grad(outputs, inputs)</code> and one entry in <code>inputs</code> has <code>requires_grad=False</code>. The output is fine, it has a graph. The tensor you asked to differentiate with respect to was never marked. Fix it with <code>x.requires_grad_(True)</code> placed before the forward pass that produces the output, then run the forward pass again.</p>
+
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">Autograd records edges during the forward pass. A flag set after the forward pass changes the tensor, not the graph that already exists.</p>
+ </div>
+
+ <h2>Check your combination</h2>
+ <p>Answer five questions about the call that failed. The tool prints the exact exception torch 2.8.0 raises for that combination, or tells you the call is valid, and gives the fix. All 48 combinations were run on CPU and the strings are copied from the real exceptions. The scenario assumes a model with trainable parameters, so the output has a graph unless you cut it yourself.</p>
+
+ <section class="tt-panel">
+ <div class="tt-grid">
+ <div>
+ <label for="tt-rg">Input tensor requires_grad</label>
+ <select id="tt-rg"></select>
+ </div>
+ <div>
+ <label for="tt-ng">Output under no_grad or detached</label>
+ <select id="tt-ng"></select>
+ </div>
+ <div>
+ <label for="tt-used">Input feeds the output</label>
+ <select id="tt-used"></select>
+ </div>
+ <div>
+ <label for="tt-au">allow_unused=True</label>
+ <select id="tt-au"></select>
+ </div>
+ <div>
+ <label for="tt-call">Which call</label>
+ <select id="tt-call"></select>
+ </div>
+ </div>
+ <div id="tt-presets" aria-label="Common cases"></div>
+ <div id="tt-result" aria-live="polite"></div>
+ <p class="tt-note" style="margin-bottom:0;">Runs entirely in your browser. Nothing you select is sent anywhere.</p>
+ </section>
+
+ <h2>The error and its two siblings</h2>
+ <pre><code>RuntimeError: One of the differentiated Tensors does not require grad</code></pre>
+ <p>Note the capital T in Tensors. That is how torch 2.8.0 spells it, and the spelling helps you tell it apart from two messages that look similar but point at a different mistake.</p>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Message</th><th>What is wrong</th></tr></thead>
+ <tbody>
+ <tr><td><code>One of the differentiated Tensors does not require grad</code></td><td>An <code>inputs</code> entry has <code>requires_grad=False</code>. The output is fine.</td></tr>
+ <tr><td><code>element 0 of tensors does not require grad and does not have a grad_fn</code></td><td>The <strong>output</strong> has no graph. It was computed under <code>torch.no_grad()</code>, detached, or built entirely from tensors that do not require grad.</td></tr>
+ <tr><td><code>One of the differentiated Tensors appears to not have been used in the graph. Set allow_unused=True if this is the desired behavior.</code></td><td>The input requires grad, but nothing on the path to the output reads it.</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p>Only <code>torch.autograd.grad</code> raises the first and third. <code>loss.backward()</code> takes no <code>inputs</code> argument, so it never inspects your tensor. With a plain input it runs, fills the parameter gradients, and leaves <code>x.grad</code> as <code>None</code>. If that is the symptom you have, the page on <a href="/answers/gradient-is-none-fix.html">gradient is None</a> covers it.</p>
+
+ <h2>Cause 1, the input is a plain leaf</h2>
+ <p>This is the saliency map, adversarial example and input attribution case. You want the gradient of the model output with respect to the input, but the input came from a DataLoader or <code>torch.randn</code> with the default <code>requires_grad=False</code>.</p>
+ <pre><code>model = nn.Linear(4, 1)
+x = torch.randn(2, 4)
+y = model(x).sum()
+torch.autograd.grad(y, x)
+# RuntimeError: One of the differentiated Tensors does not require grad
+
+x = torch.randn(2, 4, requires_grad=True)   # or x.requires_grad_(True)
+y = model(x).sum()
+(g,) = torch.autograd.grad(y, x)             # g.shape == (2, 4)</code></pre>
+ <p>The output <code>y</code> has a <code>grad_fn</code> in both versions because the weights of <code>model</code> require grad. That is why you get the differentiated Tensors message rather than the element 0 message. Freeze every parameter as well and the same plain <code>x</code> produces the element 0 message instead, because then nothing in the graph requires grad.</p>
+
+ <h2>Cause 2, requires_grad set after the forward pass</h2>
+ <p>The obvious repair is to set the flag when you see the error. If you set it after the forward pass has already run, the error changes but the call still fails.</p>
+ <pre><code>x = torch.randn(2, 4)
+y = model(x).sum()
+x.requires_grad_(True)        # too late
+torch.autograd.grad(y, x)
+# RuntimeError: One of the differentiated Tensors appears to not have been used
+# in the graph. Set allow_unused=True if this is the desired behavior.
+
+torch.autograd.grad(y, x, allow_unused=True)
+# (None,)   no error, no gradient either</code></pre>
+ <p>The graph behind <code>y</code> was recorded while <code>x</code> did not require grad, so there is no edge from <code>x</code> into it. Flipping the flag makes <code>x</code> a valid input, but an unused one. Adding <code>allow_unused=True</code> silences the check and returns <code>None</code>, which is the wrong fix for this cause. Move the <code>requires_grad_(True)</code> line above the forward pass and the same call returns a (2, 4) gradient.</p>
+
+ <h2>Cause 3, one bad tensor in a list</h2>
+ <p><code>inputs</code> accepts a sequence. The check runs over every entry and stops at the first failure, and the message does not say which entry failed.</p>
+ <pre><code>a = torch.randn(3, requires_grad=True)
+b = torch.randn(3)
+y = (a * b).sum()
+torch.autograd.grad(y, [a, b])
+# RuntimeError: One of the differentiated Tensors does not require grad</code></pre>
+ <p>Print <code>[t.requires_grad for t in inputs]</code> before the call. When the list is <code>model.parameters()</code>, look for layers you froze earlier with <code>requires_grad_(False)</code> and filter them out, or pass only the parameters you want.</p>
+
+ <h2>Cause 4, a tensor built inside no_grad</h2>
+ <p>The tensor does not have to be a leaf. An intermediate computed inside <code>torch.no_grad()</code> comes out with <code>requires_grad=False</code>, and differentiating with respect to it raises the same message even when the final output has a graph.</p>
+ <pre><code>x = torch.randn(3, requires_grad=True)
+with torch.no_grad():
+    h = x * 2
+w = torch.randn(3, requires_grad=True)
+y = (h * w).sum()
+torch.autograd.grad(y, h)
+# RuntimeError: One of the differentiated Tensors does not require grad</code></pre>
+ <p>Compute <code>h</code> outside the <code>no_grad</code> block, or differentiate with respect to <code>x</code> after doing so.</p>
+
+ <h2>Gradient penalty, WGAN-GP style</h2>
+ <p>A gradient penalty differentiates the critic output with respect to interpolated samples and then backpropagates through that gradient. Two things must be true. The interpolate must require grad before it enters the critic, and <code>create_graph=True</code> must be set so the gradient itself has a graph.</p>
+ <pre><code>eps = torch.rand(5, 1)
+interp = (eps * real + (1 - eps) * fake).requires_grad_(True)
+d_out = D(interp)
+(grads,) = torch.autograd.grad(
+    outputs=d_out, inputs=interp,
+    grad_outputs=torch.ones_like(d_out),
+    create_graph=True, retain_graph=True)
+gp = ((grads.norm(2, dim=1) - 1) ** 2).mean()
+gp.backward()</code></pre>
+ <p>Run on torch 2.8.0 this prints <code>gp 0.6463, grads.requires_grad True, D[0].weight.grad is None: False</code>, so the penalty reached the critic weights. Drop the <code>requires_grad_(True)</code> and the <code>autograd.grad</code> line raises the differentiated Tensors error. Keep it but set <code>create_graph=False</code> and the call succeeds, then <code>gp.backward()</code> raises <code>element 0 of tensors does not require grad and does not have a grad_fn</code>, because <code>grads</code> is now a constant.</p>
+
+ <h2>PINN derivatives with a scalar-output helper</h2>
+ <p>Physics-informed networks need <code>du/dx</code> and <code>d2u/dx2</code> at every collocation point. <code>torch.autograd.grad</code> wants a scalar output or an explicit <code>grad_outputs</code>. Summing the output is the usual trick, and it is exact here because each row of <code>u</code> depends only on its own row of <code>x</code>.</p>
+ <pre><code>x = torch.linspace(0, 1, 5).view(-1, 1).requires_grad_(True)
+u = net(x)
+
+def d(f, wrt):
+    return torch.autograd.grad(f.sum(), wrt, create_graph=True)[0]
+
+u_x = d(u, x)
+u_xx = d(u_x, x)
+loss = ((u_xx + u) ** 2).mean()
+loss.backward()</code></pre>
+ <p>Output on torch 2.8.0 is <code>u_x shape (5, 1), u_xx shape (5, 1), u_x.requires_grad True, loss 0.0780</code>. Build <code>x</code> from <code>torch.linspace</code> without the <code>requires_grad_(True)</code> and the first <code>d(u, x)</code> raises the differentiated Tensors error. Leave <code>create_graph=True</code> off the first derivative and the second call raises the element 0 message instead, since <code>u_x</code> then has no graph.</p>
+
+ <h2>What PyTorch 2.8.0 actually raises</h2>
+ <p>Each row below was run on torch 2.8.0, CPU, and the result column is the exception text or the printed value. The model in every row is an <code>nn.Linear</code> with trainable weights unless the row says otherwise.</p>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Setup</th><th>Result</th></tr></thead>
+ <tbody>
+ <tr><td><code>autograd.grad(y, x)</code>, x plain leaf, y through trainable w</td><td><code>RuntimeError: One of the differentiated Tensors does not require grad</code></td></tr>
+ <tr><td><code>autograd.grad(y, x)</code>, x plain leaf, y = (x * 2).sum()</td><td><code>RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</code></td></tr>
+ <tr><td><code>autograd.grad(y, [a, b])</code>, only b plain</td><td><code>RuntimeError: One of the differentiated Tensors does not require grad</code></td></tr>
+ <tr><td>saliency, <code>model(x)</code> with plain x</td><td><code>RuntimeError: One of the differentiated Tensors does not require grad</code></td></tr>
+ <tr><td>saliency, <code>x.requires_grad_(True)</code> before forward</td><td>Valid, grad shape (2, 4)</td></tr>
+ <tr><td><code>x.requires_grad_(True)</code> after forward</td><td><code>RuntimeError: One of the differentiated Tensors appears to not have been used in the graph. Set allow_unused=True if this is the desired behavior.</code></td></tr>
+ <tr><td>after forward, plus <code>allow_unused=True</code></td><td>Runs, returns <code>(None,)</code></td></tr>
+ <tr><td>x requires grad, y computed from z, not x</td><td><code>RuntimeError: One of the differentiated Tensors appears to not have been used in the graph. Set allow_unused=True if this is the desired behavior.</code></td></tr>
+ <tr><td>y computed under <code>torch.no_grad()</code></td><td><code>RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</code></td></tr>
+ <tr><td>y detached</td><td><code>RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</code></td></tr>
+ <tr><td>all params frozen, x plain</td><td><code>RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</code></td></tr>
+ <tr><td>all params frozen, x requires grad</td><td>Valid, grad shape (2, 4)</td></tr>
+ <tr><td>y detached and x plain, both wrong</td><td><code>RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</code> (the output is checked first)</td></tr>
+ <tr><td>non-leaf h built under no_grad, grad wrt h</td><td><code>RuntimeError: One of the differentiated Tensors does not require grad</code></td></tr>
+ <tr><td><code>y.backward()</code> with plain x</td><td>Runs, <code>x.grad is None</code>, weight.grad shape (1, 4)</td></tr>
+ <tr><td><code>y.backward()</code>, requires_grad set after forward</td><td>Runs, <code>x.grad is None</code></td></tr>
+ <tr><td><code>y.backward()</code>, y under no_grad</td><td><code>RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</code></td></tr>
+ <tr><td><code>autograd.grad(y, x)</code>, y is (3,) and no grad_outputs</td><td><code>RuntimeError: grad can be implicitly created only for scalar outputs</code></td></tr>
+ <tr><td>WGAN-GP, interpolate without <code>requires_grad_</code></td><td><code>RuntimeError: One of the differentiated Tensors does not require grad</code></td></tr>
+ <tr><td>WGAN-GP, <code>create_graph=False</code>, then <code>gp.backward()</code></td><td><code>RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn</code></td></tr>
+ <tr><td>PINN, plain linspace x</td><td><code>RuntimeError: One of the differentiated Tensors does not require grad</code></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="tt-note">When the output has no graph and the input is plain, the output check wins. Fix the element 0 message first and you may then meet the differentiated Tensors message for the same tensor.</p>
+
+ <h2>The inputs contract</h2>
+ <p>The reference for <a href="https://docs.pytorch.org/docs/stable/generated/torch.autograd.grad.html">torch.autograd.grad</a> describes <code>inputs</code> as the tensors "w.r.t. which the gradient will be returned (and not accumulated into .grad)", and describes <code>allow_unused</code> this way: "If False, specifying inputs that were not used when computing outputs (and therefore their grad is always zero) is an error." The same page notes that <code>retain_graph</code> defaults to the value of <code>create_graph</code>, which is why the gradient penalty above does not need a separate flag for the first call. Neither error string appears on that page. Treat the strings on this page as observed behaviour on torch 2.8.0.</p>
+ <p>The three conditions the engine checks, in order, are these. The output must have a <code>grad_fn</code>. Every input must have <code>requires_grad=True</code>. Every input must be reachable from the output, unless <code>allow_unused=True</code>. Satisfy all three and the call returns one gradient per input.</p>
+
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/trying-to-backward-through-the-graph-a-second-time.html" class="related-card">Fix "Trying to backward through the graph a second time"</a>
+ <a href="/answers/element-0-of-tensors-does-not-require-grad.html" class="related-card">Fix "element 0 of tensors does not require grad and does not have a grad_fn"</a>
+ <a href="/answers/gradient-is-none-fix.html" class="related-card">How to fix "gradient is None" after backward()?</a>
+ <a href="/answers/variable-modified-for-gradient.html" class="related-card">How to fix "one of the variables needed for gradient computation has been modified"?</a>
+ <a href="/research/most-common-pytorch-errors.html" class="related-card">The most common PyTorch errors, ranked</a>
+ <a href="/research/pytorch-error-database.html" class="related-card">The PyTorch error database</a>
+ <a href="/tools/parameter-counter.html" class="related-card">Neural network parameter counter</a>
+ <a href="/answers/weight-on-cpu-input-on-cuda.html" class="related-card">How to fix "weight is on CPU but input is on CUDA"?</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/research/pytorch-error-database.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Browse the PyTorch Error Database</a>
+ </div>
+
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a>. Behaviour verified against torch 2.8.0 on 6 September 2026.</p>
+ <div class="last-updated"><time datetime="2026-09-06">Last updated: September 6, 2026</time></div>
+ </article>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-one-of-the-differentiated-tensors-does-not-require-grad">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+<a href="https://mcp.zovo.one">MCP servers for Claude</a>
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-one-of-the-differentiated-tensors-does-not-require-grad">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-one-of-the-differentiated-tensors-does-not-require-grad" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+
+ <script>
+ (function(){
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
+
+<script>
+'use strict';
+/* Block scope so nothing leaks to window. */
+{
+/* NASA Power of 10: bounded loops with explicit ceilings, range-checked inputs,
+   no innerHTML, every function under 60 lines, two or more checks per function. */
+const TT = (function () {
+  var MAX_OPTS = 8;
+  var ERR_INPUT = 'RuntimeError: One of the differentiated Tensors does not require grad';
+  var ERR_OUTPUT = 'RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn';
+  var ERR_UNUSED = 'RuntimeError: One of the differentiated Tensors appears to not have been used in the graph. Set allow_unused=True if this is the desired behavior.';
+
+  var FIELDS = {
+    rg:   { label: 'Input tensor requires_grad', opts: [
+      { v: 'yes',   t: 'yes, set before the forward pass' },
+      { v: 'no',    t: 'no' },
+      { v: 'after', t: 'set after the forward pass' } ] },
+    ng:   { label: 'Output under no_grad or detached', opts: [
+      { v: 'no',  t: 'no' },
+      { v: 'yes', t: 'yes' } ] },
+    used: { label: 'Input feeds the output', opts: [
+      { v: 'yes', t: 'yes' },
+      { v: 'no',  t: 'no' } ] },
+    au:   { label: 'allow_unused=True', opts: [
+      { v: 'no',  t: 'no (default)' },
+      { v: 'yes', t: 'yes' } ] },
+    call: { label: 'Which call', opts: [
+      { v: 'grad',     t: 'torch.autograd.grad(y, x)' },
+      { v: 'backward', t: 'y.backward()' } ] }
+  };
+
+  function validOpt(field, value) {
+    var f = FIELDS[field];
+    if (!f || typeof value !== 'string') { return false; }
+    for (var i = 0; i < f.opts.length && i < MAX_OPTS; i += 1) {
+      if (f.opts[i].v === value) { return true; }
+    }
+    return false;
+  }
+
+  function bad(err, why, fix, code) {
+    return { level: 'error', err: err, why: why, fix: fix, code: code || '' };
+  }
+  function good(why, code) { return { level: 'ok', err: '', why: why, fix: '', code: code || '' }; }
+  function warn(err, why, fix, code) {
+    return { level: 'warn', err: err, why: why, fix: fix, code: code || '' };
+  }
+
+  var FIX_BEFORE = 'x = x.detach().requires_grad_(True)   # BEFORE the forward pass\ny = model(x).sum()\n(g,) = torch.autograd.grad(y, x)';
+
+  function outputCut() {
+    return bad(ERR_OUTPUT,
+      'The output has no grad_fn, so autograd has nothing to walk back through. This check runs before the inputs are looked at, so it hides any problem with x until you fix it.',
+      'Compute the output outside torch.no_grad() and drop any .detach(), .item() or .numpy() on the path from x to y.',
+      'with torch.enable_grad():\n    y = model(x).sum()\n(g,) = torch.autograd.grad(y, x)');
+  }
+
+  function gradPath(rg, used, au) {
+    if (rg === 'no') {
+      return bad(ERR_INPUT,
+        'x has requires_grad=False. The output is fine, but you asked for the gradient with respect to a tensor autograd was told to ignore.',
+        'Set requires_grad_(True) on x before the forward pass, then run the forward pass again.',
+        FIX_BEFORE);
+    }
+    if (rg === 'yes' && used === 'yes') {
+      return good('Valid. x requires grad, y has a grad_fn, and the path from x to y exists. torch.autograd.grad returns a tuple with one gradient of the same shape as x.',
+        'x = torch.randn(2, 4, requires_grad=True)\ny = model(x).sum()\n(g,) = torch.autograd.grad(y, x)   # g.shape == x.shape');
+    }
+    var whyAfter = rg === 'after'
+      ? 'x requires grad now, but the graph behind y was recorded while it did not, so no edge from x exists. Setting the flag after the forward pass does not rewrite the graph.'
+      : 'x requires grad but nothing on the path to y reads it, so its gradient is identically zero and autograd treats the request as a mistake.';
+    if (au === 'no') {
+      return bad(ERR_UNUSED, whyAfter,
+        rg === 'after'
+          ? 'Move requires_grad_(True) above the forward pass and recompute y. Do not reach for allow_unused=True here, it only hides the problem.'
+          : 'Differentiate with respect to the tensor that actually feeds y. If a zero gradient is what you want, pass allow_unused=True and handle the None.',
+        rg === 'after' ? FIX_BEFORE : 'grads = torch.autograd.grad(y, x, allow_unused=True)   # (None,)');
+    }
+    return warn('Runs, returns (None,)',
+      whyAfter + ' allow_unused=True turns the error into a None result.',
+      rg === 'after'
+        ? 'This is not a fix. Move requires_grad_(True) above the forward pass and recompute y, then drop allow_unused.'
+        : 'If None is acceptable, guard it. Otherwise connect x to y.',
+      rg === 'after' ? FIX_BEFORE : 'g = torch.autograd.grad(y, x, allow_unused=True)[0]\nif g is None:\n    g = torch.zeros_like(x)');
+  }
+
+  function backwardPath(rg, used) {
+    if (rg === 'yes' && used === 'yes') {
+      return good('Valid. y.backward() fills x.grad with a tensor of the same shape as x, and also fills .grad on every parameter of the model.',
+        'x = torch.randn(2, 4, requires_grad=True)\ny = model(x).sum()\ny.backward()\nprint(x.grad.shape)   # torch.Size([2, 4])');
+    }
+    var why = rg === 'no'
+      ? 'y.backward() takes no inputs argument, so it never checks x. It fills the parameter gradients and leaves x.grad as None.'
+      : (rg === 'after'
+        ? 'The flag was set after the graph was recorded, so backward never reaches x. x.grad stays None.'
+        : 'x requires grad but does not feed y, so nothing flows into it. x.grad stays None.');
+    return warn('Runs, x.grad is None', why,
+      rg === 'no' || rg === 'after'
+        ? 'Set requires_grad_(True) on x before the forward pass and recompute y.'
+        : 'Make x part of the computation that produces y.',
+      'x = x.detach().requires_grad_(True)\ny = model(x).sum()\ny.backward()\nprint(x.grad)');
+  }
+
+  function evaluate(rg, ng, used, au, call) {
+    if (!validOpt('rg', rg) || !validOpt('ng', ng)) { return null; }
+    if (!validOpt('used', used) || !validOpt('au', au) || !validOpt('call', call)) { return null; }
+    if (ng === 'yes') { return outputCut(); }
+    if (call === 'grad') { return gradPath(rg, used, au); }
+    return backwardPath(rg, used);
+  }
+
+  return { evaluate: evaluate, FIELDS: FIELDS, MAX_OPTS: MAX_OPTS };
+})();
+
+
+  /* ---- UI ---- */
+  const IDS = ['rg', 'ng', 'used', 'au', 'call'];
+  const PRESETS = [
+    { label: 'saliency on a plain input', rg: 'no', ng: 'no', used: 'yes', au: 'no', call: 'grad' },
+    { label: 'flag set after forward', rg: 'after', ng: 'no', used: 'yes', au: 'no', call: 'grad' },
+    { label: 'output under no_grad', rg: 'yes', ng: 'yes', used: 'yes', au: 'no', call: 'grad' },
+    { label: 'unused input', rg: 'yes', ng: 'no', used: 'no', au: 'no', call: 'grad' },
+    { label: 'backward, x.grad None', rg: 'no', ng: 'no', used: 'yes', au: 'no', call: 'backward' },
+    { label: 'correct call', rg: 'yes', ng: 'no', used: 'yes', au: 'no', call: 'grad' }
+  ];
+
+  function el(tag, text, cls) {
+    const e = document.createElement(tag);
+    if (typeof text === 'string' || typeof text === 'number') { e.textContent = String(text); }
+    if (cls) { e.className = cls; }
+    return e;
+  }
+
+  function clearNode(node) {
+    let n = 0;
+    while (node.firstChild) {
+      n += 1;
+      if (n > 64) { break; }
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function block(parent, label, text) {
+    if (!text) { return; }
+    const p = el('p');
+    p.appendChild(el('strong', label + ' '));
+    p.appendChild(document.createTextNode(text));
+    parent.appendChild(p);
+  }
+
+  function selects() {
+    const out = {};
+    for (let i = 0; i < IDS.length && i < 8; i += 1) {
+      const s = document.getElementById('tt-' + IDS[i]);
+      if (!s) { return null; }
+      out[IDS[i]] = s;
+    }
+    return out;
+  }
+
+  function summary(s) {
+    const parts = [];
+    for (let i = 0; i < IDS.length && i < 8; i += 1) {
+      const f = TT.FIELDS[IDS[i]];
+      const sel = s[IDS[i]];
+      const idx = sel.selectedIndex;
+      if (!f || idx < 0 || idx >= f.opts.length) { return ''; }
+      parts.push(f.label + ': ' + f.opts[idx].t);
+    }
+    return parts.join('. ') + '.';
+  }
+
+  function render() {
+    const s = selects();
+    const box = document.getElementById('tt-result');
+    if (!s || !box) { return; }
+    clearNode(box);
+    const v = TT.evaluate(s.rg.value, s.ng.value, s.used.value, s.au.value, s.call.value);
+    if (!v) { box.appendChild(el('p', 'Pick a value in every box.')); return; }
+
+    const headline = v.level === 'ok' ? 'Valid'
+      : (v.level === 'warn' ? 'Runs, but no gradient for x' : 'This raises');
+    box.appendChild(el('p', headline, 'tt-verdict tt-' + v.level));
+    box.appendChild(el('p', summary(s), 'tt-sub'));
+    if (v.err) {
+      const pre = el('pre', null, v.level === 'error' ? 'tt-err' : '');
+      pre.appendChild(el('code', v.err));
+      box.appendChild(pre);
+    }
+    block(box, 'Why.', v.why);
+    block(box, 'Fix.', v.fix);
+    if (v.code) {
+      const pre2 = el('pre');
+      pre2.appendChild(el('code', v.code));
+      box.appendChild(pre2);
+    }
+  }
+
+  function fillSelect(sel, field) {
+    const f = TT.FIELDS[field];
+    if (!sel || !f) { return; }
+    for (let i = 0; i < f.opts.length && i < TT.MAX_OPTS; i += 1) {
+      const o = document.createElement('option');
+      o.value = f.opts[i].v;
+      o.textContent = f.opts[i].t;
+      sel.appendChild(o);
+    }
+  }
+
+  function applyPreset(s, p) {
+    for (let i = 0; i < IDS.length && i < 8; i += 1) {
+      const key = IDS[i];
+      if (typeof p[key] === 'string') { s[key].value = p[key]; }
+    }
+    render();
+  }
+
+  function init() {
+    const s = selects();
+    const row = document.getElementById('tt-presets');
+    if (!s) { return; }
+    for (let i = 0; i < IDS.length && i < 8; i += 1) { fillSelect(s[IDS[i]], IDS[i]); }
+    applyPreset(s, PRESETS[0]);
+    if (row) {
+      for (let k = 0; k < PRESETS.length && k < 16; k += 1) {
+        const p = PRESETS[k];
+        const b = el('button', p.label, 'tt-preset');
+        b.type = 'button';
+        b.addEventListener('click', function () { applyPreset(s, p); });
+        row.appendChild(b);
+      }
+    }
+    for (let j = 0; j < IDS.length && j < 8; j += 1) {
+      s[IDS[j]].addEventListener('change', render);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}
+</script>
+</body>
+</html>

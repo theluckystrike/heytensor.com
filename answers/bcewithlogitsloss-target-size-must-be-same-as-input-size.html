@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Fix "Target size must be the same as input size" | HeyTensor</title>
+ <meta name="description" content="ValueError: Target size must be the same as input size means your BCEWithLogitsLoss target shape differs from the logits, usually (N) vs (N, 1). Fix here.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/bcewithlogitsloss-target-size-must-be-same-as-input-size.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/answers/bcewithlogitsloss-target-size-must-be-same-as-input-size.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/answers/bcewithlogitsloss-target-size-must-be-same-as-input-size.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: Target size must be the same as input size in BCEWithLogitsLoss">
+ <meta property="og:description" content="Your BCEWithLogitsLoss target shape differs from the logits shape. Check any output and target pair against four PyTorch losses and get the exact error string and the fix.">
+ <meta property="og:url" content="https://heytensor.com/answers/bcewithlogitsloss-target-size-must-be-same-as-input-size.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: Target size must be the same as input size in PyTorch">
+ <meta name="twitter:description" content="BCEWithLogitsLoss wants a float target with exactly the logits shape. Free shape checker with the exact fix.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "BCEWithLogitsLoss target shape checker",
+   "url": "https://heytensor.com/answers/bcewithlogitsloss-target-size-must-be-same-as-input-size.html",
+   "applicationCategory": "DeveloperApplication",
+   "operatingSystem": "Any",
+   "browserRequirements": "Requires JavaScript",
+   "description": "Enter a model output shape, a target shape, a target dtype and a loss function. The tool reports whether BCEWithLogitsLoss, BCELoss, the functional form or MSELoss accepts the pair and names the exact PyTorch error it raises.",
+   "isAccessibleForFree": true,
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+   "author": { "@id": "https://zovo.one#michael-lip" },
+   "publisher": { "@type": "Organization", "name": "HeyTensor" }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://zovo.one#michael-lip",
+   "name": "Michael Lip",
+   "url": "https://zovo.one",
+   "description": "Builds heytensor.com and the Zovo Tools network of free, privacy-first developer utilities."
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "What does \"Target size must be the same as input size\" mean in BCEWithLogitsLoss?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "nn.BCEWithLogitsLoss compares one logit to one label at the same position, so the target tensor must have exactly the shape of the logits tensor. The common pair is logits of shape (N, 1) against labels of shape (N). PyTorch checks the two torch.Size values for equality before doing anything else and raises this ValueError when they differ. Fix it with target = target.unsqueeze(1) or output = output.squeeze(1), and cast the target to float."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Why does BCEWithLogitsLoss raise on (N, 1) versus (N) when MSELoss only warns?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Both losses are elementwise, but nn.MSELoss lets the pair broadcast to (N, N), computes a loss over the wrong number of elements and prints a UserWarning. Binary cross entropy with logits checks shape equality first, so the same mistake raises a ValueError instead of returning a wrong number that still trains."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "The shapes match but the error is \"result type Float can't be cast to the desired output type Long\"",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Your target is int64. Once the shapes agree, the kernel needs a floating point target, and an integer label tensor raises this RuntimeError on torch 2.8.0. An int32 target says Int instead of Long, and a bool target raises a subtraction error. Cast it with target = target.float()."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Can I use BCEWithLogitsLoss with integer class labels and (N, C) logits?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Not directly. Logits of shape (N, 3) against labels of shape (N) raise the same Target size ValueError. If each sample has exactly one class, switch to nn.CrossEntropyLoss, which takes that pair. If a sample can carry several labels, expand the target with F.one_hot(labels, 3).float() so it becomes (N, 3) and keep BCEWithLogitsLoss."
+     }
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Answers", "item": "https://heytensor.com/answers/" },
+    { "@type": "ListItem", "position": 3, "name": "Target size must be the same as input size" }
+   ]
+  }
+ ]
+}
+ </script>
+ <style>
+ .tt-panel { background: var(--bg-card); border: 1px solid var(--border);
+   border-radius: var(--radius, 12px); padding: 1.5rem; margin: 1.75rem 0; }
+ .tt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.1rem; }
+ .tt-grid label { display: block; font-size: 0.78rem; text-transform: uppercase;
+   letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.4rem; }
+ .tt-grid input, .tt-grid select { width: 100%; padding: 0.7rem 0.8rem; font: inherit;
+   background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+ #tt-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; }
+ .tt-preset { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.75rem; cursor: pointer;
+   background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; }
+ .tt-preset:hover { color: var(--accent); border-color: var(--accent); }
+ #tt-result { margin-top: 1.4rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+ #tt-result .tt-verdict { font-family: var(--font-display, monospace); font-size: 1.7rem;
+   font-weight: 700; margin: 0 0 0.3rem; }
+ .tt-ok { color: #16a34a; }
+ .tt-warn { color: #d97706; }
+ .tt-error { color: #dc2626; }
+ #tt-result .tt-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 1rem; }
+ #tt-result pre { overflow-x: auto; }
+ #tt-result pre.tt-err code { color: #dc2626; }
+ .tt-note { font-size: 0.85rem; color: var(--text-muted); }
+ main table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+ main thead th { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 2px solid var(--accent); white-space: nowrap; }
+ main tbody td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+ .tt-scroll { overflow-x: auto; }
+ @media (max-width: 720px) { .tt-scroll table td, .tt-scroll table th { white-space: nowrap; } }
+ </style>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-bcewithlogitsloss-target-size-must-be-same-as-input-size" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container" style="max-width:760px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>Target size must be the same as input size</span>
+ </nav>
+
+ <article>
+ <h1>How to Fix "Target size must be the same as input size" in BCEWithLogitsLoss</h1>
+ <p class="qas" data-keyword="bcewithlogitsloss target size must be the same as input size">Your target tensor and your logits tensor have different shapes, and <code>nn.BCEWithLogitsLoss</code> refuses to guess how to line them up. The usual pair is a model output of shape (N, 1) against labels of shape (N). Fix it with <code>target = target.unsqueeze(1)</code>, or drop the extra dimension from the output with <code>output.squeeze(1)</code>, and make sure the target is a float tensor.</p>
+
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">One logit, one label, same position. BCEWithLogitsLoss is elementwise, so output (8, 1) pairs with target (8, 1), not (8) and not (1, 8). The dtype of the target must be floating point too.</p>
+ </div>
+
+ <h2>Check your own shapes</h2>
+ <p>Type the shape your model returns, the shape of your labels, their dtype, and the loss you call. The tool prints the exact exception PyTorch raises, or Valid, plus a fix. Every string comes from running the pair on torch 2.8.0, CPU, and copying the exception out of the traceback.</p>
+
+ <section class="tt-panel">
+ <div class="tt-grid">
+ <div>
+ <label for="tt-out">Model output shape</label>
+ <input id="tt-out" type="text" inputmode="numeric" value="8, 1" placeholder="8, 1">
+ </div>
+ <div>
+ <label for="tt-tgt">Target shape</label>
+ <input id="tt-tgt" type="text" inputmode="numeric" value="8" placeholder="8, 1">
+ </div>
+ <div>
+ <label for="tt-dtype">Target dtype</label>
+ <select id="tt-dtype"></select>
+ </div>
+ <div>
+ <label for="tt-loss">Loss</label>
+ <select id="tt-loss"></select>
+ </div>
+ </div>
+ <div id="tt-presets" aria-label="Common cases"></div>
+ <div id="tt-result" aria-live="polite"></div>
+ <p class="tt-note" style="margin-bottom:0;">Runs entirely in your browser. Nothing you type is sent anywhere. The tool assumes a float32 model output. Leave a box empty to mean a 0-dim scalar.</p>
+ </section>
+
+ <h2>The error</h2>
+ <pre><code>ValueError: Target size (torch.Size([8])) must be the same as input size (torch.Size([8, 1]))</code></pre>
+ <p>The check lives in <code>torch.nn.functional.binary_cross_entropy_with_logits</code>, so it fires for the module and for the functional call alike. It compares <code>target.size()</code> to <code>input.size()</code> with a plain equality test. There is no broadcasting step before it and no attempt to squeeze away a size-1 dimension. If the two <code>torch.Size</code> objects differ in any way, you get this <code>ValueError</code>.</p>
+ <p>Note the exception class. It is a <code>ValueError</code>, not a <code>RuntimeError</code>, which matters if you wrapped your training step in <code>except RuntimeError</code> to catch shape bugs.</p>
+
+ <h2>Why this loss refuses to broadcast</h2>
+ <p>Binary cross entropy with logits is defined per element. Logit number k is scored against label number k, and the result is averaged. A label vector of shape (8) and a logit matrix of shape (8, 1) could broadcast to (8, 8) under the normal tensor rules, and every logit would then be compared against all eight labels. That number is meaningless, so the function checks shape equality first and stops.</p>
+ <p><code>nn.MSELoss</code> takes the other path. It broadcasts, emits a <code>UserWarning</code>, and returns a wrong loss that still moves when you train. For the pair (2, 1) against (2) with values 0 and 2 in both tensors, the correct mean squared error is 0.0 and the broadcast version returns 2.0. The strict check in BCEWithLogitsLoss is a feature. It turns a silent wrong number into a loud exception.</p>
+
+ <h2>Cause 1, output is (N, 1) and target is (N)</h2>
+ <p>A binary classifier usually ends in <code>nn.Linear(hidden, 1)</code>, so the logits carry a trailing dimension of size 1. Labels from a DataLoader arrive as a flat vector of length N. The shapes are (8, 1) and (8), and the loss rejects them.</p>
+ <pre><code>logits = model(x)                      # torch.Size([8, 1])
+target = batch["label"].float()        # torch.Size([8])
+loss = nn.BCEWithLogitsLoss()(logits, target)
+# ValueError: Target size (torch.Size([8])) must be the same as input size (torch.Size([8, 1]))
+
+loss = nn.BCEWithLogitsLoss()(logits, target.unsqueeze(1))   # (8, 1) vs (8, 1)
+loss = nn.BCEWithLogitsLoss()(logits.squeeze(1), target)     # (8) vs (8)
+loss = nn.BCEWithLogitsLoss()(logits, target.view(-1, 1))    # (8, 1) vs (8, 1)</code></pre>
+ <p>All three fixes ran clean on torch 2.8.0. Pick one and use it everywhere, including in your validation loop and your metric code, so the shapes never drift apart again.</p>
+ <p>The reversed case raises the same error with the sizes swapped. An output of (8) against a target of (8, 1) gives <code>Target size (torch.Size([8, 1])) must be the same as input size (torch.Size([8]))</code>. Same cause, same fixes, opposite direction.</p>
+
+ <h2>Cause 2, the target is transposed</h2>
+ <p>Reshaping the label with <code>view(1, -1)</code> instead of <code>view(-1, 1)</code> gives (1, 8), which has the right number of elements in the wrong order. MSELoss would silently broadcast this pair to (8, 8). BCEWithLogitsLoss raises.</p>
+ <pre><code>ValueError: Target size (torch.Size([1, 8])) must be the same as input size (torch.Size([8, 1]))
+
+target = target.reshape(8, 1)   # or target.t()</code></pre>
+
+ <h2>Cause 3, class indices against multi-class logits</h2>
+ <p>People reach for BCEWithLogitsLoss with a three-way classifier because the name sounds like the general classification loss. The logits are (8, 3), the labels are integers in [0, 3) of shape (8), and the loss raises the shape error before it ever looks at the values.</p>
+ <pre><code>logits = torch.randn(8, 3)
+labels = torch.randint(0, 3, (8,))
+nn.BCEWithLogitsLoss()(logits, labels)
+# ValueError: Target size (torch.Size([8])) must be the same as input size (torch.Size([8, 3]))</code></pre>
+ <p>Which fix you want depends on the problem. If the classes are mutually exclusive, one label per sample, switch to <code>nn.CrossEntropyLoss()(logits, labels)</code>. It takes exactly this pair, (N, C) logits and (N) long indices, and ran clean in the same test. If a sample may carry several labels at once, stay with BCEWithLogitsLoss and expand the target to one column per class:</p>
+ <pre><code>target = F.one_hot(labels, num_classes=3).float()   # torch.Size([8, 3])
+loss = nn.BCEWithLogitsLoss()(logits, target)</code></pre>
+ <p>The <code>.float()</code> is not optional. <code>F.one_hot</code> returns int64, which leads straight to the next error.</p>
+
+ <h2>Cause 4, the shapes match but the target is long</h2>
+ <p>Once the shapes agree, the kernel needs a floating point target. An int64 label tensor of the right shape raises a different message from the same call.</p>
+ <pre><code>RuntimeError: result type Float can't be cast to the desired output type Long</code></pre>
+ <p>An int32 target says <code>desired output type Int</code>. A bool target trips even earlier, inside the <code>1 - target</code> term, with <code>RuntimeError: Subtraction, the `-` operator, with two bool tensors is not supported. Use the `^` or `logical_xor()` operator instead.</code> The fix is one call in every case:</p>
+ <pre><code>target = target.float()</code></pre>
+ <p>A float64 target with float32 logits does not raise. The loss is promoted to float64 and <code>backward()</code> runs, which is fine on CPU and slower than it needs to be on a GPU.</p>
+
+ <h2>BCELoss and the functional form say the same thing differently</h2>
+ <p>Plain <code>nn.BCELoss</code> checks the same equality and raises a <code>ValueError</code> with older wording that still mentions deprecation:</p>
+ <pre><code>ValueError: Using a target size (torch.Size([8])) that is different to the input size (torch.Size([8, 1])) is deprecated. Please ensure they have the same size.</code></pre>
+ <p>Its dtype check is stricter as well. BCELoss wants the target dtype to equal the input dtype, so a float64 target against float32 probabilities raises <code>RuntimeError: Found dtype Double but expected Float</code>, and long, int32 and bool targets raise the same message with Long, Int and Bool. BCELoss also demands that every input value is in [0, 1]. Feed it raw logits and you get <code>RuntimeError: all elements of input should be between 0 and 1</code>. Switching to BCEWithLogitsLoss removes that constraint and the sigmoid call.</p>
+ <p><code>F.binary_cross_entropy_with_logits(logits, target)</code> raises the exact same strings as the module for every case in the table below, because the module is a thin wrapper around it.</p>
+
+ <h2>pos_weight has its own shape rule</h2>
+ <p><code>pos_weight</code> is broadcast against the target, and the documented contract asks for a tensor with one entry per class. For logits of shape (8, 3), a <code>pos_weight</code> of shape (3) runs. A <code>pos_weight</code> of shape (8), one entry per sample, does not:</p>
+ <pre><code>RuntimeError: The size of tensor a (8) must match the size of tensor b (3) at non-singleton dimension 1</code></pre>
+ <p>A 0-dim scalar <code>pos_weight</code> runs, and for (8, 1) logits both shape (1) and shape (8, 1) run. The one to remember is (C), matching the last dimension of the logits.</p>
+
+ <h2>What PyTorch 2.8.0 actually raises</h2>
+ <p>Every row was produced by running the pair through the loss on torch 2.8.0, CPU, and copying the exception text. The model output is float32 in all rows. The checker at the top of this page reproduces each one.</p>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Setup</th><th>Result</th></tr></thead>
+ <tbody>
+ <tr><td>BCEWithLogitsLoss, output (8, 1), target (8) float32</td><td><code>ValueError: Target size (torch.Size([8])) must be the same as input size (torch.Size([8, 1]))</code></td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8), target (8, 1) float32</td><td><code>ValueError: Target size (torch.Size([8, 1])) must be the same as input size (torch.Size([8]))</code></td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 1), target (1, 8) float32</td><td><code>ValueError: Target size (torch.Size([1, 8])) must be the same as input size (torch.Size([8, 1]))</code></td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 3), target (8) long</td><td><code>ValueError: Target size (torch.Size([8])) must be the same as input size (torch.Size([8, 3]))</code></td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8), target () float32</td><td><code>ValueError: Target size (torch.Size([])) must be the same as input size (torch.Size([8]))</code></td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 1), target (8, 1) long</td><td><code>RuntimeError: result type Float can't be cast to the desired output type Long</code></td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 1), target (8, 1) int32</td><td><code>RuntimeError: result type Float can't be cast to the desired output type Int</code></td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 1), target (8, 1) bool</td><td><code>RuntimeError: Subtraction, the `-` operator, with two bool tensors is not supported. Use the `^` or `logical_xor()` operator instead.</code></td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 1), target (8, 1) float32</td><td>Valid</td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 1), target (8, 1) float64</td><td>Valid, loss is float64</td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 3), target (8, 3) float32 from <code>F.one_hot</code></td><td>Valid</td></tr>
+ <tr><td>F.binary_cross_entropy_with_logits, output (8, 1), target (8) float32</td><td><code>ValueError: Target size (torch.Size([8])) must be the same as input size (torch.Size([8, 1]))</code></td></tr>
+ <tr><td>F.binary_cross_entropy_with_logits, output (8, 1), target (8, 1) long</td><td><code>RuntimeError: result type Float can't be cast to the desired output type Long</code></td></tr>
+ <tr><td>BCELoss, output (8, 1), target (8) float32</td><td><code>ValueError: Using a target size (torch.Size([8])) that is different to the input size (torch.Size([8, 1])) is deprecated. Please ensure they have the same size.</code></td></tr>
+ <tr><td>BCELoss, output (8, 1), target (8, 1) long</td><td><code>RuntimeError: Found dtype Long but expected Float</code></td></tr>
+ <tr><td>BCELoss, output (8, 1), target (8, 1) float64</td><td><code>RuntimeError: Found dtype Double but expected Float</code></td></tr>
+ <tr><td>BCELoss, raw logits as input, target (8, 1) float32</td><td><code>RuntimeError: all elements of input should be between 0 and 1</code></td></tr>
+ <tr><td>CrossEntropyLoss, output (8, 3), target (8) long</td><td>Valid</td></tr>
+ <tr><td>MSELoss, output (8, 1), target (8) float32</td><td>Runs. <code>UserWarning: Using a target size (torch.Size([8])) that is different to the input size (torch.Size([8, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.</code></td></tr>
+ <tr><td>MSELoss, output (8, 3), target (8) float32</td><td><code>RuntimeError: The size of tensor a (3) must match the size of tensor b (8) at non-singleton dimension 1</code></td></tr>
+ <tr><td>MSELoss, output (8, 1), target (8, 1) long, then <code>backward()</code></td><td>Forward runs. <code>RuntimeError: Found dtype Long but expected Float</code> on backward</td></tr>
+ <tr><td>BCEWithLogitsLoss, output (8, 3), <code>pos_weight</code> shape (8)</td><td><code>RuntimeError: The size of tensor a (8) must match the size of tensor b (3) at non-singleton dimension 1</code></td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <h2>Quick reference</h2>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>You have</th><th>Do this</th></tr></thead>
+ <tbody>
+ <tr><td>logits (N, 1), labels (N)</td><td><code>target.unsqueeze(1)</code> or <code>output.squeeze(1)</code></td></tr>
+ <tr><td>logits (N), labels (N, 1)</td><td><code>target.squeeze(1)</code> or <code>output.unsqueeze(1)</code></td></tr>
+ <tr><td>logits (N, 1), labels (1, N)</td><td><code>target.reshape(N, 1)</code></td></tr>
+ <tr><td>logits (N, C), integer labels (N), one class per sample</td><td><code>nn.CrossEntropyLoss()(logits, labels)</code></td></tr>
+ <tr><td>logits (N, C), several labels per sample</td><td><code>F.one_hot(labels, C).float()</code> or a float multi-hot target of shape (N, C)</td></tr>
+ <tr><td>matching shapes, long or int or bool labels</td><td><code>target.float()</code></td></tr>
+ <tr><td>probabilities and <code>nn.BCELoss</code></td><td>drop the sigmoid and use <code>nn.BCEWithLogitsLoss</code> on raw logits</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p>The documented shape contract is on the PyTorch reference page <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html">torch.nn.BCEWithLogitsLoss</a>, which at the time of writing redirects to the 2.14 build of the docs. It lists Input as (*), where * means any number of dimensions, Target as (*), same shape as the input, and describes <code>pos_weight</code> as a tensor with equal size along the class dimension to the number of classes. The error strings themselves appear nowhere in the docs, so treat them as observed behaviour on torch 2.8.0.</p>
+
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/input-type-double-and-bias-type-float-should-be-the-same.html" class="related-card">Fix "Input type (double) and bias type (float) should be the same"</a>
+ <a href="/answers/0d-or-1d-target-tensor-expected.html" class="related-card">How to fix "0D or 1D target tensor expected, multi-target not supported"?</a>
+ <a href="/tools/loss-target-shape.html" class="related-card">Which target shape does my loss function want?</a>
+ <a href="/answers/input-target-batch-size-mismatch.html" class="related-card">How to fix "Expected input batch_size to match target batch_size"?</a>
+ <a href="/tools/loss-functions.html" class="related-card">Which PyTorch loss function should I use?</a>
+ <a href="/answers/expected-float-got-long.html" class="related-card">How to fix "expected scalar type Float but found Long"?</a>
+ <a href="/research/pytorch-error-database.html" class="related-card">The PyTorch error database, 52 errors</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/loss-target-shape.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Loss Target Shape Checker</a>
+ </div>
+
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a>. Behaviour verified against torch 2.8.0 on 6 September 2026.</p>
+ <div class="last-updated"><time datetime="2026-09-06">Last updated: September 6, 2026</time></div>
+ </article>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-bcewithlogitsloss-target-size-must-be-same-as-input-size">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+<a href="https://mcp.zovo.one">MCP servers for Claude</a>
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-bcewithlogitsloss-target-size-must-be-same-as-input-size">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-bcewithlogitsloss-target-size-must-be-same-as-input-size" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+
+ <script>
+ (function(){
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
+
+<script>
+'use strict';
+/* Block scope so nothing leaks to window. */
+{
+/* NASA Power of 10: bounded loops with explicit ceilings, range-checked indices,
+   no innerHTML, every function under 60 lines, two or more checks per function. */
+/* TT-BEGIN */
+const TT = (function () {
+  var MAX_DIMS = 8;
+  var DTYPES = {
+    'float32': { name: 'Float',  floating: true,  py: 'torch.float32' },
+    'float64': { name: 'Double', floating: true,  py: 'torch.float64' },
+    'long':    { name: 'Long',   floating: false, py: 'torch.long' },
+    'int32':   { name: 'Int',    floating: false, py: 'torch.int32' },
+    'bool':    { name: 'Bool',   floating: false, py: 'torch.bool' }
+  };
+
+  function parseShape(text) {
+    if (typeof text !== 'string') { return null; }
+    var parts = text.split(/[^0-9]+/).filter(function (p) { return p.length > 0; });
+    if (parts.length === 0) { return []; }
+    if (parts.length > MAX_DIMS) { return null; }
+    var out = [];
+    for (var i = 0; i < parts.length && i < MAX_DIMS; i += 1) {
+      var n = parseInt(parts[i], 10);
+      if (!isFinite(n) || n <= 0) { return null; }
+      out.push(n);
+    }
+    return out;
+  }
+
+  function eqShape(a, b) {
+    if (!a || !b || a.length !== b.length) { return false; }
+    for (var i = 0; i < a.length && i < MAX_DIMS; i += 1) {
+      if (a[i] !== b[i]) { return false; }
+    }
+    return true;
+  }
+
+  function numel(d) {
+    var n = 1;
+    for (var i = 0; i < d.length && i < MAX_DIMS; i += 1) { n *= d[i]; }
+    return n;
+  }
+
+  function fmt(d) { return d.length ? '(' + d.join(', ') + ')' : '()'; }
+  function tsz(d) { return 'torch.Size([' + d.join(', ') + '])'; }
+
+  function bad(err, why, fix, code) {
+    return { level: 'error', err: err, why: why, fix: fix, code: code || '' };
+  }
+  function good(why, code) { return { level: 'ok', err: '', why: why, fix: '', code: code || '' }; }
+  function warn(err, why, fix, code) {
+    return { level: 'warn', err: err, why: why, fix: fix, code: code || '' };
+  }
+
+  /* Broadcast per NumPy rules, right aligned. PyTorch reports the highest
+     indexed dimension that fails, so scan from the trailing dimension down. */
+  function broadcastFail(a, b) {
+    var n = Math.max(a.length, b.length);
+    if (n > MAX_DIMS) { return null; }
+    for (var i = n - 1; i >= 0; i -= 1) {
+      var ai = a.length - (n - i);
+      var bi = b.length - (n - i);
+      var av = (ai >= 0 && ai < a.length) ? a[ai] : 1;
+      var bv = (bi >= 0 && bi < b.length) ? b[bi] : 1;
+      if (av !== bv && av !== 1 && bv !== 1) { return { a: av, b: bv, dim: i }; }
+    }
+    return null;
+  }
+
+  /* Classify how two unequal shapes differ so the fix can be specific. */
+  function diagnose(inp, tgt) {
+    var n = inp.length;
+    var m = tgt.length;
+    if (n === m + 1 && inp[n - 1] === 1 && eqShape(inp.slice(0, n - 1), tgt)) { return 'trailing-on-output'; }
+    if (m === n + 1 && tgt[m - 1] === 1 && eqShape(tgt.slice(0, m - 1), inp)) { return 'trailing-on-target'; }
+    if (n === 2 && m === 1 && inp[1] > 1 && inp[0] === tgt[0]) { return 'class-indices'; }
+    if (n >= 1 && m >= 1 && inp[0] !== tgt[0] && numel(inp) !== numel(tgt)) { return 'batch'; }
+    if (numel(inp) === numel(tgt)) { return 'same-count'; }
+    return 'other';
+  }
+
+  function shapeFix(inp, tgt, call) {
+    var kind = diagnose(inp, tgt);
+    var want = fmt(inp);
+    if (kind === 'trailing-on-output') {
+      return { why: 'The output carries a trailing dimension of size 1 that the target lacks, ' + want + ' against ' + fmt(tgt) + '. The loss is elementwise and will not broadcast the pair.',
+        fix: 'Add the dimension to the target with target.unsqueeze(' + (inp.length - 1) + '), or drop it from the output with output.squeeze(' + (inp.length - 1) + '). Cast the target to float while you are there.',
+        code: 'target = target.unsqueeze(' + (inp.length - 1) + ').float()   # ' + fmt(tgt) + ' -> ' + want + '\nloss = ' + call + '(logits, target)\n# or: loss = ' + call + '(logits.squeeze(' + (inp.length - 1) + '), target.float())' };
+    }
+    if (kind === 'trailing-on-target') {
+      return { why: 'The target carries a trailing dimension of size 1 that the output lacks, ' + fmt(tgt) + ' against ' + want + '. Same rule, opposite direction.',
+        fix: 'Drop it with target.squeeze(' + (tgt.length - 1) + '), or add it to the output with output.unsqueeze(' + (tgt.length - 1) + ').',
+        code: 'target = target.squeeze(' + (tgt.length - 1) + ').float()   # ' + fmt(tgt) + ' -> ' + want + '\nloss = ' + call + '(logits, target)' };
+    }
+    if (kind === 'class-indices') {
+      return { why: 'Output ' + want + ' has ' + inp[1] + ' logits per sample and the target has one value per sample. That is the class index layout of nn.CrossEntropyLoss, not the one label per logit layout this loss needs.',
+        fix: 'For mutually exclusive classes use nn.CrossEntropyLoss()(logits, labels) with long labels of shape ' + fmt(tgt) + '. For multi-label targets expand to ' + want + ' with F.one_hot(labels, ' + inp[1] + ').float().',
+        code: 'loss = nn.CrossEntropyLoss()(logits, labels)   # one class per sample\n# multi-label instead:\ntarget = F.one_hot(labels, num_classes=' + inp[1] + ').float()   # ' + want + '\nloss = ' + call + '(logits, target)' };
+    }
+    if (kind === 'batch') {
+      return { why: 'Dimension 0 differs, ' + inp[0] + ' against ' + tgt[0] + ', and the element counts differ too. The batch pairing is off, not just the layout.',
+        fix: 'Check the DataLoader pairing and any indexing on the way to the loss. You need a target of shape ' + want + '.',
+        code: 'assert logits.shape == target.shape, (logits.shape, target.shape)' };
+    }
+    if (kind === 'same-count') {
+      return { why: 'Both tensors hold ' + numel(inp) + ' elements laid out differently, ' + fmt(tgt) + ' against ' + want + '. A view(1, -1) where view(-1, 1) was meant is the usual cause.',
+        fix: 'Reshape the target to ' + want + '.',
+        code: 'target = target.reshape(' + inp.join(', ') + ').float()\nloss = ' + call + '(logits, target)' };
+    }
+    return { why: 'The shapes differ, ' + fmt(tgt) + ' against ' + want + ', and the loss compares element to element with no broadcasting.',
+      fix: 'Produce a target of shape ' + want + ', one float label per logit.',
+      code: 'target = target.reshape(' + (inp.length ? inp.join(', ') : '') + ').float()\nloss = ' + call + '(logits, target)' };
+  }
+
+  function dtypeCheck(dt, call) {
+    if (dt === 'bool') {
+      return bad('RuntimeError: Subtraction, the `-` operator, with two bool tensors is not supported. Use the `^` or `logical_xor()` operator instead.',
+        'The shapes match. The kernel computes 1 - target for the negative term and that subtraction is not defined for torch.bool.',
+        'Cast it: target = target.float().',
+        'target = target.float()\nloss = ' + call + '(logits, target)');
+    }
+    if (!DTYPES[dt].floating) {
+      return bad("RuntimeError: result type Float can't be cast to the desired output type " + DTYPES[dt].name,
+        'The shapes match. The target must be floating point and yours is ' + DTYPES[dt].py + '.',
+        'Cast it: target = target.float().',
+        'target = target.float()\nloss = ' + call + '(logits, target)');
+    }
+    return null;
+  }
+
+  function logitsLoss(inp, tgt, dt, call) {
+    if (!eqShape(inp, tgt)) {
+      var d = shapeFix(inp, tgt, call);
+      return bad('ValueError: Target size (' + tsz(tgt) + ') must be the same as input size (' + tsz(inp) + ')', d.why, d.fix, d.code);
+    }
+    var e = dtypeCheck(dt, call);
+    if (e) { return e; }
+    var extra = dt === 'float64' ? ' A float64 target promotes the loss to float64, which runs but is slower than it needs to be on a GPU.' : '';
+    return good('Valid. Shapes match and the target is floating point. The loss applies the sigmoid internally, so pass raw logits and keep target values in [0, 1].' + extra,
+      'loss = ' + call + '(logits, target)   # no sigmoid on the output');
+  }
+
+  function bcewl(inp, tgt, dt) { return logitsLoss(inp, tgt, dt, 'nn.BCEWithLogitsLoss()'); }
+  function fbcewl(inp, tgt, dt) { return logitsLoss(inp, tgt, dt, 'F.binary_cross_entropy_with_logits'); }
+
+  function bce(inp, tgt, dt) {
+    if (!eqShape(inp, tgt)) {
+      var d = shapeFix(inp, tgt, 'nn.BCELoss()');
+      return bad('ValueError: Using a target size (' + tsz(tgt) + ') that is different to the input size (' + tsz(inp) + ') is deprecated. Please ensure they have the same size.',
+        d.why + ' nn.BCELoss uses older wording for the same check.', d.fix, d.code);
+    }
+    if (dt !== 'float32') {
+      return bad('RuntimeError: Found dtype ' + DTYPES[dt].name + ' but expected Float',
+        'nn.BCELoss needs the target dtype to equal the float32 input dtype. Yours is ' + DTYPES[dt].py + '.',
+        'Cast it: target = target.float().',
+        'target = target.float()\nloss = nn.BCELoss()(probs, target)');
+    }
+    return good('Shapes and dtype are valid. One condition remains that a shape checker cannot see: nn.BCELoss requires every INPUT value in [0, 1]. Raw logits raise RuntimeError: all elements of input should be between 0 and 1.',
+      'probs = torch.sigmoid(logits)\nloss = nn.BCELoss()(probs, target)\n# or skip the sigmoid: nn.BCEWithLogitsLoss()(logits, target)');
+  }
+
+  function mse(inp, tgt, dt) {
+    var castNote = 'RuntimeError: Found dtype ' + DTYPES[dt].name + ' but expected Float';
+    if (eqShape(inp, tgt)) {
+      if (dt !== 'float32') {
+        return warn(castNote + '  (raised by .backward(), not by the forward pass)',
+          'The shapes match, so the forward pass returns a number. The ' + DTYPES[dt].py + ' target only breaks when the gradient is computed.',
+          'Cast it: target = target.float().',
+          'target = target.float()\nloss = nn.MSELoss()(output, target)\nloss.backward()');
+      }
+      return good('Valid. nn.MSELoss is elementwise and both tensors are ' + fmt(inp) + '.', 'loss = nn.MSELoss()(output, target)');
+    }
+    var f = broadcastFail(inp, tgt);
+    if (f) {
+      return bad('RuntimeError: The size of tensor a (' + f.a + ') must match the size of tensor b (' + f.b + ') at non-singleton dimension ' + f.dim,
+        'The shapes differ and cannot broadcast. ' + fmt(inp) + ' against ' + fmt(tgt) + ' collides at aligned dimension ' + f.dim + '.',
+        'Reshape the target to ' + fmt(inp) + '. If these are class indices you want nn.CrossEntropyLoss.',
+        'target = target.reshape(' + inp.join(', ') + ').float()\nloss = nn.MSELoss()(output, target)');
+    }
+    var tail = dt !== 'float32' ? ' With a ' + DTYPES[dt].py + ' target the forward pass still runs and .backward() then raises ' + castNote + '.' : '';
+    return warn('UserWarning: Using a target size (' + tsz(tgt) + ') that is different to the input size (' + tsz(inp) + '). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.',
+      'This does NOT raise. nn.MSELoss broadcasts the pair, computes a loss over the wrong number of elements and only warns. BCEWithLogitsLoss raises a ValueError for the same shapes on purpose.' + tail,
+      'Make the shapes equal. target = target.reshape(' + inp.join(', ') + ') if the element count matches, or output = output.squeeze() if the model added a trailing 1.',
+      'target = target.reshape(' + inp.join(', ') + ').float()\nloss = nn.MSELoss()(output, target)');
+  }
+
+  var LOSSES = [
+    { id: 'BCEWithLogitsLoss', label: 'nn.BCEWithLogitsLoss', fn: bcewl },
+    { id: 'BCELoss', label: 'nn.BCELoss', fn: bce },
+    { id: 'F.binary_cross_entropy_with_logits', label: 'F.binary_cross_entropy_with_logits', fn: fbcewl },
+    { id: 'MSELoss', label: 'nn.MSELoss', fn: mse }
+  ];
+
+  function evaluate(inp, tgt, dt, lossId) {
+    if (!inp || !tgt || !DTYPES[dt]) { return null; }
+    if (inp.length > MAX_DIMS || tgt.length > MAX_DIMS) { return null; }
+    for (var i = 0; i < LOSSES.length; i += 1) {
+      if (LOSSES[i].id === lossId) { return LOSSES[i].fn(inp, tgt, dt); }
+    }
+    return null;
+  }
+
+  return { parseShape: parseShape, evaluate: evaluate, LOSSES: LOSSES, DTYPES: DTYPES, fmt: fmt };
+})();
+/* TT-END */
+
+  /* ---- UI ---- */
+  const PRESETS = [
+    { label: '(N, 1) vs (N)', o: '8, 1', t: '8', d: 'float32', l: 'BCEWithLogitsLoss' },
+    { label: '(N) vs (N, 1)', o: '8', t: '8, 1', d: 'float32', l: 'BCEWithLogitsLoss' },
+    { label: 'transposed target', o: '8, 1', t: '1, 8', d: 'float32', l: 'BCEWithLogitsLoss' },
+    { label: 'class indices vs (N, 3)', o: '8, 3', t: '8', d: 'long', l: 'BCEWithLogitsLoss' },
+    { label: 'long target, same shape', o: '8, 1', t: '8, 1', d: 'long', l: 'BCEWithLogitsLoss' },
+    { label: 'bool target', o: '8, 1', t: '8, 1', d: 'bool', l: 'BCEWithLogitsLoss' },
+    { label: 'plain BCELoss', o: '8, 1', t: '8', d: 'float32', l: 'BCELoss' },
+    { label: 'silent MSE broadcast', o: '8, 1', t: '8', d: 'float32', l: 'MSELoss' }
+  ];
+
+  function el(tag, text, cls) {
+    const e = document.createElement(tag);
+    if (typeof text === 'string' || typeof text === 'number') { e.textContent = String(text); }
+    if (cls) { e.className = cls; }
+    return e;
+  }
+
+  function clearNode(node) {
+    let n = 0;
+    while (node.firstChild) {
+      n += 1;
+      if (n > 64) { break; }
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function block(parent, label, text) {
+    if (!text) { return; }
+    const p = el('p');
+    p.appendChild(el('strong', label + ' '));
+    p.appendChild(document.createTextNode(text));
+    parent.appendChild(p);
+  }
+
+  function lossLabel(id) {
+    for (let i = 0; i < TT.LOSSES.length; i += 1) {
+      if (TT.LOSSES[i].id === id) { return TT.LOSSES[i].label; }
+    }
+    return id;
+  }
+
+  function render() {
+    const oIn = document.getElementById('tt-out');
+    const tIn = document.getElementById('tt-tgt');
+    const dSel = document.getElementById('tt-dtype');
+    const lSel = document.getElementById('tt-loss');
+    const box = document.getElementById('tt-result');
+    if (!oIn || !tIn || !dSel || !lSel || !box) { return; }
+    clearNode(box);
+
+    const inp = TT.parseShape(oIn.value);
+    const tgt = TT.parseShape(tIn.value);
+    if (inp === null || tgt === null) {
+      box.appendChild(el('p', 'Enter shapes as numbers, for example 8, 1 for the output and 8 for the target. '
+        + 'Leave a box empty to mean a 0-dim scalar.'));
+      return;
+    }
+    const v = TT.evaluate(inp, tgt, dSel.value, lSel.value);
+    if (!v) { box.appendChild(el('p', 'Pick a loss function.')); return; }
+
+    const headline = v.level === 'ok' ? 'Valid'
+      : (v.level === 'warn' ? 'Runs, but it is wrong' : 'This raises');
+    box.appendChild(el('p', headline, 'tt-verdict tt-' + v.level));
+    box.appendChild(el('p', lossLabel(lSel.value) + '  with output ' + TT.fmt(inp)
+      + ' and target ' + TT.fmt(tgt) + ' ' + TT.DTYPES[dSel.value].py, 'tt-sub'));
+
+    if (v.err) {
+      const pre = el('pre', null, 'tt-err');
+      pre.appendChild(el('code', v.err));
+      box.appendChild(pre);
+    }
+    block(box, 'Why.', v.why);
+    block(box, 'Fix.', v.fix);
+    if (v.code) {
+      const pre2 = el('pre');
+      pre2.appendChild(el('code', v.code));
+      box.appendChild(pre2);
+    }
+  }
+
+  function init() {
+    const dSel = document.getElementById('tt-dtype');
+    const lSel = document.getElementById('tt-loss');
+    const oIn = document.getElementById('tt-out');
+    const tIn = document.getElementById('tt-tgt');
+    const row = document.getElementById('tt-presets');
+    if (!dSel || !lSel || !oIn || !tIn) { return; }
+
+    const dkeys = ['float32', 'float64', 'long', 'int32', 'bool'];
+    for (let i = 0; i < dkeys.length; i += 1) {
+      const o = document.createElement('option');
+      o.value = dkeys[i];
+      o.textContent = TT.DTYPES[dkeys[i]].py;
+      dSel.appendChild(o);
+    }
+    for (let j = 0; j < TT.LOSSES.length; j += 1) {
+      const o2 = document.createElement('option');
+      o2.value = TT.LOSSES[j].id;
+      o2.textContent = TT.LOSSES[j].label;
+      lSel.appendChild(o2);
+    }
+    dSel.value = 'float32';
+    lSel.value = 'BCEWithLogitsLoss';
+    if (row) {
+      for (let k = 0; k < PRESETS.length && k < 16; k += 1) {
+        const p = PRESETS[k];
+        const b = el('button', p.label, 'tt-preset');
+        b.type = 'button';
+        b.addEventListener('click', function () {
+          oIn.value = p.o; tIn.value = p.t; dSel.value = p.d; lSel.value = p.l; render();
+        });
+        row.appendChild(b);
+      }
+    }
+    oIn.addEventListener('input', render);
+    tIn.addEventListener('input', render);
+    dSel.addEventListener('change', render);
+    lSel.addEventListener('change', render);
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}
+</script>
+</body>
+</html>

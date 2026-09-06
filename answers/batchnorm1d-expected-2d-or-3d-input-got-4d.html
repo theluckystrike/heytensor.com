@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Fix "expected 2D or 3D input (got 4D input)" | HeyTensor</title>
+ <meta name="description" content="ValueError: expected 2D or 3D input (got 4D input) means a 4D tensor reached nn.BatchNorm1d, which takes (N, C) or (N, C, L). Check your shape and fix it.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/batchnorm1d-expected-2d-or-3d-input-got-4d.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/answers/batchnorm1d-expected-2d-or-3d-input-got-4d.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/answers/batchnorm1d-expected-2d-or-3d-input-got-4d.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix: expected 2D or 3D input (got 4D input) in BatchNorm1d">
+ <meta property="og:description" content="A 4D tensor reached nn.BatchNorm1d, which accepts only (N, C) or (N, C, L). Check any layer, channel count and input shape against torch 2.8.0 and get the exact error string.">
+ <meta property="og:url" content="https://heytensor.com/answers/batchnorm1d-expected-2d-or-3d-input-got-4d.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix: expected 2D or 3D input (got 4D input) in BatchNorm1d">
+ <meta name="twitter:description" content="Your conv feature map went into BatchNorm1d. Free shape checker for BatchNorm1d, 2d, 3d and LayerNorm with the exact fix.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "WebApplication",
+   "name": "PyTorch normalization layer shape checker",
+   "url": "https://heytensor.com/answers/batchnorm1d-expected-2d-or-3d-input-got-4d.html",
+   "applicationCategory": "DeveloperApplication",
+   "operatingSystem": "Any",
+   "browserRequirements": "Requires JavaScript",
+   "description": "Pick BatchNorm1d, BatchNorm2d, BatchNorm3d or LayerNorm, enter the channel count, the input shape and train or eval mode. The tool reports whether the call is valid and names the exact PyTorch error it raises.",
+   "isAccessibleForFree": true,
+   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+   "author": { "@id": "https://zovo.one#michael-lip" },
+   "publisher": { "@type": "Organization", "name": "HeyTensor" }
+  },
+  {
+   "@type": "Person",
+   "@id": "https://zovo.one#michael-lip",
+   "name": "Michael Lip",
+   "url": "https://zovo.one",
+   "description": "Builds heytensor.com and the Zovo Tools network of free, privacy-first developer utilities."
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "What does \"expected 2D or 3D input (got 4D input)\" mean in PyTorch?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "nn.BatchNorm1d accepts a tensor of shape (N, C) or (N, C, L) and nothing else. A 4D tensor of shape (N, C, H, W) is the output of a 2D convolution, so the layer you want is nn.BatchNorm2d(C). If you must keep BatchNorm1d, fold the spatial dimensions with x.flatten(2) to get (N, C, H*W)."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Why does BatchNorm1d raise \"expected 2D or 3D input (got 1D input)\" for a single sample?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A tensor of shape (C) has no batch dimension. BatchNorm needs dimension 0 to be the batch and dimension 1 to be the channels, so add the batch dimension with x.unsqueeze(0). In training mode a batch of 1 with no spatial dimensions then raises Expected more than 1 value per channel when training, so call model.eval() or use a batch larger than 1."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "What does \"running_mean should contain 16 elements not 8\" mean?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Dimension 1 of your input has 16 entries but the layer was built with num_features=8. The first number is what the input has and the second is what the layer expects. For sequence data laid out as (N, L, C) the length is sitting in the channel slot, so call x.transpose(1, 2) to get (N, C, L) before the layer."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Does LayerNorm accept a (N, C, H, W) tensor?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Only if normalized_shape matches the trailing dimensions. nn.LayerNorm(8) on a (2, 8, 4, 4) tensor raises RuntimeError: Given normalized_shape=[8], expected input with shape [*, 8], but got input of size[2, 8, 4, 4] on torch 2.8.0. Either permute the channels to the last position or use nn.LayerNorm([8, 4, 4])."
+     }
+    }
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Answers", "item": "https://heytensor.com/answers/" },
+    { "@type": "ListItem", "position": 3, "name": "expected 2D or 3D input (got 4D input)" }
+   ]
+  }
+ ]
+}
+ </script>
+ <style>
+ .tt-panel { background: var(--bg-card); border: 1px solid var(--border);
+   border-radius: var(--radius, 12px); padding: 1.5rem; margin: 1.75rem 0; }
+ .tt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1.1rem; }
+ .tt-grid label { display: block; font-size: 0.78rem; text-transform: uppercase;
+   letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.4rem; }
+ .tt-grid input, .tt-grid select { width: 100%; padding: 0.7rem 0.8rem; font: inherit;
+   background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 8px; }
+ #tt-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.1rem; }
+ .tt-preset { font: inherit; font-size: 0.8rem; padding: 0.4rem 0.75rem; cursor: pointer;
+   background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: 999px; }
+ .tt-preset:hover { color: var(--accent); border-color: var(--accent); }
+ #tt-result { margin-top: 1.4rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+ #tt-result .tt-verdict { font-family: var(--font-display, monospace); font-size: 1.7rem;
+   font-weight: 700; margin: 0 0 0.3rem; }
+ .tt-ok { color: #16a34a; }
+ .tt-warn { color: #d97706; }
+ .tt-error { color: #dc2626; }
+ #tt-result .tt-sub { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 1rem; }
+ #tt-result pre { overflow-x: auto; }
+ #tt-result pre.tt-err code { color: #dc2626; }
+ .tt-note { font-size: 0.85rem; color: var(--text-muted); }
+ main table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.88rem; }
+ main thead th { text-align: left; padding: 0.6rem 0.7rem; border-bottom: 2px solid var(--accent); white-space: nowrap; }
+ main tbody td { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+ .tt-scroll { overflow-x: auto; }
+ @media (max-width: 720px) { .tt-scroll table td, .tt-scroll table th { white-space: nowrap; } }
+ </style>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-batchnorm1d-expected-2d-or-3d-input-got-4d" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container" style="max-width:760px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>expected 2D or 3D input (got 4D input)</span>
+ </nav>
+
+ <article>
+ <h1>How to Fix "expected 2D or 3D input (got 4D input)" in BatchNorm1d</h1>
+ <p class="qas" data-keyword="batchnorm1d expected 2d or 3d input got 4d input">A 4-dimensional tensor reached <code>nn.BatchNorm1d</code>, which accepts only (N, C) or (N, C, L). A (N, C, H, W) tensor is the output of a 2D convolution, so the layer you want is <code>nn.BatchNorm2d(C)</code>. If the 1D layer has to stay, fold the spatial dimensions first with <code>x.flatten(2)</code>.</p>
+
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">Each BatchNorm variant accepts exactly two ranks. BatchNorm1d takes 2 or 3, BatchNorm2d takes 4, BatchNorm3d takes 5, and in every case the channel count sits at dimension 1.</p>
+ </div>
+
+ <h2>Check your own shape</h2>
+ <p>Pick the layer, type the <code>num_features</code> you built it with, the shape of the tensor you feed it, and whether the model is in train or eval mode. The tool names the exact exception PyTorch raises, or reports the output shape when the call is valid. Every rule was checked against torch 2.8.0 on CPU and the strings are copied from the real exceptions.</p>
+
+ <section class="tt-panel">
+ <div class="tt-grid">
+ <div>
+ <label for="tt-layer">Layer</label>
+ <select id="tt-layer"></select>
+ </div>
+ <div>
+ <label for="tt-feat" id="tt-feat-label">num_features</label>
+ <input id="tt-feat" type="text" inputmode="numeric" value="8" placeholder="8">
+ </div>
+ <div>
+ <label for="tt-shape">Input shape</label>
+ <input id="tt-shape" type="text" inputmode="numeric" value="2, 8, 4, 4" placeholder="2, 8, 4, 4">
+ </div>
+ <div>
+ <label for="tt-mode">Mode</label>
+ <select id="tt-mode"></select>
+ </div>
+ </div>
+ <div id="tt-presets" aria-label="Common cases"></div>
+ <div id="tt-result" aria-live="polite"></div>
+ <p class="tt-note" style="margin-bottom:0;">Runs entirely in your browser. Nothing you type is sent anywhere. The tool assumes the default <code>track_running_stats=True</code>. For LayerNorm the second box is <code>normalized_shape</code> and accepts a list such as 4, 4.</p>
+ </section>
+
+ <h2>The error</h2>
+ <pre><code>ValueError: expected 2D or 3D input (got 4D input)</code></pre>
+ <p>This is a <code>ValueError</code>, not a <code>RuntimeError</code>. It is raised in Python, inside the <code>_check_input_dim</code> method of the module, before any tensor arithmetic runs. The three BatchNorm classes differ only in that method, and each one prints its own accepted ranks:</p>
+ <pre><code>nn.BatchNorm1d(8)(torch.randn(2, 8, 4, 4))
+# ValueError: expected 2D or 3D input (got 4D input)
+
+nn.BatchNorm2d(8)(torch.randn(2, 8, 4))
+# ValueError: expected 4D input (got 3D input)
+
+nn.BatchNorm3d(8)(torch.randn(2, 8, 4, 4))
+# ValueError: expected 5D input (got 4D input)</code></pre>
+ <p>The number in parentheses is the rank of the tensor you passed. The message tells you which layer you called and how far off you are, which is enough to pick the fix from the list below.</p>
+
+ <h2>The rule behind all three layers</h2>
+ <p>BatchNorm normalizes each channel over every other dimension. To do that it needs to know which dimension holds the channels, and PyTorch fixes that at dimension 1. The batch is dimension 0. Anything after dimension 1 is treated as spatial and averaged over. That leaves one degree of freedom, the number of spatial dimensions, and the class name pins it:</p>
+ <ul>
+ <li><code>nn.BatchNorm1d(C)</code> takes (N, C) or (N, C, L). Zero or one spatial dimension.</li>
+ <li><code>nn.BatchNorm2d(C)</code> takes (N, C, H, W). Two spatial dimensions, no exceptions.</li>
+ <li><code>nn.BatchNorm3d(C)</code> takes (N, C, D, H, W). Three spatial dimensions.</li>
+ </ul>
+ <p>The documented contract for the 1D layer lives at <a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.BatchNorm1d.html">torch.nn.BatchNorm1d</a>, which states the input as (N, C) or (N, C, L) with N the batch size, C the number of features or channels, and L the sequence length. The output has the same shape as the input. The error strings themselves are not documented, so everything quoted on this page is observed behaviour on torch 2.8.0.</p>
+
+ <h2>Cause 1, a conv feature map goes into BatchNorm1d</h2>
+ <p>This is the case behind the search query. A <code>Conv2d</code> returns (N, C, H, W), and a <code>nn.BatchNorm1d</code> was pasted after it from a fully connected block or a 1D model.</p>
+ <pre><code>x = conv(x)                    # (2, 8, 4, 4)
+x = nn.BatchNorm1d(8)(x)
+# ValueError: expected 2D or 3D input (got 4D input)
+
+x = nn.BatchNorm2d(8)(x)       # (2, 8, 4, 4)  correct</code></pre>
+ <p>Swap the layer. <code>BatchNorm2d(8)</code> has the same parameters, the same <code>running_mean</code> of 8 entries, and the same math. Only the accepted rank changes. If the module is shared with a 1D path and cannot be swapped, fold the spatial dimensions into one:</p>
+ <pre><code>N, C, H, W = x.shape
+y = bn1d(x.flatten(2))         # (2, 8, 16)
+y = y.view(N, C, H, W)         # back to (2, 8, 4, 4)
+
+# x.view(N, C, -1) does the same fold</code></pre>
+ <p>The statistics come out identical either way, because both layers average over every element that is not the channel.</p>
+
+ <h2>Cause 2, a single sample with no batch dimension</h2>
+ <p>The mirror image of the 4D error. A tensor of shape (8) goes into <code>BatchNorm1d(8)</code>, usually during inference on one example pulled out of a dataset.</p>
+ <pre><code>nn.BatchNorm1d(8)(torch.randn(8))
+# ValueError: expected 2D or 3D input (got 1D input)
+
+x = x.unsqueeze(0)             # (1, 8)</code></pre>
+ <p>Adding the batch dimension clears the rank check and lands you on the next one. In training mode a (1, 8) input raises:</p>
+ <pre><code>ValueError: Expected more than 1 value per channel when training, got input size torch.Size([1, 8])</code></pre>
+ <p>The same (1, 8) tensor passes in eval mode and returns (1, 8). The check counts N times every spatial dimension, so (1, 8, 4) passes even in training because each channel sees 4 values, while (1, 8, 1) fails. Call <code>model.eval()</code> for inference. During training, drop the last incomplete batch with <code>DataLoader(..., drop_last=True)</code>.</p>
+
+ <h2>Cause 3, the channel count does not match</h2>
+ <p>Once the rank is right, PyTorch compares dimension 1 with <code>num_features</code>. The message is a <code>RuntimeError</code> and the order of the two numbers trips people up:</p>
+ <pre><code>nn.BatchNorm1d(8)(torch.randn(2, 4))
+# RuntimeError: running_mean should contain 4 elements not 8</code></pre>
+ <p>The first number, 4, is what your input has at dimension 1. The second number, 8, is what the layer was built with. Read it as "the input wants a running_mean of 4 but the layer holds 8".</p>
+ <p>The most common way to hit this with sequence data is a (N, L, C) layout, the one Transformers and most tokenizers produce. BatchNorm reads the sequence length as the channel count:</p>
+ <pre><code>x = torch.randn(2, 16, 8)      # (N, L, C)
+nn.BatchNorm1d(8)(x)
+# RuntimeError: running_mean should contain 16 elements not 8
+
+y = bn(x.transpose(1, 2))      # (2, 8, 16), valid
+y = y.transpose(1, 2)          # back to (2, 16, 8)</code></pre>
+ <p>If you built the layer with <code>track_running_stats=False</code> the same mismatch is reported against the weight instead: <code>RuntimeError: weight should contain 4 elements not 8</code>. Same cause, a different parameter is checked first.</p>
+
+ <h2>Cause 4, LayerNorm on a channels-first tensor</h2>
+ <p>People reach for <code>nn.LayerNorm</code> as a way around the batch size limit and hit a different contract. LayerNorm normalizes over the trailing dimensions named in <code>normalized_shape</code>, so the channel count must be last, not at dimension 1.</p>
+ <pre><code>nn.LayerNorm(8)(torch.randn(2, 8, 4, 4))
+# RuntimeError: Given normalized_shape=[8], expected input with shape [*, 8], but got input of size[2, 8, 4, 4]</code></pre>
+ <p>The missing space before the bracket is in the real string. Three fixes work on torch 2.8.0. Move the channels last and back with <code>ln(x.permute(0, 2, 3, 1)).permute(0, 3, 1, 2)</code>. Or normalize over all three trailing dims with <code>nn.LayerNorm([8, 4, 4])</code>, which ties the layer to a fixed spatial size. Or use <code>nn.GroupNorm(1, 8)</code>, which accepts (N, C, *) directly and has no batch size requirement. LayerNorm and GroupNorm ignore train and eval mode, so the batch of 1 problem from Cause 2 disappears with either.</p>
+
+ <h2>What PyTorch 2.8.0 actually raises</h2>
+ <p>Every row below was produced by running the shape through the layer on torch 2.8.0, CPU, with default arguments, and copying the exception. The tool at the top of this page reproduces all of them.</p>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Setup</th><th>Result</th></tr></thead>
+ <tbody>
+ <tr><td>BatchNorm1d(8), input (2, 8, 4, 4), train</td><td><code>ValueError: expected 2D or 3D input (got 4D input)</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (8), train</td><td><code>ValueError: expected 2D or 3D input (got 1D input)</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (2, 8, 4, 4, 4), train</td><td><code>ValueError: expected 2D or 3D input (got 5D input)</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (2, 8), train</td><td>Valid, output (2, 8)</td></tr>
+ <tr><td>BatchNorm1d(8), input (2, 8, 16), train</td><td>Valid, output (2, 8, 16)</td></tr>
+ <tr><td>BatchNorm2d(8), input (2, 8, 4), train</td><td><code>ValueError: expected 4D input (got 3D input)</code></td></tr>
+ <tr><td>BatchNorm2d(8), input (2, 8, 4, 4, 4), train</td><td><code>ValueError: expected 4D input (got 5D input)</code></td></tr>
+ <tr><td>BatchNorm3d(8), input (2, 8, 4, 4), train</td><td><code>ValueError: expected 5D input (got 4D input)</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (2, 4), train or eval</td><td><code>RuntimeError: running_mean should contain 4 elements not 8</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (2, 16, 8), train</td><td><code>RuntimeError: running_mean should contain 16 elements not 8</code></td></tr>
+ <tr><td>BatchNorm2d(8), input (2, 3, 8, 8), train</td><td><code>RuntimeError: running_mean should contain 3 elements not 8</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (1, 8), train</td><td><code>ValueError: Expected more than 1 value per channel when training, got input size torch.Size([1, 8])</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (1, 8), eval</td><td>Valid, output (1, 8)</td></tr>
+ <tr><td>BatchNorm1d(8), input (1, 8, 4), train</td><td>Valid, output (1, 8, 4)</td></tr>
+ <tr><td>BatchNorm2d(8), input (1, 8, 1, 1), train</td><td><code>ValueError: Expected more than 1 value per channel when training, got input size torch.Size([1, 8, 1, 1])</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (1, 4), train</td><td><code>ValueError: Expected more than 1 value per channel when training, got input size torch.Size([1, 4])</code></td></tr>
+ <tr><td>BatchNorm1d(8), input (1, 4), eval</td><td><code>RuntimeError: running_mean should contain 4 elements not 8</code></td></tr>
+ <tr><td>LayerNorm(8), input (2, 8, 4, 4)</td><td><code>RuntimeError: Given normalized_shape=[8], expected input with shape [*, 8], but got input of size[2, 8, 4, 4]</code></td></tr>
+ <tr><td>LayerNorm(8), input (2, 4, 4, 8)</td><td>Valid, output (2, 4, 4, 8)</td></tr>
+ <tr><td>LayerNorm([4, 4]), input (2, 8, 4)</td><td><code>RuntimeError: Given normalized_shape=[4, 4], expected input with shape [*, 4, 4], but got input of size[2, 8, 4]</code></td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p class="tt-note">Note the check order. The (1, 4) input raises the batch size error in training and the channel error in eval, because the batch check runs first and only in training mode. Fixing one message can reveal the next, which is why the tool takes the mode as an input.</p>
+
+ <h2>Quick reference</h2>
+ <div class="tt-scroll">
+ <table>
+ <thead><tr><th>Layer</th><th>Accepted input</th><th>Channels at</th><th>Batch of 1 in training</th></tr></thead>
+ <tbody>
+ <tr><td><code>nn.BatchNorm1d(C)</code></td><td>(N, C) or (N, C, L)</td><td>dim 1</td><td>raises unless L &gt; 1</td></tr>
+ <tr><td><code>nn.BatchNorm2d(C)</code></td><td>(N, C, H, W)</td><td>dim 1</td><td>raises unless H*W &gt; 1</td></tr>
+ <tr><td><code>nn.BatchNorm3d(C)</code></td><td>(N, C, D, H, W)</td><td>dim 1</td><td>raises unless D*H*W &gt; 1</td></tr>
+ <tr><td><code>nn.LayerNorm(S)</code></td><td>(*, S), any rank</td><td>trailing dims</td><td>fine</td></tr>
+ <tr><td><code>nn.GroupNorm(G, C)</code></td><td>(N, C, *), any rank</td><td>dim 1</td><td>fine</td></tr>
+ </tbody>
+ </table>
+ </div>
+ <p>The three BatchNorm rows are the whole story for the 4D error. Count the dimensions of the tensor, subtract 2, and that is the digit in the class name you need.</p>
+
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/input-type-double-and-bias-type-float-should-be-the-same.html" class="related-card">Fix "Input type (double) and bias type (float) should be the same"</a>
+ <a href="/answers/batch-norm-input-shape.html" class="related-card">What input shape does BatchNorm expect?</a>
+ <a href="/tools/batchnorm-calculator.html" class="related-card">BatchNorm output shape calculator</a>
+ <a href="/answers/expected-4d-input-got-3d.html" class="related-card">How to fix "expected 4D input (got 3D input)"?</a>
+ <a href="/tools/layernorm-calculator.html" class="related-card">LayerNorm shape calculator</a>
+ <a href="/tools/flatten-calculator.html" class="related-card">Flatten output shape calculator</a>
+ <a href="/research/pytorch-error-database.html" class="related-card">The PyTorch error database</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/batchnorm-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the BatchNorm Calculator</a>
+ </div>
+
+ <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a>. Behaviour verified against torch 2.8.0 on 6 September 2026.</p>
+ <div class="last-updated"><time datetime="2026-09-06">Last updated: September 6, 2026</time></div>
+ </article>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-batchnorm1d-expected-2d-or-3d-input-got-4d">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+<a href="https://mcp.zovo.one">MCP servers for Claude</a>
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-batchnorm1d-expected-2d-or-3d-input-got-4d">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-batchnorm1d-expected-2d-or-3d-input-got-4d" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+
+ <script>
+ (function(){
+  var toggle = document.querySelector('.mobile-toggle');
+  var nav = document.querySelector('nav');
+  if (toggle && nav) {
+   toggle.addEventListener('click', function() { nav.classList.toggle('open'); });
+  }
+ })();
+ </script>
+ <script src="/assets/js/share.js"></script>
+
+<script>
+'use strict';
+/* Block scope so nothing leaks to window. */
+{
+/* NASA Power of 10: bounded loops with explicit ceilings, range-checked indices,
+   no innerHTML, every function under 60 lines, two or more checks per function. */
+const TT = (function () {
+  var MAX_DIMS = 8;
+  var LAYERS = {
+    'BatchNorm1d': { ranks: [2, 3], expects: 'expected 2D or 3D input', kind: 'bn' },
+    'BatchNorm2d': { ranks: [4],    expects: 'expected 4D input',       kind: 'bn' },
+    'BatchNorm3d': { ranks: [5],    expects: 'expected 5D input',       kind: 'bn' },
+    'LayerNorm':   { ranks: [],     expects: '',                        kind: 'ln' }
+  };
+  var LAYER_IDS = ['BatchNorm1d', 'BatchNorm2d', 'BatchNorm3d', 'LayerNorm'];
+
+  function parseShape(text) {
+    if (typeof text !== 'string') { return null; }
+    var parts = text.split(/[^0-9]+/).filter(function (p) { return p.length > 0; });
+    if (parts.length === 0) { return []; }
+    if (parts.length > MAX_DIMS) { return null; }
+    var out = [];
+    for (var i = 0; i < parts.length && i < MAX_DIMS; i += 1) {
+      var n = parseInt(parts[i], 10);
+      if (!isFinite(n) || n <= 0 || n > 1000000) { return null; }
+      out.push(n);
+    }
+    return out;
+  }
+
+  function fmt(d) { return d.length ? '(' + d.join(', ') + ')' : '()'; }
+  function sz(d) { return '[' + d.join(', ') + ']'; }
+  function tsz(d) { return 'torch.Size([' + d.join(', ') + '])'; }
+
+  function bad(err, why, fix, code) {
+    return { level: 'error', err: err, why: why, fix: fix, code: code || '' };
+  }
+  function good(why, code) { return { level: 'ok', err: '', why: why, fix: '', code: code || '' }; }
+
+  function spatialCount(shape) {
+    var n = shape.length ? shape[0] : 0;
+    for (var i = 2; i < shape.length && i < MAX_DIMS; i += 1) { n *= shape[i]; }
+    return n;
+  }
+
+  /* Which class accepts this rank, if any. */
+  function layerForRank(rank) {
+    if (rank === 2 || rank === 3) { return 'BatchNorm1d'; }
+    if (rank === 4) { return 'BatchNorm2d'; }
+    if (rank === 5) { return 'BatchNorm3d'; }
+    return '';
+  }
+
+  function rankFix(layer, shape, c) {
+    var r = shape.length;
+    var other = layerForRank(r);
+    var cs = String(c);
+    if (r <= 1) {
+      return { fix: 'Add the batch dimension with x.unsqueeze(0), then use eval mode or a batch larger than 1 so the training-time batch check passes.',
+        code: 'x = x.unsqueeze(0)  # ' + fmt([1].concat(shape)) + '\nmodel.eval()\ny = nn.' + layer + '(' + cs + ')(x)' };
+    }
+    if (other) {
+      var lay = 'nn.' + other + '(' + cs + ')';
+      var fold = (layer === 'BatchNorm1d' && r > 3)
+        ? '\n# or keep BatchNorm1d and fold the spatial dims:\ny = bn1d(x.flatten(2)).view(' + shape.join(', ') + ')' : '';
+      var up = (r === 3 && layer === 'BatchNorm2d') || (r === 4 && layer === 'BatchNorm3d')
+        ? '\n# or, if this is ONE sample with no batch dim:\ny = nn.' + layer + '(' + cs + ')(x.unsqueeze(0))' : '';
+      return { fix: 'Use ' + lay + ', which accepts a ' + r + 'D input with the same ' + c + ' channels and the same parameters.'
+        + (fold ? ' Or fold the spatial dimensions with x.flatten(2) so BatchNorm1d sees (N, C, L).' : '')
+        + (up ? ' If the tensor is a single sample missing its batch dimension, x.unsqueeze(0) is the fix instead.' : ''),
+        code: 'y = ' + lay + '(x)' + fold + up };
+    }
+    return { fix: 'No BatchNorm class accepts a ' + r + 'D input. Reshape to (N, C, L) with x.view(N, C, -1) or use nn.LayerNorm or nn.GroupNorm.',
+      code: 'y = nn.BatchNorm1d(' + cs + ')(x.view(x.shape[0], ' + cs + ', -1))' };
+  }
+
+  function batchNorm(layer, c, shape, train) {
+    var L = LAYERS[layer];
+    var r = shape.length;
+    var ok = false;
+    for (var i = 0; i < L.ranks.length && i < 4; i += 1) { if (L.ranks[i] === r) { ok = true; } }
+    if (!ok) {
+      var f = rankFix(layer, shape, c);
+      return bad('ValueError: ' + L.expects + ' (got ' + r + 'D input)',
+        'nn.' + layer + ' accepts only rank ' + L.ranks.join(' or ') + ' with the channels at dimension 1. Your tensor ' + fmt(shape) + ' has rank ' + r + '.',
+        f.fix, f.code);
+    }
+    if (train && spatialCount(shape) === 1) {
+      return bad('ValueError: Expected more than 1 value per channel when training, got input size ' + tsz(shape),
+        'In training mode BatchNorm computes a variance per channel from the batch. With N times the spatial size equal to 1 there is one value per channel and no variance to compute. This check runs before the channel count is compared.',
+        'Call model.eval() for inference, or train with a batch larger than 1 and set drop_last=True on the DataLoader.',
+        'model.eval()\ny = nn.' + layer + '(' + c + ')(x)  # ' + fmt(shape) + ' passes in eval mode');
+    }
+    if (shape[1] !== c) {
+      var last = shape[shape.length - 1];
+      var seq = (r === 3 && last === c);
+      return bad('RuntimeError: running_mean should contain ' + shape[1] + ' elements not ' + c,
+        'Dimension 1 of the input has ' + shape[1] + ' entries but the layer holds running statistics for ' + c + ' channels. The first number is what the input has, the second is what the layer was built with.'
+        + (seq ? ' Your last dimension is ' + c + ', which is the (N, L, C) layout with the channels last.' : ''),
+        seq ? 'Move the channels to dimension 1 with x.transpose(1, 2), then transpose back after the layer.'
+            : 'Build the layer with num_features=' + shape[1] + ', or fix the tensor so the channels sit at dimension 1.',
+        seq ? 'y = bn(x.transpose(1, 2)).transpose(1, 2)  # ' + fmt(shape) + ' -> (N, C, L) -> back'
+            : 'bn = nn.' + layer + '(' + shape[1] + ')');
+    }
+    return good('Valid. nn.' + layer + '(' + c + ') accepts ' + fmt(shape) + (train ? ' in training mode' : ' in eval mode') + ' and returns the same shape, ' + fmt(shape) + '.',
+      'y = nn.' + layer + '(' + c + ')(x)  # ' + fmt(shape));
+  }
+
+  function tailMatches(shape, ns) {
+    if (shape.length < ns.length) { return false; }
+    for (var i = 0; i < ns.length && i < MAX_DIMS; i += 1) {
+      if (shape[shape.length - ns.length + i] !== ns[i]) { return false; }
+    }
+    return true;
+  }
+
+  /* Permutation that moves dim 1 last, and the one that moves it back. */
+  function permOut(rank) {
+    var a = [];
+    for (var i = 0; i < rank && i < MAX_DIMS; i += 1) { if (i !== 1) { a.push(i); } }
+    a.push(1);
+    return a.join(', ');
+  }
+  function permBack(rank) {
+    var a = [0, rank - 1];
+    for (var i = 1; i < rank - 1 && i < MAX_DIMS; i += 1) { a.push(i); }
+    return a.join(', ');
+  }
+
+  function layerNorm(ns, shape) {
+    if (tailMatches(shape, ns)) {
+      return good('Valid. nn.LayerNorm(' + sz(ns) + ') accepts ' + fmt(shape) + ' and returns the same shape. Mode does not matter, LayerNorm has no running statistics and no batch size requirement.',
+        'y = nn.LayerNorm(' + sz(ns) + ')(x)  # ' + fmt(shape));
+    }
+    var r = shape.length;
+    var chanFirst = (ns.length === 1 && r >= 3 && shape[1] === ns[0]);
+    var tail = shape.slice(Math.max(0, r - ns.length));
+    var suggest = sz(shape.slice(Math.max(0, r - Math.max(1, ns.length))));
+    var err = 'RuntimeError: Given normalized_shape=' + sz(ns) + ', expected input with shape [*, ' + ns.join(', ') + '], but got input of size' + sz(shape);
+    var why = 'nn.LayerNorm normalizes over the trailing dimensions named in normalized_shape, so the last ' + ns.length
+      + ' dimension' + (ns.length === 1 ? '' : 's') + ' of the input must equal ' + sz(ns) + '. Yours end in ' + sz(tail) + '.';
+    if (chanFirst) {
+      return bad(err, why + ' Your channels sit at dimension 1, the BatchNorm layout, not last.',
+        'Permute the channels to the last position and back, or normalize over every trailing dimension with nn.LayerNorm(' + sz(shape.slice(1)) + '), or use nn.GroupNorm(1, ' + ns[0] + ') which takes (N, C, *) directly.',
+        'y = ln(x.permute(' + permOut(r) + ')).permute(' + permBack(r) + ')\n# or\ny = nn.GroupNorm(1, ' + ns[0] + ')(x)');
+    }
+    return bad(err, why,
+      'Set normalized_shape to the trailing dimensions of the input, for example nn.LayerNorm(' + suggest + ').',
+      'ln = nn.LayerNorm(' + suggest + ')');
+  }
+
+  function evaluate(layer, feat, shape, train) {
+    if (!LAYERS[layer] || !feat || !shape) { return null; }
+    if (feat.length === 0 || feat.length > MAX_DIMS || shape.length === 0 || shape.length > MAX_DIMS) { return null; }
+    if (LAYERS[layer].kind === 'ln') { return layerNorm(feat, shape); }
+    if (feat.length !== 1) { return null; }
+    return batchNorm(layer, feat[0], shape, train === true);
+  }
+
+  return { parseShape: parseShape, evaluate: evaluate, LAYER_IDS: LAYER_IDS, LAYERS: LAYERS, fmt: fmt, sz: sz };
+})();
+
+
+  /* ---- UI ---- */
+  const PRESETS = [
+    { label: 'conv map into BatchNorm1d', l: 'BatchNorm1d', f: '8', s: '2, 8, 4, 4', m: 'train' },
+    { label: 'single sample, no batch dim', l: 'BatchNorm1d', f: '8', s: '8', m: 'train' },
+    { label: 'batch of 1 in training', l: 'BatchNorm1d', f: '8', s: '1, 8', m: 'train' },
+    { label: '(N, L, C) sequence', l: 'BatchNorm1d', f: '8', s: '2, 16, 8', m: 'train' },
+    { label: '(N, C, L) into BatchNorm2d', l: 'BatchNorm2d', f: '8', s: '2, 8, 4', m: 'train' },
+    { label: 'LayerNorm on (N, C, H, W)', l: 'LayerNorm', f: '8', s: '2, 8, 4, 4', m: 'train' }
+  ];
+
+  function el(tag, text, cls) {
+    const e = document.createElement(tag);
+    if (typeof text === 'string' || typeof text === 'number') { e.textContent = String(text); }
+    if (cls) { e.className = cls; }
+    return e;
+  }
+
+  function clearNode(node) {
+    let n = 0;
+    while (node.firstChild) {
+      n += 1;
+      if (n > 64) { break; }
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function block(parent, label, text) {
+    if (!text) { return; }
+    const p = el('p');
+    p.appendChild(el('strong', label + ' '));
+    p.appendChild(document.createTextNode(text));
+    parent.appendChild(p);
+  }
+
+  function callText(layer, feat, shape, mode) {
+    const arg = layer === 'LayerNorm' ? TT.sz(feat) : String(feat[0]);
+    const tail = layer === 'LayerNorm' ? '' : ('  ' + mode + ' mode');
+    return 'nn.' + layer + '(' + arg + ')  with input ' + TT.fmt(shape) + tail;
+  }
+
+  function render() {
+    const lSel = document.getElementById('tt-layer');
+    const fIn = document.getElementById('tt-feat');
+    const sIn = document.getElementById('tt-shape');
+    const mSel = document.getElementById('tt-mode');
+    const box = document.getElementById('tt-result');
+    const fLab = document.getElementById('tt-feat-label');
+    if (!lSel || !fIn || !sIn || !mSel || !box) { return; }
+    clearNode(box);
+    if (fLab) { fLab.textContent = lSel.value === 'LayerNorm' ? 'normalized_shape' : 'num_features'; }
+
+    const feat = TT.parseShape(fIn.value);
+    const shape = TT.parseShape(sIn.value);
+    if (feat === null || shape === null || feat.length === 0 || shape.length === 0) {
+      box.appendChild(el('p', 'Enter positive integers, for example 8 for num_features and 2, 8, 4, 4 for the input shape.'));
+      return;
+    }
+    if (lSel.value !== 'LayerNorm' && feat.length !== 1) {
+      box.appendChild(el('p', 'num_features is a single integer for BatchNorm. Enter one number, for example 8.'));
+      return;
+    }
+    const v = TT.evaluate(lSel.value, feat, shape, mSel.value === 'train');
+    if (!v) { box.appendChild(el('p', 'Pick a layer.')); return; }
+
+    const headline = v.level === 'ok' ? 'Valid' : 'This raises';
+    box.appendChild(el('p', headline, 'tt-verdict tt-' + v.level));
+    box.appendChild(el('p', callText(lSel.value, feat, shape, mSel.value), 'tt-sub'));
+    if (v.err) {
+      const pre = el('pre', null, 'tt-err');
+      pre.appendChild(el('code', v.err));
+      box.appendChild(pre);
+    }
+    block(box, v.level === 'ok' ? 'Output.' : 'Why.', v.why);
+    block(box, 'Fix.', v.fix);
+    if (v.code) {
+      const pre2 = el('pre');
+      pre2.appendChild(el('code', v.code));
+      box.appendChild(pre2);
+    }
+  }
+
+  function init() {
+    const lSel = document.getElementById('tt-layer');
+    const fIn = document.getElementById('tt-feat');
+    const sIn = document.getElementById('tt-shape');
+    const mSel = document.getElementById('tt-mode');
+    const row = document.getElementById('tt-presets');
+    if (!lSel || !fIn || !sIn || !mSel) { return; }
+
+    for (let i = 0; i < TT.LAYER_IDS.length && i < 8; i += 1) {
+      const o = document.createElement('option');
+      o.value = TT.LAYER_IDS[i];
+      o.textContent = 'nn.' + TT.LAYER_IDS[i];
+      lSel.appendChild(o);
+    }
+    const modes = ['train', 'eval'];
+    for (let j = 0; j < modes.length; j += 1) {
+      const o2 = document.createElement('option');
+      o2.value = modes[j];
+      o2.textContent = modes[j] === 'train' ? 'model.train()' : 'model.eval()';
+      mSel.appendChild(o2);
+    }
+    lSel.value = 'BatchNorm1d';
+    mSel.value = 'train';
+    if (row) {
+      for (let k = 0; k < PRESETS.length && k < 16; k += 1) {
+        const p = PRESETS[k];
+        const b = el('button', p.label, 'tt-preset');
+        b.type = 'button';
+        b.addEventListener('click', function () {
+          lSel.value = p.l; fIn.value = p.f; sIn.value = p.s; mSel.value = p.m; render();
+        });
+        row.appendChild(b);
+      }
+    }
+    lSel.addEventListener('change', render);
+    fIn.addEventListener('input', render);
+    sIn.addEventListener('input', render);
+    mSel.addEventListener('change', render);
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+}
+</script>
+</body>
+</html>

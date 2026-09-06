@@ -656,7 +656,7 @@ for seq in sequences:
   hidden = hidden.detach() # break graph connection
   output, hidden = rnn(seq, hidden)</code></pre>
  </div>
- <div class="rank-prevention">Prevention: Combine all losses into one scalar before <code>.backward()</code>. For RNNs, detach hidden states between sequences with <code>.detach()</code>.</div>
+ <div class="rank-prevention">Prevention: Combine all losses into one scalar before <code>.backward()</code>. For RNNs, detach hidden states between sequences with <code>.detach()</code>. Full walkthrough with a checker: <a href="/answers/trying-to-backward-through-the-graph-a-second-time.html">fix the second backward error</a>.</div>
  </div>
 
  
@@ -811,7 +811,7 @@ with torch.no_grad():
 loss = criterion(output, y)
 loss.backward() # ERROR: output has no grad_fn</code></pre>
  </div>
- <div class="rank-prevention">Prevention: Never <code>.detach()</code> a tensor that needs gradients. Only use <code>torch.no_grad()</code> for inference/validation, not training.</div>
+ <div class="rank-prevention">Prevention: Never <code>.detach()</code> a tensor that needs gradients. Only use <code>torch.no_grad()</code> for inference/validation, not training. Full walkthrough with a checker: <a href="/answers/element-0-of-tensors-does-not-require-grad.html">fix the missing grad_fn error</a>.</div>
  </div>
 
  
