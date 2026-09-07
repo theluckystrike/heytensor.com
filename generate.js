@@ -110,3 +110,6 @@ function updateSitemap(tools) {
 
   fs.writeFileSync(SITEMAP_FILE, sitemap, 'utf8');
 }
+
+// Preserve product navigation and offers after page generation.
+require('./scripts/sync-product-ctas')();

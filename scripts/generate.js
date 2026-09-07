@@ -1458,3 +1458,6 @@ function main() {
 }
 
 main();
+
+// Preserve product navigation and offers after page generation.
+require('./sync-product-ctas')();

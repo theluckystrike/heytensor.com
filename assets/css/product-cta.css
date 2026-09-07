@@ -1,0 +1,19 @@
+/* Tensor Preflight: static, accessible offers without overlays or tracking. */
+header nav a.nav-toolkit{color:#fbbf24;font-weight:700;white-space:nowrap}
+header nav a.nav-toolkit:hover{color:#fde68a}
+header nav a.nav-toolkit:focus-visible,.product-cta a:focus-visible{outline:3px solid #fbbf24;outline-offset:5px}
+.product-cta{display:flex;align-items:center;gap:32px;padding:30px;margin:40px 0;border:1px solid #765624;border-radius:16px;background:linear-gradient(120deg,#211d17,#151619);color:#f5f5f6;text-align:left}
+.product-cta-copy{flex:1;min-width:0}
+.product-cta-kicker{font-size:.72rem!important;letter-spacing:.09em;color:#fbbf24!important;font-weight:700;margin:0 0 12px!important}
+.product-cta h2{font-size:clamp(1.25rem,2vw,1.65rem);line-height:1.3;margin:0 0 12px;color:#fafafa}
+.product-cta-copy>p{font-size:.95rem;line-height:1.65;color:#d0d0d6;margin:0}
+.product-cta .product-cta-requirements{margin-top:12px;font-size:.8rem;color:#b8b8c1}
+.product-cta-actions{display:flex;flex-direction:column;align-items:center;gap:12px;flex-shrink:0}
+.product-cta a.product-cta-buy{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:14px 20px;min-height:48px;box-sizing:border-box;border-radius:9px;background:#fbbf24;color:#18130a;font-size:.95rem;font-weight:700;text-decoration:none;line-height:1.4;text-align:center}
+.product-cta a.product-cta-buy:hover{background:#fcd34d}
+.product-cta-payment{font-size:.78rem;color:#c6c6ce}
+.product-cta a.product-cta-sample{font-size:.85rem;color:#f5d789;text-underline-offset:4px;text-decoration:underline;padding:6px}
+.product-cta-home{margin-top:20px;margin-bottom:32px}
+/* Added navigation item needs the compact menu on tablet widths too. */
+@media(max-width:1200px){header .mobile-toggle{display:block}header nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg,#101012);border-bottom:1px solid var(--border,#333);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:14px;max-height:calc(100dvh - 80px);overflow-y:auto}header nav.open{display:flex}header .nav-right{flex-direction:row;flex-wrap:wrap;margin-left:0;gap:12px}header nav>a{min-height:32px;display:inline-flex;align-items:center}}
+@media(max-width:760px){.product-cta{flex-direction:column;align-items:stretch;padding:22px;gap:22px;margin:28px 0}.product-cta-actions{align-items:stretch;text-align:center}.product-cta a.product-cta-buy{white-space:normal}}
