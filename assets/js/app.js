@@ -30,6 +30,7 @@
     'shape-calculator': '/assets/js/components/shape-calculator.js',
     'error-debugger': '/assets/js/components/error-debugger.js',
     'reference': '/assets/js/components/reference.js',
+    'flops-calculator': '/assets/js/components/flops-calculator.js',
     'model-tool': '/assets/js/components/model-tool.js'
   };
 

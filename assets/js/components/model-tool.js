@@ -209,6 +209,7 @@
     container.appendChild(summaryDiv);
 
     var layers = [];
+    var preflightOffer = document.getElementById("tensor-preflight-offer");
 
     function addLayer(type) {
       var layerDef = LAYER_TYPES.find(function (lt) { return lt.type === type; });
@@ -288,8 +289,10 @@
           ' | Model size (float16): ' + formatBytes(totalParams * 2) +
           '</div>';
         summaryDiv.innerHTML = html;
+        if (preflightOffer) preflightOffer.hidden = !Number.isFinite(totalParams);
       } else {
         summaryDiv.style.display = 'none';
+        if (preflightOffer) preflightOffer.hidden = true;
       }
     }
 
@@ -394,6 +397,7 @@
     container.appendChild(gpuCard);
 
     function calculate() {
+      var preflightOffer = document.getElementById("tensor-preflight-offer");
       var paramsMil = parseFloat(inputs.params.value) || 0;
       var totalParams = paramsMil * 1e6;
       var batchSize = parseInt(inputs.batch_size.value, 10) || 1;
@@ -456,6 +460,7 @@
         (masterWeightMemory > 0 ? '<div class="summary-row"><span>FP32 Master Weights</span><span class="val">' + formatBytes(masterWeightMemory) + '</span></div>' : '') +
         '<div class="summary-total"><span>Estimated Total VRAM</span><span class="val">' + formatBytes(totalMemory) + '</span></div>' +
         '<p class="plot-info" style="margin-top:12px;">This is an estimate. Actual memory usage depends on PyTorch memory allocator overhead, CUDA context (~300-800MB), and peak memory during forward/backward passes. Add ~20% buffer for safety.</p>';
+      if (preflightOffer) preflightOffer.hidden = !Number.isFinite(totalMemory) || totalMemory <= 0;
     }
 
     calcBtn.addEventListener('click', calculate);

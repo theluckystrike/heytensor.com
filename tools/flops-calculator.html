@@ -4,14 +4,14 @@
  <meta charset="UTF-8">
  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>FLOPs Calculator, PyTorch Model | HeyTensor</title>
- <meta name="description" content="Estimate FLOPs (floating point operations) for PyTorch layers. Calculate computational cost for Conv2d, Linear, LSTM, and attention layers. Compare model efficiency.">
+ <title>FLOPs Calculator, Linear and Conv2d | HeyTensor</title>
+ <meta name="description" content="Estimate forward FLOPs and MACs for Linear and Conv2d operations, including batch size, spatial dimensions, groups, stride and dilation.">
  <meta name="robots" content="index, follow">
  <link rel="canonical" href="https://heytensor.com/tools/flops-calculator.html">
  <link rel="alternate" hreflang="en" href="https://heytensor.com/tools/flops-calculator.html">
  <link rel="alternate" hreflang="x-default" href="https://heytensor.com/tools/flops-calculator.html">
  <meta property="og:type" content="website">
- <meta property="og:title" content="FLOPs Calculator, PyTorch Model | HeyTensor">
+ <meta property="og:title" content="FLOPs Calculator, Linear and Conv2d | HeyTensor">
  <meta property="og:description" content="Estimate FLOPs for PyTorch layers. Calculate computational cost and compare model efficiency.">
  <meta property="og:url" content="https://heytensor.com/tools/flops-calculator.html">
  <meta property="og:site_name" content="HeyTensor">
@@ -26,14 +26,15 @@
  <link rel="stylesheet" href="/assets/style.css">
  <link rel="stylesheet" href="/assets/tools.css">
  <script type="application/ld+json">
- {"@context":"https://schema.org","@type":"WebApplication","name":"FLOPs Calculator","url":"https://heytensor.com/tools/flops-calculator.html","description":"Estimate FLOPs for PyTorch model layers.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"},"datePublished":"2026-04-10","dateModified":"2026-04-10"}
+ {"@context":"https://schema.org","@type":"WebApplication","name":"FLOPs Calculator","url":"https://heytensor.com/tools/flops-calculator.html","description":"Estimate FLOPs for PyTorch model layers.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Michael Lip","url":"https://zovo.one"},"datePublished":"2026-04-10","dateModified":"2026-09-07"}
  </script>
  <script type="application/ld+json">
- {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are FLOPs?","acceptedAnswer":{"@type":"Answer","text":"FLOPs (Floating Point Operations) measure the computational cost of a neural network layer or model. One multiply-add counts as 2 FLOPs (1 multiplication + 1 addition). A Linear(512, 256) layer with batch size 1 performs 512×256 multiply-adds = 262,144 FLOPs."}},{"@type":"Question","name":"What is the difference between FLOPs and FLOPS?","acceptedAnswer":{"@type":"Answer","text":"FLOPs (lowercase s) = total number of floating point operations (a count). FLOPS (uppercase S) = floating point operations per second (a rate). A model has X FLOPs of computation. A GPU can perform Y FLOPS. Inference time ≈ FLOPs / FLOPS."}},{"@type":"Question","name":"How do I calculate Conv2d FLOPs?","acceptedAnswer":{"@type":"Answer","text":"Conv2d FLOPs = 2 × out_channels × out_height × out_width × in_channels × kernel_h × kernel_w. The factor of 2 accounts for multiply-add. For a Conv2d(3, 64, 3) on 224×224 input: 2 × 64 × 224 × 224 × 3 × 3 × 3 ≈ 173M FLOPs."}},{"@type":"Question","name":"FLOPs vs parameters, which matters more?","acceptedAnswer":{"@type":"Answer","text":"Parameters determine model size (memory). FLOPs determine computation time. They don't always correlate: depthwise separable convolutions have fewer FLOPs but similar parameters. Attention layers have quadratic FLOPs in sequence length but linear parameters. For mobile deployment, FLOPs matter more. For memory-constrained inference, parameters matter more."}},{"@type":"Question","name":"Is this tool free?","acceptedAnswer":{"@type":"Answer","text":"Yes. All HeyTensor tools are free, run in your browser, and require no signup."}}]}
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What are FLOPs?", "acceptedAnswer": {"@type": "Answer", "text": "FLOPs count floating point operations. This tool uses one MAC = two FLOPs. Linear(512, 256) with one input vector has 131,072 MACs and 262,144 core FLOPs, excluding bias."}}, {"@type": "Question", "name": "FLOPs vs FLOPS?", "acceptedAnswer": {"@type": "Answer", "text": "FLOPs is an operation count; FLOPS is a rate per second. Operation counts alone do not predict latency: memory traffic, hardware utilization and kernels also matter."}}, {"@type": "Question", "name": "How to calculate Conv2d FLOPs?", "acceptedAnswer": {"@type": "Answer", "text": "Core FLOPs = 2 × batch × output channels × output height × output width × (input channels / groups) × kernel height × kernel width. Conv2d(3, 64, 3, padding=1) on [1, 3, 224, 224] has 173,408,256 core FLOPs. Without padding the output is 222×222 and the count changes."}}, {"@type": "Question", "name": "FLOPs vs parameters?", "acceptedAnswer": {"@type": "Answer", "text": "Parameters describe stored model weights. FLOPs describe estimated arithmetic for an input. Reusing convolution weights across spatial positions means parameter counts alone cannot determine FLOPs."}}, {"@type": "Question", "name": "What is included?", "acceptedAnswer": {"@type": "Answer", "text": "One dense Linear or Conv2d forward operation, with optional separate bias additions. LSTM, attention, activations, normalization, backward passes and whole-model profiling are not included. The result is a mathematical estimate, not a hardware measurement."}}, {"@type": "Question", "name": "Is this tool free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. This calculator runs in your browser and requires no signup."}}]}
  </script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://heytensor.com/tools/"},{"@type":"ListItem","position":3,"name":"FLOPs Calculator"}]}</script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","url":"https://heytensor.com/tools/flops-calculator.html","isPartOf":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":[".qas"]}}]}</script>
+<style>nav.zovo-network,nav.breadcrumb{position:static}nav.breadcrumb{flex-direction:row;flex-wrap:wrap;gap:.5rem}#flops-fields label{min-width:0}#flops-fields input{width:100%;box-sizing:border-box}#flops-result .summary-row{gap:1rem;flex-wrap:wrap}#flops-result .val{overflow-wrap:anywhere;min-width:0}#flops-error{color:var(--red);line-height:1.6}</style>
 </head>
 <body>
  <header><div class="container header-inner"><a href="/" class="logo">Hey<span>Tensor</span></a><button class="mobile-toggle" aria-label="Menu">&#9776;</button> <nav>
@@ -54,11 +55,11 @@
  <nav class="breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a> <span>/</span> <a href="/tools/">Tools</a> <span>/</span> <span>FLOPs Calculator</span></nav>
  <section class="hero tool-hero">
  <h1>FLOPs Calculator</h1>
- <p>Estimate FLOPs (floating point operations) for PyTorch layers. Calculate computational cost for Conv2d, Linear, LSTM, and attention layers. Compare model efficiency.</p>
+ <p>Estimate forward FLOPs and MACs for Linear and Conv2d operations, including batch size, spatial dimensions, groups, stride and dilation.</p>
  <p style="font-size:0.85rem;color:var(--text-muted);">Built by <a href="/about.html">Michael Lip</a></p>
  </section>
 
- <div id="tool-container" data-component="model-tool" data-config='{"tool":"flops"}'></div>
+ <div id="tool-container" data-component="flops-calculator"></div>
  <script src="/assets/js/cta.js?v=3"
          data-mt-cta
          data-tool="gpu-memory-for-training-and-inference"
@@ -68,21 +69,16 @@
          data-source="heytensor-memory"
          data-placement="inline"></script>
 
- <div class="last-updated"><time datetime="2026-04-10">Last updated: April 10, 2026</time></div>
+ <div class="last-updated"><time datetime="2026-09-07">Last updated: September 7, 2026</time></div>
 
- <section class="faq-section">
- <h2>Frequently Asked Questions</h2>
- <details><summary>What are FLOPs?</summary>
- <p class="qas">FLOPs (Floating Point Operations) measure computational cost. One multiply-add counts as 2 FLOPs. A Linear(512, 256) layer performs 512×256 multiply-adds = 262,144 FLOPs.</p></details>
- <details><summary>FLOPs vs FLOPS?</summary>
- <p class="qas">FLOPs (lowercase s) = total operations (a count). FLOPS (uppercase S) = operations per second (a rate). Inference time ≈ FLOPs / FLOPS.</p></details>
- <details><summary>How to calculate Conv2d FLOPs?</summary>
- <p class="qas">Conv2d FLOPs = 2 × out_channels × out_h × out_w × in_channels × kernel_h × kernel_w. For Conv2d(3, 64, 3) on 224×224: ≈ 173M FLOPs.</p></details>
- <details><summary>FLOPs vs parameters?</summary>
- <p class="qas">Parameters = model size (memory). FLOPs = computation time. They don't always correlate. For mobile: FLOPs matter more. For memory-constrained: parameters matter more.</p></details>
- <details><summary>Is this tool free?</summary>
- <p class="qas">Yes. All HeyTensor tools are free, run in your browser, and require no signup.</p></details>
- </section>
+ <section class="faq-section"><h2>Frequently Asked Questions</h2>
+<details><summary>What are FLOPs?</summary><p class="qas">FLOPs count floating point operations. This tool uses one MAC = two FLOPs. Linear(512, 256) with one input vector has 131,072 MACs and 262,144 core FLOPs, excluding bias.</p></details>
+<details><summary>FLOPs vs FLOPS?</summary><p class="qas">FLOPs is an operation count; FLOPS is a rate per second. Operation counts alone do not predict latency: memory traffic, hardware utilization and kernels also matter.</p></details>
+<details><summary>How to calculate Conv2d FLOPs?</summary><p class="qas">Core FLOPs = 2 × batch × output channels × output height × output width × (input channels / groups) × kernel height × kernel width. Conv2d(3, 64, 3, padding=1) on [1, 3, 224, 224] has 173,408,256 core FLOPs. Without padding the output is 222×222 and the count changes.</p></details>
+<details><summary>FLOPs vs parameters?</summary><p class="qas">Parameters describe stored model weights. FLOPs describe estimated arithmetic for an input. Reusing convolution weights across spatial positions means parameter counts alone cannot determine FLOPs.</p></details>
+<details><summary>What is included?</summary><p class="qas">One dense Linear or Conv2d forward operation, with optional separate bias additions. LSTM, attention, activations, normalization, backward passes and whole-model profiling are not included. The result is a mathematical estimate, not a hardware measurement.</p></details>
+<details><summary>Is this tool free?</summary><p class="qas">Yes. This calculator runs in your browser and requires no signup.</p></details>
+</section>
 
  <section class="related-tools">
  <h2>Related Tools</h2>
@@ -96,6 +92,7 @@
  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
  <h2>About This Tool</h2>
  <p>Part of <a href="/">HeyTensor</a>. All calculations run in your browser. Source code on <a href="https://github.com/theluckystrike/heytensor.com">GitHub</a>.</p>
+ <p>Formula references: <a href="https://docs.pytorch.org/docs/2.8/generated/torch.nn.Conv2d.html">PyTorch Conv2d</a>, <a href="https://docs.pytorch.org/docs/2.8/generated/torch.nn.Linear.html">Linear</a>, and <a href="https://docs.pytorch.org/docs/2.8/profiler.html">profiler FLOPs scope</a>.</p>
  <h3>Contact</h3>
  <p>Built by <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=tools-flops-calculator">Michael Lip</a>. Email <a href="mailto:support@zovo.one">support@zovo.one</a>.</p>
  </section>

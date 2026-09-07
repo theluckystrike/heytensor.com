@@ -48,6 +48,7 @@
  <script type="application/ld+json">
  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://heytensor.com/blog/"},{"@type":"ListItem","position":3,"name":"Every PyTorch Shape Error Explained (With Fixes)"}]}
  </script>
+<link rel="stylesheet" href="/assets/css/tensor-preflight-offer.css">
 </head>
 <body>
  <header>
@@ -99,6 +100,14 @@ self.fc = nn.Linear(x.shape[1], 10)</code></pre>
 
  <p>This is the single most common PyTorch shape error. It almost always involves a <code>nn.Linear</code> layer receiving flattened CNN features. Use HeyTensor's <a href="/">Chain Mode</a> to trace the exact shape through your layers and find the correct in_features value.</p>
 
+
+<aside id="tensor-preflight-offer" class="tensor-preflight-offer" aria-labelledby="tensor-preflight-title">
+ <p class="tensor-preflight-label">OPTIONAL LOCAL TOOLKIT · $29 USD ONCE</p>
+ <h2 id="tensor-preflight-title">Take the diagnosis into your Python project.</h2>
+ <p>Run a reproducible shape-error example locally and inspect the module trail in an HTML report.</p>
+ <a href="https://buy.heytensor.com/">Preview Tensor Preflight and its sample report →</a>
+ <p class="tensor-preflight-note">Your free tools and guide remain available. The downloadable toolkit runs locally, without toolkit telemetry.</p>
+</aside>
  <h2>2. Expected input batch_size (X) to match target batch_size (Y)</h2>
 
  <p>Error text:</p>
