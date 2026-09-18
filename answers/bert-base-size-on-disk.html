@@ -112,7 +112,7 @@ Formula: 109,482,240 params x bytes / 1,000,000 = MB</code></pre>
 
  <h2>Why 438 MB, Not 418 MB</h2>
  <p>The math uses decimal megabytes (1 MB = 1,000,000 bytes), which is how filesystem sizes and Hugging Face checkpoint sizes are reported. In binary mebibytes (1 MiB = 1,048,576 bytes) the FP32 checkpoint is ~418 MiB. Both are correct; the file on disk reads as ~440 MB because of safetensors headers and the optimization state that ships inside some checkpoints.</p>
- <p>The official <code>bert-base-uncased</code> checkpoint from Hugging Face contains a <code>pytorch_model.bin</code> of about <strong>440 MB</strong> and a <code>model.safetensors</code> of about <strong>440 MB</strong> — the exact parameter weights, matching the 438 MB arithmetic above within rounding. There is no hidden "extra" copy of the model; the two files are the same weights in two serialization formats.</p>
+ <p>The official <code>bert-base-uncased</code> checkpoint from Hugging Face contains a <code>pytorch_model.bin</code> of about <strong>440 MB</strong> and a <code>model.safetensors</code> of about <strong>440 MB</strong>, the exact parameter weights, matching the 438 MB arithmetic above within rounding. There is no hidden "extra" copy of the model; the two files are the same weights in two serialization formats.</p>
 
  <h2>Loading Time and RAM</h2>
  <pre><code>FP32 (~440 MB file):
@@ -139,7 +139,7 @@ Vocab:         30,522</code></pre>
  <div class="related-grid">
  <a href="/answers/how-many-parameters-bert-base.html" class="related-card">How many parameters does BERT-base have?</a>
  <a href="/tools/parameter-counter.html" class="related-card">Neural Network Parameter Counter</a>
- <a href="/research/llm-checkpoint-size-on-disk/" class="related-card">LLM checkpoint size on disk — research notes</a>
+ <a href="/research/llm-checkpoint-size-on-disk/" class="related-card">LLM checkpoint size on disk, research notes</a>
  <a href="/answers/cuda-out-of-memory-fix.html" class="related-card">How to fix CUDA out of memory?</a>
 
  <a href="https://claudhq.com/claude-agent-sdk-guide/" class="related-card" title="Claude Agent SDK Guide">Build AI Agents, ClaudHQ Guide</a>
