@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>expected dtype torch.float32 but got torch.float64</title>
+ <meta name="description" content="Fix expected dtype torch.float32 for the weight argument but got torch.float64: numpy float64 into nn.Linear and nn.Conv2d, fixed with astype or .float().">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/dtype-mismatch-weight-argument-float64.html">
+ <link rel="alternate" hreflang="en" href="https://heytensor.com/answers/dtype-mismatch-weight-argument-float64.html">
+ <link rel="alternate" hreflang="x-default" href="https://heytensor.com/answers/dtype-mismatch-weight-argument-float64.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="Fix expected dtype torch.float32 but got torch.float64">
+ <meta property="og:description" content="The dtype mismatch that fires when a numpy float64 array reaches an nn.Linear or nn.Conv2d weight argument. Three fixes with copy-paste code.">
+ <meta property="og:url" content="https://heytensor.com/answers/dtype-mismatch-weight-argument-float64.html">
+ <meta property="og:site_name" content="Zovo Tools">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="Fix expected dtype torch.float32 but got torch.float64">
+ <meta name="twitter:description" content="numpy defaults to float64, torch weights default to float32. Here is the exact mismatch and three fixes.">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Fix expected dtype torch.float32 but got torch.float64 in PyTorch",
+  "description": "Fix expected dtype torch.float32 for the weight argument but got dtype torch.float64. Covers numpy float64 into nn.Linear and nn.Conv2d, astype, .float(), model.double().",
+  "datePublished": "2026-09-18",
+  "dateModified": "2026-09-18",
+  "author": {
+   "@type": "Person",
+   "name": "Michael Lip",
+   "url": "https://zovo.one"
+  },
+  "publisher": {
+   "@type": "Organization",
+   "name": "HeyTensor",
+   "url": "https://heytensor.com"
+  },
+  "mainEntityOfPage": "https://heytensor.com/answers/dtype-mismatch-weight-argument-float64.html",
+  "image": "https://heytensor.com/assets/og-image.png"
+ }
+ </script>
+
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+   {
+    "@type": "Question",
+    "name": "What causes expected dtype torch.float32 for the weight argument but got dtype torch.float64?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "The module's weight parameter is float32 and the tensor you handed it is float64. PyTorch requires both operands of a matmul or convolution to share one dtype, so it refuses rather than silently downcasting. The float64 tensor almost always enters through numpy: np.array() and np.loadtxt() default to float64, while torch.nn weight initialization defaults to torch.float32 (torch.get_default_dtype()). Converting a numpy array with torch.from_numpy() preserves the float64 dtype, so the mismatch is carried straight into the module call."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "How do I convert a numpy float64 array to a torch.float32 tensor?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Cast on either side of the conversion. In numpy: x = x.astype(np.float32) then torch.from_numpy(x). In torch: torch.from_numpy(x).float() or torch.from_numpy(x).to(torch.float32). Both produce the same float32 storage. .float() is a convenience alias for .to(torch.float32); neither is in-place, so reassign the result. For a whole dataset, do the cast once at load time instead of on every forward pass."
+    }
+   },
+   {
+    "@type": "Question",
+    "name": "Should I fix this with model.double() or by casting the data to float32?",
+    "acceptedAnswer": {
+     "@type": "Answer",
+     "text": "Cast the data to float32 unless you have a documented numerical-precision need for double. float32 halves memory and is several times faster on consumer GPUs, whose tensor cores are built for float32 and lower. model.double() calls .to(torch.float64) on every parameter and buffer, which resolves the error but doubles memory and slows the forward pass. Use it when you genuinely need double precision, and then cast the input with the same dtype: x.to(torch.float64)."
+    }
+   }
+  ]
+ }
+ </script>
+
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+   {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://heytensor.com/"},
+   {"@type": "ListItem", "position": 2, "name": "Answers", "item": "https://heytensor.com/answers/"},
+   {"@type": "ListItem", "position": 3, "name": "Fix expected dtype torch.float32 but got torch.float64"}
+  ]
+ }
+ </script>
+
+ <style>
+  /* Answer-page styles */
+  .guide-article { max-width: 780px; margin: 0 auto; padding: 40px 20px 60px; }
+  .guide-article h1 { font-size: 2rem; margin-bottom: 8px; line-height: 1.25; }
+  .guide-article .meta { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 32px; }
+  .guide-article .meta a { color: var(--accent); }
+  .guide-article h2 { font-size: 1.4rem; margin-top: 40px; margin-bottom: 16px; padding-top: 8px; border-top: 1px solid var(--border); }
+  .guide-article h2:first-of-type { border-top: none; margin-top: 24px; }
+  .guide-article h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 10px; color: var(--text); }
+  .guide-article h4 { font-size: 1rem; margin-top: 20px; margin-bottom: 8px; }
+  .guide-article p { margin-bottom: 16px; color: var(--text); line-height: 1.8; }
+  .guide-article ul, .guide-article ol { margin-bottom: 16px; padding-left: 24px; }
+  .guide-article li { margin-bottom: 8px; line-height: 1.7; }
+  .guide-article code {
+   font-family: var(--font-display);
+   background: var(--bg-card);
+   padding: 2px 6px;
+   border-radius: 4px;
+   font-size: 0.85em;
+  }
+  .guide-article pre {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 16px;
+   overflow-x: auto;
+   margin-bottom: 16px;
+   font-family: var(--font-display);
+   font-size: 0.85rem;
+   line-height: 1.6;
+  }
+  .guide-article pre code { background: none; padding: 0; }
+  .guide-article blockquote {
+   border-left: 3px solid var(--accent);
+   padding-left: 16px;
+   color: var(--text-dim);
+   margin-bottom: 16px;
+   font-style: italic;
+  }
+  .guide-article strong { color: #fff; }
+  .guide-article table {
+   width: 100%;
+   border-collapse: collapse;
+   margin-bottom: 16px;
+   font-size: 0.9rem;
+  }
+  .guide-article th, .guide-article td {
+   padding: 10px 14px;
+   border: 1px solid var(--border);
+   text-align: left;
+  }
+  .guide-article th { background: var(--bg-card); font-weight: 600; }
+
+  /* Error callout box */
+  .error-callout {
+   background: rgba(239, 68, 68, 0.06);
+   border: 1px solid var(--red);
+   border-left: 4px solid var(--red);
+   border-radius: var(--radius);
+   padding: 1.25rem 1.5rem;
+   margin: 1.5rem 0;
+   font-family: var(--font-display);
+   font-size: 0.9rem;
+   color: var(--red);
+   overflow-x: auto;
+  }
+
+  /* Fix callout box */
+  .fix-callout {
+   background: rgba(34, 197, 94, 0.06);
+   border: 1px solid var(--green);
+   border-left: 4px solid var(--green);
+   border-radius: var(--radius);
+   padding: 1.25rem 1.5rem;
+   margin: 1.5rem 0;
+  }
+  .fix-callout strong { color: var(--green); }
+
+  /* TLDR box */
+  .tldr-box {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-left: 4px solid var(--accent);
+   border-radius: var(--radius);
+   padding: 1.25rem 1.5rem;
+   margin: 1.5rem 0;
+  }
+  .tldr-box p { margin: 0; line-height: 1.7; }
+
+  /* Step numbers */
+  .step-num {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   width: 28px;
+   height: 28px;
+   background: var(--accent);
+   color: #fff;
+   border-radius: 50%;
+   font-family: var(--font-display);
+   font-size: 0.8rem;
+   font-weight: 700;
+   margin-right: 8px;
+   flex-shrink: 0;
+  }
+
+  /* Cause section numbering */
+  .cause-header {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   margin-top: 28px;
+   margin-bottom: 10px;
+  }
+  .cause-num {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+   min-width: 32px;
+   height: 32px;
+   background: var(--red);
+   color: #fff;
+   border-radius: 6px;
+   font-family: var(--font-display);
+   font-size: 0.8rem;
+   font-weight: 700;
+   flex-shrink: 0;
+  }
+  .cause-header h3 { margin: 0 !important; }
+
+  /* TOC */
+  .toc {
+   background: var(--bg-card);
+   border: 1px solid var(--border);
+   border-radius: var(--radius);
+   padding: 20px 24px;
+   margin: 24px 0;
+  }
+  .toc h4 {
+   font-size: 0.85rem;
+   color: var(--text-dim);
+   text-transform: uppercase;
+   letter-spacing: 0.05em;
+   margin-bottom: 12px;
+  }
+  .toc ol { margin: 0; padding-left: 20px; }
+  .toc li { margin-bottom: 6px; font-size: 0.9rem; }
+  .toc a { color: var(--text); }
+  .toc a:hover { color: var(--accent); }
+
+  /* Prevent checklist */
+  .prevent-list { list-style: none; padding: 0; }
+  .prevent-list li {
+   padding: 8px 0 8px 28px;
+   position: relative;
+   border-bottom: 1px solid var(--border);
+  }
+  .prevent-list li:last-child { border-bottom: none; }
+  .prevent-list li::before {
+   content: '';
+   position: absolute;
+   left: 0;
+   top: 12px;
+   width: 16px;
+   height: 16px;
+   border: 2px solid var(--green);
+   border-radius: 3px;
+  }
+
+  /* Nav override for this page */
+  .nav { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px); z-index: 100; max-width: var(--max-width); margin: 0 auto; }
+  .nav-logo { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text); text-decoration: none; margin-right: auto; }
+  .nav-logo:hover { text-decoration: none; }
+  .nav-links { display: flex; list-style: none; gap: 24px; margin: 0; padding: 0; }
+  .nav-links a { color: var(--text-dim); font-size: 0.9rem; text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+  @media (max-width: 768px) {
+   .guide-article h1 { font-size: 1.5rem; }
+   .guide-article pre { font-size: 0.78rem; white-space: pre-wrap; }
+   .nav-links { display: none; }
+  }
+ </style>
+</head>
+<body>
+
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-dtype-mismatch-weight-argument-float64" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="guide-article">
+ <nav class="breadcrumb" aria-label="Breadcrumb" style="font-size:0.82rem;color:var(--text-dim);margin-bottom:24px;">
+ <a href="/">Home</a> <span style="margin:0 6px;">/</span>
+ <a href="/answers/">Answers</a> <span style="margin:0 6px;">/</span>
+ <span>Fix dtype torch.float32 for the weight argument</span>
+ </nav>
+
+ <article>
+ <h1>Fixing "expected dtype torch.float32 for the weight argument but got dtype torch.float64"</h1>
+ <p class="meta">By <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-dtype-mismatch-weight-argument-float64">Michael Lip</a> &middot; <time datetime="2026-09-18">September 18, 2026</time> &middot; 6 min read</p>
+
+ <div class="tldr-box">
+ <p>TL;DR: your module's weight is <code>float32</code> and the tensor you passed in is <code>float64</code>. PyTorch will not mix them. Cast the data with <code>torch.from_numpy(x).float()</code> or <code>x.astype(np.float32)</code>. If you actually want double precision everywhere, call <code>model.double()</code> and cast the input with <code>x.to(torch.float64)</code> so both sides move together.</p>
+ </div>
+
+ <div class="error-callout">
+ RuntimeError: expected dtype torch.float32 for the weight argument but got dtype torch.float64
+ </div>
+
+ <div class="toc">
+ <h4>Contents</h4>
+ <ol>
+ <li><a href="#what-it-means">What the error means</a></li>
+ <li><a href="#why">Why the mismatch happens</a></li>
+ <li><a href="#reproduce">Reproduce it in four lines</a></li>
+ <li><a href="#fix1">Fix 1: cast the data to float32</a></li>
+ <li><a href="#fix2">Fix 2: switch the model to float64</a></li>
+ <li><a href="#fix3">Fix 3: change the global default dtype</a></li>
+ <li><a href="#variant">The FloatTensor and numpy.float64 variant</a></li>
+ <li><a href="#before-after">Before and after</a></li>
+ <li><a href="#which">Which fix to choose</a></li>
+ <li><a href="#faq">FAQ</a></li>
+ </ol>
+ </div>
+
+ <h2 id="what-it-means">What the Error Means</h2>
+
+ <p>PyTorch implements elementwise and matrix operations with a strict same-dtype rule. If you multiply a <code>float32</code> tensor by a <code>float64</code> tensor, you do not get a silent promotion the way numpy would give you one. You get a <code>RuntimeError</code>. The library refuses to guess which precision you wanted and stops before it burns memory on an accidental upcast.</p>
+
+ <p>The message names two things. <em>the weight argument</em> is the parameter the operator is holding &mdash; for <code>nn.Linear</code> that is <code>self.weight</code>, a tensor of shape <code>(out_features, in_features)</code>; for <code>nn.Conv2d</code> it is the filter bank of shape <code>(out_channels, in_channels/groups, kH, kW)</code>. <em>got dtype torch.float64</em> is the tensor you supplied. So the error reads: this module's weights are single precision, your input is double precision, and the two cannot be combined.</p>
+
+ <p>The diagnosis is one line of code. Print the dtypes of both sides:</p>
+
+ <pre><code>print(layer.weight.dtype)  # torch.float32  <- what the module holds
+print(x.dtype)         # torch.float64  <- what you passed</code></pre>
+
+ <p>Once those two lines disagree, the fix is to make them agree &mdash; in whichever direction your project actually needs. For the neighboring family of type errors, where the offending value is not a dtype but a scalar, see <a href="/answers/runtime-error-expected-scalar-type-float.html">expected scalar type Float but found Double</a>.</p>
+
+ <h2 id="why">Why the Mismatch Happens</h2>
+
+ <p>Two defaults collide. numpy's floating-point default is <code>float64</code>, and PyTorch's floating-point default is <code>float32</code>. Neither library is wrong; they simply disagree, and every path that moves an array from one to the other preserves the wrong half of the agreement.</p>
+
+ <table>
+ <thead>
+ <tr><th>Operation</th><th>Resulting dtype</th><th>Note</th></tr>
+ </thead>
+ <tbody>
+ <tr><td><code>np.array([1.0, 2.0])</code></td><td><code>float64</code></td><td>numpy's default float</td></tr>
+ <tr><td><code>np.zeros((3, 4))</code></td><td><code>float64</code></td><td>same default</td></tr>
+ <tr><td><code>np.loadtxt("data.csv")</code></td><td><code>float64</code></td><td>text parsing yields doubles</td></tr>
+ <tr><td><code>np.random.randn(5, 5)</code></td><td><code>float64</code></td><td>random module defaults to double</td></tr>
+ <tr><td><code>torch.from_numpy(x)</code></td><td><code>float64</code></td><td><strong>shares memory, does not cast</strong></td></tr>
+ <tr><td><code>torch.tensor([1.0, 2.0])</code></td><td><code>float32</code></td><td>torch's default float</td></tr>
+ <tr><td><code>nn.Linear(4, 2).weight</code></td><td><code>float32</code></td><td><code>kaiming_uniform_</code> on the default dtype</td></tr>
+ <tr><td><code>nn.Conv2d(3, 8, 3).weight</code></td><td><code>float32</code></td><td>same initialization path</td></tr>
+ </tbody>
+</table>
+
+ <p>The trap is the fifth row. <code>torch.from_numpy</code> is zero-copy: it wraps the existing numpy buffer instead of reading the values out. That is exactly why it is fast, and exactly why it carries <code>float64</code> straight into your model. If the array came from pandas, <code>DataFrame.to_numpy()</code> and <code>df.values</code> are also <code>float64</code> for the same reason. So the chain is usually <code>CSV &rarr; pandas &rarr; numpy float64 &rarr; torch.from_numpy &rarr; nn.Linear</code>, with the dtype never once questioned.</p>
+
+ <p>There is a second, rarer source: an explicit <code>.double()</code> somewhere in the codebase. If a loader or a test helper calls <code>x.double()</code>, or a module was moved with <code>model.to(torch.float64)</code>, then that side is double while a freshly constructed submodule is still float32. Grep for <code>.double()</code>, <code>float64</code>, and <code>set_default_dtype</code> before assuming the data is at fault.</p>
+
+ <h2 id="reproduce">Reproduce It in Four Lines</h2>
+
+ <p>The smallest failing program is four lines. Run it and you will get the error verbatim:</p>
+
+ <pre><code>import numpy as np
+import torch, torch.nn as nn
+
+W = np.random.randn(4, 3)   # numpy default: float64
+layer = nn.Linear(3, 4)    # weight: float32
+
+layer(torch.from_numpy(W))
+# RuntimeError: expected dtype torch.float32 for the weight argument
+# but got dtype torch.float64</code></pre>
+
+ <p>This is also the reason the error often shows up in a unit test rather than in training. Tests routinely build inputs with <code>np.ones</code>, <code>np.zeros</code>, or hand-written lists, none of which go through the training-time data pipeline where a <code>.float()</code> cast already exists.</p>
+
+ <h2 id="fix1">Fix 1 &mdash; Cast the Data to float32</h2>
+
+ <p>This is the fix for the overwhelming majority of cases. Convert once, at the boundary where numpy ends and torch begins.</p>
+
+ <pre><code># Option A: cast on the numpy side, then wrap
+W32 = W.astype(np.float32)      # new array, float32
+x = torch.from_numpy(W32)      # dtype inherited: torch.float32
+
+# Option B: cast on the torch side (equivalent result)
+x = torch.from_numpy(W).float()   # .float() == .to(torch.float32)
+x = torch.from_numpy(W).to(torch.float32) # explicit form
+
+# Option C: go through torch.tensor(), which copies and casts
+x = torch.tensor(W, dtype=torch.float32)</code></pre>
+
+ <p>Where you put the cast matters more than which spelling you use. Casting inside <code>forward()</code> is correct but wasteful: you pay a full copy of the batch on every step. Cast once in the dataset or the loader, and every later <code>forward()</code> is clean.</p>
+
+ <pre><code># Better: fix it once at the data boundary
+class CSVTorchDataset(torch.utils.data.Dataset):
+  def __init__(self, path):
+    self.raw = np.loadtxt(path, delimiter=",") # float64
+
+  def __getitem__(self, i):
+    # cast here, once per sample, never inside forward()
+    return torch.from_numpy(self.raw[i].astype(np.float32))
+
+# Then a collate/batching step keeps float32 all the way through
+loader = torch.utils.data.DataLoader(ds, batch_size=32)</code></pre>
+
+ <div class="fix-callout">
+ <strong>Rule of thumb:</strong> the dtype cast belongs at the data boundary &mdash; the Dataset, the collate function, or the point where a numpy array becomes a tensor. Never inside <code>forward()</code>.
+ </div>
+
+ <h2 id="fix2">Fix 2 &mdash; Switch the Whole Model to float64</h2>
+
+ <p>If your project genuinely needs double precision &mdash; iterative solvers, financial or scientific modeling, gradient checks, or numerical work where float32 accumulation loses too many bits &mdash; then the correct direction is to move the model to the data, not the data to the model. <code>model.double()</code> is the switch.</p>
+
+ <pre><code>model = MyNet()
+model.double()   # every parameter and buffer -> torch.float64
+# equivalent to: model.to(torch.float64)
+
+x = x.double()   # the INPUT must move too
+x = x.to(torch.float64)  # explicit form
+y = model(x)     # now both sides are float64</code></pre>
+
+ <p>Two things trip people up here. First, <code>model.double()</code> changes the parameters in place and returns <code>self</code>, so it must be called before you hand <code>model.parameters()</code> to an optimizer that captured the old tensors. Second, and this is the one that produces the mirror-image error, <code>double()</code> does not touch your input. A model in float64 fed a float32 tensor raises <code>expected dtype torch.float64 for the weight argument but got dtype torch.float32</code> &mdash; the same error with the operands swapped.</p>
+
+ <pre><code># Common follow-up bug: labels don't follow the data
+model.double()
+x = x.double()
+y = y.long()              # keep integer labels as long, never double
+# For regression targets, cast them too:
+# y = y.double()</code></pre>
+
+ <h2 id="fix3">Fix 3 &mdash; Set the Global Default Dtype</h2>
+
+ <p><code>torch.set_default_dtype(torch.float64)</code> changes what <code>torch.get_default_dtype()</code> returns, which changes the dtype of newly created floating-point tensors and of module parameters initialized after the call. Used as a one-liner at the top of a script, it makes torch agree with numpy and the mismatch stops appearing.</p>
+
+ <pre><code>import torch
+torch.set_default_dtype(torch.float64)
+
+torch.tensor([1.0, 2.0]).dtype   # torch.float64 now
+nn.Linear(3, 4).weight.dtype     # torch.float64 now
+
+# Note: set_default_dtype only accepts floating-point dtypes.
+# torch.set_default_dtype(torch.int64) raises a RuntimeError.</code></pre>
+
+ <p>Use this with care. It is process-global mutable state: it affects every tensor created anywhere in the program afterward, including inside third-party libraries that were written against a float32 norm. Weight initialization also assumes <code>sqrt(1/fan_in)</code> style bounds scaled for float32; RNG values themselves are not affected, but the behavior of pretrained checkpoints is, because a checkpoint saved in float32 loaded into a float64 module is a dtype mismatch again. In a large codebase the mismatch that <code>set_default_dtype</code> fixes in one file reappears in another. Prefer it for self-contained scripts and numerical experiments; prefer Fix 1 for libraries and training pipelines.</p>
+
+ <h2 id="variant">The Variant With torch.FloatTensor and numpy.float64</h2>
+
+ <p>A second wording of the same failure appears when the mismatch is caught at the tensor type level rather than the dtype level:</p>
+
+ <div class="error-callout">
+ RuntimeError: Expected object of scalar type Float but got scalar type Double for argument #2 'weight',<br>
+ or ValueError: expected torch.FloatTensor but got numpy.float64
+</div>
+
+ <p>Two historical spellings, one cause. In PyTorch 0.4 and earlier, tensors carried a distinct type per dtype, so the message named types: <code>torch.FloatTensor</code> was float32 and <code>torch.DoubleTensor</code> was float64. The <code>Expected object of scalar type Float but got scalar type Double</code> form persisted into the 1.x series and still shows up in older Stack Overflow answers and in <code>torch.nn.functional</code> helpers that pass a numpy array straight through. The <code>expected torch.FloatTensor but got numpy.float64</code> wording comes from a wrapper layer &mdash; typically custom code or a thin binding &mdash; that receives the raw numpy object before it has been wrapped by <code>torch.from_numpy</code> at all.</p>
+
+ <p>The mapping is one-to-one, so treat all three messages as the same defect:</p>
+
+ <table>
+ <thead>
+ <tr><th>Message wording</th><th>Left side</th><th>Right side</th><th>Fix</th></tr>
+ </thead>
+ <tbody>
+ <tr><td><code>expected dtype torch.float32 ... got torch.float64</code></td><td><code>torch.float32</code></td><td><code>torch.float64</code></td><td>cast one side</td></tr>
+ <tr><td><code>Expected object of scalar type Float but got Double</code></td><td><code>Float</code> = float32</td><td><code>Double</code> = float64</td><td>cast one side</td></tr>
+ <tr><td><code>expected torch.FloatTensor but got numpy.float64</code></td><td><code>FloatTensor</code> = float32</td><td>raw numpy array</td><td>wrap in <code>torch.from_numpy</code>, then cast</td></tr>
+ </tbody>
+</table>
+
+ <p>In the <code>numpy.float64</code> case the object is not even a tensor yet. Something handed a numpy scalar or array to an operator expecting a tensor, and the type check fired before the dtype check could. The repair is the same <code>torch.as_tensor(x, dtype=torch.float32)</code> you would write for the modern message.</p>
+
+ <h2 id="before-after">Before and After</h2>
+
+ <pre><code># ---------------- BEFORE (raises RuntimeError) ----------------
+import numpy as np
+import torch
+import torch.nn as nn
+
+class Net(nn.Module):
+  def __init__(self):
+    super().__init__()
+    self.fc1 = nn.Linear(784, 128)   # weight: float32
+    self.fc2 = nn.Linear(128, 10)    # weight: float32
+
+  def forward(self, x):
+    return self.fc2(torch.relu(self.fc1(x)))
+
+model = Net()
+
+# data arrives from numpy with numpy's default dtype
+X = np.loadtxt("train.csv", delimiter=",")  # float64!
+xb = torch.from_numpy(X[:32])          # still float64 (zero-copy)
+model(xb)
+# RuntimeError: expected dtype torch.float32 for the weight
+# argument but got dtype torch.float64</code></pre>
+
+<pre><code># ---------------- AFTER (runs) ----------------
+import numpy as np
+import torch
+import torch.nn as nn
+
+class Net(nn.Module):
+  def __init__(self):
+    super().__init__()
+    self.fc1 = nn.Linear(784, 128)
+    self.fc2 = nn.Linear(128, 10)
+
+  def forward(self, x):
+    return self.fc2(torch.relu(self.fc1(x)))
+
+model = Net()
+
+X = np.loadtxt("train.csv", delimiter=",")
+xb = torch.from_numpy(X[:32]).float()   # <-- float64 -> float32
+y = model(xb)
+
+assert xb.dtype == model.fc1.weight.dtype == torch.float32
+print(y.dtype)   # torch.float32
+
+# Keep it fixed for good: cast at the data boundary, not per batch.
+def to_tensor(batch):
+  return torch.as_tensor(batch, dtype=torch.float32)</code></pre>
+
+ <h2 id="which">Which Fix to Choose</h2>
+ <table>
+ <thead>
+ <tr><th>Situation</th><th>Use</th><th>Why</th></tr>
+ </thead>
+ <tbody>
+ <tr><td>Standard training, CNN or MLP</td><td>Fix 1: cast to float32</td><td>Fastest, half the memory, matches pretrained weights</td></tr>
+ <tr><td>Numerical/scientific work needing doubles</td><td>Fix 2: <code>model.double()</code> plus <code>x.double()</code></td><td>Explicit and local to one model</td></tr>
+ <tr><td>One-off script, torch and numpy should agree</td><td>Fix 3: <code>set_default_dtype</code></td><td>One line, no per-tensor edits</td></tr>
+ <tr><td>Loading a pretrained checkpoint</td><td>Fix 1</td><td>Checkpoints are float32; keep the model float32</td></tr>
+ <tr><td>Library or shared code</td><td>Fix 1</td><td>Never mutate process-global state in a library</td></tr>
+ </tbody>
+</table>
+
+ <p>If the corrupted dtype has already propagated and you are triaging a wider set of failures, the percentage breakdown in <a href="/research/most-common-pytorch-errors.html">most common PyTorch errors</a> is a useful map, and <a href="/blog/pytorch-shape-errors-explained.html">PyTorch shape errors explained</a> covers the adjacent shape family that frequently appears in the same traceback.</p>
+
+ <h3>Prevention Checklist</h3>
+
+ <ul class="prevent-list">
+ <li>Cast at the data boundary: Dataset or collate, never inside <code>forward()</code>.</li>
+ <li>Prefer <code>torch.as_tensor(x, dtype=torch.float32)</code> over bare <code>torch.from_numpy(x)</code>.</li>
+ <li>Never call <code>.double()</code> on inputs without also calling <code>model.double()</code>.</li>
+ <li>Grep the codebase for <code>set_default_dtype</code> and <code>float64</code> before adding a cast &mdash; you may be fixing a symptom.</li>
+ <li>Keep integer labels as <code>torch.long</code>; only floats are affected by this class of error.</li>
+ <li>Add <code>assert x.dtype == model.fc1.weight.dtype</code> in a test, so the mismatch fails loudly and early.</li>
+ </ul>
+
+ <h3>Check Your Own Dtype Pair</h3>
+
+ <p>Type the dtype on each side of the error, separated by a pipe, to see whether the check passes and which cast to use.</p>
+
+ <div class="dtype-checker" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.5rem;">
+  <label for="dtype-input" style="display:block;font-size:0.85rem;color:var(--text-dim);margin-bottom:8px;">weight dtype | input dtype</label>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+   <input id="dtype-input" type="text" value="torch.float32 | torch.float64" style="flex:1 1 260px;min-width:0;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:var(--font-display);font-size:0.85rem;" aria-describedby="dtype-result">
+   <button id="dtype-check-btn" type="button" style="padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-weight:600;cursor:pointer;">Check</button>
+  </div>
+  <p id="dtype-result" style="display:none;margin:12px 0 0;font-family:var(--font-display);font-size:0.85rem;line-height:1.7;color:var(--text);"></p>
+ </div>
+
+ <h2 id="faq">Frequently Asked Questions</h2>
+
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What causes expected dtype torch.float32 for the weight argument but got dtype torch.float64?</div>
+ <div class="faq-a">The module's weight parameter is float32 and the tensor you handed it is float64. PyTorch requires both operands of a matmul or convolution to share one dtype, so it refuses rather than silently downcasting. The float64 tensor almost always enters through numpy: <code>np.array()</code>, <code>np.zeros()</code>, and <code>np.loadtxt()</code> all default to float64, while <code>torch.nn</code> weight initialization defaults to <code>torch.float32</code>. <code>torch.from_numpy()</code> preserves the float64 dtype, so the mismatch is carried straight into the module call.</div>
+ </div>
+
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I convert a numpy float64 array to a torch.float32 tensor?</div>
+ <div class="faq-a">Cast on either side. In numpy: <code>x = x.astype(np.float32)</code> then <code>torch.from_numpy(x)</code>. In torch: <code>torch.from_numpy(x).float()</code> or <code>torch.from_numpy(x).to(torch.float32)</code>. Both produce the same float32 storage. <code>.float()</code> is a convenience alias for <code>.to(torch.float32)</code>; neither is in-place, so reassign the result. For a whole dataset, do the cast once at load time rather than on every forward pass.</div>
+ </div>
+
+ <div class="faq-item">
+ <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Should I fix this with model.double() or by casting the data to float32?</div>
+ <div class="faq-a">Cast the data to float32 unless you have a documented precision requirement for double. float32 halves memory and is several times faster on consumer GPUs, whose tensor cores are built for float32 and lower. <code>model.double()</code> calls <code>.to(torch.float64)</code> on every parameter and buffer, which resolves the error but doubles memory and slows the forward pass. Use it when you genuinely need double precision &mdash; and then cast the input with the same dtype, <code>x.to(torch.float64)</code>, so both sides move together.</div>
+ </div>
+
+ <section class="related-links" style="margin-top:40px;">
+ <h2 style="border-top:none;">Related Resources</h2>
+ <div class="related-grid">
+ <a href="/research/most-common-pytorch-errors.html" class="related-card">Most Common PyTorch Errors (Research)</a>
+ <a href="/blog/pytorch-shape-errors-explained.html" class="related-card">PyTorch Shape Errors Explained</a>
+ <a href="/answers/runtime-error-expected-scalar-type-float.html" class="related-card">expected scalar type Float but found Double</a>
+ <a href="/answers/flatten-after-conv2d.html" class="related-card">What shape does Flatten produce?</a>
+ <a href="/tools/linear-layer-calculator.html" class="related-card">Linear Layer Shape Calculator</a>
+ <a href="/tools/conv2d-calculator.html" class="related-card">Conv2d Output Shape Calculator</a>
+ <a href="/" class="related-card">HeyTensor Shape Calculator</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2.5rem 0;">
+ <a href="/" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Open HeyTensor Shape Calculator</a>
+ </div>
+
+ </article>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime &mdash; $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-dtype-mismatch-weight-argument-float64">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-dtype-mismatch-weight-argument-float64">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-dtype-mismatch-weight-argument-float64" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+
+<script>
+ // Dtype pair checker. Reads two dtype spellings (one per side of the
+ // error) and reports whether the weight-argument check will pass.
+ // The article text is complete without this script.
+ (function () {
+  var btn = document.getElementById('dtype-check-btn');
+  if (!btn) return;
+  var input = document.getElementById('dtype-input');
+  var out = document.getElementById('dtype-result');
+
+  function classify(v) {
+   var t = (v || '').trim();
+   if (!t) return null;
+   if (/^torch\.(float16|bfloat16)$/.test(t)) return [t, 'half precision'];
+   if (t === 'torch.float32' || t === 'torch.FloatTensor' || t === 'float32' || t === 'Float')
+    return ['torch.float32', 'single precision (torch default)'];
+   if (t === 'torch.float64' || t === 'torch.DoubleTensor' || t === 'float64' || t === 'Double' || t === 'numpy.float64')
+    return ['torch.float64', 'double precision (numpy default)'];
+   if (t === 'torch.long' || t === 'torch.int64' || t === 'int64')
+    return ['torch.int64', 'integer - not affected by this error'];
+   return [t, 'unrecognised spelling'];
+  }
+
+  btn.addEventListener('click', function () {
+   out.style.display = 'block';
+   if (input.value.indexOf('|') === -1) {
+    out.textContent = 'Format: weight dtype | input dtype  (for example torch.float32 | torch.float64)';
+    return;
+   }
+   var parts = input.value.split('|');
+   var a = classify(parts[0]);
+   var b = classify(parts[1]);
+   if (!a || !b) {
+    out.textContent = 'Could not read both sides. Format: weight dtype | input dtype';
+    return;
+   }
+   if (a[0] === b[0]) {
+    out.textContent = 'Same dtype (' + a[0] + '). The weight-argument check passes.';
+   } else {
+    out.textContent = 'Mismatch. Weight is ' + a[0] + ' (' + a[1] + ') and input is ' + b[0] + ' (' + b[1] +
+     '). Fix: torch.as_tensor(x, dtype=' + a[0] + '), or move both sides with model.double() plus x.double().';
+   }
+  });
+ })();
+</script>
+
+</body>
+</html>

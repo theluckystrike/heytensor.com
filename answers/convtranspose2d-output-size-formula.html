@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>ConvTranspose2d Output Size Formula in PyTorch | HeyTensor</title>
+ <meta name="description" content="out = (in - 1) * stride - 2*padding + kernel (+ output_padding). Worked examples and output_padding explained for ConvTranspose2d in PyTorch.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/convtranspose2d-output-size-formula.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="The ConvTranspose2d Output Size Formula in PyTorch">
+ <meta property="og:description" content="out = (in - 1) * stride - 2*padding + kernel (+ output_padding). Worked examples and output_padding explained.">
+ <meta property="og:url" content="https://heytensor.com/answers/convtranspose2d-output-size-formula.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="The ConvTranspose2d Output Size Formula">
+ <meta name="twitter:description" content="out = (in - 1) * stride - 2*padding + kernel (+ output_padding).">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [{
+  "@type": "Question",
+  "name": "What is the ConvTranspose2d output size formula in PyTorch?",
+  "acceptedAnswer": {
+   "@type": "Answer",
+   "text": "For a 2D transposed convolution, each output dimension is out = (in - 1) * stride - 2 * padding + kernel_size + output_padding. Each dimension of the input is treated independently. For example, with in=7, kernel_size=2, stride=2, padding=0, the output is (7-1)*2 - 0 + 2 = 14, which is the classic 7x7 to 14x14 upsampling used in many GAN generator networks."
+  }
+ }, {
+  "@type": "Question",
+  "name": "What does output_padding do in ConvTranspose2d?",
+  "acceptedAnswer": {
+   "@type": "Answer",
+   "text": "output_padding adds extra rows and columns to one side of the output to disambiguate the shape when stride > 1. It does not change what information is learned; it only changes the output size. It is applied after the transposed convolution and allows you to resolve the ambiguity in output size, for example choosing between 14 and 15 for a given configuration."
+  }
+ }, {
+  "@type": "Question",
+  "name": "How does ConvTranspose2d output size compare to Conv2d?",
+  "acceptedAnswer": {
+   "@type": "Answer",
+   "text": "Conv2d shrinks spatial dimensions: out = floor((in - kernel + 2*padding) / stride) + 1. ConvTranspose2d grows them: out = (in - 1)*stride - 2*padding + kernel + output_padding. The two formulas are inverses of each other. A Conv2d that maps 14 to 7 with kernel=2, stride=2, padding=0 is reversed by a ConvTranspose2d that maps 7 back to 14 with the same kernel, stride, and padding."
+  }
+ }]
+}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"The ConvTranspose2d Output Size Formula"}]}</script>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-convtranspose2d-output-size-formula" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container" style="max-width:720px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>The ConvTranspose2d Output Size Formula</span>
+ </nav>
+
+ <article>
+ <h1>The ConvTranspose2d Output Size Formula in PyTorch</h1>
+
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">For each spatial dimension, <code>out = (in - 1) * stride - 2*padding + kernel_size + output_padding</code>. Height and width are computed independently with the same formula.</p>
+ </div>
+
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/convtranspose2d-calculator.html"><strong>ConvTranspose2d Output Size Calculator</strong></a>. Enter input, kernel, stride, padding and output_padding to get the exact output shape.</p>
+ </div>
+ </aside>
+
+ <h2>The Formula</h2>
+ <pre><code>output_size = (input_size - 1) * stride - 2 * padding + kernel_size + output_padding</code></pre>
+ <p>PyTorch's <code>ConvTranspose2d</code> applies this formula to the height and width independently. The channel dimensions work differently: <code>ConvTranspose2d(in_channels, out_channels, ...)</code> maps a tensor of shape <code>(N, in_channels, H, W)</code> to <code>(N, out_channels, H_out, W_out)</code>.</p>
+
+ <h2>Worked Examples</h2>
+ <pre><code># in=7, kernel=2, stride=2, padding=0
+out = (7 - 1) * 2 - 2*0 + 2 + 0 = 14   # 7x7 -> 14x14
+
+# in=8, kernel=4, stride=2, padding=1
+out = (8 - 1) * 2 - 2*1 + 4 + 0 = 16   # 8x8 -> 16x16
+
+# in=5, kernel=4, stride=2, padding=1, output_padding=1
+out = (5 - 1) * 2 - 2*1 + 4 + 1 = 11   # 5x5 -> 11x11</code></pre>
+
+ <h2>The Classic GAN Upsample, 7&times;7 to 14&times;14</h2>
+ <p>The most common use of <code>ConvTranspose2d</code> is upsampling in generator networks. The canonical case is doubling a 7&times;7 feature map to 14&times;14 with <code>kernel_size=2, stride=2, padding=0</code>:</p>
+ <pre><code>import torch
+import torch.nn as nn
+
+x = torch.randn(1, 512, 7, 7)                 # 512-channel, 7x7
+up = nn.ConvTranspose2d(512, 256, 2, stride=2) # kernel=2, stride=2, padding=0
+print(up(x).shape)                             # [1, 256, 14, 14]</code></pre>
+ <p>The DCGAN generator uses this exact pattern in sequence, doubling the spatial size at each stage while halving the channels:</p>
+ <pre><code>z = torch.randn(1, 100, 1, 1)
+net = nn.Sequential(
+    nn.ConvTranspose2d(100, 512, 4, 1, 0),  # 1 -> 4
+    nn.ConvTranspose2d(512, 256, 4, 2, 1),  # 4 -> 8
+    nn.ConvTranspose2d(256, 128, 4, 2, 1),  # 8 -> 16
+    nn.ConvTranspose2d(128, 64,  4, 2, 1),  # 16 -> 32
+    nn.ConvTranspose2d(64,  3,   4, 2, 1),  # 32 -> 64
+)
+print(net(z).shape)  # [1, 3, 64, 64]</code></pre>
+ <p>Verify any one of these stages with the formula. For 8&rarr;16 with <code>kernel=4, stride=2, padding=1</code>: <code>(8-1)*2 - 2*1 + 4 = 16</code>.</p>
+
+ <h2>What output_padding Does</h2>
+ <p><code>output_padding</code> adds extra rows and columns to one side of the output to control its size. It is added to the result of the transposed convolution and is the final term in the formula:</p>
+ <pre><code>out = (in - 1) * stride - 2 * padding + kernel_size + output_padding</code></pre>
+ <p>It exists because when <code>stride &gt; 1</code>, several valid output sizes are ambiguous under the standard convolution inverse. For example, a forward <code>Conv2d</code> with <code>kernel=3, stride=2, padding=1</code> maps both a 6&times;6 and a 7&times;7 input to a 3&times;3 output. The matching transposed layer cannot know which size to restore, so <code>output_padding</code> lets you pick between the candidate shapes.</p>
+ <pre><code># Same kernel, stride, padding - output_padding chooses the size
+c1 = nn.ConvTranspose2d(3, 3, 3, stride=2, padding=1, output_padding=0)
+c2 = nn.ConvTranspose2d(3, 3, 3, stride=2, padding=1, output_padding=1)
+print(c1(torch.randn(1, 3, 3, 3)).shape)  # [1, 3, 6, 6]
+print(c2(torch.randn(1, 3, 3, 3)).shape)  # [1, 3, 7, 7]</code></pre>
+ <p>Note that <code>output_padding</code> does not change what the layer learns; it only affects the output spatial size. The valid range for a given configuration is 0 to <code>max(stride - 1, kernel_size - 2*padding - 1)</code> per PyTorch documentation. Setting it to a value outside this range raises an error. Use the smallest value that yields the output size you need.</p>
+
+ <h2>Contrast With the Conv2d Formula</h2>
+ <p>The regular <code>Conv2d</code> formula shrinks the spatial dimensions:</p>
+ <pre><code>conv2d_out = floor((in - kernel + 2 * padding) / stride) + 1</code></pre>
+ <p>The transposed formula is its algebraic inverse. Where <code>Conv2d</code> divides by stride, <code>ConvTranspose2d</code> multiplies by it. A <code>Conv2d</code> that maps 14&rarr;7 with <code>kernel=2, stride=2, padding=0</code> is reversed by a <code>ConvTranspose2d</code> that maps 7&rarr;14 with the same parameters:</p>
+ <pre><code># Forward Conv2d: 14 -> 7
+forward  = floor((14 - 2 + 0) / 2) + 1 = 7
+# Transposed:    7  -> 14
+inverse  = (7 - 1) * 2 - 0 + 2 = 14</code></pre>
+ <p>Because of this inverse relationship, <code>ConvTranspose2d</code> is also called a fractionally-strided convolution or deconvolution (a name PyTorch avoids to prevent confusion with true mathematical deconvolution).</p>
+
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/what-is-stride-in-conv2d.html" class="related-card">What Is Stride in Conv2d?</a>
+ <a href="/tools/convtranspose2d-calculator.html" class="related-card">ConvTranspose2d Output Size Calculator</a>
+ <a href="/tools/conv2d-calculator.html" class="related-card">Conv2d Output Size Calculator</a>
+
+ <a href="https://claudhq.com/how-to-use-claude-code-beginner-guide/" class="related-card" title="How to Use Claude Code">Learn AI-Assisted Development, ClaudHQ Guide</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/convtranspose2d-calculator.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the ConvTranspose2d Calculator</a>
+ </div>
+ </article>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-convtranspose2d-output-size-formula">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-convtranspose2d-output-size-formula">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-convtranspose2d-output-size-formula" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+ <script src="/assets/js/share.js"></script>
+</body>
+</html>

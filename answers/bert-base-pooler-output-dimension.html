@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>BERT-base pooler_output Dimension Is 768</title>
+ <meta name="description" content="BERT-base pooler_output has shape (batch_size, 768). It is the tanh-activated [CLS] token passed through a 768x768 dense layer. Here is how it is computed.">
+ <meta name="robots" content="index, follow">
+ <link rel="canonical" href="https://heytensor.com/answers/bert-base-pooler-output-dimension.html">
+ <meta property="og:type" content="article">
+ <meta property="og:title" content="BERT-base pooler_output Dimension Is 768">
+ <meta property="og:description" content="BERT-base pooler_output has shape (batch_size, 768). It is the tanh-activated [CLS] token through a 768x768 dense layer.">
+ <meta property="og:url" content="https://heytensor.com/answers/bert-base-pooler-output-dimension.html">
+ <meta property="og:site_name" content="HeyTensor">
+ <meta property="og:image" content="https://heytensor.com/assets/og-image.png">
+ <meta name="twitter:card" content="summary_large_image">
+ <meta name="twitter:title" content="BERT-base pooler_output Dimension Is 768">
+ <meta name="twitter:description" content="BERT-base pooler_output has shape (batch_size, 768).">
+ <meta name="twitter:image" content="https://heytensor.com/assets/og-image.png">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/style.css">
+ <script type="application/ld+json">
+ {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{
+   "@type": "Question",
+   "name": "What is the dimension of BERT-base pooler_output?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "BERT-base pooler_output has shape (batch_size, 768). It is produced by taking the final hidden state of the [CLS] token and passing it through a 768x768 dense layer (590,592 parameters) followed by a tanh activation. The output dimension is fixed at 768 because that is the hidden size of BERT-base, regardless of the sequence length."
+   }
+  }, {
+   "@type": "Question",
+   "name": "How does pooler_output differ from last_hidden_state?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "last_hidden_state has shape (batch_size, sequence_length, 768) and holds one 768-vector per token. pooler_output has shape (batch_size, 768) and holds a single 768-vector per batch item, computed only from the [CLS] token. The pooler collapses the sequence dimension down to one vector."
+   }
+  }, {
+   "@type": "Question",
+   "name": "Can you disable the BERT-base pooler?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes. Set add_pooling_layer=False when building BertModel. With that flag the model returns None for pooler_output and pooler, and you must build your own sentence-level representation, typically by mean-pooling last_hidden_state across the sequence dimension."
+   }
+  }]
+ }
+ </script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://heytensor.com/"},{"@type":"ListItem","position":2,"name":"Answers","item":"https://heytensor.com/answers/"},{"@type":"ListItem","position":3,"name":"BERT-base pooler_output Dimension"}]}</script>
+</head>
+<body>
+ <header>
+ <div class="container header-inner">
+ <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
+ <nav>
+ <a href="/">Calculator</a>
+ <a href="/tools/">Tools</a>
+ <a href="/answers/" class="active">Answers</a>
+ <a href="/research/">Research</a>
+ <a href="/guides/">Guides</a>
+ <a href="/about.html">About</a>
+ <a href="/blog/">Blog</a>
+ <div class="nav-right">
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=nav-link" class="nav-pro" target="_blank">Go Pro &#10022;</a>
+ <a href="https://zovo.one/tools?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-bert-base-pooler-output-dimension" class="nav-zovo">Zovo Tools</a>
+ </div>
+ </nav>
+ </div>
+ </header>
+
+ <main class="container" style="max-width:720px;">
+ <nav class="breadcrumb" aria-label="Breadcrumb">
+ <a href="/">Home</a> <span>/</span> <a href="/answers/">Answers</a> <span>/</span> <span>BERT-base pooler_output Dimension</span>
+ </nav>
+
+ <article>
+ <h1>What Is the Dimension of BERT-base pooler_output?</h1>
+
+ <div style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin:1.5rem 0;">
+ <p style="margin:0;line-height:1.7;">BERT-base <code>pooler_output</code> has shape <strong>(batch_size, 768)</strong>. It is the hidden state of the <code>[CLS]</code> token passed through a <code>768&times;768</code> dense layer (590,592 parameters) and a <code>tanh</code> activation. The output dimension is fixed at 768, equal to the model&rsquo;s hidden size, and does not depend on the input sequence length.</p>
+ </div>
+
+ <aside class="answer-tool-cta" style="display:flex;gap:0.9rem;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
+ <div style="flex:1;min-width:0;">
+ <p style="margin:0 0 0.35rem;font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);">Run it yourself</p>
+ <p style="margin:0;line-height:1.6;"><a href="/tools/parameter-counter.html"><strong>Neural Network Parameter Counter</strong></a>. Change hidden size or layer count and watch the pooler and embedding parameter totals move.</p>
+ </div>
+ </aside>
+
+ <h2>Shape at a Glance</h2>
+ <pre><code>last_hidden_state:  (batch_size, seq_len, 768)   # one vector per token
+pooler_output:      (batch_size, 768)            # one vector per batch item</code></pre>
+ <p>The sequence dimension is the key difference. <code>last_hidden_state</code> keeps every token position, so its length varies with the input. <code>pooler_output</code> collapses that dimension to a single 768-vector per example, which is convenient for classification heads that expect a fixed-size representation.</p>
+
+ <h2>How It Is Computed</h2>
+ <p>The pooler is a single dense layer followed by <code>tanh</code>. It reads only the hidden state at position 0, the <code>[CLS]</code> token:</p>
+ <pre><code>pooled = dense(last_hidden_state[:, 0, :])   # shape (batch, 768)
+pooler_output = tanh(pooled)                  # shape (batch, 768)</code></pre>
+ <p>With hidden size 768, the dense layer has <code>768&times;768</code> weights plus a 768-vector bias:</p>
+ <pre><code>weights: 768 * 768  = 589,824
+bias:               =     768
+total:              = 590,592 parameters</code></pre>
+
+ <h2>Why It Is Always 768</h2>
+ <p>In BERT-base the hidden size <code>H</code> is 768, and every transformer output vector lives in that space. The pooler is a linear map from <code>768 &rarr; 768</code>, so its output is always 768-dimensional. The number never changes with the number of layers, attention heads, or tokens; it is pinned to the model dimension.</p>
+ <pre><code>Hidden size (H):  768
+Intermediate:     3072   (4 * H)
+Attention heads:  12
+Layers:           12
+pooler_output:    (batch, 768)</code></pre>
+
+ <h2>Reading the Output Dict</h2>
+ <p><code>BertModel.forward()</code> returns a <code>BaseModelOutputWithPoolingAndCrossAttentions</code>. The fields you normally use are <code>last_hidden_state</code>, <code>pooler_output</code>, and <code>hidden_states</code>. Only the first element of <code>pooler_output</code> is ever used by the model&rsquo;s prediction heads:</p>
+ <pre><code>outputs = model(input_ids)
+cls_vec  = outputs.pooler_output        # (batch, 768)
+# or the underlying tensor, identical to:
+cls_vec  = outputs.last_hidden_state[:, 0]  # then densed + tanh</code></pre>
+
+ <h2>pooler_output vs .pooler.dense</h2>
+ <p>When you build the model with <code>config.output_hidden_states=True</code> or access submodules directly, you may see <code>model.pooler</code> and <code>model.pooler.dense</code>. These are the same layer that produces <code>pooler_output</code>. The named module is a <code>BertPooler</code> whose single dense member holds the <code>768&times;768 + 768</code> parameters; <code>pooler_output</code> is just its output applied through <code>tanh</code>. Accessing the tensor directly bypasses the tanh:</p>
+ <pre><code>pre_tanh = model.pooler.dense(last_hidden_state[:, 0])   # no tanh
+pooled   = model.pooler(last_hidden_state)               # tanh applied</code></pre>
+
+ <h2>Disabling the Pooler</h2>
+ <p>If you do not need a sentence-level vector, you can turn the pooler off entirely. Passing <code>add_pooling_layer=False</code> to <code>BertModel</code> removes it, so <code>pooler_output</code> comes back as <code>None</code> and <code>model.pooler</code> is absent:</p>
+ <pre><code>model = BertModel.from_pretrained("bert-base-uncased",
+                                  add_pooling_layer=False)
+outputs = model(input_ids)
+outputs.pooler_output   # None
+outputs.last_hidden_state  # (batch, seq, 768)</code></pre>
+ <p>With the pooler disabled, build your own pooled vector when you need one, for example a mean over tokens:</p>
+ <pre><code># mask-aware mean pooling over last_hidden_state
+mask = attention_mask.unsqueeze(-1)          # (batch, seq, 1)
+sums = (last_hidden_state * mask).sum(dim=1)
+counts = mask.sum(dim=1).clamp(min=1e-9)
+mean_pooled = sums / counts                  # (batch, 768)</code></pre>
+
+ <h2>Contrast With Other BERT Models</h2>
+ <pre><code>Model          | Hidden | pooler_output dim
+------------------------------|--------------
+BERT-tiny      |  128   | (batch, 128)
+BERT-mini      |  256   | (batch, 256)
+BERT-small     |  512   | (batch, 512)
+BERT-base      |  768   | (batch, 768)
+BERT-large     | 1024   | (batch, 1024)</code></pre>
+ <p>In every BERT variant the pooler output dimension equals the hidden size. BERT-large uses 1024, so its <code>pooler_output</code> is <code>(batch_size, 1024)</code> with a <code>1024&times;1024</code> dense layer and 1,049,600 total pooler parameters.</p>
+
+ <section class="related-links">
+ <h2>Related Questions</h2>
+ <div class="related-grid">
+ <a href="/answers/how-many-parameters-bert-base.html" class="related-card">How many parameters does BERT-base have?</a>
+ <a href="/answers/transformer-encoder-input-shape.html" class="related-card">What is the input shape for TransformerEncoder?</a>
+ <a href="/answers/linear-layer-512-to-10.html" class="related-card">What does a linear layer 512 to 10 do?</a>
+ <a href="/answers/lstm-output-shape-bidirectional.html" class="related-card">What is the LSTM output shape when bidirectional?</a>
+ </div>
+ </section>
+
+ <div style="text-align:center;margin:2rem 0;">
+ <a href="/tools/parameter-counter.html" style="display:inline-block;padding:0.75rem 2rem;background:var(--accent);color:#fff;border-radius:var(--radius);text-decoration:none;font-weight:600;">Try the Parameter Counter</a>
+ </div>
+ </article>
+ </main>
+
+ <footer class="site-footer">
+ <div class="footer-inner">
+ <div class="footer-brand">Zovo Tools</div>
+ <div class="footer-tagline">Free developer tools by a solo dev. No tracking.</div>
+ <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta">Zovo Lifetime, $99 once, free forever &rarr;</a>
+ <div class="footer-copy">&copy; 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=answers-bert-base-pooler-output-dimension">Zovo</a> &middot; lifetime access, one payment</div>
+ </div>
+ </footer>
+
+ <nav class="zovo-network" aria-label="Zovo Tools Network">
+ <div class="zovo-network-inner">
+ <h3 class="zovo-network-title">Explore More Tools</h3>
+ <div class="zovo-network-links">
+ <a href="https://abwex.com">ABWex, A/B Testing</a>
+ <a href="https://b2berp.com">B2BERP, Business Tools</a>
+ <a href="https://bugbountyreality.com">BugBountyReality, Security</a>
+ <a href="https://claudflow.com">ClaudFlow, Workflows</a>
+ <a href="https://claudkit.com">ClaudKit, API Tools</a>
+ <a href="https://dismissticket.com">DismissTicket, Support</a>
+ <a href="https://enhio.com">Enhio, Text Tools</a>
+ <a href="https://epochpilot.com">EpochPilot, Timestamps</a>
+ <a href="https://gen8x.com">Gen8X, Color Tools</a>
+ <a href="https://gpt0x.com">GPT0X, AI Models</a>
+ <a href="https://ingredientcalculator.com">IngredientCalc, Recipes</a>
+ <a href="https://invokebot.com">InvokeBot, Webhooks</a>
+ <a href="https://kappafy.com">Kappafy, JSON</a>
+ <a href="https://kappakit.com">KappaKit, Dev Toolkit</a>
+ <a href="https://kickllm.com">KickLLM, LLM Costs</a>
+ <a href="https://krzen.com">Krzen, Image Tools</a>
+ <a href="https://lochbot.com">LochBot, Security</a>
+ <a href="https://lockml.com">LockML, ML Security</a>
+ <a href="https://ml0x.com?utm_source=heytensor&amp;utm_medium=nav&amp;utm_campaign=answers-bert-base-pooler-output-dimension">ML0X, ML Basics</a>
+ <a href="https://ml3x.com">ML3X, Matrix Math</a>
+ <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
+ <a href="https://recipetool.net">RecipeTool, Cooking</a>
+ <a href="https://viryd.com">Viryd, Dev Tools</a>
+ </div>
+ </div>
+</nav>
+
+<div class="pow-strip">
+ <div class="pow-strip-inner">
+ <span class="pow-label">By the same builder:</span>
+ <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
+ <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
+ <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>
+ <a href="https://bugbountyreality.com" rel="nofollow">Bug Bounty Reality</a>
+ <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=inline&amp;utm_campaign=answers-bert-base-pooler-output-dimension" rel="nofollow">Zovo, AI Dev Tools</a>
+ </div>
+</div>
+ <script src="/assets/js/share.js"></script>
+</body>
+</html>
