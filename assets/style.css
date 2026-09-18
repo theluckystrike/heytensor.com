@@ -1055,3 +1055,25 @@ main,
 
 /* QAS — quotable authority sentence (GEO speakable target; no visual restyle) */
 .qas { }
+
+
+/* QA 09-18: answers declutter — spacing & code panel treatment (matches .article) */
+main.container article h2 { font-size: 1.3rem; margin-top: 2.25rem; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+main.container article h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+main.container article p { margin-bottom: 1rem; line-height: 1.8; color: var(--text); }
+main.container article li { margin-bottom: 0.5rem; line-height: 1.7; }
+main.container article pre {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  line-height: 1.6;
+  color: #e8eaed;
+}
+main.container article pre code { background: none; padding: 0; color: inherit; }
+main.container article code { font-size: 0.9em; }
+@media (max-width: 768px) {
+  main.container article pre { padding: 0.85rem 1rem; font-size: 0.8rem; }
+}
