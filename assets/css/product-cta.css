@@ -17,3 +17,5 @@ header nav a.nav-toolkit:focus-visible,.product-cta a:focus-visible{outline:3px 
 /* Added navigation item needs the compact menu on tablet widths too. */
 @media(max-width:1200px){header .mobile-toggle{display:block}header nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg,#101012);border-bottom:1px solid var(--border,#333);flex-direction:column;align-items:flex-start;padding:16px 20px;gap:14px;max-height:calc(100dvh - 80px);overflow-y:auto}header nav.open{display:flex}header .nav-right{flex-direction:row;flex-wrap:wrap;margin-left:0;gap:12px}header nav>a{min-height:32px;display:inline-flex;align-items:center}}
 @media(max-width:760px){.product-cta{flex-direction:column;align-items:stretch;padding:22px;gap:22px;margin:28px 0}.product-cta-actions{align-items:stretch;text-align:center}.product-cta a.product-cta-buy{white-space:normal}}
+
+.product-fit{margin:16px 0;color:#d0d0d6;font-size:.9rem;line-height:1.6}.product-fit summary{cursor:pointer;color:#f5d789}.product-fit p{margin:10px 0}.product-fit summary:focus-visible{outline:3px solid #fbbf24;outline-offset:4px}
