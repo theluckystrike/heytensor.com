@@ -16,9 +16,9 @@ HeyTensor is a browser-based tensor shape calculator for deep learning practitio
 - Model parameter counter and GPU memory estimator
 - Activation, loss function, and optimizer reference library
 - Einsum notation calculator for advanced tensor operations
-- 100% client-side — no data leaves your browser
+- 100% client-side calculations — inputs and results stay in your browser
 - MIT licensed
-- No signup, no tracking
+- No signup; optional consent-based page and offer analytics
 
 ## Tools
 
@@ -60,7 +60,7 @@ HeyTensor is a browser-based tensor shape calculator for deep learning practitio
 
 ## Part of Zovo Tools
 
-HeyTensor is part of [Zovo Tools](https://zovo.one/tools) — free developer tools by a solo developer. No tracking, no signup, no nonsense.
+HeyTensor is part of [Zovo Tools](https://zovo.one/tools) — free developer tools by a solo developer. No signup. Optional analytics is consent-based.
 
 **Other tools in the network:**
 
