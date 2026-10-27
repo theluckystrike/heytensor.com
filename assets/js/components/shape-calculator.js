@@ -261,7 +261,8 @@
           shape: [p.batch, p.seq_len, p.embed_dim],
           formula: 'head_dim = embed_dim / num_heads = ' + p.embed_dim + ' / ' + p.num_heads + ' = ' + headDim +
                    '\nOutput (attn_output): [' + p.batch + ', ' + p.seq_len + ', ' + p.embed_dim + ']' +
-                   '\nAttention weights: [' + p.batch + ', ' + p.num_heads + ', ' + p.seq_len + ', ' + p.seq_len + ']' +
+                   '\nAttention weights (default, averaged over heads): [' + p.batch + ', ' + p.seq_len + ', ' + p.seq_len + ']' +
+                   '\nWith average_attn_weights=False: [' + p.batch + ', ' + p.num_heads + ', ' + p.seq_len + ', ' + p.seq_len + ']' +
                    '\nParameters: 3*' + p.embed_dim + '*' + p.embed_dim + ' + ' + p.embed_dim + '*' + p.embed_dim + ' + biases = ~' + (4 * p.embed_dim * p.embed_dim + 4 * p.embed_dim).toLocaleString()
         };
       }

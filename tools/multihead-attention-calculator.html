@@ -55,7 +55,7 @@
     "name": "What is the output shape of MultiheadAttention?",
     "acceptedAnswer": {
      "@type": "Answer",
-     "text": "For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, num_heads, seq_len, seq_len]."
+     "text": "For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, seq_len, seq_len] (default, averaged over heads), or [batch, num_heads, seq_len, seq_len] with average_attn_weights=False."
     }
    },
    {
@@ -147,7 +147,7 @@
  <h2>Frequently Asked Questions</h2>
  <details>
  <summary>What is the output shape of MultiheadAttention?</summary>
- <p class="qas">For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, num_heads, seq_len, seq_len].</p>
+ <p class="qas">For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, seq_len, seq_len] (default, averaged over heads), or [batch, num_heads, seq_len, seq_len] with average_attn_weights=False.</p>
  </details>
 
  <details>

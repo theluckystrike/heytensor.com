@@ -230,7 +230,7 @@
     "faq": [
       {
         "q": "What is the output shape of MultiheadAttention?",
-        "a": "For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, num_heads, seq_len, seq_len]."
+        "a": "For input [seq_len, batch, embed_dim] (PyTorch default) or [batch, seq_len, embed_dim] (with batch_first=True), the output attention shape is the same: the embed_dim dimension is preserved. The attention weights have shape [batch, seq_len, seq_len] (default, averaged over heads), or [batch, num_heads, seq_len, seq_len] with average_attn_weights=False."
       },
       {
         "q": "Why must embed_dim be divisible by num_heads?",
