@@ -547,19 +547,24 @@
       inputStep.innerHTML = '<span class="step-num">IN</span><span class="step-layer">Input</span><span class="step-shape">[' + currentShape.join(', ') + ']</span>';
       chainList.appendChild(inputStep);
 
+      var chainError = null;
+
       chainLayers.forEach(function (cl, idx) {
+        if (chainError) return;
         var layerDef = LAYERS[cl.type];
         // Auto-set input params from current shape
         var p = Object.assign({}, cl.params);
-        autoSetInput(cl.type, p, currentShape);
+        var inputError = autoSetInput(cl.type, p, currentShape);
 
-        var result = layerDef.calc(p);
+        var result = inputError ? { error: inputError } : layerDef.calc(p);
+        if (result.error) chainError = { index: idx, message: result.error };
         var step = el('div', { className: 'chain-step' + (result.error ? ' error' : '') });
         var removeBtn = '<button class="remove-layer-btn" data-idx="' + idx + '" title="Remove">&#10005;</button>';
         step.innerHTML = '<span class="step-num">' + (idx + 1) + '</span>' +
           '<span class="step-layer">' + layerDef.label + '</span>' +
           '<span class="step-shape' + (result.error ? ' err' : '') + '">' +
-          (result.error ? 'Error' : '[' + result.shape.join(', ') + ']') + '</span>' + removeBtn;
+          (result.error ? 'Error' : '[' + result.shape.join(', ') + ']') + '</span>' +
+          (result.error ? '<span class="step-error">' + escHtml(result.error) + '</span>' : '') + removeBtn;
         chainList.appendChild(step);
 
         if (!result.error) currentShape = result.shape;
@@ -576,8 +581,13 @@
       // Final result
       if (chainLayers.length > 0) {
         chainResult.style.display = 'block';
-        chainResult.className = 'result-box success';
-        chainResult.innerHTML = '<div class="shape">Final Output: [' + currentShape.join(', ') + ']</div>';
+        if (chainError) {
+          chainResult.className = 'result-box error';
+          chainResult.innerHTML = '<div class="shape">Stopped at layer ' + (chainError.index + 1) + '</div><div class="formula">' + escHtml(chainError.message) + '</div>';
+        } else {
+          chainResult.className = 'result-box success';
+          chainResult.innerHTML = '<div class="shape">Final Output: [' + currentShape.join(', ') + ']</div>';
+        }
       } else {
         chainResult.style.display = 'none';
       }
@@ -587,13 +597,16 @@
       // Automatically map current shape to layer input params
       switch (type) {
         case 'Conv2d':
-          if (shape.length >= 4) { p.batch = shape[0]; p.c_in = shape[1]; p.h_in = shape[2]; p.w_in = shape[3]; }
+          if (shape.length !== 4) return 'Conv2d expects a 4D input, got ' + shape.length + 'D.';
+          p.batch = shape[0]; p.c_in = shape[1]; p.h_in = shape[2]; p.w_in = shape[3];
           break;
         case 'Conv1d':
-          if (shape.length >= 3) { p.batch = shape[0]; p.c_in = shape[1]; p.l_in = shape[2]; }
+          if (shape.length !== 3) return 'Conv1d expects a 3D input, got ' + shape.length + 'D.';
+          p.batch = shape[0]; p.c_in = shape[1]; p.l_in = shape[2];
           break;
         case 'ConvTranspose2d':
-          if (shape.length >= 4) { p.batch = shape[0]; p.c_in = shape[1]; p.h_in = shape[2]; p.w_in = shape[3]; }
+          if (shape.length !== 4) return 'ConvTranspose2d expects a 4D input, got ' + shape.length + 'D.';
+          p.batch = shape[0]; p.c_in = shape[1]; p.h_in = shape[2]; p.w_in = shape[3];
           break;
         case 'Linear':
           if (shape.length >= 2) { p.batch = shape[0]; p.in_features = shape[shape.length - 1]; }
@@ -603,10 +616,12 @@
           break;
         case 'MaxPool2d':
         case 'AvgPool2d':
-          if (shape.length >= 4) { p.batch = shape[0]; p.channels = shape[1]; p.h_in = shape[2]; p.w_in = shape[3]; }
+          if (shape.length !== 4) return '2D pooling expects a 4D input, got ' + shape.length + 'D.';
+          p.batch = shape[0]; p.channels = shape[1]; p.h_in = shape[2]; p.w_in = shape[3];
           break;
         case 'BatchNorm2d':
-          if (shape.length >= 4) { p.batch = shape[0]; p.channels = shape[1]; p.h_in = shape[2]; p.w_in = shape[3]; p.num_features = shape[1]; }
+          if (shape.length !== 4) return 'BatchNorm2d expects a 4D input, got ' + shape.length + 'D.';
+          p.batch = shape[0]; p.channels = shape[1]; p.h_in = shape[2]; p.w_in = shape[3]; p.num_features = shape[1];
           break;
         case 'Flatten':
           if (shape.length >= 4) { p.batch = shape[0]; p.c = shape[1]; p.h = shape[2]; p.w = shape[3]; }
@@ -635,6 +650,7 @@
           else if (shape.length === 3) { p.batch = shape[0]; p.c = shape[1]; p.h = shape[2]; p.w = 1; }
           break;
       }
+      return null;
     }
 
     addBtn.addEventListener('click', function () { addChainLayer(addSelect.value); });
