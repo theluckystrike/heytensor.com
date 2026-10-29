@@ -97,9 +97,11 @@
         { key: 'out_features', label: 'out_features', default: 10 }
       ],
       calc: function (p) {
+        var lead = p.lead || [p.batch];
+        var outputShape = lead.concat([p.out_features]);
         return {
-          shape: [p.batch, p.out_features],
-          formula: 'Output: [' + p.batch + ', ' + p.out_features + ']\nLinear transforms the last dimension: in_features(' + p.in_features + ') -> out_features(' + p.out_features + ')\nParameters: ' + p.in_features + ' * ' + p.out_features + ' + ' + p.out_features + ' = ' + (p.in_features * p.out_features + p.out_features)
+          shape: outputShape,
+          formula: 'Output: [' + outputShape.join(', ') + ']\nLinear transforms the last dimension: in_features(' + p.in_features + ') -> out_features(' + p.out_features + ')\nParameters: ' + p.in_features + ' * ' + p.out_features + ' + ' + p.out_features + ' = ' + (p.in_features * p.out_features + p.out_features)
         };
       }
     },
@@ -596,7 +598,7 @@
           if (shape.length >= 4) { p.batch = shape[0]; p.c_in = shape[1]; p.h_in = shape[2]; p.w_in = shape[3]; }
           break;
         case 'Linear':
-          if (shape.length >= 2) { p.batch = shape[0]; p.in_features = shape[shape.length - 1]; }
+          if (shape.length >= 2) { p.lead = shape.slice(0, -1); p.batch = shape[0]; p.in_features = shape[shape.length - 1]; }
           break;
         case 'LSTM':
           if (shape.length >= 3) { p.batch = shape[0]; p.seq_len = shape[1]; p.input_size = shape[2]; }
