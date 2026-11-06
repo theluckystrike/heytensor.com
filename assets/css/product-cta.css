@@ -46,3 +46,6 @@ header nav .nav-right a.nav-zovo{min-height:48px;display:inline-flex;align-items
 .hero p.hero-offer a{color:#fbbf24;font-weight:700;text-underline-offset:4px;display:inline-flex;align-items:center;min-height:48px}
 /* CRO 1106 R2 review B: header wraps at 200 % text zoom instead of pushing the menu off screen */
 @media(max-width:1200px){header .header-inner{flex-wrap:wrap;row-gap:6px}header a.hdr-buy{white-space:normal;max-width:calc(100% - 64px)}}
+/* CRO 1106 R2 review C: filled hero buy button */
+.hero p.hero-offer a[data-cta="hero_preflight"]{display:inline-flex;align-items:center;min-height:48px;padding:0 16px;border-radius:9px;background:#fbbf24;color:#18130a;text-decoration:none;margin:4px 0}
+.hero p.hero-offer a[data-cta="hero_preflight"]:hover{background:#fcd34d}
