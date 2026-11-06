@@ -81,7 +81,7 @@ window.ROI_MEASUREMENT_CONFIG = {"site": "heytensor", "id": "G-6NLQRTBX02", "pro
       var t = ev.target;
       if (!(t instanceof Element)) return;
       var item = label(t);
-      if (item) send(item.kind, {product_id: item.product_id, placement: item.placement});
+      if (item) { var ca = t.closest('a'); send(item.kind, {product_id: item.product_id, placement: item.placement, cta_id: (ca && ca.getAttribute('data-cta')) || '', transport_type: 'beacon'}); }
       if (config.site === 'deepvalueradar' && t.closest('[data-studio-interest]')) send('offer_click', {product_id: 'equity_scenario_studio', placement: 'studio_interest'});
     }, {capture: true});
     document.addEventListener('toggle', function (ev) {
