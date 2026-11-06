@@ -83,7 +83,21 @@ window.ROI_MEASUREMENT_CONFIG = {"site": "heytensor", "id": "G-6NLQRTBX02", "pro
       var item = label(t);
       if (item) { var ca = t.closest('a'); send(item.kind, {product_id: item.product_id, placement: item.placement, cta_id: (ca && ca.getAttribute('data-cta')) || '', transport_type: 'beacon'}); }
       var cta = t.closest('[data-cta]');
-      if (cta) { var dest = ''; try { dest = new URL(cta.href, location.href).hostname; } catch (e) {} send('cta_click', {cta_id: cta.getAttribute('data-cta'), link_domain: dest, product_id: item ? item.product_id : '', transport_type: 'beacon'}); }
+      if (cta) {
+        var dest = '', cu = null; try { cu = new URL(cta.href, location.href); dest = cu.hostname; } catch (e) {}
+        var cp = {cta_id: cta.getAttribute('data-cta'), link_domain: dest, product_id: item ? item.product_id : '', transport_type: 'beacon'};
+        // Same-tab navigation: hold it until gtag confirms the hit (max 1.2 s), so a click right after consent is not lost.
+        var hold = active && cu && cta.tagName === 'A' && ev.button === 0 && !(ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) &&
+          !ev.defaultPrevented && (!cta.target || cta.target === '_self') && /^https?:$/.test(cu.protocol) &&
+          !(cu.origin === location.origin && cu.pathname === location.pathname && cu.hash);
+        if (hold) {
+          ev.preventDefault();
+          var gone = false, to = cu.href, go = function () { if (!gone) { gone = true; location.href = to; } };
+          cp.event_callback = go; cp.event_timeout = 1000;
+          setTimeout(go, 1200);
+        }
+        send('cta_click', cp);
+      }
       if (config.site === 'deepvalueradar' && t.closest('[data-studio-interest]')) send('offer_click', {product_id: 'equity_scenario_studio', placement: 'studio_interest'});
     }, {capture: true});
     document.addEventListener('toggle', function (ev) {

@@ -49,3 +49,10 @@ header nav .nav-right a.nav-zovo{min-height:48px;display:inline-flex;align-items
 /* CRO 1106 R2 review C: filled hero buy button */
 .hero p.hero-offer a[data-cta="hero_preflight"]{display:inline-flex;align-items:center;min-height:48px;padding:0 16px;border-radius:9px;background:#fbbf24;color:#18130a;text-decoration:none;margin:4px 0}
 .hero p.hero-offer a[data-cta="hero_preflight"]:hover{background:#fcd34d}
+
+/* CRO 1106 R3: header and consent box fit at 200 % text zoom on phones */
+header .hdr-buy{white-space:normal;min-width:0;text-align:center}
+header nav,.site-header,.header-inner{flex-wrap:wrap}
+.zovo-network-inner{min-width:0;max-width:100%;overflow-wrap:anywhere}
+#roi-consent{max-width:calc(100% - 32px)!important;overflow-wrap:anywhere}
+main code{overflow-wrap:anywhere}
