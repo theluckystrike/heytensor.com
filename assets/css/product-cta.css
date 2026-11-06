@@ -24,3 +24,6 @@ header nav a.nav-toolkit:focus-visible,.product-cta a:focus-visible{outline:3px 
 @media(max-width:760px){.product-cta{flex-direction:column;align-items:stretch;padding:22px;gap:22px;margin:28px 0}.product-cta-actions{align-items:stretch;text-align:center}.product-cta a.product-cta-buy{white-space:normal}}
 
 .product-fit{margin:16px 0;color:#d0d0d6;font-size:.9rem;line-height:1.6}.product-fit summary{cursor:pointer;color:#f5d789}.product-fit p{margin:10px 0}.product-fit summary:focus-visible{outline:3px solid #fbbf24;outline-offset:4px}
+
+/* CRO 1106: 48 px touch target */
+.product-cta .product-cta-sample{display:inline-flex;align-items:center;min-height:48px}
