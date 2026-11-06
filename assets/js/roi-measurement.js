@@ -39,7 +39,7 @@ window.ROI_MEASUREMENT_CONFIG = {"site": "heytensor", "id": "G-6NLQRTBX02", "pro
     var url;
     try { url = new URL(a.href); } catch (e) { return null; }
     if (config.site === 'heytensor' && url.hostname === 'buy.heytensor.com') {
-      return {product_id: 'tensor_preflight', placement: a.closest('.product-cta') ? 'product_cta' : 'navigation', kind: url.pathname.indexOf('sample-report') >= 0 ? 'offer_open' : 'offer_click'};
+      return {product_id: 'tensor_preflight', placement: a.closest('.product-cta') ? 'product_cta' : a.closest('footer') ? 'footer' : a.closest('.hero') ? 'hero' : 'navigation', kind: url.pathname.indexOf('sample-report') >= 0 ? 'offer_open' : 'offer_click'};
     }
     if (config.site === 'earlythunder' && url.hostname === 'workbench.earlythunder.com') {
       return {product_id: 'token_evidence_workbench', placement: a.closest('.workbench-offer') ? (a.closest('.workbench-offer').className.match(/workbench-offer--([a-z]+)/) || [,'offer'])[1] : 'navigation', kind: url.pathname.indexOf('preview') >= 0 ? 'offer_open' : 'offer_click'};
@@ -82,6 +82,8 @@ window.ROI_MEASUREMENT_CONFIG = {"site": "heytensor", "id": "G-6NLQRTBX02", "pro
       if (!(t instanceof Element)) return;
       var item = label(t);
       if (item) { var ca = t.closest('a'); send(item.kind, {product_id: item.product_id, placement: item.placement, cta_id: (ca && ca.getAttribute('data-cta')) || '', transport_type: 'beacon'}); }
+      var cta = t.closest('[data-cta]');
+      if (cta) { var dest = ''; try { dest = new URL(cta.href, location.href).hostname; } catch (e) {} send('cta_click', {cta_id: cta.getAttribute('data-cta'), link_domain: dest, product_id: item ? item.product_id : '', transport_type: 'beacon'}); }
       if (config.site === 'deepvalueradar' && t.closest('[data-studio-interest]')) send('offer_click', {product_id: 'equity_scenario_studio', placement: 'studio_interest'});
     }, {capture: true});
     document.addEventListener('toggle', function (ev) {
@@ -128,8 +130,8 @@ window.ROI_MEASUREMENT_CONFIG = {"site": "heytensor", "id": "G-6NLQRTBX02", "pro
     box.id = 'roi-consent';
     box.setAttribute('role', 'dialog');
     box.setAttribute('aria-label', 'Analytics choice');
-    box.style.cssText = 'position:fixed;z-index:2147483647;bottom:12px;left:12px;right:12px;max-width:480px;margin:auto;background:#17202b;color:#fff;border:1px solid #62748a;border-radius:12px;padding:16px;font:14px/1.45 system-ui,sans-serif;box-shadow:0 10px 35px #0007;box-sizing:border-box';
-    box.innerHTML = '<p style="margin:0 0 10px">Allow optional Google Analytics to measure page visits and product interest? Tool inputs and results are never sent. You can change this choice later.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" data-roi-choice="yes" style="padding:9px 14px;min-height:40px;border:0;border-radius:6px;background:#a8e67b;color:#10200a;font-weight:700;cursor:pointer">Allow analytics</button><button type="button" data-roi-choice="no" style="padding:9px 14px;min-height:40px;border:1px solid #8fa3b8;border-radius:6px;background:transparent;color:#fff;cursor:pointer">Decline</button></div>';
+    box.style.cssText = 'position:fixed;z-index:2147483647;bottom:12px;left:12px;right:12px;max-width:480px;margin:auto;background:#17202b;color:#fff;border:1px solid #62748a;border-radius:12px;padding:12px 14px;font:14px/1.45 system-ui,sans-serif;box-shadow:0 10px 35px #0007;box-sizing:border-box';
+    box.innerHTML = '<p style="margin:0 0 8px">Allow optional Google Analytics for page visits? Tool inputs and results are never sent.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" data-roi-choice="yes" style="padding:9px 14px;min-height:48px;border:0;border-radius:6px;background:#a8e67b;color:#10200a;font-weight:700;cursor:pointer">Allow analytics</button><button type="button" data-roi-choice="no" style="padding:9px 14px;min-height:48px;border:1px solid #8fa3b8;border-radius:6px;background:transparent;color:#fff;cursor:pointer">Decline</button></div>';
     document.body.appendChild(box);
     box.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-roi-choice]');

@@ -58,7 +58,7 @@
     "name": "How do I calculate Conv2d output shape?",
     "acceptedAnswer": {
      "@type": "Answer",
-     "text": "The Conv2d output shape formula is: H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use HeyTensor's calculator to compute this instantly for any configuration."
+     "text": "The Conv2d output shape formula is H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1, the result is output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use HeyTensor's calculator to compute this instantly for any configuration."
     }
    },
    {
@@ -66,7 +66,7 @@
     "name": "Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?",
     "acceptedAnswer": {
      "@type": "Answer",
-     "text": "This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's in_features doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll get 'mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)'. Fix: set in_features to match your actual flattened size."
+     "text": "This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's in_features doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll get 'mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)'. To fix it, set in_features to match your actual flattened size."
     }
    },
    {
@@ -82,7 +82,7 @@
     "name": "How do I fix tensor size mismatch in PyTorch?",
     "acceptedAnswer": {
      "@type": "Answer",
-     "text": "Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with tensor.shape at each layer. 2) Use HeyTensor's Chain Mode to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers."
+     "text": "Tensor size mismatches happen when two tensors in an operation have incompatible shapes. To fix it, 1) Print tensor shapes with tensor.shape at each layer. 2) Use HeyTensor's Chain Mode to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers."
     }
    },
    {
@@ -90,7 +90,7 @@
     "name": "What does RuntimeError: Expected input batch_size mean?",
     "acceptedAnswer": {
      "@type": "Answer",
-     "text": "This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension."
+     "text": "This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. To fix it, make sure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension."
     }
    }
   ]
@@ -99,9 +99,9 @@
  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://heytensor.com/#website","name":"HeyTensor","url":"https://heytensor.com/","sameAs":"https://github.com/theluckystrike/heytensor.com","publisher":{"@id":"https://heytensor.com/#org"}}</script>
 
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://heytensor.com/#org","name":"HeyTensor","url":"https://heytensor.com/","description":"Free browser-based PyTorch tensor shape calculator and error debugger.","knowsAbout":["PyTorch","tensor shapes","deep learning","Conv2d","neural network debugging","TensorFlow"]},{"@type":"WebPage","@id":"https://heytensor.com/#webpage","url":"https://heytensor.com/","isPartOf":{"@id":"https://heytensor.com/#website"},"about":{"@id":"https://heytensor.com/#org"},"isBasedOn":{"@type":"CreativeWork","name":"PyTorch Documentation","url":"https://pytorch.org/docs/stable/nn.html"},"speakable":{"@type":"SpeakableSpecification","cssSelector":["h1",".qas"]}}]}</script>
-<link rel="stylesheet" href="/assets/css/product-cta.css">
+<link rel="stylesheet" href="/assets/css/product-cta.css?v=1106r2">
 <script defer src="/assets/js/product-navigation.js"></script>
-<script defer src="/assets/js/roi-measurement.js"></script>
+<script defer src="/assets/js/roi-measurement.js?v=1106r2"></script>
 <link rel="stylesheet" href="/assets/css/support-cta.css?v=3">
 <link rel="stylesheet" href="/assets/support-v3.css?v=4-github-20261017">
 <script src="/assets/support-v3.js?v=3"></script>
@@ -110,6 +110,7 @@
  <header>
  <div class="container header-inner">
  <a href="/" class="logo">Hey<span>Tensor</span></a>
+ <a class="hdr-buy" data-cta="header_preflight_m" href="https://buy.heytensor.com/?utm_source=heytensor&amp;utm_medium=website&amp;utm_campaign=header-mobile">Preflight, $29</a>
  <button class="mobile-toggle" aria-label="Menu">&#9776;</button>
  <nav>
  <a class="nav-toolkit" data-cta="nav_preflight" href="https://buy.heytensor.com/">Tensor Preflight <span>· $29</span></a>
@@ -132,11 +133,12 @@
  <section class="hero">
  <h1>PyTorch <span>Tensor Shape</span> Calculator</h1>
  <p>Calculate output shapes for 14 layer types. Chain layers together, debug shape errors, and explore architecture presets. Works with PyTorch and TensorFlow.</p>
+ <p class="hero-offer">The calculator is free. The paid toolkit is <a data-cta="hero_preflight" href="https://buy.heytensor.com/?utm_source=heytensor&amp;utm_medium=website&amp;utm_campaign=hero&amp;utm_content=index">Tensor Preflight, $29 once</a>. It turns a tensor error into a repeatable local check.</p>
  </section>
 
   <div class="quick-answer" style="background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1rem 1.25rem;margin:1.5rem 0;">
    <p style="margin:0 0 0.5rem;line-height:1.7;">HeyTensor is a free browser tool. Type an input shape, pick one of 14 layer types, and read the output shape, the formula, and the parameter count. Chain mode traces a whole network. Paste a PyTorch RuntimeError to find the failing layer.</p>
-   <p style="margin:0;font-size:0.8rem;color:var(--text-muted);">Updated <time datetime="2026-10-28">October 28, 2026</time></p>
+   <p style="margin:0;font-size:0.8rem;color:var(--text-muted);">Updated <time datetime="2026-11-06">November 6, 2026</time></p>
   </div>
 
 
@@ -146,9 +148,9 @@
  <p>Trace a local forward pass, inspect tensor shapes in an HTML report, and turn a repair into a regression check. Includes eight broken-and-fixed workflows, source code and setup instructions.</p>
  <details class="product-fit"><summary>Is this toolkit right for my problem?</summary><p><strong>Use the free calculator</strong> for a layer formula or a quick shape check.</p><p><strong>Consider Tensor Preflight</strong> when you have a local PyTorch model and want a forward-pass report plus repeatable checks. Python 3.9+ and PyTorch 2.8+ are required. It does not run your model in this website or automatically repair it.</p><p>Open the sample report before buying to check the output format.</p></details>
  <p class="product-cta-requirements">Python 3.9+ · PyTorch 2.8+ · Runs locally</p></div>
- <div class="product-cta-actions"><a class="product-cta-buy" data-cta="article_preflight_buy" href="https://buy.heytensor.com/?utm_source=heytensor&utm_medium=website&utm_campaign=toolkit-fit&utm_content=index">Get Tensor Preflight, $29 once <span aria-hidden="true">→</span></a>
+ <div class="product-cta-actions"><a class="product-cta-buy" data-cta="home_preflight_buy" href="https://buy.heytensor.com/?utm_source=heytensor&utm_medium=website&utm_campaign=toolkit-fit&utm_content=index">Get Tensor Preflight, $29 once <span aria-hidden="true">→</span></a>
  <span class="product-cta-payment">One-time payment · ZIP download</span>
- <a class="product-cta-sample" data-cta="article_preflight_sample" href="https://buy.heytensor.com/sample-report.html?utm_source=heytensor&utm_medium=website&utm_campaign=toolkit-fit&utm_content=index">See a sample report</a></div>
+ <a class="product-cta-sample" data-cta="home_preflight_sample" href="https://buy.heytensor.com/sample-report.html?utm_source=heytensor&utm_medium=website&utm_campaign=toolkit-fit&utm_content=index">See a sample report</a></div>
 </section>
 
 
@@ -168,19 +170,19 @@
 
 <aside class="support-cta support-cta-result" data-support-cta="result" aria-label="Support HeyTensor" hidden><div class="sct-variants"><div data-sct-variant="first"><p class="sc-title sct-maker"><img class="sct-face" src="/assets/michael-128.webp" width="32" height="32" loading="lazy" alt="Michael Lip"><span>Shapes match. Training can continue.</span></p><p>Glad this got you unstuck. HeyTensor is one person and a lot of debugging. If it saved your evening, buy me a coffee. I'll put it toward the next fix.</p></div><div data-sct-variant="returning" hidden><p class="sc-title sct-maker"><img class="sct-face" src="/assets/michael-128.webp" width="32" height="32" loading="lazy" alt="Michael Lip"><span>You're officially a regular.</span></p><p>This is visit <span data-sct-uses></span>. Regulars are the reason I keep HeyTensor running. If it's part of your routine now, a coffee says thanks better than anything.</p></div></div><div class="sct-actions"><span class="sct-card-rail"><a class="sc-btn sc-btn-primary" href="https://paypal.me/najzzz/5USD" target="_blank" rel="noopener" data-rail="paypal">Buy me a coffee · $5</a><small>via PayPal</small></span><a class="sc-btn sc-btn-secondary" href="https://buymeacoffee.com/michaellip" target="_blank" rel="noopener" data-rail="bmc">Card, any amount or monthly</a><a class="sc-btn sct-github" href="https://github.com/sponsors/theluckystrike" data-rail="github" target="_blank" rel="noopener">Sponsor on GitHub<small>monthly or one-time</small></a><button type="button" data-sct-dismiss>Not now</button></div></aside>
 
- <div class="last-updated"><time datetime="2026-05-27">Last updated: May 27, 2026</time></div>
+ <div class="last-updated"><time datetime="2026-11-06">Last updated November 6, 2026</time></div>
 
  <section class="faq-section">
  <h2>Frequently Asked Questions</h2>
 
  <details>
  <summary>How do I calculate Conv2d output shape?</summary>
- <p class="qas">The Conv2d output shape formula is: <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1: output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
+ <p class="qas">The Conv2d output shape formula is <code>H_out = floor((H_in + 2*padding - dilation*(kernel_size-1) - 1) / stride) + 1</code>. The same formula applies to width. For example, with input (1, 3, 224, 224), kernel_size=3, padding=1, stride=1, the result is output height = floor((224 + 2 - 3) / 1) + 1 = 224. Use the calculator above to compute this instantly for any configuration.</p>
  </details>
 
  <details>
  <summary>Why does PyTorch say mat1 and mat2 shapes cannot be multiplied?</summary>
- <p class="qas">This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. Fix: set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
+ <p class="qas">This error means the number of columns in the first matrix doesn't match the number of rows in the second. In PyTorch, this usually happens when a Linear layer's <code>in_features</code> doesn't match the actual input size. For example, if your flatten produces 512 features but Linear expects 256, you'll see this error. To fix it, set in_features to match your actual flattened size, or use the Chain Mode above to trace shapes through your network.</p>
  </details>
 
  <details>
@@ -190,12 +192,12 @@
 
  <details>
  <summary>How do I fix tensor size mismatch in PyTorch?</summary>
- <p class="qas">Tensor size mismatches happen when two tensors in an operation have incompatible shapes. Steps to fix: 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
+ <p class="qas">Tensor size mismatches happen when two tensors in an operation have incompatible shapes. To fix it, 1) Print tensor shapes with <code>tensor.shape</code> at each layer. 2) Use the Chain Mode above to trace shapes through your network. 3) Common fixes include adjusting padding in Conv layers, changing in_features in Linear layers, or adding a Flatten layer before fully connected layers.</p>
  </details>
 
  <details>
  <summary>What does RuntimeError: Expected input batch_size mean?</summary>
- <p class="qas">This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. Fix: ensure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
+ <p class="qas">This error means your input tensor and target tensor have different batch sizes. For example, if your model outputs predictions for 32 samples but your labels only have 16 entries. To fix it, make sure your data loader returns matching batch sizes for inputs and targets. Check for accidental reshaping that changes the batch dimension.</p>
  </details>
 
  <details>
@@ -208,9 +210,9 @@
  <section class="explainer-section" style="max-width:720px;margin:2rem auto;line-height:1.7;">
  <h2>How HeyTensor Works</h2>
 
- <p class="qas">HeyTensor is a free, browser-based tensor shape calculator built for deep learning practitioners who need to quickly determine output dimensions for neural network layers. Instead of manually applying formulas or inserting print statements into your code, you enter the input shape and layer parameters, and HeyTensor computes the exact output shape instantly. The calculator supports 14 layer types across both PyTorch and TensorFlow: Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, and Concatenate.</p>
+ <p class="qas">HeyTensor is a free, browser-based tensor shape calculator built for deep learning practitioners who need to quickly determine output dimensions for neural network layers. Instead of manually applying formulas or inserting print statements into your code, you enter the input shape and layer parameters, and HeyTensor computes the exact output shape instantly. The calculator supports 14 layer types across both PyTorch and TensorFlow, such as Conv2d, Conv1d, Linear, LSTM, GRU, MultiheadAttention, BatchNorm, MaxPool2d, AvgPool2d, Flatten, Reshape, Dropout, Transpose, and Concatenate.</p>
 
- <p>The most powerful feature is Chain Mode, which lets you stack layers sequentially and see the output shape at every step of your network. If shapes become incompatible between layers, the most common source of PyTorch RuntimeErrors, the mismatch is highlighted immediately. This lets you fix architecture issues before writing any code, saving the frustrating cycle of running a training script, hitting a shape error, guessing the fix, and running again. The Paste Error mode goes further: paste a PyTorch error message like "mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)" and HeyTensor extracts the dimensions and suggests which parameter to change.</p>
+ <p>The main feature is Chain Mode, which lets you stack layers sequentially and see the output shape at every step of your network. If shapes become incompatible between layers, the most common source of PyTorch RuntimeErrors, the mismatch is highlighted immediately. This lets you fix architecture issues before writing any code, saving the frustrating cycle of running a training script, hitting a shape error, guessing the fix, and running again. The Paste Error mode goes further: paste a PyTorch error message like "mat1 and mat2 shapes cannot be multiplied (64x512 and 256x10)" and HeyTensor extracts the dimensions and suggests which parameter to change.</p>
 
  <p>Architecture Presets let you load complete network configurations with one click. Available presets include LeNet-5, a simple CNN classifier, a ResNet residual block, a Transformer encoder layer, and an LSTM classifier. Each preset shows shape propagation through every layer, serving as both a learning tool and a starting point for your own designs.</p>
 
@@ -327,7 +329,8 @@
  <div class="footer-inner">
  <div class="footer-brand">Zovo Tools</div>
  <div class="footer-tagline">Free developer tools by a solo dev. Optional analytics by consent.</div>
- <a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta" data-cta="footer_zovo">Zovo Lifetime, $99 once &rarr;</a>
+ <a href="https://buy.heytensor.com/?utm_source=heytensor&amp;utm_medium=website&amp;utm_campaign=footer" class="footer-cta footer-preflight" data-cta="footer_preflight">Get Tensor Preflight, $29 once &rarr;</a>
+<a href="https://zovo.one/pricing?utm_source=heytensor&amp;utm_medium=satellite&amp;utm_campaign=footer-link" class="footer-cta" data-cta="footer_zovo">Zovo Lifetime, $99 once &rarr;</a>
  <div class="footer-copy">© 2026 <a href="https://zovo.one/lifetime?utm_source=heytensor&amp;utm_medium=footer&amp;utm_campaign=home">Zovo</a> · lifetime access, one payment</div>
  
 <div class="support-cta support-cta-footer" data-support-cta="footer" aria-label="Support HeyTensor"><p class="sc-title">Made by Michael, one person and a lot of coffee.</p><p class="sct-maker"><img class="sct-face" src="/assets/michael-128.webp" width="44" height="44" loading="lazy" alt="Michael Lip"><span>If HeyTensor has helped you, you can buy me a coffee. It honestly makes my day, and I read every note that comes with one.</span></p><div class="sct-actions"><span class="sct-card-rail"><a class="sc-btn sc-btn-primary" href="https://paypal.me/najzzz/5USD" target="_blank" rel="noopener" data-rail="paypal">Buy me a coffee · $5</a><small>via PayPal</small></span><a class="sc-btn sc-btn-secondary" href="https://buymeacoffee.com/michaellip" target="_blank" rel="noopener" data-rail="bmc">Card, any amount or monthly</a><a class="sc-btn sct-github" href="https://github.com/sponsors/theluckystrike" data-rail="github" target="_blank" rel="noopener">Sponsor on GitHub<small>monthly or one-time</small></a><a class="sc-why" href="/support/">Why I ask</a></div></div>
@@ -362,14 +365,14 @@
  <a href="https://pictureeditor.net">PictureEditor, Image Editing</a>
  <a href="https://recipetool.net">RecipeTool, Cooking</a>
  <a href="https://viryd.com">Viryd, Dev Tools</a>
- <a href="https://tg.zovo.one/">Tiny Telegram Tools — Telegram Bots</a>
+ <a href="https://tg.zovo.one/">Tiny Telegram Tools, Telegram Bots</a>
  </div>
  </div>
 </nav>
 
 <div class="pow-strip">
  <div class="pow-strip-inner">
- <span class="pow-label">By the same builder:</span>
+ <span class="pow-label">By the same builder</span>
  <a href="https://github.com/theluckystrike" rel="nofollow">GitHub, theluckystrike</a>
  <a href="https://www.belikenative.com" rel="nofollow">BeLikeNative, Grammar AI</a>
  <a href="https://earlythunder.com" rel="nofollow">EarlyThunder, Dev Blog</a>

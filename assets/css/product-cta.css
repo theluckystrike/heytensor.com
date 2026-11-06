@@ -27,3 +27,20 @@ header nav a.nav-toolkit:focus-visible,.product-cta a:focus-visible{outline:3px 
 
 /* CRO 1106: 48 px touch target */
 .product-cta .product-cta-sample{display:inline-flex;align-items:center;min-height:48px}
+
+/* CRO 1106 R2: one primary offer, mobile header buy link, 48 px targets, label contrast */
+:root{--text-muted:#a1a1aa}
+.site-footer,.zovo-network{--text-dim:#a1a1aa}
+header a.hdr-buy{display:none}
+@media(max-width:1200px){header a.hdr-buy{display:inline-flex;align-items:center;min-height:48px;padding:0 14px;margin-left:auto;margin-right:10px;border-radius:8px;background:#fbbf24;color:#18130a!important;font-weight:700;font-size:.9rem;white-space:nowrap;text-decoration:none}header a.hdr-buy:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}header .mobile-toggle{min-width:48px;min-height:48px}}
+header nav a.nav-toolkit{display:inline-flex;align-items:center;min-height:48px}
+header nav .nav-right a.nav-pro{background:none;color:var(--text-dim,#a1a1aa)!important;padding:0 6px;font-weight:500;min-height:48px;display:inline-flex;align-items:center}
+header nav .nav-right a.nav-pro:hover{color:var(--text,#ededef)!important}
+header nav .nav-right a.nav-zovo{min-height:48px;display:inline-flex;align-items:center}
+.site-footer a.footer-cta{min-height:48px;display:inline-flex;align-items:center;box-sizing:border-box}
+.site-footer a.footer-preflight{background:#fbbf24;border-color:#fbbf24;color:#18130a;margin-bottom:10px}
+.site-footer a.footer-preflight:hover{background:#fcd34d;color:#18130a}
+.site-footer a.footer-cta[data-cta="footer_zovo"]{border:0;color:#c6c6ce;font-weight:500;text-decoration:underline;text-underline-offset:4px;padding:0 8px}
+.site-footer a.footer-cta[data-cta="footer_zovo"]:hover{background:none;color:#fafafa}
+.hero p.hero-offer{margin-top:14px;color:#d0d0d6}
+.hero p.hero-offer a{color:#fbbf24;font-weight:700;text-underline-offset:4px;display:inline-flex;align-items:center;min-height:48px}
