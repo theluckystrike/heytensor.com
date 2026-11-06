@@ -57,11 +57,13 @@
     load: function() {
       // Try query params
       var params = new URLSearchParams(window.location.search);
-      if (params.toString()) {
-        var state = {};
-        params.forEach(function(val, key) { state[key] = val; });
-        return state;
-      }
+      var state = {}, n = 0;
+      // Campaign and tracking parameters are not tool state, so they must not show the shared-result banner.
+      params.forEach(function(val, key) {
+        if (/^(utm_[a-z_]+|gclid|fbclid|msclkid|ref|cb|traffic_type)$/i.test(key)) return;
+        state[key] = val; n++;
+      });
+      if (n) return state;
       // Try base64 hash
       var hash = window.location.hash;
       if (hash && hash.indexOf('#s=') === 0) {
