@@ -83,15 +83,7 @@ window.ROI_MEASUREMENT_CONFIG = {"site": "heytensor", "id": "G-6NLQRTBX02", "pro
       var item = label(t);
       if (item) { var ca = t.closest('a'); send(item.kind, {product_id: item.product_id, placement: item.placement, cta_id: (ca && ca.getAttribute('data-cta')) || '', transport_type: 'beacon'}); }
       var cta = t.closest('[data-cta]');
-      if (cta) {
-        var dest = ''; try { dest = new URL(cta.href, location.href).hostname; } catch (e) {}
-        var outbound = active && cta.tagName === 'A' && dest && dest !== location.hostname && !ev.defaultPrevented && ev.button === 0 && !ev.metaKey && !ev.ctrlKey && !ev.shiftKey && !ev.altKey && (!cta.target || cta.target === '_self');
-        var href = cta.href, gone = false;
-        function go() { if (!gone) { gone = true; location.href = href; } }
-        var p = {cta_id: cta.getAttribute('data-cta'), link_domain: dest, product_id: item ? item.product_id : '', transport_type: 'beacon'};
-        if (outbound) { ev.preventDefault(); p.event_callback = go; p.event_timeout = 600; setTimeout(go, 700); }
-        send('cta_click', p);
-      }
+      if (cta) { var dest = ''; try { dest = new URL(cta.href, location.href).hostname; } catch (e) {} send('cta_click', {cta_id: cta.getAttribute('data-cta'), link_domain: dest, product_id: item ? item.product_id : '', transport_type: 'beacon'}); }
       if (config.site === 'deepvalueradar' && t.closest('[data-studio-interest]')) send('offer_click', {product_id: 'equity_scenario_studio', placement: 'studio_interest'});
     }, {capture: true});
     document.addEventListener('toggle', function (ev) {
